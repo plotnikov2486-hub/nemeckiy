@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Выбрать звуки ответа — ЗУБР</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --фон:#E9EBF6; --бел:#FFFFFF; --фон2:#F3F4FA;
+    --текст:#1C2242; --текст2:#6C7291; --текст3:#9AA0BE; --линия:#DCE0F0;
+    --синий:#4A63D6; --зелёный:#22A06B; --зелёныйФон:#E4F7EC;
+    --красный:#E0455E; --красныйФон:#FCE8EC;
+    --градиент:linear-gradient(135deg,#4A63D6,#EC6A86);
+    --тень:0 12px 30px rgba(40,50,110,.12);
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --фон:#12142A; --бел:#1E2140; --фон2:#191C36; --текст:#EDEFF8;
+      --текст2:#9AA0BE; --текст3:#6C7291; --линия:#2A2E52;
+      --зелёныйФон:#16321F; --красныйФон:#3A1620; --тень:0 12px 30px rgba(0,0,0,.35); }
+  }
+  *{box-sizing:border-box}
+  body{ margin:0; background:var(--фон); color:var(--текст);
+    font-family:Figtree,-apple-system,system-ui,sans-serif; line-height:1.45; }
+  .обёртка{ max-width:720px; margin:0 auto; padding:24px 16px 60px; }
+  h1{ font-size:clamp(26px,7vw,34px); font-weight:800; margin:0 0 6px; letter-spacing:-.02em; }
+  .лид{ color:var(--текст2); font-size:15px; margin:0 0 24px; }
+  h2{ font-size:19px; font-weight:800; margin:28px 0 12px; display:flex; align-items:center; gap:9px; }
+  .точка{ width:11px; height:11px; border-radius:50%; }
+  .точка.з{ background:var(--зелёный) } .точка.к{ background:var(--красный) }
+
+  .звук{ display:flex; align-items:center; gap:13px; background:var(--бел);
+    border:2px solid transparent; border-radius:18px; padding:14px 16px; margin-bottom:10px;
+    box-shadow:var(--тень); cursor:pointer; transition:transform .12s ease, border-color .12s ease; }
+  .звук:active{ transform:scale(.98) }
+  .звук.выбран{ border-color:var(--синий) }
+  .звук .играть{ width:46px; height:46px; border-radius:50%; border:none; flex-shrink:0;
+    background:var(--градиент); color:#fff; font-size:19px; cursor:pointer;
+    box-shadow:0 6px 14px rgba(74,99,214,.3); }
+  .звук .имя{ flex:1; min-width:0 }
+  .звук .имя b{ display:block; font-size:15.5px; font-weight:700 }
+  .звук .имя small{ display:block; font-size:13px; color:var(--текст2); margin-top:1px }
+  .звук .галка{ width:26px; height:26px; border-radius:50%; border:2px solid var(--линия);
+    flex-shrink:0; display:flex; align-items:center; justify-content:center; font-size:14px; color:#fff; }
+  .звук.выбран .галка{ background:var(--синий); border-color:var(--синий) }
+
+  .итог{ position:sticky; bottom:0; background:var(--бел); border-radius:20px 20px 0 0;
+    box-shadow:0 -8px 24px rgba(40,50,110,.14); padding:16px; margin-top:28px; }
+  .итог p{ margin:0 0 12px; font-size:14.5px; }
+  .итог b{ color:var(--синий) }
+  .кн{ display:block; width:100%; border:none; border-radius:16px; padding:15px;
+    font:inherit; font-size:16px; font-weight:700; cursor:pointer;
+    background:var(--градиент); color:#fff; box-shadow:0 8px 20px rgba(74,99,214,.3); }
+  .проба{ background:var(--фон2); color:var(--текст); box-shadow:none; margin-top:9px; }
+</style>
+</head>
+<body>
+<div class="обёртка">
+  <h1>Выбери звуки</h1>
+  <p class="лид">Сверху — живые голоса, ниже — короткие звуки. Нажми на кружок — послушаешь. Нажми на строку — выберешь. Потом скажи мне, какие понравились, и я вставлю их во все режимы ЗУБРа.</p>
+
+  <h2><span class="точка з"></span> Когда ответ верный</h2>
+  <div id="верные"></div>
+
+  <h2><span class="точка к"></span> Когда ответ неверный</h2>
+  <div id="неверные"></div>
+
+  <div class="итог">
+    <p>Выбрано: <b id="выбор">пока ничего</b></p>
+    <button class="кн" id="кПрименить">Применить в ЗУБРе</button>
+    <button class="кн проба" id="кПроба">▶︎ Проверить пару вместе</button>
+    <button class="кн проба" id="кВыкл">Выключить звуки совсем</button>
+  </div>
+</div>
+
+<script>
+const ВЕРНЫЕ = [
+  ["голосДа1", "🗣 «Ja!»", "голос Anna — тот же, что читает слова в уроках"],
+  ["голосДа2", "🗣 «Richtig!»", "она же, «правильно»"],
+  ["голосДа3", "🗣 «Sehr gut!»", "она же, «очень хорошо»"],
+  ["верно1", "Колокольчик", "одна мягкая нота, ненавязчиво"],
+  ["верно2", "Две ноты вверх", "самое привычное «правильно»"],
+  ["верно3", "Три ноты вверх", "маленькая победа, чуть длиннее"],
+  ["верно4", "Тёплый аккорд", "три ноты разом, мягко"],
+  ["верно5", "Короткий поп", "почти незаметный, для быстрой гонки"],
+];
+const НЕВЕРНЫЕ = [
+  ["голосНет1", "🗣 «Nein.»", "голос Yannick, тон опущен — сухо и строго"],
+  ["голосНет2", "🗣 «Leider nicht.»", "он же, «к сожалению, нет»"],
+  ["голосНет3", "🗣 «Falsch.»", "он же, «неверно»"],
+  ["мимо1", "Низкий бум", "коротко и глухо"],
+  ["мимо2", "Две ноты вниз", "привычное «не то»"],
+  ["мимо3", "Двойное дзз", "как зуммер на викторине"],
+  ["мимо4", "Резкая секунда", "режет ухо ровно настолько, чтобы заметить"],
+  ["мимо5", "Деликатный", "тихий, если резкие раздражают"],
+];
+
+const выбрано = { верно: null, мимо: null };
+const плеер = new Audio();
+
+function играть(имя){
+  плеер.pause();
+  плеер.src = "zvuk/otvet/" + имя + ".mp3";
+  плеер.currentTime = 0;
+  плеер.play().catch(()=>{});
+}
+
+function нарисовать(куда, список, вид){
+  document.getElementById(куда).innerHTML = список.map(([имя, титул, опис]) => `
+    <div class="звук" data-имя="${имя}" data-вид="${вид}">
+      <button class="играть" data-играть="${имя}">▶︎</button>
+      <span class="имя"><b>${титул}</b><small>${опис}</small></span>
+      <span class="галка">✓</span>
+    </div>`).join("");
+}
+нарисовать("верные", ВЕРНЫЕ, "верно");
+нарисовать("неверные", НЕВЕРНЫЕ, "мимо");
+
+document.addEventListener("click", e => {
+  const кнопка = e.target.closest("[data-играть]");
+  if (кнопка){ e.stopPropagation(); играть(кнопка.dataset.играть); return; }
+
+  const строка = e.target.closest(".звук");
+  if (!строка) return;
+  const вид = строка.dataset.вид;
+  document.querySelectorAll(`.звук[data-вид="${вид}"]`).forEach(x => x.classList.remove("выбран"));
+  строка.classList.add("выбран");
+  выбрано[вид] = строка.dataset.имя;
+  играть(строка.dataset.имя);
+  обновить();
+});
+
+function обновить(){
+  const части = [];
+  if (выбрано.верно) части.push("верно → " + выбрано.верно);
+  if (выбрано.мимо) части.push("мимо → " + выбрано.мимо);
+  document.getElementById("выбор").textContent = части.join(" · ") || "пока ничего";
+}
+
+document.getElementById("кПроба").onclick = async () => {
+  if (выбрано.верно){ играть(выбрано.верно); await new Promise(r => setTimeout(r, 900)); }
+  if (выбрано.мимо) играть(выбрано.мимо);
+};
+document.getElementById("кПрименить").onclick = () => {
+  if (!выбрано.верно && !выбрано.мимо){
+    alert("Сначала выбери хотя бы один звук — нажми на строку.");
+    return;
+  }
+  // ЗУБР читает эти же ключи при запуске
+  if (выбрано.верно) localStorage.setItem("nemeckiy_zvuk_верно", выбрано.верно);
+  if (выбрано.мимо)  localStorage.setItem("nemeckiy_zvuk_мимо",  выбрано.мимо);
+  localStorage.removeItem("nemeckiy_zvuk_выкл");
+  const к = document.getElementById("кПрименить");
+  к.textContent = "✓ Готово — звуки включены в ЗУБРе";
+  setTimeout(() => { к.textContent = "Применить в ЗУБРе"; }, 2500);
+};
+
+document.getElementById("кВыкл").onclick = () => {
+  localStorage.setItem("nemeckiy_zvuk_выкл", "1");
+  const к = document.getElementById("кВыкл");
+  к.textContent = "✓ Звуки выключены";
+  setTimeout(() => { к.textContent = "Выключить звуки совсем"; }, 2500);
+};
+</script>
+</body>
+</html>

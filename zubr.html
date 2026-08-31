@@ -1,0 +1,2259 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<title>ЗУБР — слова немецкого</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ЗУБР — оформление взято с сайта flebo-plotnikov.netlify.app:
+   лавандовый фон, белые карточки с мягкой тенью, объёмные кнопки,
+   сине-розовый градиент как акцент. Шрифт Figtree, как там же. */
+
+:root{
+  --фон:#E9EBF6;
+  --фон2:#F3F4FA;
+  --бел:#FFFFFF;
+  --текст:#1C2242;
+  --текст2:#6C7291;
+  --текст3:#9AA0BE;
+  --линия:#DCE0F0;
+  --синий:#4A63D6;
+  --розовый:#EC6A86;
+  --зелёный:#22A06B;
+  --зелёныйФон:#E4F7EC;
+  --жёлтыйФон:#FBF1DE;
+  --красный:#E0455E;
+  --красныйФон:#FBE6EA;
+  --градиент:linear-gradient(135deg,#4A63D6,#EC6A86);
+  --градиент2:linear-gradient(135deg,#1C2242,#14152B);
+  --тень:0 12px 30px rgba(40,50,110,.12);
+  --теньБольшая:0 26px 54px rgba(60,60,120,.18);
+  --теньКнопки:0 6px 16px rgba(40,50,110,.18);
+  --радиус:22px;
+  --радиусМалый:14px;
+}
+:root[data-theme="dark"], html.тёмная{
+  --фон:#12142A; --фон2:#191C36; --бел:#1E2140; --текст:#EDEFF8; --текст2:#9AA0BE; --текст3:#6C7291;
+  --линия:#2A2E52; --зелёныйФон:#16321F; --жёлтыйФон:#33290F; --красныйФон:#3A1620;
+  --тень:0 12px 30px rgba(0,0,0,.35); --теньБольшая:0 26px 54px rgba(0,0,0,.45);
+}
+
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;height:100%;}
+body{
+  background:var(--фон); color:var(--текст);
+  font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  font-size:16px; line-height:1.45;
+  overscroll-behavior:none;
+}
+
+/* ---------- каркас во весь экран ---------- */
+.прил{ display:flex; flex-direction:column; min-height:100vh; min-height:100dvh; }
+.шапка{
+  position:sticky; top:0; z-index:20;
+  display:flex; align-items:center; gap:12px;
+  padding:calc(env(safe-area-inset-top) + 12px) 16px 12px;
+  background:color-mix(in srgb, var(--фон) 88%, transparent);
+  backdrop-filter:saturate(180%) blur(14px);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+}
+.шапка .назад{
+  width:40px; height:40px; flex-shrink:0; border:none; border-radius:50%;
+  background:var(--бел); box-shadow:var(--тень); color:var(--текст);
+  font-size:20px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  transition:transform .12s ease;
+}
+.шапка .назад:active{ transform:scale(.92); }
+.шапка .титул{ flex:1; min-width:0; font-weight:700; font-size:17px; text-align:center;
+  overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.шапка .право{ width:40px; flex-shrink:0; display:flex; justify-content:flex-end; }
+.подвал{ max-width:720px; width:100%; margin:0 auto;
+  padding:4px 16px calc(env(safe-area-inset-bottom) + 24px); }
+.подвал[hidden]{ display:none; }
+.экран{ flex:1; padding:4px 16px calc(env(safe-area-inset-bottom) + 28px); max-width:720px; width:100%; margin:0 auto; }
+
+/* ---------- типографика ---------- */
+h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spacing:-.02em; margin:6px 0 4px; }
+.подзаголовок{ color:var(--текст2); font-size:15px; margin:0 0 18px; }
+.раздел{ font-size:13px; font-weight:700; color:var(--текст2); text-transform:uppercase;
+  letter-spacing:.06em; margin:26px 0 10px; }
+
+/* ---------- карточка набора ---------- */
+.набор{
+  display:block; width:100%; text-align:left; border:none; cursor:pointer;
+  background:var(--бел); border-radius:var(--радиус); box-shadow:var(--тень);
+  padding:18px 18px 16px; margin-bottom:12px; color:var(--текст);
+  font-family:inherit; transition:transform .14s ease, box-shadow .14s ease;
+}
+.набор:active{ transform:scale(.985); box-shadow:0 6px 16px rgba(40,50,110,.1); }
+.набор .верх{ display:flex; align-items:flex-start; gap:13px; }
+.набор .знак{
+  width:44px; height:44px; border-radius:13px; flex-shrink:0;
+  background:var(--градиент); display:flex; align-items:center; justify-content:center;
+  font-size:21px; box-shadow:0 6px 14px rgba(74,99,214,.3);
+}
+.набор .имя{ flex:1; min-width:0; }
+.набор .имя b{ display:block; font-size:18px; font-weight:800; letter-spacing:-.01em; }
+.набор .имя span{ display:block; font-size:13.5px; color:var(--текст2); margin-top:1px; }
+.набор .стрелка{ color:var(--текст3); font-size:22px; align-self:center; }
+.набор .итог{
+  margin-top:13px; padding-top:12px; border-top:1px solid var(--линия);
+  font-size:13.5px; color:var(--текст2); display:flex; align-items:center; gap:8px; flex-wrap:wrap;
+}
+.набор .итог b{ color:var(--текст); }
+.набор .балл{
+  padding:3px 10px; border-radius:999px; font-weight:700; font-size:12.5px;
+  background:var(--зелёныйФон); color:var(--зелёный);
+}
+.набор .балл.средне{ background:var(--жёлтыйФон); color:#B07A16; }
+.набор .балл.плохо{ background:var(--красныйФон); color:var(--красный); }
+
+/* ---------- полоса прогресса набора ---------- */
+.прогресс{ display:flex; height:8px; border-radius:999px; overflow:hidden; background:var(--линия); margin-top:12px; }
+.прогресс i{ display:block; height:100%; }
+.прогресс .усвоено{ background:var(--зелёный); }
+.прогресс .улучшено{ background:#E8A33D; }
+.прогресс-подпись{ display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--текст2); margin-top:9px; }
+.прогресс-подпись span{ display:inline-flex; align-items:center; gap:5px; }
+.прогресс-подпись i{ width:9px; height:9px; border-radius:50%; display:block; }
+.прогресс-подпись .з{ background:var(--зелёный); } .прогресс-подпись .ж{ background:#E8A33D; }
+.прогресс-подпись .с{ background:var(--линия); }
+
+/* ---------- плитки режимов ---------- */
+.режимы{ display:grid; grid-template-columns:repeat(2,1fr); gap:11px; }
+.режим{
+  border:none; cursor:pointer; font-family:inherit; color:var(--текст); text-align:left;
+  background:var(--бел); border-radius:18px; box-shadow:var(--тень);
+  padding:15px 15px 14px; display:flex; flex-direction:column; gap:9px; min-height:104px;
+  transition:transform .14s ease;
+}
+.режим:active{ transform:scale(.97); }
+.режим .знак{ width:38px; height:38px; border-radius:11px; display:flex; align-items:center;
+  justify-content:center; font-size:19px; background:var(--градиент); box-shadow:0 5px 12px rgba(74,99,214,.28); }
+.режим.з2 .знак{ background:linear-gradient(135deg,#22A06B,#5FD0A0); box-shadow:0 5px 12px rgba(34,160,107,.28); }
+.режим.з3 .знак{ background:linear-gradient(135deg,#E8A33D,#F3C77A); box-shadow:0 5px 12px rgba(232,163,61,.28); }
+.режим.з4 .знак{ background:linear-gradient(135deg,#7A5AF8,#B79CFF); box-shadow:0 5px 12px rgba(122,90,248,.28); }
+.режим b{ font-size:15.5px; font-weight:800; display:block; }
+.режим small{ font-size:12.5px; color:var(--текст2); display:block; margin-top:1px; }
+.режим:disabled{ opacity:.45; cursor:not-allowed; }
+.режим:disabled:active{ transform:none; }
+
+/* ---------- кнопки ---------- */
+.кн{
+  display:inline-flex; align-items:center; justify-content:center; gap:8px;
+  border:none; cursor:pointer; font-family:inherit; font-weight:700; font-size:16px;
+  padding:15px 24px; border-radius:16px; min-height:52px;
+  background:var(--бел); color:var(--текст); box-shadow:var(--тень);
+  transition:transform .12s ease, filter .12s ease;
+}
+.кн:active{ transform:scale(.97); }
+.кн.главная{ background:var(--градиент); color:#fff; box-shadow:0 10px 24px rgba(74,99,214,.34); }
+.кн.тёмная{ background:var(--градиент2); color:#fff; box-shadow:var(--теньКнопки); }
+.кн.широкая{ width:100%; }
+.кн:disabled{ opacity:.5; cursor:not-allowed; }
+.кн.лёгкая{ background:transparent; box-shadow:none; color:var(--текст2); font-weight:600; }
+
+/* ---------- карточка со смахиванием ---------- */
+.сцена{ position:relative; height:calc(100dvh - 300px); min-height:320px; max-height:540px;
+  display:flex; align-items:center; justify-content:center; perspective:1400px;
+  touch-action:pan-y; overflow:hidden; border-radius:30px; }
+.полоса{ position:absolute; top:8px; bottom:8px; width:18px; border-radius:999px; opacity:.32; z-index:3;
+  transition:opacity .18s ease, width .18s ease; pointer-events:none; }
+.полоса.лево{ left:2px; background:var(--красный); }
+.полоса.право{ right:2px; background:var(--зелёный); }
+.полоса.ярко{ opacity:1; width:26px; }
+.полоса .бирка{ position:absolute; top:50%; transform:translateY(-50%) rotate(180deg); writing-mode:vertical-rl;
+  font-size:11.5px; font-weight:800; letter-spacing:.1em; text-transform:uppercase; color:#fff;
+  left:50%; margin-left:-6px; opacity:0; transition:opacity .18s ease; white-space:nowrap; }
+.полоса.ярко .бирка{ opacity:1; }
+
+.карта{
+  position:absolute; inset:0 34px; z-index:2; border-radius:26px; cursor:grab; user-select:none;
+  transition:transform .28s cubic-bezier(.3,.8,.4,1);
+  touch-action:pan-y;
+}
+.карта.тянут{ transition:none; cursor:grabbing; }
+/* как только понятно, что жест горизонтальный, забираем его себе —
+   иначе браузер отдаёт палец прокрутке и свайп срывается */
+.карта.ведём{ touch-action:none; }
+.карта.улетела{ transition:transform .3s ease, opacity .3s ease; opacity:0; }
+/* переворот отдельным слоем: карточка целиком ещё и ездит по экрану */
+.флип{ position:absolute; inset:0; transform-style:preserve-3d;
+  transition:transform .45s cubic-bezier(.4,.15,.2,1); }
+.флип.перевёрнута{ transform:rotateY(180deg); }
+.карта .грань{ position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+  border-radius:26px; background:var(--бел); box-shadow:var(--теньБольшая);
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  padding:34px 24px; overflow:auto; }
+.карта .грань.тыл{ transform:rotateY(180deg); }
+.окраска{ position:absolute; inset:0; border-radius:26px; pointer-events:none;
+  background:transparent; transition:background .12s linear; }
+.карта .слово{ font-size:clamp(26px,7vw,40px); font-weight:800; letter-spacing:-.02em; line-height:1.15; }
+.карта .слово b{ background:var(--градиент); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.карта .транс{ color:var(--синий); font-size:15px; margin-top:10px; font-weight:600; }
+.карта .перевод{ font-size:clamp(20px,5.4vw,28px); font-weight:700; }
+.карта .контекст{ margin-top:16px; font-size:14px; color:var(--текст2); max-width:32ch; line-height:1.4; }
+.карта .подпись{ position:absolute; top:16px; left:20px; font-size:11.5px; font-weight:700;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--текст3); }
+.карта .звезда{ position:absolute; top:12px; right:14px; width:38px; height:38px; border:none;
+  background:none; font-size:19px; cursor:pointer; color:var(--текст3); }
+.карта .звезда.горит{ color:#F0B429; }
+.карта .динамик{ position:absolute; bottom:14px; right:16px; width:42px; height:42px; border-radius:50%;
+  border:none; background:var(--фон2); color:var(--текст); font-size:18px; cursor:pointer; }
+.карта .намёк{ position:absolute; bottom:16px; left:0; right:0; font-size:12.5px; color:var(--текст3); }
+
+.счёт{ display:flex; align-items:center; justify-content:center; gap:16px; margin:2px 0 12px;
+  font-size:14px; color:var(--текст2); font-variant-numeric:tabular-nums; }
+.счёт b{ color:var(--текст); font-weight:800; }
+.счёт .кучка{ display:inline-flex; align-items:center; gap:6px; }
+.счёт .кучка i{ width:9px; height:9px; border-radius:50%; display:block; }
+.счёт .кучка.з i{ background:var(--зелёный); } .счёт .кучка.к i{ background:var(--красный); }
+
+.низ{ display:flex; align-items:center; justify-content:center; gap:12px; margin-top:16px; }
+.круг{ width:54px; height:54px; border-radius:50%; border:none; background:var(--бел);
+  box-shadow:var(--тень); font-size:21px; cursor:pointer; color:var(--текст);
+  display:flex; align-items:center; justify-content:center; transition:transform .12s ease; }
+.круг:active{ transform:scale(.9); }
+.круг.нет{ color:var(--красный); } .круг.да{ color:var(--зелёный); }
+.круг.большой{ width:64px; height:64px; font-size:26px; }
+
+/* ---------- тумблеры как в айфоне ---------- */
+.строка{ display:flex; align-items:center; gap:14px; padding:15px 16px; background:var(--бел);
+  border-radius:var(--радиусМалый); box-shadow:var(--тень); margin-bottom:10px; }
+.строка .имя{ flex:1; min-width:0; }
+.строка .имя b{ display:block; font-size:15.5px; font-weight:700; }
+.строка .имя small{ display:block; font-size:12.5px; color:var(--текст2); margin-top:1px; }
+.тумблер{ position:relative; width:52px; height:31px; flex-shrink:0; }
+.тумблер input{ position:absolute; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; z-index:2; }
+.тумблер .бег{ position:absolute; inset:0; background:var(--линия); border-radius:999px; transition:background .2s ease; }
+.тумблер .бег::after{ content:''; position:absolute; top:2px; left:2px; width:27px; height:27px;
+  border-radius:50%; background:#fff; box-shadow:0 2px 5px rgba(0,0,0,.2); transition:transform .2s ease; }
+.тумблер input:checked + .бег{ background:var(--зелёный); }
+.тумблер input:checked + .бег::after{ transform:translateX(21px); }
+
+.ползунок{ display:flex; align-items:center; gap:13px; }
+.ползунок input{ flex:1; accent-color:var(--синий); height:30px; }
+.ползунок .знач{ min-width:44px; text-align:right; font-weight:800; font-variant-numeric:tabular-nums; font-size:17px; }
+
+.выбор{ display:flex; gap:7px; background:var(--фон2); padding:4px; border-radius:12px; }
+.выбор button{ flex:1; border:none; background:none; font-family:inherit; font-size:13.5px; font-weight:700;
+  color:var(--текст2); padding:9px 6px; border-radius:9px; cursor:pointer; transition:all .15s ease; }
+.выбор button.вкл{ background:var(--бел); color:var(--текст); box-shadow:0 2px 6px rgba(40,50,110,.12); }
+
+/* ---------- лента вопросов теста ---------- */
+.лента{ display:flex; gap:4px; margin:6px 0 16px; flex-wrap:wrap; }
+.лента i{ flex:1; min-width:6px; height:5px; border-radius:999px; background:var(--линия); display:block; }
+.лента i.верно{ background:var(--зелёный); }
+.лента i.мимо{ background:var(--красный); }
+.лента i.сейчас{ background:var(--синий); }
+
+/* дырка в предложении */
+.дырка{ display:inline-block; min-width:74px; padding:0 6px; border-bottom:3px solid var(--розовый);
+  color:var(--розовый); letter-spacing:1px; }
+
+/* ---------- список терминов ---------- */
+.термины{ display:grid; gap:9px; }
+.термин{ display:flex; align-items:center; gap:12px; background:var(--бел); border-radius:var(--радиусМалый);
+  box-shadow:var(--тень); padding:13px 15px; }
+.термин .тексты{ flex:1; min-width:0; }
+.термин .де{ display:block; font-weight:700; font-size:15.5px; }
+.термин .ру{ display:block; font-size:13.5px; color:var(--текст2); }
+.термин .метка{ width:8px; height:8px; border-radius:50%; flex-shrink:0; background:var(--линия); }
+.термин .метка.з{ background:var(--зелёный); } .термин .метка.ж{ background:#E8A33D; }
+.термин button{ border:none; background:none; cursor:pointer; font-size:17px; color:var(--текст3); padding:5px; }
+.термин button.горит{ color:#F0B429; }
+
+/* ---------- итоги ---------- */
+.итоги{ text-align:center; padding:30px 10px; }
+.итоги .эмо{ font-size:56px; line-height:1; }
+.итоги .балл{ font-size:52px; font-weight:900; letter-spacing:-.03em; margin:10px 0 2px;
+  background:var(--градиент); -webkit-background-clip:text; background-clip:text; color:transparent; }
+.итоги h2{ font-size:22px; font-weight:800; margin:6px 0; }
+.итоги p{ color:var(--текст2); font-size:15px; margin:0 auto 22px; max-width:38ch; }
+
+.пусто{ text-align:center; color:var(--текст2); padding:44px 16px; font-size:15px; }
+
+/* ---------- ответы в тесте и заучивании ---------- */
+.вопрос{ font-size:clamp(22px,5.6vw,30px); font-weight:800; text-align:center; margin:20px 0 6px; letter-spacing:-.02em; }
+.вопрос-под{ text-align:center; color:var(--текст2); font-size:14px; margin-bottom:20px; }
+.варианты{ display:grid; gap:10px; }
+.вариант{ display:flex; align-items:center; gap:12px; background:var(--бел); border:2px solid transparent;
+  border-radius:var(--радиусМалый); box-shadow:var(--тень); padding:15px 16px; cursor:pointer;
+  font-family:inherit; font-size:16px; color:var(--текст); text-align:left; transition:transform .12s ease; }
+/* ── ответ раскрывается прямо в кнопке ────────────────────────────
+   Раньше пояснение всплывало отдельной плашкой внизу экрана, и глаз
+   бегал туда-сюда. Теперь нажатая кнопка сама разворачивается. */
+.вариант{ overflow:hidden; transition:background .18s ease, border-color .18s ease,
+  transform .12s ease, padding .22s cubic-bezier(.3,.8,.4,1); }
+.вариант .разъяснение{
+  display:block; flex:0 0 100%; max-height:0; opacity:0; overflow:hidden; width:100%;
+  transition:max-height .3s cubic-bezier(.3,.8,.4,1), opacity .22s ease, margin-top .3s ease;
+  text-align:left; line-height:1.35;
+}
+.вариант.раскрыт{ padding-top:16px; padding-bottom:16px; flex-wrap:wrap; align-items:flex-start; }
+.вариант.раскрыт .разъяснение{ max-height:230px; opacity:1; margin-top:10px; }
+.вариант .разъяснение b{ display:block; font-size:13px; font-weight:800; letter-spacing:.04em;
+  text-transform:uppercase; color:var(--зелёный); margin-bottom:5px; }
+.вариант .разъяснение .перев{ display:block; font-size:14.5px; color:var(--текст2); margin-top:3px; }
+.вариант .разъяснение .тран{ display:block; font-size:13.5px; color:var(--синий); font-weight:600; margin-top:2px; }
+.вариант.раскрыт .текстВарианта{ font-weight:800; }
+.вариант .текстВарианта{ flex:1 1 auto; min-width:0; text-align:left; }
+
+/* короткое вздрагивание ошибочной кнопки */
+@keyframes дрожь{
+  0%,100%{ transform:translateX(0) }
+  15%{ transform:translateX(-7px) }
+  30%{ transform:translateX(6px) }
+  45%{ transform:translateX(-4px) }
+  60%{ transform:translateX(3px) }
+  80%{ transform:translateX(-2px) }
+}
+.вариант.дрожит{ animation:дрожь .42s ease; }
+@media (prefers-reduced-motion: reduce){
+  .вариант.дрожит{ animation:none }
+  .вариант .разъяснение{ transition:none }
+}
+.вариант:active{ transform:scale(.98); }
+.вариант .ном{ width:24px; height:24px; border-radius:7px; background:var(--фон2); color:var(--текст2);
+  font-size:12.5px; font-weight:800; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.вариант.верно{ border-color:var(--зелёный); background:var(--зелёныйФон); }
+.вариант.верно .ном{ background:var(--зелёный); color:#fff; }
+.вариант.неверно{ border-color:var(--красный); background:var(--красныйФон); }
+.вариант.неверно .ном{ background:var(--красный); color:#fff; }
+.вариант:disabled{ cursor:default; }
+
+.поле{ width:100%; background:var(--бел); border:2px solid transparent; border-radius:var(--радиусМалый);
+  box-shadow:var(--тень); padding:16px; font-size:18px; font-family:inherit; color:var(--текст); min-height:56px; }
+.поле:focus{ outline:none; border-color:var(--синий); }
+.поле.верно{ border-color:var(--зелёный); } .поле.неверно{ border-color:var(--красный); }
+.умляуты{ display:flex; gap:7px; margin-top:10px; flex-wrap:wrap; }
+.умляуты button{ width:44px; height:42px; border-radius:11px; border:none; background:var(--бел);
+  box-shadow:var(--тень); font-size:17px; font-weight:700; color:var(--текст); cursor:pointer; font-family:inherit; }
+.отклик{ margin-top:14px; padding:15px 16px; border-radius:var(--радиусМалый); font-size:15px; display:none; }
+.отклик.видно{ display:block; }
+.отклик.хорошо{ background:var(--зелёныйФон); color:var(--текст); }
+.отклик.плохо{ background:var(--красныйФон); color:var(--текст); }
+.отклик b{ display:block; font-weight:800; margin-bottom:4px; }
+.отклик .правильно{ font-size:19px; font-weight:800; }
+
+/* ---------- подбор ---------- */
+.плитки{ display:grid; grid-template-columns:repeat(3,1fr); gap:9px; }
+.плитка{ min-height:78px; border:2px solid transparent; border-radius:var(--радиусМалый); background:var(--бел);
+  box-shadow:var(--тень); font-family:inherit; font-size:13.5px; font-weight:600; color:var(--текст);
+  padding:9px 7px; cursor:pointer; display:flex; align-items:center; justify-content:center;
+  text-align:center; line-height:1.25; word-break:break-word; transition:all .13s ease; }
+.плитка.выбрана{ border-color:var(--синий); transform:scale(.96); }
+.плитка.ушла{ opacity:0; pointer-events:none; }
+.плитка.мимо{ border-color:var(--красный); background:var(--красныйФон); }
+
+@media (max-width:430px){
+  .режимы{ grid-template-columns:repeat(2,1fr); }
+  .плитки{ grid-template-columns:repeat(2,1fr); }
+  .экран{ padding-left:14px; padding-right:14px; }
+}
+@media (prefers-reduced-motion: reduce){
+  .карта,.режим,.набор,.кн{ transition:none !important; }
+}
+
+</style>
+</head>
+<body>
+<div class="прил">
+  <header class="шапка">
+    <button class="назад" id="назад">‹</button>
+    <div class="титул" id="титул"></div>
+    <div class="право" id="право"></div>
+  </header>
+  <main class="экран" id="экран">
+    <div class="пусто">Открываю ЗУБР…</div>
+  </main>
+  <footer class="подвал" id="подвал">
+    <button class="кн широкая" id="назадНиз">‹ Назад</button>
+  </footer>
+</div>
+
+<script>window.ЗУБР_ВЕРСИЯ = '202608311440';</script>
+<script>
+/* ============================================================
+   FSRS-5 — расписание повторений, как в Anki.
+
+   Алгоритм открытый (лицензия MIT), реализация здесь своя.
+   Смысл: у каждого слова считаются три величины —
+     S (stability)      сколько дней слово продержится в памяти,
+     D (difficulty)     насколько оно трудное, от 1 до 10,
+     R (retrievability) вероятность вспомнить его прямо сейчас.
+   Слово показывается, когда R падает до 90%. Не раньше — иначе
+   зубрёжка впустую, и не позже — иначе забудется совсем.
+   ============================================================ */
+window.ФСРС = (function(){
+"use strict";
+
+var W = [0.40255,1.18385,3.173,15.69105,7.1949,0.5345,1.4604,0.0046,1.54575,
+         0.1192,1.01925,1.9395,0.11,0.29605,2.2698,0.2315,2.9898,0.51655,0.6621];
+
+var DECAY  = -0.5;
+var FACTOR = Math.pow(0.9, 1 / DECAY) - 1;     // 19/81 — чтобы R(S,S)=0.9
+var ЦЕЛЬ   = 0.9;                              // желаемая доля вспоминаний
+var МАКС   = 3650;                             // дальше десяти лет не планируем
+
+// оценки: 1 снова · 2 трудно · 3 хорошо · 4 легко
+function зажать(x, лево, право){ return Math.min(право, Math.max(лево, x)); }
+
+function вероятность(дней, S){ return Math.pow(1 + FACTOR * дней / S, DECAY); }
+function интервал(S){
+  var д = S / FACTOR * (Math.pow(ЦЕЛЬ, 1 / DECAY) - 1);
+  return зажать(Math.round(д), 1, МАКС);
+}
+
+function S0(G){ return W[G - 1]; }
+function D0(G){ return зажать(W[4] - Math.exp(W[5] * (G - 1)) + 1, 1, 10); }
+
+function новаяD(D, G){
+  var сдвиг = -W[6] * (G - 3);
+  var D1 = D + сдвиг * (10 - D) / 9;                  // трудные меняются медленнее
+  return зажать(W[7] * D0(4) + (1 - W[7]) * D1, 1, 10);  // тянем к среднему
+}
+
+function SприУспехе(D, S, R, G){
+  var трудно = (G === 2) ? W[15] : 1;
+  var легко  = (G === 4) ? W[16] : 1;
+  return S * (1 + Math.exp(W[8]) * (11 - D) * Math.pow(S, -W[9]) *
+              (Math.exp(W[10] * (1 - R)) - 1) * трудно * легко);
+}
+
+function SприПровале(D, S, R){
+  var новое = W[11] * Math.pow(D, -W[12]) * (Math.pow(S + 1, W[13]) - 1) *
+              Math.exp(W[14] * (1 - R));
+  return Math.min(новое, S);        // после провала прочность не растёт
+}
+
+var ДЕНЬ = 86400000;
+function сегодня(){ var d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+function дней(от, до){ return Math.max(0, Math.round((до - от) / ДЕНЬ)); }
+
+/* Принимает прежнее состояние (или null для нового слова) и оценку,
+   возвращает новое состояние. */
+function ответ(сост, G){
+  var н = сегодня();
+  if (!сост || !сост.S){
+    return {
+      S: S0(G), D: D0(G),
+      due: н + интервал(S0(G)) * ДЕНЬ,
+      last: н, reps: 1, lapses: G === 1 ? 1 : 0
+    };
+  }
+  var прошло = дней(сост.last, н);
+  var R = вероятность(прошло, сост.S);
+  var S = (G === 1) ? SприПровале(сост.D, сост.S, R)
+                    : SприУспехе(сост.D, сост.S, R, G);
+  return {
+    S: S, D: новаяD(сост.D, G),
+    due: н + интервал(S) * ДЕНЬ,
+    last: н, reps: (сост.reps || 0) + 1,
+    lapses: (сост.lapses || 0) + (G === 1 ? 1 : 0)
+  };
+}
+
+/* Что будет, если нажать эту кнопку — чтобы подписать её «через 4 дня». */
+function прогноз(сост, G){
+  var н = ответ(сост, G);
+  return Math.max(1, Math.round((н.due - сегодня()) / ДЕНЬ));
+}
+
+function пора(сост){ return !сост || !сост.due || сост.due <= сегодня(); }
+
+/* Слово считается выученным, когда держится в памяти не меньше трёх недель. */
+function выучено(сост){ return !!(сост && сост.S >= 21); }
+function проблемное(сост){ return !!(сост && (сост.lapses || 0) >= 6); }
+
+function словами(дни){
+  if (дни < 1) return 'сегодня';
+  if (дни === 1) return 'завтра';
+  if (дни < 30) return 'через ' + дни + ' ' + скл(дни, 'день','дня','дней');
+  if (дни < 365){ var м = Math.round(дни / 30); return 'через ' + м + ' ' + скл(м,'месяц','месяца','месяцев'); }
+  var г = (дни / 365).toFixed(1).replace('.0','');
+  return 'через ' + г + ' ' + скл(Math.round(дни/365), 'год','года','лет');
+}
+function скл(n, a, b, c){ n = Math.abs(n) % 100; var d = n % 10;
+  if (n > 10 && n < 20) return c; if (d > 1 && d < 5) return b; if (d === 1) return a; return c; }
+
+return { ответ: ответ, прогноз: прогноз, пора: пора, выучено: выучено,
+         проблемное: проблемное, словами: словами, сегодня: сегодня,
+         интервал: интервал, вероятность: вероятность, ДЕНЬ: ДЕНЬ };
+})();
+</script>
+
+<script>
+/* ЗУБР — приложение для зубрёжки слов.
+   Механика повторяет Quizlet, расписание повторений — FSRS (см. ФСРС).
+   Всё живёт на одном экране: экраны сменяют друг друга, а не открываются
+   маленькими окошками внутри страницы. */
+(function(){
+"use strict";
+
+var $ = function(id){ return document.getElementById(id); };
+var ПРОФИЛЬ = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+var ДАННЫЕ = null;          // словарь с сервера
+var НАБОРЫ = [];            // [{ключ, имя, под, знак, карточки}]
+var текущий = null;         // выбранный набор
+var история = [];           // для кнопки «назад»
+
+/* ================= хранилище ================= */
+function ключСост(c){ return 'nemeckiy_f_' + ПРОФИЛЬ + '_' + (c.урок || 'zubr') + '_' + c.k; }
+function сост(c){
+  try{ var s = localStorage.getItem(ключСост(c)); if (s) return JSON.parse(s); }catch(e){}
+  return null;
+}
+function сохранить(c, с){ try{ localStorage.setItem(ключСост(c), JSON.stringify(с)); }catch(e){} }
+function оценить(c, G){
+  var н = ФСРС.ответ(сост(c), G);
+  сохранить(c, н);
+  журнал(G);
+  return н;
+}
+function журнал(G){
+  var к = 'nemeckiy_log_' + ПРОФИЛЬ, ж = {};
+  try{ ж = JSON.parse(localStorage.getItem(к) || '{}'); }catch(e){}
+  var d = new Date();
+  var день = d.getFullYear()+'-'+('0'+(d.getMonth()+1)).slice(-2)+'-'+('0'+d.getDate()).slice(-2);
+  var з = ж[день] || [0,0];
+  з[0]++; if (G > 1) з[1]++;
+  ж[день] = з;
+  try{ localStorage.setItem(к, JSON.stringify(ж)); }catch(e){}
+}
+
+function звезда(c, поставить){
+  var к = 'nemeckiy_star_' + ПРОФИЛЬ + '_' + c.k;
+  if (поставить === undefined) return localStorage.getItem(к) === '1';
+  if (поставить) localStorage.setItem(к, '1'); else localStorage.removeItem(к);
+  return поставить;
+}
+
+function итогТеста(наборКлюч, процент){
+  var к = 'nemeckiy_test_' + ПРОФИЛЬ + '_' + наборКлюч;
+  if (процент === undefined){
+    try{ return JSON.parse(localStorage.getItem(к) || 'null'); }catch(e){ return null; }
+  }
+  try{ localStorage.setItem(к, JSON.stringify({ п: процент, д: Date.now() })); }catch(e){}
+}
+
+function норма(){ return parseInt(localStorage.getItem('nemeckiy_norma_' + ПРОФИЛЬ), 10) || 15; }
+function новыхСегодня(добавить){
+  var d = new Date();
+  var к = 'nemeckiy_new_' + ПРОФИЛЬ + '_' + d.getFullYear()+'-'+(d.getMonth()+1)+'-'+d.getDate();
+  var n = parseInt(localStorage.getItem(к), 10) || 0;
+  if (добавить){ n += добавить; try{ localStorage.setItem(к, String(n)); }catch(e){} }
+  return n;
+}
+
+/* ================= вспомогательное ================= */
+function экр(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function скл(n,a,b,c){ n=Math.abs(n)%100; var d=n%10;
+  if(n>10&&n<20) return c; if(d>1&&d<5) return b; if(d===1) return a; return c; }
+function перемешать(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)),t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function чисто(s){ return (s||'').split(/\s+[—–→]\s+/)[0].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim(); }
+function норм(s){
+  return (s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+    .replace(/ß/g,'ss').replace(/ё/g,'е').replace(/[.,!?;:()«»"'’\-–—/]/g,' ').replace(/\s+/g,' ').trim();
+}
+function лев(a,b){
+  if(a===b) return 0; var m=a.length,n=b.length; if(!m) return n; if(!n) return m;
+  var p=[],c=[],i,j; for(j=0;j<=n;j++) p[j]=j;
+  for(i=1;i<=m;i++){ c[0]=i;
+    for(j=1;j<=n;j++) c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a.charAt(i-1)===b.charAt(j-1)?0:1));
+    p=c.slice(); }
+  return p[n];
+}
+/* Проверка строгая — так просил Григорий: «я могу и род перепутать,
+   и букву, а он засчитает — так не пойдёт».
+
+   Что НЕ прощаем:
+     • неверный артикль (die Hund вместо der Hund) — род это половина
+       грамматики, ошибка в нём тянет за собой падежи и окончания;
+     • опечатку в любой букве, включая умляут: кнопки ä ö ü ß есть
+       под каждым полем ввода, набрать правильно ничего не мешает.
+
+   Что прощаем — и почему это не поблажка на незнание:
+     • регистр: заглавная у существительных отрабатывается на письме,
+       а не в устном словарном тренажёре;
+     • знаки препинания и лишние пробелы;
+     • ae/oe/ue/ss вместо ä/ö/ü/ß — это официально допустимая запись
+       немецкого без немецкой раскладки, а не ошибка;
+     • любой из вариантов, если в карточке их несколько через запятую
+       или слэш.
+
+   Возвращает только 0 или 2. Промежуточного «почти верно» больше нет:
+   именно оно и засчитывало неверные ответы. */
+function сверить(ответ, правильно){
+  var u = норм(ответ);
+  if (!u) return 0;
+
+  var варианты = String(правильно || '')
+    .split(/\s*[,/]\s*|\s+или\s+/)      // «врач, доктор» или «kein / keine»
+    .map(норм)
+    .filter(Boolean);
+  if (!варианты.length) варианты = [норм(правильно)];
+
+  for (var i = 0; i < варианты.length; i++){
+    if (u === варианты[i]) return 2;
+  }
+  return 0;
+}
+/* Короткие звуки на верный и неверный ответ. Какие именно — выбирает
+   сам врач на странице zvuki-vybor.html, выбор лежит в localStorage.
+   Пока не выбрал, играют самые привычные: две ноты вверх и две вниз. */
+var ЗВУК_ВЕРНО = localStorage.getItem('nemeckiy_zvuk_верно') || 'верно2';
+var ЗВУК_МИМО  = localStorage.getItem('nemeckiy_zvuk_мимо')  || 'мимо2';
+var _плеерОтвета = null;
+
+function звукОтвета(верно){
+  if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+  try{
+    if (!_плеерОтвета) _плеерОтвета = new Audio();
+    _плеерОтвета.pause();
+    _плеерОтвета.src = 'zvuk/otvet/' + (верно ? ЗВУК_ВЕРНО : ЗВУК_МИМО) + '.mp3';
+    _плеерОтвета.currentTime = 0;
+    _плеерОтвета.volume = .55;
+    _плеерОтвета.play().catch(function(){});
+  }catch(e){}
+}
+
+/* Ответ раскрывается прямо в той кнопке, на которую нажали: правильная
+   зеленеет и разворачивается с пояснением, ошибочная краснеет и коротко
+   вздрагивает. Раньше пояснение всплывало плашкой внизу экрана — глаз
+   бегал туда-сюда и терял место. Пользуются все режимы с вариантами. */
+function раскрытьВКнопках(кнопки, вар, эталон, нажатая, подпись){
+  кнопки.forEach(function(x, m){
+    x.disabled = true;
+    if (вар[m] === эталон){
+      x.classList.add('верно', 'раскрыт');
+      var я = x.querySelector('.разъяснение');
+      if (я) я.innerHTML = подпись || '<b>Верно</b>';
+    } else if (x === нажатая){
+      x.classList.add('неверно', 'дрожит');
+      setTimeout(function(){ x.classList.remove('дрожит'); }, 420);
+    }
+  });
+}
+
+function подписьКарточки(c){
+  return '<b>Верно</b>' + c.deHtml +
+    '<span class="перев">' + экр(c.ответ) + '</span>' +
+    (c.тр ? '<span class="тран">[' + экр(c.тр) + ']</span>' : '');
+}
+
+function подсветить(html){
+  return (html||'').replace(/^(der|die|das)(\s)/i, function(_,а,п){
+    return '<b style="color:'+({der:'#4A63D6',die:'#EC6A86',das:'#E8A33D'}[а.toLowerCase()])+'">'+а+'</b>'+п;
+  });
+}
+
+/* ================= загрузка ================= */
+function добавленныеСвои(){ return свои(); }
+
+function свои(){
+  var сырое = [];
+  try{ сырое = JSON.parse(localStorage.getItem('nemeckiy_zubr_' + ПРОФИЛЬ) || '[]'); }catch(e){}
+  return сырое.map(function(c,i){
+    return карточка(c.de, c.ru, 'my'+(c.t||i), null, '');
+  });
+}
+
+function карточка(de, ru, k, номера, было, тема){
+  var подпись = ru;
+  if (номера && номера.length) подпись += '  ·  № ' + номера.join(', ');
+  if (тема) подпись += '  ·  ' + тема;
+  if (было) подпись += '  ·  в тетради: ' + было;
+  return {
+    de: de, deHtml: подсветить(экр(de)), ru: подпись, ответ: чисто(ru),
+    k: k, урок: 'zubr', mp3: 'zvuk/zubr/' + k + '.mp3',
+    фраза: de.split(/\s+/).length > 3
+  };
+}
+
+/* Из урока сюда приходят ссылкой: zubr.html?урок=urok3 (и &повтор=1,
+   чтобы подтянуть все предыдущие уроки той же линии). */
+function изАдреса(){
+  var п = new URLSearchParams(location.search);
+  var урок = п.get('урок') || п.get('urok');
+  if (!урок || !/^(urok|dasha|polya)\d+$/.test(урок)) return null;
+  return { урок: урок, повтор: п.get('повтор') === '1' || п.get('repeat') === '1' };
+}
+
+function карточкаУрока(строка, урок){
+  var de = строка[1];
+  return {
+    de: de, deHtml: строка[5] || подсветить(экр(de)), ru: строка[3], ответ: чисто(строка[3]),
+    тр: строка[2], k: строка[0], урок: урок + '_interactive',
+    mp3: 'zvuk/' + урок + '/' + строка[0] + '.mp3',
+    фраза: !!строка[4]
+  };
+}
+
+function имяУрока(код){
+  var м = код.match(/^([a-z]+)(\d+)$/);
+  if (!м) return код;
+  if (м[1] === 'urok') return 'Урок ' + м[2];
+  if (м[1] === 'dasha') return 'Занятие ' + м[2] + ' с Дашей';
+  return 'Занятие ' + м[2] + ' Полины';
+}
+
+/* Грузит словари перечисленных уроков и склеивает в одну колоду. */
+function словариУроков(список, готово){
+  var куски = new Array(список.length), осталось = список.length;
+  if (!осталось) return готово([]);
+  список.forEach(function(имя, i){
+    fetch('words/' + имя + '.json?v=' + (window.ЗУБР_ВЕРСИЯ || '1'))
+      .then(function(r){ return r.ok ? r.json() : []; })
+      .catch(function(){ return []; })
+      .then(function(строки){
+        куски[i] = (строки || []).map(function(с){ return карточкаУрока(с, имя); });
+        if (--осталось === 0){
+          var было = {}, всё = [];
+          куски.forEach(function(к){
+            (к||[]).forEach(function(c){
+              var кл = c.de.toLowerCase();
+              if (было[кл]) return; было[кл] = 1; всё.push(c);
+            });
+          });
+          готово(всё);
+        }
+      });
+  });
+}
+
+function открытьУрок(парам, готово){
+  var м = парам.урок.match(/^([a-z]+)(\d+)$/);
+  var семья = м[1], номер = +м[2];
+  var первый = семья === 'polya' ? 5 : семья === 'dasha' ? 1 : 0;
+  var список = [];
+  if (парам.повтор){ for (var n = первый; n <= номер; n++) список.push(семья + n); }
+  else список.push(парам.урок);
+
+  словариУроков(список, function(карточки){
+    var набор = {
+      ключ: парам.урок + (парам.повтор ? '_всё' : ''),
+      имя: имяУрока(парам.урок) + (парам.повтор ? ' и предыдущие' : ''),
+      под: парам.повтор ? 'с повторением' : 'слова урока',
+      знак: парам.повтор ? '🔁' : '📖',
+      карточки: карточки, изУрока: true
+    };
+    НАБОРЫ.unshift(набор);
+    готово(набор);
+  });
+}
+
+function загрузить(готово){
+  fetch('words/zubr.json?v=' + (window.ЗУБР_ВЕРСИЯ || '1'))
+    .then(function(r){ return r.json(); })
+    .then(function(д){
+      ДАННЫЕ = д;
+      НАБОРЫ = [];
+
+      var личные = [];
+      if (ПРОФИЛЬ !== 'polina'){
+        var по = {}, порядок = [];
+        (д.словарик||[]).forEach(function(c){
+          if(!по[c.de]){ по[c.de]={c:c,н:[]}; порядок.push(c.de); }
+          по[c.de].н.push(c.n);
+        });
+        личные = порядок.map(function(де){
+          var з = по[де];
+          return карточка(з.c.de, з.c.ru, з.c.k, з.н, з.c.было);
+        });
+      }
+      НАБОРЫ.push({ ключ:'мой', имя: ПРОФИЛЬ==='polina'?'Словарик Полины':'Мой словарик',
+                    под:'выписано из тетради', знак:'📓', свой:true, карточки: личные.concat(свои()) });
+
+      (д.наборы||[]).forEach(function(н){
+        НАБОРЫ.push({
+          ключ: н.файл, имя: н.имя,
+          под: н.под || 'набор слов',
+          знак: н.знак || '📄',
+          карточки: н.карточки.map(function(c){ return карточка(c.de, c.ru, c.k, null, '', c.тема); })
+        });
+      });
+
+      var отмеченные = [];
+      НАБОРЫ.forEach(function(н){ н.карточки.forEach(function(c){ if (звезда(c)) отмеченные.push(c); }); });
+      if (отмеченные.length)
+        НАБОРЫ.push({ ключ:'звёзды', имя:'Отмеченные звездой', под:'то, что отложил на потом',
+                      знак:'⭐️', карточки: отмеченные });
+
+      готово();
+    })
+    .catch(function(){ $('экран').innerHTML = '<div class="пусто">Не удалось загрузить словарь. Проверь интернет.</div>'; });
+}
+
+/* ================= каркас ================= */
+function показать(имя, данные, безИстории){
+  if (!безИстории && текущийЭкран) история.push({ имя: текущийЭкран, данные: текущиеДанные });
+  текущийЭкран = имя; текущиеДанные = данные;
+  window.scrollTo(0,0);
+  ЭКРАНЫ[имя](данные);
+}
+var текущийЭкран = null, текущиеДанные = null;
+
+function назад(){
+  var п = история.pop();
+  if (!п) return показать('главный', null, true);
+  текущийЭкран = п.имя; текущиеДанные = п.данные;
+  window.scrollTo(0,0);
+  ЭКРАНЫ[п.имя](п.данные);
+}
+
+function шапка(титул, правое){
+  $('титул').textContent = титул || '';
+  $('право').innerHTML = правое || '';
+  var есть = история.length || текущийЭкран !== 'главный';
+  $('назад').style.visibility = есть ? 'visible' : 'hidden';
+  $('подвал').hidden = !есть;
+}
+
+/* ================= сводка по набору ================= */
+function сводка(набор){
+  var усвоено=0, улучшено=0, ново=0, пора=0;
+  набор.карточки.forEach(function(c){
+    var с = сост(c);
+    if (!с){ ново++; return; }
+    if (ФСРС.выучено(с)) усвоено++; else улучшено++;
+    if (ФСРС.пора(с)) пора++;
+  });
+  var порция = пора + Math.min(ново, Math.max(0, норма() - новыхСегодня()));
+  return { усвоено:усвоено, улучшено:улучшено, ново:ново, пора:пора, порция:порция, всего:набор.карточки.length };
+}
+
+/* ================= экран: список наборов ================= */
+var ЭКРАНЫ = {};
+
+ЭКРАНЫ.главный = function(){
+  шапка('');
+  var кто = ПРОФИЛЬ === 'polina' ? 'Полина' : 'Григорий';
+  $('экран').innerHTML =
+    '<h1 class="большой">ЗУБР</h1>' +
+    '<p class="подзаголовок">Слова, которые надо знать назубок. Учится ' + кто +
+      ' · <button class="кн лёгкая" id="сменитьКого" style="padding:0;min-height:0;font-size:15px">сменить</button></p>' +
+    НАБОРЫ.map(function(н, i){
+      var с = сводка(н);
+      var т = итогТеста(н.ключ);
+      var класс = !т ? '' : т.п >= 80 ? '' : т.п >= 60 ? ' средне' : ' плохо';
+      return '<button class="набор" data-i="' + i + '">' +
+        '<span class="верх"><span class="знак">' + н.знак + '</span>' +
+        '<span class="имя"><b>' + экр(н.имя) + '</b><span>' + с.всего + ' ' +
+          скл(с.всего,'слово','слова','слов') + ' · ' + экр(н.под) + '</span></span>' +
+        '<span class="стрелка">›</span></span>' +
+        (с.всего ? '<span class="прогресс">' +
+          '<i class="усвоено" style="width:' + (с.усвоено/с.всего*100) + '%"></i>' +
+          '<i class="улучшено" style="width:' + (с.улучшено/с.всего*100) + '%"></i></span>' : '') +
+        '<span class="итог">' +
+          (т ? '<span class="балл' + класс + '">в тесте ' + т.п + '%</span>' : '') +
+          (с.порция ? '<span><b>' + с.порция + '</b> на сегодня</span>'
+                    : с.всего ? '<span>на сегодня всё пройдено</span>' : '<span>пока пусто</span>') +
+        '</span>' +
+      '</button>';
+    }).join('') +
+    '<div class="раздел">ещё</div>' +
+    '<a class="кн широкая" href="index.html#пер" style="text-decoration:none">🌐 Переводчик с озвучкой</a>' +
+    '<div style="height:10px"></div>' +
+    '<a class="кн широкая" href="slushat.html" style="text-decoration:none">🎧 Слушать тексты</a>' +
+    '<div style="height:10px"></div>' +
+    '<a class="кн широкая" href="zvuki-vybor.html" style="text-decoration:none">🔊 Звуки верного и неверного ответа</a>' +
+    '<div style="height:10px"></div>' +
+    '<a class="кн широкая" href="stat.html" style="text-decoration:none">📊 Статистика занятий</a>';
+
+  document.querySelectorAll('.набор').forEach(function(b){
+    b.onclick = function(){ показать('набор', НАБОРЫ[+b.dataset.i]); };
+  });
+  $('сменитьКого').onclick = function(){
+    localStorage.setItem('nemeckiy_profile', ПРОФИЛЬ === 'polina' ? 'grigoriy' : 'polina');
+    location.reload();
+  };
+
+};
+
+/* ================= перевод на лету =================
+   Врач пишет только немецкое слово — перевод подставляется сам.
+   Основной путь — открытый эндпойнт Google, запасной — MyMemory. */
+function перевестиСлово(текст, откуда, куда){
+  var гугл = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' +
+             откуда + '&tl=' + куда + '&dt=t&q=' + encodeURIComponent(текст);
+  return fetch(гугл)
+    .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(j){ return j[0].map(function(ч){ return ч[0]; }).join(''); })
+    .catch(function(){
+      return fetch('https://api.mymemory.translated.net/get?q=' + encodeURIComponent(текст) +
+                   '&langpair=' + откуда + '|' + куда)
+        .then(function(r){ return r.json(); })
+        .then(function(j){
+          if (!j.responseData || !j.responseData.translatedText) throw 0;
+          return j.responseData.translatedText;
+        });
+    });
+}
+
+/* Форма «вписать слово» — живёт прямо в колоде «Мой словарик»,
+   чтобы не бегать на отдельный экран. */
+function формаДобавления(куда, послеДобавления){
+  куда.innerHTML =
+    '<div class="строка" style="display:block">' +
+      '<div class="имя" style="margin-bottom:10px"><b>Вписать новое слово</b>' +
+      '<small>перевод подставится сам — можно не заполнять</small></div>' +
+      '<input class="поле" id="новоеDe" placeholder="слово по-немецки" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">' +
+      умляутыHTML() +
+      '<div style="height:9px"></div>' +
+      '<input class="поле" id="новоеRu" placeholder="перевод (подставится сам)" autocomplete="off">' +
+      '<div style="height:11px"></div>' +
+      '<button class="кн главная широкая" id="новоеОк">Добавить в словарик</button>' +
+      '<div class="вопрос-под" id="новоеСказ" style="margin:9px 0 0;min-height:18px"></div>' +
+    '</div>';
+
+  var поле = $('новоеDe'), перевод = $('новоеRu'), сказ = $('новоеСказ');
+  подключитьУмляуты(поле);
+
+  var таймер = null, переводим = false;
+  поле.oninput = function(){
+    clearTimeout(таймер);
+    var слово = поле.value.trim();
+    if (слово.length < 2) return;
+    // ждём, пока врач допишет, и только потом лезем в сеть
+    таймер = setTimeout(function(){
+      if (перевод.value.trim() && !перевод.dataset.авто) return;
+      переводим = true;
+      сказ.textContent = 'подбираю перевод…';
+      перевестиСлово(слово, 'de', 'ru').then(function(п){
+        переводим = false;
+        if (поле.value.trim() !== слово) return;      // уже дописал дальше
+        перевод.value = п;
+        перевод.dataset.авто = '1';
+        сказ.textContent = 'перевод подставлен — поправь, если не то';
+      }).catch(function(){
+        переводим = false;
+        сказ.textContent = 'перевод не подтянулся, впиши сам';
+      });
+    }, 700);
+  };
+  перевод.oninput = function(){ delete перевод.dataset.авто; };
+  поле.onkeydown = function(e){ if (e.key === 'Enter') перевод.focus(); };
+  перевод.onkeydown = function(e){ if (e.key === 'Enter') добавить(); };
+  $('новоеОк').onclick = добавить;
+
+  function добавить(){
+    var de = поле.value.trim(), ru = перевод.value.trim();
+    if (!de){ сказ.textContent = 'Впиши немецкое слово.'; return; }
+    if (!ru && переводим){ сказ.textContent = 'Секунду, перевод ещё идёт…'; return; }
+    if (!ru){ сказ.textContent = 'Перевода нет — впиши его сам.'; return; }
+
+    var ключ = 'nemeckiy_zubr_' + ПРОФИЛЬ, список = [];
+    try{ список = JSON.parse(localStorage.getItem(ключ) || '[]'); }catch(e){}
+    if (список.some(function(c){ return c.de.toLowerCase() === de.toLowerCase(); })){
+      сказ.textContent = '«' + de + '» уже есть в словарике.';
+      return;
+    }
+    список.push({ de: de, ru: ru, t: Date.now() });
+    try{ localStorage.setItem(ключ, JSON.stringify(список)); }catch(e){}
+    сказ.textContent = '«' + de + '» добавлено.';
+    поле.value = ''; перевод.value = ''; delete перевод.dataset.авто;
+    поле.focus();
+    if (послеДобавления) послеДобавления();
+  }
+}
+
+/* ================= экран: набор ================= */
+ЭКРАНЫ.набор = function(набор){
+  текущий = набор;
+  шапка(набор.имя);
+  var с = сводка(набор);
+  var т = итогТеста(набор.ключ);
+  var пропусков = 0, родов = набор.карточки.filter(function(c){ return /^(der|die|das)\s/i.test(c.de); }).length;
+
+  var режимы = [
+    { к:'повторение', и:'📅', имя:'Повторение', под: с.порция ? с.порция + ' на сегодня' : 'на сегодня всё', цвет:'' },
+    { к:'карточки',   и:'🃏', имя:'Карточки',   под:'смахивай влево-вправо', цвет:'з2' },
+    { к:'заучивание', и:'🎓', имя:'Заучивание', под:'выбор, потом письмо', цвет:'з3' },
+    { к:'тест',       и:'📝', имя:'Тест',       под:'своя контрольная', цвет:'з4' },
+    { к:'письмо',     и:'✍️', имя:'Письмо',     под:'на слух, по буквам', цвет:'' },
+    { к:'подбор',     и:'⚡️', имя:'Подбор',     под:'пары на скорость', цвет:'з2' },
+    { к:'род',        и:'🎨', имя:'der die das', под: родов > 2 ? 'только артикль' : 'мало существительных', цвет:'з3', выкл: родов < 3 }
+  ];
+  if (набор.ключ === 'модальные')
+    режимы.splice(1, 0, { к:'модальные', и:'🔑', имя:'Вставить глагол',
+                          под:'60 предложений с дыркой', цвет:'з4' });
+
+  $('экран').innerHTML =
+    '<h1 class="большой">' + экр(набор.имя) + '</h1>' +
+    '<p class="подзаголовок">' + с.всего + ' ' + скл(с.всего,'слово','слова','слов') +
+      (т ? ' · в последнем тесте вы набрали <b>' + т.п + '%</b>' : '') + '</p>' +
+
+    '<div class="раздел">Ваш прогресс</div>' +
+    '<div class="строка" style="display:block">' +
+      '<div class="прогресс">' +
+        '<i class="усвоено" style="width:' + (с.всего? с.усвоено/с.всего*100:0) + '%"></i>' +
+        '<i class="улучшено" style="width:' + (с.всего? с.улучшено/с.всего*100:0) + '%"></i>' +
+      '</div>' +
+      '<div class="прогресс-подпись">' +
+        '<span><i class="з"></i> усвоено: <b>' + с.усвоено + '</b></span>' +
+        '<span><i class="ж"></i> улучшено: <b>' + с.улучшено + '</b></span>' +
+        '<span><i class="с"></i> не изучено: <b>' + с.ново + '</b></span>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="раздел">Как учить</div>' +
+    '<div class="режимы">' + режимы.map(function(р){
+      return '<button class="режим ' + р.цвет + '" data-к="' + р.к + '"' + (р.выкл?' disabled':'') + '>' +
+             '<span class="знак">' + р.и + '</span>' +
+             '<span><b>' + р.имя + '</b><small>' + р.под + '</small></span></button>';
+    }).join('') + '</div>' +
+
+    (набор.свой ? '<div class="раздел">Добавить своё</div><div id="формаСлова"></div>' : '') +
+    '<div class="раздел">Все слова · ' + набор.карточки.length + '</div>' +
+    '<div class="термины" id="термины"></div>';
+
+  if (набор.свой){
+    формаДобавления($('формаСлова'), function(){
+      // колода пересобирается, чтобы новое слово сразу было видно в списке
+      var личные = набор.карточки.filter(function(c){ return c.k.indexOf('my') !== 0; });
+      набор.карточки = личные.concat(добавленныеСвои());
+      показать('набор', набор, true);
+    });
+  }
+
+  document.querySelectorAll('.режим').forEach(function(b){
+    b.onclick = function(){
+      if (b.disabled) return;
+      var к = b.dataset.к;
+      if (к === 'тест') показать('настройкиТеста', набор);
+      else показать(к, набор);
+    };
+  });
+  нарисоватьТермины(набор);
+};
+
+function нарисоватьТермины(набор){
+  $('термины').innerHTML = набор.карточки.map(function(c, i){
+    var с = сост(c);
+    var метка = !с ? '' : ФСРС.выучено(с) ? 'з' : 'ж';
+    return '<div class="термин">' +
+      '<span class="метка ' + метка + '"></span>' +
+      '<span class="тексты"><span class="де">' + c.deHtml + '</span>' +
+      '<span class="ру">' + экр(c.ответ) + '</span></span>' +
+      '<button data-звук="' + i + '">🔊</button>' +
+      '<button data-звезда="' + i + '" class="' + (звезда(c)?'горит':'') + '">' + (звезда(c)?'★':'☆') + '</button>' +
+      '</div>';
+  }).join('');
+
+  $('термины').querySelectorAll('[data-звук]').forEach(function(b){
+    b.onclick = function(){ сказать(набор.карточки[+b.dataset.звук]); };
+  });
+  $('термины').querySelectorAll('[data-звезда]').forEach(function(b){
+    b.onclick = function(){
+      var c = набор.карточки[+b.dataset.звезда];
+      var стало = !звезда(c);
+      звезда(c, стало);
+      b.textContent = стало ? '★' : '☆';
+      b.classList.toggle('горит', стало);
+    };
+  });
+}
+
+/* ================= звук ================= */
+var проигрыватель = null, немГолос;
+function сказать(c){
+  if (!c) return;
+  if (c.mp3){
+    if (!проигрыватель) проигрыватель = new Audio();
+    proигратьБезопасно(c);
+    return;
+  }
+  прочитать(c.de);
+}
+function proигратьБезопасно(c){
+  try{
+    проигрыватель.pause(); проигрыватель.src = c.mp3;
+    var п = проигрыватель.play();
+    if (п && п.catch) п.catch(function(){ прочитать(c.de); });
+  }catch(e){ прочитать(c.de); }
+}
+function прочитать(текст){
+  if (!window.speechSynthesis) return;
+  if (немГолос === undefined){
+    var список = [];
+    try{ список = speechSynthesis.getVoices() || []; }catch(e){}
+    var нем = список.filter(function(v){ return (v.lang||'').toLowerCase().indexOf('de') === 0; });
+    немГолос = нем.filter(function(v){ return /anna/i.test(v.name); })[0] || нем[0] || null;
+    if (!список.length) немГолос = undefined;
+  }
+  if (!немГолос) return;
+  try{
+    var у = new SpeechSynthesisUtterance(текст);
+    у.voice = немГолос; у.lang = немГолос.lang || 'de-DE'; у.rate = .85;
+    speechSynthesis.cancel(); speechSynthesis.speak(у);
+  }catch(e){}
+}
+if (window.speechSynthesis){
+  try{ speechSynthesis.onvoiceschanged = function(){ немГолос = undefined; }; }catch(e){}
+}
+
+/* ================= экран: карточки со смахиванием =================
+   Тянешь вправо — карточка зеленеет, «знаю». Влево — краснеет, «не знаю».
+   Чем дальше утянул, тем насыщеннее цвет. Отпустил за порогом — улетела.
+   Короткий тап без движения — переворот. */
+ЭКРАНЫ.карточки = function(набор){
+  var колода = перемешать(набор.карточки), i = 0, знаю = 0, неЗнаю = 0;
+  var деЛицом = true;
+  шапка(набор.имя, '<button class="назад" id="перевернуть" title="Поменять стороны">⇄</button>');
+
+  $('экран').innerHTML =
+    '<div class="счёт">' +
+      '<span class="кучка к"><i></i><b id="счНет">0</b></span>' +
+      '<span><b id="счТек">1</b> / ' + колода.length + '</span>' +
+      '<span class="кучка з"><i></i><b id="счДа">0</b></span>' +
+    '</div>' +
+    '<div class="сцена" id="сцена">' +
+      '<div class="полоса лево" id="полЛево"><span class="бирка">не знаю</span></div>' +
+      '<div class="полоса право" id="полПраво"><span class="бирка">знаю</span></div>' +
+      '<div id="местоКарты"></div>' +
+    '</div>' +
+    '<div class="низ">' +
+      '<button class="круг нет большой" id="кНет" title="Не знаю">✕</button>' +
+      '<button class="круг" id="кЗвук">🔊</button>' +
+      '<button class="круг" id="кПеревернуть">⇅</button>' +
+      '<button class="круг да большой" id="кДа" title="Знаю">✓</button>' +
+    '</div>' +
+    '<p class="подзаголовок" style="text-align:center;margin-top:14px">Смахни вправо, если знаешь. Влево — если нет. Нажми на карточку, чтобы перевернуть.</p>';
+
+  $('перевернуть').onclick = function(){ деЛицом = !деЛицом; нарисовать(); };
+  $('кЗвук').onclick = function(){ сказать(колода[i]); };
+  $('кПеревернуть').onclick = перевернуть;
+  $('кНет').onclick = function(){ улететь(-1); };
+  $('кДа').onclick = function(){ улететь(1); };
+
+  var карта, флип, окраска, перевёрнута = false;
+  нарисовать();
+
+  function нарисовать(){
+    if (i >= колода.length) return итог();
+    var c = колода[i];
+    перевёрнута = false;
+    $('счТек').textContent = i + 1;
+
+    var лицо = деЛицом
+      ? '<div class="слово">' + c.deHtml + '</div>'
+      : '<div class="перевод">' + экр(c.ответ) + '</div>';
+    var тыл = деЛицом
+      ? '<div class="перевод">' + экр(c.ru) + '</div>'
+      : '<div class="слово">' + c.deHtml + '</div>';
+
+    $('местоКарты').innerHTML =
+      '<div class="карта" id="карта">' +
+        '<div class="флип" id="флип">' +
+          '<div class="грань лицо"><span class="подпись">' + (деЛицом?'немецкий':'перевод') + '</span>' +
+            лицо + '<span class="намёк">нажми, чтобы перевернуть</span></div>' +
+          '<div class="грань тыл"><span class="подпись">' + (деЛицом?'перевод':'немецкий') + '</span>' +
+            тыл + '</div>' +
+        '</div>' +
+        '<button class="звезда' + (звезда(c)?' горит':'') + '" id="звёздочка">' + (звезда(c)?'★':'☆') + '</button>' +
+        '<div class="окраска" id="окраска"></div>' +
+      '</div>';
+
+    карта = $('карта'); флип = $('флип'); окраска = $('окраска');
+    $('звёздочка').onclick = function(e){
+      e.stopPropagation();
+      var стало = !звезда(c); звезда(c, стало);
+      this.textContent = стало?'★':'☆'; this.classList.toggle('горит', стало);
+    };
+    if (деЛицом) сказать(c);
+    подключитьЖесты();
+  }
+
+  function перевернуть(){
+    перевёрнута = !перевёрнута;
+    флип.classList.toggle('перевёрнута', перевёрнута);
+    if (перевёрнута && !деЛицом) сказать(колода[i]);
+  }
+
+  function подключитьЖесты(){
+    var началX = 0, началY = 0, началоВремя = 0;
+    var сдвиг = 0, тянем = false, двигали = false, ведём = false;
+
+    // Порог расстояния — для спокойного перетаскивания. Но если палец
+    // идёт быстро, человек уже показал намерение, и ждать 90 пикселей
+    // незачем: короткий резкий флик тоже должен срабатывать.
+    var ПОРОГ = 70;
+    var ПОРОГ_БЫСТРО = 28;        // при быстром движении хватит и этого
+    var СКОРОСТЬ = 0.45;          // пикселей на миллисекунду
+
+    карта.addEventListener('pointerdown', function(e){
+      if (e.target.closest('.звезда')) return;
+      тянем = true; двигали = false; ведём = false;
+      началX = e.clientX; началY = e.clientY;
+      началоВремя = e.timeStamp || Date.now();
+      сдвиг = 0;
+      карта.classList.add('тянут');
+      try{ карта.setPointerCapture(e.pointerId); }catch(err){}
+    });
+
+    карта.addEventListener('pointermove', function(e){
+      if (!тянем) return;
+      var dx = e.clientX - началX, dy = e.clientY - началY;
+
+      // Решаем один раз, что это за жест. Горизонтальный забираем себе
+      // и выключаем прокрутку, иначе браузер отменит нам жест на полпути.
+      if (!ведём){
+        if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+        if (Math.abs(dy) > Math.abs(dx)){    // это вертикальная прокрутка
+          тянем = false;
+          карта.classList.remove('тянут');
+          return;
+        }
+        ведём = true;
+        карта.classList.add('ведём');
+      }
+
+      двигали = true;
+      сдвиг = dx;
+      e.preventDefault();
+
+      var сила = Math.min(1, Math.abs(dx) / 160);
+      карта.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx / 26) + 'deg)';
+      окраска.style.background = dx > 0 ? 'rgba(34,160,107,' + (сила * .5) + ')'
+                                        : 'rgba(224,69,94,' + (сила * .5) + ')';
+      $('полПраво').classList.toggle('ярко', dx > 30);
+      $('полЛево').classList.toggle('ярко', dx < -30);
+    }, { passive: false });
+
+    function отпустили(e){
+      if (!тянем) return;
+      тянем = false;
+      карта.classList.remove('тянут');
+      карта.classList.remove('ведём');
+      $('полПраво').classList.remove('ярко');
+      $('полЛево').classList.remove('ярко');
+
+      if (!двигали){ перевернуть(); вернуть(); сдвиг = 0; return; }
+
+      var прошло = Math.max(1, (e.timeStamp || Date.now()) - началоВремя);
+      var скорость = Math.abs(сдвиг) / прошло;
+      var хватит = Math.abs(сдвиг) > ПОРОГ ||
+                   (скорость > СКОРОСТЬ && Math.abs(сдвиг) > ПОРОГ_БЫСТРО);
+
+      if (хватит) улететь(сдвиг > 0 ? 1 : -1);
+      else вернуть();
+      сдвиг = 0;
+    }
+    карта.addEventListener('pointerup', отпустили);
+    карта.addEventListener('pointercancel', отпустили);
+    карта.addEventListener('lostpointercapture', отпустили);
+  }
+
+  function вернуть(){
+    карта.style.transform = '';
+    окраска.style.background = 'transparent';
+  }
+
+  function улететь(куда){
+    var c = колода[i];
+    if (карта){
+      карта.classList.add('улетела');
+      карта.style.transform = 'translateX(' + (куда * 700) + 'px) rotate(' + (куда * 26) + 'deg)';
+    }
+    if (куда > 0){ знаю++; оценить(c, 4); $('счДа').textContent = знаю; }
+    else { неЗнаю++; оценить(c, 1); $('счНет').textContent = неЗнаю; }
+    i++;
+    setTimeout(нарисовать, 190);
+  }
+
+  function итог(){
+    var процент = колода.length ? Math.round(знаю / колода.length * 100) : 0;
+    $('экран').innerHTML =
+      '<div class="итоги">' +
+        '<div class="эмо">' + (процент === 100 ? '🏆' : процент >= 70 ? '👏' : '💪') + '</div>' +
+        '<div class="балл">' + процент + '%</div>' +
+        '<h2>Колода пройдена</h2>' +
+        '<p>Знаю — ' + знаю + ', ещё учить — ' + неЗнаю + '.</p>' +
+        (неЗнаю ? '<button class="кн главная широкая" id="кСложные">Прогнать те, что не знаю</button><div style="height:10px"></div>' : '') +
+        '<button class="кн широкая" id="кЗаново">Пройти заново</button>' +
+        '<div style="height:10px"></div>' +
+        '<button class="кн лёгкая широкая" id="кНабор">К набору</button>' +
+      '</div>';
+    if ($('кСложные')) $('кСложные').onclick = function(){
+      var трудные = колода.filter(function(c){ var с = сост(c); return с && !ФСРС.выучено(с); });
+      показать('карточки', { имя: набор.имя, ключ: набор.ключ, карточки: трудные.length ? трудные : колода }, true);
+    };
+    $('кЗаново').onclick = function(){ показать('карточки', набор, true); };
+    $('кНабор').onclick = function(){ показать('набор', набор, true); };
+  }
+};
+
+/* ================= экран: настройки теста ================= */
+function настройкиТеста(){
+  var с = {};
+  try{ с = JSON.parse(localStorage.getItem('nemeckiy_testopt_' + ПРОФИЛЬ) || '{}'); }catch(e){}
+  return {
+    сколько: с.сколько || 20,
+    мгновенно: с.мгновенно !== false,
+    толькоЗвёзды: с.толькоЗвёзды === true,
+    ответТермин: с.ответТермин !== false,       // спрашиваем немецкое слово
+    ответПеревод: с.ответПеревод !== false,     // спрашиваем перевод
+    выбор: с.выбор !== false,
+    верноНеверно: с.верноНеверно !== false,
+    подборВТесте: с.подборВТесте === true,
+    письменно: с.письменно === true
+  };
+}
+function сохранитьНастройки(н){
+  try{ localStorage.setItem('nemeckiy_testopt_' + ПРОФИЛЬ, JSON.stringify(н)); }catch(e){}
+}
+
+ЭКРАНЫ.настройкиТеста = function(набор){
+  шапка('Настройка теста');
+  var н = настройкиТеста();
+  var сЗвездой = набор.карточки.filter(function(c){ return звезда(c); });
+  var доступно = function(){ return (н.толькоЗвёзды ? сЗвездой : набор.карточки).length; };
+  н.сколько = Math.min(н.сколько, Math.max(1, доступно()));
+
+  $('экран').innerHTML =
+    '<h1 class="большой">Тест</h1>' +
+    '<p class="подзаголовок">' + экр(набор.имя) + ' · максимум <b id="максСлов">' + доступно() + '</b> ' +
+      скл(доступно(),'вопрос','вопроса','вопросов') + '</p>' +
+
+    '<div class="раздел">Сколько вопросов</div>' +
+    '<div class="строка"><div class="ползунок" style="flex:1">' +
+      '<input type="range" id="скольковопр" min="1" max="' + Math.max(1, доступно()) + '" value="' + н.сколько + '">' +
+      '<span class="знач" id="скольковыв">' + н.сколько + '</span>' +
+    '</div></div>' +
+    строкаТумблер('толькоЗвёзды', 'Только слова со ★', сЗвездой.length + ' ' + скл(сЗвездой.length,'слово','слова','слов') + ' отмечено', н.толькоЗвёзды, !сЗвездой.length) +
+
+    '<div class="раздел">Как отвечать</div>' +
+    строкаТумблер('мгновенно', 'Мгновенный ответ', 'сразу видно, верно или нет', н.мгновенно) +
+    строкаТумблер('ответТермин', 'Спрашивать немецкое слово', 'вопрос по-русски', н.ответТермин) +
+    строкаТумблер('ответПеревод', 'Спрашивать перевод', 'вопрос по-немецки', н.ответПеревод) +
+
+    '<div class="раздел">Типы вопросов</div>' +
+    строкаТумблер('выбор', 'С выбором ответа', 'четыре варианта', н.выбор) +
+    строкаТумблер('верноНеверно', 'Верно или неверно', 'показываем пару, ты решаешь', н.верноНеверно) +
+    строкаТумблер('подборВТесте', 'Подбор', 'соединить пять пар', н.подборВТесте) +
+    строкаТумблер('письменно', 'Письменный', 'вписать ответ руками', н.письменно) +
+
+    '<div style="height:20px"></div>' +
+    '<button class="кн главная широкая" id="кНачать">Начать тест</button>' +
+    '<div style="height:10px"></div>' +
+    '<button class="кн широкая" id="кПечать">🖨 Распечатать на бумаге</button>' +
+    '<p class="подзаголовок" id="предупр" style="text-align:center;margin-top:12px"></p>';
+
+  function строкаТумблер(имя, титул, под, вкл, выкл){
+    return '<div class="строка"' + (выкл?' style="opacity:.5"':'') + '>' +
+      '<span class="имя"><b>' + титул + '</b><small>' + под + '</small></span>' +
+      '<label class="тумблер"><input type="checkbox" data-н="' + имя + '"' +
+      (вкл?' checked':'') + (выкл?' disabled':'') + '><span class="бег"></span></label></div>';
+  }
+
+  var пв = $('скольковопр');
+  пв.oninput = function(){ н.сколько = +пв.value; $('скольковыв').textContent = н.сколько; };
+
+  document.querySelectorAll('[data-н]').forEach(function(вх){
+    вх.onchange = function(){
+      н[вх.dataset.н] = вх.checked;
+      if (вх.dataset.н === 'толькоЗвёзды'){
+        var макс = Math.max(1, доступно());
+        пв.max = макс;
+        if (+пв.value > макс){ пв.value = макс; н.сколько = макс; $('скольковыв').textContent = макс; }
+        $('максСлов').textContent = доступно();
+      }
+      проверить();
+    };
+  });
+
+  function проверить(){
+    var типы = н.выбор || н.верноНеверно || н.письменно || н.подборВТесте;
+    var языки = н.ответТермин || н.ответПеревод;
+    var хватает = доступно() >= 4;
+    $('кНачать').disabled = !(типы && языки && хватает);
+    $('предупр').textContent = !хватает ? 'Слишком мало слов для теста.'
+      : !типы ? 'Оставь хотя бы один тип вопросов.'
+      : !языки ? 'Выбери хотя бы одно направление вопроса.' : '';
+  }
+  проверить();
+
+  $('кНачать').onclick = function(){
+    сохранитьНастройки(н);
+    показать('тест', { набор: набор, настройки: н,
+                       колода: н.толькоЗвёзды ? сЗвездой : набор.карточки });
+  };
+  $('кПечать').onclick = function(){ печатьТеста(набор, н); };
+};
+
+/* Бумажный вариант: вопросы на листе плюс отдельный ключ с ответами. */
+function печатьТеста(набор, н){
+  var колода = перемешать(н.толькоЗвёзды ? набор.карточки.filter(звезда) : набор.карточки).slice(0, н.сколько);
+  var окно = window.open('', '_blank');
+  if (!окно) return alert('Браузер заблокировал новое окно — разреши всплывающие окна для печати.');
+  окно.document.write(
+    '<!DOCTYPE html><html lang="ru"><head><meta charset="UTF-8"><title>Тест · ' + экр(набор.имя) + '</title>' +
+    '<style>body{font-family:-apple-system,Arial,sans-serif;max-width:700px;margin:0 auto;padding:28px;color:#111}' +
+    'h1{font-size:22px;margin:0 0 4px} .шапка{color:#666;font-size:13px;margin-bottom:22px}' +
+    'ol{padding-left:22px} li{margin-bottom:16px;font-size:15px}' +
+    '.строчка{display:inline-block;border-bottom:1px solid #999;min-width:220px;margin-left:8px}' +
+    '.ключ{margin-top:34px;padding-top:16px;border-top:2px solid #111;page-break-before:always}' +
+    '.ключ li{margin-bottom:5px;font-size:14px;color:#333}' +
+    '@media print{ .нет-печати{display:none} }</style></head><body>' +
+    '<h1>' + экр(набор.имя) + '</h1>' +
+    '<div class="шапка">Тест на ' + колода.length + ' ' + скл(колода.length,'вопрос','вопроса','вопросов') +
+    ' · ' + new Date().toLocaleDateString('ru') + ' · имя: ______________</div>' +
+    '<ol>' + колода.map(function(c){
+      return '<li>' + экр(c.ответ) + ' <span class="строчка"></span></li>';
+    }).join('') + '</ol>' +
+    '<div class="ключ"><h1>Ключ</h1><ol>' + колода.map(function(c){
+      return '<li>' + экр(c.de) + '</li>';
+    }).join('') + '</ol></div>' +
+    '<button class="нет-печати" onclick="window.print()" style="margin-top:20px;padding:12px 20px;font-size:15px">Печать</button>' +
+    '</body></html>');
+  окно.document.close();
+}
+
+/* ================= экран: тест ================= */
+ЭКРАНЫ.тест = function(данные){
+  var набор = данные.набор, н = данные.настройки;
+  var источник = данные.колода || набор.карточки;
+  var колода = перемешать(источник).slice(0, н.сколько);
+  var типы = [];
+  if (н.выбор) типы.push('выбор');
+  if (н.верноНеверно) типы.push('вн');
+  if (н.подборВТесте && источник.length >= 6) типы.push('подбор');
+  if (н.письменно) типы.push('письмо');
+  if (!типы.length) типы.push('выбор');
+
+  var i = 0, верных = 0, ошибки = [], ответы = [];
+  шапка('Тест · ' + набор.имя);
+  вопрос();
+
+  // «нем = true» значит в вопросе немецкое слово, а ответ — перевод
+  function немПервым(){
+    if (н.ответПеревод && !н.ответТермин) return true;
+    if (н.ответТермин && !н.ответПеревод) return false;
+    return Math.random() < .5;
+  }
+
+  function вопрос(){
+    if (i >= колода.length) return итог();
+    var c = колода[i];
+    var тип = типы[i % типы.length];
+    var нем = немПервым();
+
+    $('экран').innerHTML =
+      '<div class="счёт"><span><b>' + (i+1) + '</b> / ' + колода.length + '</span>' +
+      (н.мгновенно ? '<span class="кучка з"><i></i><b>' + верных + '</b></span>' : '') + '</div>' +
+      лентаВопросов() +
+      '<div id="телоВопроса"></div>';
+
+    if (тип === 'выбор') сВыбором(c, нем);
+    else if (тип === 'вн') верноНеверно(c, нем);
+    else if (тип === 'подбор') подборВопрос(c);
+    else письменный(c, нем);
+  }
+
+  /* Полоска с номерами вопросов — видно, сколько пройдено и где ошибся. */
+  function лентаВопросов(){
+    return '<div class="лента">' + колода.map(function(_, k){
+      var кл = k < ответы.length ? (ответы[k] ? 'верно' : 'мимо') : (k === i ? 'сейчас' : '');
+      return '<i class="' + кл + '"></i>';
+    }).join('') + '</div>';
+  }
+
+  /* Подбор прямо внутри теста: пять пар, засчитывается как один вопрос. */
+  function подборВопрос(c){
+    var пары = перемешать(источник.filter(function(x){ return !x.фраза; }));
+    if (пары.length < 5) пары = перемешать(источник);
+    пары = пары.slice(0, 5);
+    if (пары.indexOf(c) < 0){ пары[0] = c; }
+    var плитки = перемешать(пары.map(function(x){ return {c:x,с:'de'}; })
+                    .concat(пары.map(function(x){ return {c:x,с:'ru'}; })));
+    var осталось = пары.length, выбран = null, промахов = 0;
+
+    $('телоВопроса').innerHTML =
+      '<div class="вопрос-под" style="margin-top:6px">Соедини пары — это один вопрос теста</div>' +
+      '<div class="плитки">' + плитки.map(function(т,k){
+        return '<button class="плитка" data-k="' + k + '">' +
+               (т.с === 'de' ? экр(т.c.de) : экр(т.c.ответ)) + '</button>';
+      }).join('') + '</div>';
+
+    document.querySelectorAll('.плитка').forEach(function(b){
+      b.onclick = function(){
+        var т = плитки[+b.dataset.k];
+        if (b.classList.contains('ушла')) return;
+        if (т.с === 'de') сказать(т.c);
+        if (!выбран){ выбран = {b:b,т:т}; b.classList.add('выбрана'); return; }
+        if (выбран.b === b){ b.classList.remove('выбрана'); выбран = null; return; }
+        if (выбран.т.c === т.c && выбран.т.с !== т.с){
+          b.classList.add('ушла'); выбран.b.classList.add('ушла');
+          оценить(т.c, 3); осталось--; выбран = null;
+          if (!осталось) дальше(промахов === 0, c);
+          return;
+        }
+        промахов++;
+        var a = выбран.b; a.classList.remove('выбрана');
+        a.classList.add('мимо'); b.classList.add('мимо');
+        setTimeout(function(){ a.classList.remove('мимо'); b.classList.remove('мимо'); }, 300);
+        выбран = null;
+      };
+    });
+  }
+
+  function дальше(верно, c){
+    if (верно) верных++; else ошибки.push(c);
+    ответы.push(верно);
+    оценить(c, верно ? 3 : 1);
+    i++;
+    if (н.мгновенно){
+      var кн = document.createElement('button');
+      кн.className = 'кн главная широкая';
+      кн.style.marginTop = '14px';
+      кн.textContent = i >= колода.length ? 'Показать результат' : 'Дальше →';
+      $('телоВопроса').appendChild(кн);
+      кн.focus();
+      кн.onclick = вопрос;
+    } else {
+      setTimeout(вопрос, 120);
+    }
+  }
+
+  function показатьОтклик(верно, c, поле){
+    if (!н.мгновенно) return;
+    var о = document.createElement('div');
+    о.className = 'отклик видно ' + (верно ? 'хорошо' : 'плохо');
+    о.innerHTML = '<b>' + (верно ? 'Верно' : 'Неверно') + '</b>' +
+      '<span class="правильно">' + c.deHtml + '</span>' +
+      '<span style="color:var(--текст2)">' + экр(c.ответ) + '</span>';
+    $('телоВопроса').appendChild(о);
+    сказать(c);
+  }
+
+  function сВыбором(c, нем){
+    var чужие = перемешать(набор.карточки.filter(function(x){ return x !== c; })).slice(0,3);
+    var вар = перемешать([c].concat(чужие));
+    $('телоВопроса').innerHTML =
+      '<div class="вопрос">' + (нем ? c.deHtml : экр(c.ответ)) + '</div>' +
+      '<div class="вопрос-под">Выбери ' + (нем ? 'перевод' : 'немецкое слово') + '</div>' +
+      '<div class="варианты">' + вар.map(function(o,k){
+        return '<button class="вариант" data-k="' + k + '"><span class="ном">' + (k+1) + '</span>' +
+               '<span class="текстВарианта">' + (нем ? экр(o.ответ) : o.deHtml) + '</span>' +
+               '<span class="разъяснение"></span></button>';
+      }).join('') + '</div>' +
+      '<button class="кн лёгкая широкая" id="кНеУверен" style="margin-top:12px">Не уверен — показать ответ</button>';
+    if (нем) сказать(c);
+    var кнБолею = $('кНеУверен');
+    if (кнБолею) кнБолею.onclick = function(){
+      звукОтвета(false);
+      раскрытьВКнопках(document.querySelectorAll('.вариант'), вар, c, null, подписьКарточки(c));
+      сказать(c);
+      кнБолею.remove();
+      дальше(false, c);
+    };
+    var кнопки = document.querySelectorAll('.вариант');
+    кнопки.forEach(function(b,k){
+      b.onclick = function(){
+        var верно = вар[k] === c;
+        звукОтвета(верно);
+        if (н.мгновенно) раскрытьВКнопках(кнопки, вар, c, b, подписьКарточки(c));
+        сказать(c);
+        дальше(верно, c);
+      };
+    });
+  }
+
+  function верноНеверно(c, нем){
+    var врём = Math.random() < .5;
+    var другой = перемешать(набор.карточки.filter(function(x){ return x !== c; }))[0];
+    var показ = (врём && другой) ? другой : c;
+    var правда = !(врём && другой);
+    $('телоВопроса').innerHTML =
+      '<div class="вопрос">' + c.deHtml + '</div>' +
+      '<div class="вопрос-под">Это переводится так?</div>' +
+      '<div class="вопрос" style="font-size:22px;font-weight:700">«' + экр(показ.ответ) + '»</div>' +
+      '<div class="варианты" style="grid-template-columns:1fr 1fr;display:grid;gap:10px;margin-top:18px">' +
+        '<button class="вариант" id="кДа" style="justify-content:center"><b>Верно</b></button>' +
+        '<button class="вариант" id="кНет" style="justify-content:center"><b>Неверно</b></button>' +
+      '</div>';
+    сказать(c);
+    function ответить(сказал){
+      var верно = сказал === правда;
+      if (н.мгновенно){
+        $('кДа').disabled = $('кНет').disabled = true;
+        (правда ? $('кДа') : $('кНет')).classList.add('верно');
+        if (!верно) (сказал ? $('кДа') : $('кНет')).classList.add('неверно');
+        показатьОтклик(верно, c);
+      }
+      дальше(верно, c);
+    }
+    $('кДа').onclick = function(){ ответить(true); };
+    $('кНет').onclick = function(){ ответить(false); };
+  }
+
+  function письменный(c, нем){
+    var цель = нем ? c.ответ : c.de;
+    $('телоВопроса').innerHTML =
+      '<div class="вопрос">' + (нем ? c.deHtml : экр(c.ответ)) + '</div>' +
+      '<div class="вопрос-под">Напиши ' + (нем ? 'перевод' : 'по-немецки') + '</div>' +
+      '<input class="поле" id="ввод" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="твой ответ">' +
+      (нем ? '' : умляутыHTML()) +
+      '<div style="height:12px"></div>' +
+      '<button class="кн главная широкая" id="кОтвет">Ответить</button>';
+    var поле = $('ввод'); поле.focus();
+    подключитьУмляуты(поле);
+    поле.onkeydown = function(e){ if (e.key === 'Enter') ответить(); };
+    $('кОтвет').onclick = ответить;
+    function ответить(){
+      if ($('кОтвет').disabled) return;
+      var оц = сверить(поле.value, цель);
+      звукОтвета(!!оц);
+      поле.disabled = true; $('кОтвет').disabled = true;
+      poleКласс(поле, оц);
+      if (н.мгновенно) показатьОтклик(!!оц, c);
+      дальше(!!оц, c);
+    }
+  }
+
+  function итог(){
+    var процент = Math.round(верных / колода.length * 100);
+    итогТеста(набор.ключ, процент);
+    var эмо = процент === 100 ? '🏆' : процент >= 80 ? '👏' : процент >= 60 ? '🙂' : '💪';
+    $('экран').innerHTML =
+      '<div class="итоги">' +
+        '<div class="эмо">' + эмо + '</div>' +
+        '<div class="балл">' + процент + '%</div>' +
+        '<h2>' + верных + ' из ' + колода.length + '</h2>' +
+        '<p>' + (процент === 100 ? 'Идеально, все до одного.'
+              : процент >= 80 ? 'Хороший результат.'
+              : процент >= 60 ? 'Нормально, но есть над чем поработать.'
+              : 'Тема ещё сырая — прогони «Заучивание».') + '</p>' +
+      '</div>' +
+      (ошибки.length ? '<div class="раздел">Над чем поработать</div><div class="термины">' +
+        ошибки.map(function(c,k){
+          return '<div class="термин"><span class="тексты"><span class="де">' + c.deHtml + '</span>' +
+                 '<span class="ру">' + экр(c.ответ) + '</span></span>' +
+                 '<button data-о="' + k + '">🔊</button></div>';
+        }).join('') + '</div>' : '') +
+      '<div style="height:16px"></div>' +
+      '<button class="кн главная широкая" id="кЕщё">Пройти ещё раз</button>' +
+      '<div style="height:10px"></div>' +
+      '<button class="кн лёгкая широкая" id="кНабор2">К набору</button>';
+
+    document.querySelectorAll('[data-о]').forEach(function(b){
+      b.onclick = function(){ сказать(ошибки[+b.dataset.о]); };
+    });
+    $('кЕщё').onclick = function(){ показать('настройкиТеста', набор, true); };
+    $('кНабор2').onclick = function(){ показать('набор', набор, true); };
+  }
+};
+
+function умляутыHTML(){
+  return '<div class="умляуты">' + ['ä','ö','ü','ß','Ä','Ö','Ü'].map(function(ч){
+    return '<button type="button" data-ч="' + ч + '">' + ч + '</button>';
+  }).join('') + '</div>';
+}
+function подключитьУмляуты(поле){
+  document.querySelectorAll('.умляуты button').forEach(function(b){
+    b.onclick = function(){
+      var s = поле.selectionStart == null ? поле.value.length : поле.selectionStart;
+      var e = поле.selectionEnd == null ? s : поле.selectionEnd;
+      поле.value = поле.value.slice(0,s) + b.dataset.ч + поле.value.slice(e);
+      поле.focus(); поле.selectionStart = поле.selectionEnd = s + 1;
+    };
+  });
+}
+function poleКласс(поле, оц){ поле.classList.add(оц ? 'верно' : 'неверно'); }
+
+/* ================= общая очередь по расписанию ================= */
+function очередь(набор){
+  var повторы = [], новые = [];
+  набор.карточки.forEach(function(c){
+    var с = сост(c);
+    if (!с) новые.push(c); else if (ФСРС.пора(с)) повторы.push(c);
+  });
+  повторы.sort(function(a,b){ return (сост(a).due||0) - (сост(b).due||0); });
+  var осталось = Math.max(0, норма() - новыхСегодня());
+  return повторы.concat(перемешать(новые).slice(0, осталось));
+}
+
+/* ================= экран: повторение по расписанию ================= */
+ЭКРАНЫ.повторение = function(набор){
+  шапка('Повторение · ' + набор.имя);
+  var очер = очередь(набор), всего = очер.length, сделано = 0;
+
+  if (!всего){
+    var ближ = null;
+    набор.карточки.forEach(function(c){ var с = сост(c); if (с && (!ближ || с.due < ближ)) ближ = с.due; });
+    return $('экран').innerHTML =
+      '<div class="итоги"><div class="эмо">✅</div><h2>На сегодня всё</h2>' +
+      '<p>' + (ближ ? 'Следующее повторение — ' + ФСРС.словами(Math.round((ближ - ФСРС.сегодня())/ФСРС.ДЕНЬ)) + '.'
+                    : 'Слова кончились.') + '</p></div>';
+  }
+  шаг();
+
+  function шаг(){
+    if (!очер.length){
+      return $('экран').innerHTML =
+        '<div class="итоги"><div class="эмо">🎉</div><h2>Порция закрыта</h2>' +
+        '<p>Сегодня пройдено ' + сделано + ' ' + скл(сделано,'слово','слова','слов') +
+        '. Дальше — по расписанию.</p></div>';
+    }
+    var c = очер[0], с = сост(c);
+    $('экран').innerHTML =
+      '<div class="счёт"><span><b>' + сделано + '</b> / ' + всего + '</span>' +
+        '<span>' + (с ? 'повторение' : 'новое слово') + '</span></div>' +
+      '<div class="сцена" style="min-height:260px"><div class="карта" style="position:relative;inset:auto;width:100%">' +
+        '<div class="грань лицо" style="position:relative;min-height:250px">' +
+          '<div class="слово">' + c.deHtml + '</div>' +
+          '<div class="перевод" id="ответТут" style="margin-top:16px;color:var(--текст2);display:none">' + экр(c.ru) + '</div>' +
+        '</div></div></div>' +
+      '<div id="подКартой"><button class="кн главная широкая" id="кПоказать">Показать ответ</button></div>';
+    сказать(c);
+    $('кПоказать').onclick = раскрыть;
+
+    function раскрыть(){
+      $('ответТут').style.display = 'block';
+      var подписи = [
+        { g:1, имя:'Снова',  класс:'' },
+        { g:2, имя:'Трудно', класс:'' },
+        { g:3, имя:'Хорошо', класс:'главная' },
+        { g:4, имя:'Легко',  класс:'' }
+      ];
+      $('подКартой').innerHTML = '<div class="режимы" style="grid-template-columns:repeat(4,1fr);gap:8px">' +
+        подписи.map(function(п){
+          return '<button class="кн ' + п.класс + '" data-g="' + п.g + '" style="flex-direction:column;gap:2px;padding:12px 4px;font-size:14px">' +
+                 п.имя + '<small style="font-weight:600;font-size:11px;opacity:.75">' +
+                 ФСРС.словами(ФСРС.прогноз(с, п.g)) + '</small></button>';
+        }).join('') + '</div>';
+      document.querySelectorAll('[data-g]').forEach(function(b){
+        b.onclick = function(){
+          var G = +b.dataset.g;
+          if (!с) новыхСегодня(1);
+          оценить(c, G);
+          очер.shift();
+          if (G === 1) очер.push(c); else сделано++;
+          шаг();
+        };
+      });
+    }
+  }
+};
+
+/* ================= экран: заучивание ================= */
+ЭКРАНЫ.заучивание = function(набор){
+  шапка('Заучивание · ' + набор.имя);
+  var порция = Math.min(7, набор.карточки.length);
+  if (набор.карточки.length < 4) return $('экран').innerHTML = '<div class="пусто">Нужно хотя бы четыре слова.</div>';
+  var список = перемешать(набор.карточки).sort(function(a,b){
+    var А = сост(a), Б = сост(b);
+    return (А ? А.S : 0) - (Б ? Б.S : 0);
+  }).slice(0, порция).map(function(c){ return { c:c, шаг:0 }; });
+  var всего = порция * 2, сделано = 0;
+  шаг();
+
+  function шаг(){
+    if (!список.length){
+      return $('экран').innerHTML = '<div class="итоги"><div class="эмо">🎓</div><h2>Раунд закрыт</h2>' +
+        '<p>' + порция + ' ' + скл(порция,'слово','слова','слов') + ' сдано дважды — выбором и письменно.</p>' +
+        '<button class="кн главная широкая" id="ещёРаунд">Следующий раунд</button></div>',
+        $('ещёРаунд').onclick = function(){ показать('заучивание', набор, true); };
+    }
+    var э = список.shift(), c = э.c;
+    $('экран').innerHTML =
+      '<div class="счёт"><span><b>' + сделано + '</b> / ' + всего + '</span>' +
+      '<span>' + (э.шаг ? 'напиши сам' : 'выбери перевод') + '</span></div><div id="тело"></div>';
+    if (э.шаг === 0) выбор(); else письмо();
+
+    function выбор(){
+      var чужие = перемешать(набор.карточки.filter(function(x){ return x !== c; })).slice(0,3);
+      var вар = перемешать([c].concat(чужие));
+      $('тело').innerHTML =
+        '<div class="вопрос">' + c.deHtml + '</div><div class="вопрос-под">Что это значит?</div>' +
+        '<div class="варианты">' + вар.map(function(o,k){
+          return '<button class="вариант" data-k="' + k + '"><span class="ном">' + (k+1) + '</span><span class="текстВарианта">' + экр(o.ответ) + '</span><span class="разъяснение"></span></button>';
+        }).join('') + '</div><div id="откл"></div>';
+      сказать(c);
+      var кн = document.querySelectorAll('.вариант');
+      кн.forEach(function(b,k){
+        b.onclick = function(){
+          var верно = вар[k] === c;
+          звукОтвета(верно);
+          раскрытьВКнопках(кн, вар, c, b, подписьКарточки(c));
+          сказать(c);
+          if (верно){ сделано++; э.шаг = 1; список.push(э); }
+          else { оценить(c, 1); список.push(э); }
+          продолжить(верно, c, true);
+        };
+      });
+    }
+
+    function письмо(){
+      $('тело').innerHTML =
+        '<div class="вопрос">' + экр(c.ответ) + '</div><div class="вопрос-под">Напиши по-немецки</div>' +
+        '<input class="поле" id="ввод" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="по-немецки">' +
+        умляутыHTML() + '<div style="height:12px"></div>' +
+        '<button class="кн главная широкая" id="кПроверить">Проверить</button><div id="откл"></div>';
+      var поле = $('ввод'); поле.focus(); подключитьУмляуты(поле);
+      поле.onkeydown = function(e){ if (e.key === 'Enter') проверить(); };
+      $('кПроверить').onclick = проверить;
+      function проверить(){
+        if ($('кПроверить').disabled) return;
+        var оц = сверить(поле.value, c.de);
+        звукОтвета(!!оц);
+        поле.disabled = true; $('кПроверить').disabled = true; poleКласс(поле, оц);
+        if (оц){ сделано++; оценить(c, оц === 2 ? 3 : 2); }
+        else { оценить(c, 1); э.шаг = 0; список.push(э); }
+        продолжить(!!оц, c);
+      }
+    }
+
+    function продолжить(верно, c, безОтклика){
+      // когда ответ уже раскрылся прямо в кнопке, плашка внизу только дублирует
+      if (!безОтклика){
+        var о = document.createElement('div');
+        о.className = 'отклик видно ' + (верно ? 'хорошо' : 'плохо');
+        о.innerHTML = '<b>' + (верно ? 'Верно' : 'Правильно так:') + '</b>' +
+          '<span class="правильно">' + c.deHtml + '</span><span style="color:var(--текст2)">' + экр(c.ответ) + '</span>';
+        $('откл').appendChild(о);
+        сказать(c);
+      }
+      var b = document.createElement('button');
+      b.className = 'кн главная широкая'; b.style.marginTop = '12px'; b.textContent = 'Дальше →';
+      $('откл').appendChild(b); b.focus(); b.onclick = шаг;
+    }
+  }
+};
+
+/* ================= экран: письмо на слух ================= */
+ЭКРАНЫ.письмо = function(набор){
+  шапка('Письмо · ' + набор.имя);
+  var колода = перемешать(набор.карточки).slice(0, 12), i = 0, верных = 0, ошибки = [];
+  шаг();
+  function шаг(){
+    if (i >= колода.length){
+      return $('экран').innerHTML = '<div class="итоги"><div class="эмо">' +
+        (верных === колода.length ? '🏆' : '✍️') + '</div><div class="балл">' +
+        Math.round(верных/колода.length*100) + '%</div><h2>Диктант окончен</h2>' +
+        '<p>Без ошибок: ' + верных + ' из ' + колода.length + '.</p>' +
+        '<button class="кн главная широкая" id="ещёДиктант">Ещё раз</button></div>',
+        $('ещёДиктант').onclick = function(){ показать('письмо', набор, true); };
+    }
+    var c = колода[i];
+    $('экран').innerHTML =
+      '<div class="счёт"><span><b>' + i + '</b> / ' + колода.length + '</span><span>слушай и пиши</span></div>' +
+      '<div style="text-align:center;margin:22px 0"><button class="кн тёмная" id="кСлушать" style="padding:16px 28px;font-size:17px">🔊 Послушать ещё раз</button></div>' +
+      '<input class="поле" id="ввод" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="что слышишь">' +
+      умляутыHTML() + '<div style="height:12px"></div>' +
+      '<div style="display:flex;gap:10px"><button class="кн" id="кПодсказка">Подсказка</button>' +
+      '<button class="кн главная" id="кПроверить" style="flex:1">Проверить</button></div><div id="откл"></div>';
+    var поле = $('ввод'); поле.focus(); подключитьУмляуты(поле);
+    сказать(c);
+    $('кСлушать').onclick = function(){ сказать(c); };
+    $('кПодсказка').onclick = function(){
+      var о = document.createElement('div');
+      о.className = 'отклик видно хорошо';
+      о.innerHTML = '<b>Перевод</b>' + экр(c.ответ);
+      $('откл').innerHTML = ''; $('откл').appendChild(о);
+    };
+    поле.onkeydown = function(e){ if (e.key === 'Enter') проверить(); };
+    $('кПроверить').onclick = проверить;
+    function проверить(){
+      if ($('кПроверить').disabled) return;
+      var оц = сверить(поле.value, c.de);
+      звукОтвета(!!оц);
+      поле.disabled = true; $('кПроверить').disabled = true; poleКласс(поле, оц);
+      if (оц) верных++; else ошибки.push(c);
+      оценить(c, оц ? 3 : 1);
+      var о = document.createElement('div');
+      о.className = 'отклик видно ' + (оц ? 'хорошо' : 'плохо');
+      о.innerHTML = '<b>' + (оц === 2 ? 'В точку' : оц === 1 ? 'Почти — сверь буквы' : 'Было так') + '</b>' +
+        '<span class="правильно">' + c.deHtml + '</span>';
+      $('откл').innerHTML = ''; $('откл').appendChild(о);
+      var b = document.createElement('button');
+      b.className = 'кн главная широкая'; b.style.marginTop = '12px';
+      b.textContent = i + 1 >= колода.length ? 'Итог' : 'Дальше →';
+      $('откл').appendChild(b); b.focus();
+      b.onclick = function(){ i++; шаг(); };
+    }
+  }
+};
+
+/* ================= экран: подбор ================= */
+ЭКРАНЫ.подбор = function(набор){
+  шапка('Подбор · ' + набор.имя);
+  var короткие = набор.карточки.filter(function(c){ return !c.фраза; });
+  var исходные = короткие.length >= 6 ? короткие : набор.карточки;
+  if (исходные.length < 4) return $('экран').innerHTML = '<div class="пусто">Нужно хотя бы четыре слова.</div>';
+  var пар = Math.min(6, исходные.length);
+  var выбранные = перемешать(исходные).slice(0, пар);
+  var плитки = перемешать(выбранные.map(function(c){ return {c:c,с:'de'}; })
+                 .concat(выбранные.map(function(c){ return {c:c,с:'ru'}; })));
+  var осталось = пар, выбран = null, промахов = 0, старт = Date.now(), таймер;
+  var рекорд = parseFloat(localStorage.getItem('nemeckiy_match_' + ПРОФИЛЬ + '_' + набор.ключ) || '0');
+
+  $('экран').innerHTML =
+    '<div class="счёт"><span id="время" style="font-weight:800;color:var(--синий)">0.0 с</span>' +
+    (рекорд ? '<span>рекорд ' + рекорд.toFixed(1) + ' с</span>' : '') + '</div>' +
+    '<div class="плитки" id="плитки">' + плитки.map(function(т,k){
+      return '<button class="плитка" data-k="' + k + '">' +
+             (т.с === 'de' ? экр(т.c.de) : экр(т.c.ответ)) + '</button>';
+    }).join('') + '</div>';
+
+  таймер = setInterval(function(){
+    var э = $('время'); if (!э) return clearInterval(таймер);
+    э.textContent = ((Date.now()-старт)/1000).toFixed(1) + ' с';
+  }, 100);
+
+  document.querySelectorAll('.плитка').forEach(function(b){
+    b.onclick = function(){
+      var т = плитки[+b.dataset.k];
+      if (b.classList.contains('ушла')) return;
+      if (т.с === 'de') сказать(т.c);
+      if (!выбран){ выбран = {b:b,т:т}; b.classList.add('выбрана'); return; }
+      if (выбран.b === b){ b.classList.remove('выбрана'); выбран = null; return; }
+      if (выбран.т.c === т.c && выбран.т.с !== т.с){
+        b.classList.add('ушла'); выбран.b.classList.add('ушла');
+        оценить(т.c, 3); осталось--; выбран = null;
+        if (!осталось) финиш();
+        return;
+      }
+      промахов++;
+      var a = выбран.b; a.classList.remove('выбрана');
+      a.classList.add('мимо'); b.classList.add('мимо');
+      setTimeout(function(){ a.classList.remove('мимо'); b.classList.remove('мимо'); }, 320);
+      выбран = null;
+    };
+  });
+
+  function финиш(){
+    clearInterval(таймер);
+    var сек = (Date.now()-старт)/1000;
+    var новый = !рекорд || сек < рекорд;
+    if (новый) try{ localStorage.setItem('nemeckiy_match_' + ПРОФИЛЬ + '_' + набор.ключ, сек.toFixed(1)); }catch(e){}
+    $('экран').innerHTML = '<div class="итоги"><div class="эмо">' + (новый?'⚡️':'✅') + '</div>' +
+      '<div class="балл">' + сек.toFixed(1) + ' с</div>' +
+      '<h2>' + (новый ? 'Новый рекорд' : 'Готово') + '</h2>' +
+      '<p>' + (промахов ? 'Промахов: ' + промахов + '.' : 'Ни одного промаха.') + '</p>' +
+      '<button class="кн главная широкая" id="ещёПодбор">Ещё партию</button></div>';
+    $('ещёПодбор').onclick = function(){ показать('подбор', набор, true); };
+  }
+};
+
+/* ================= экран: род ================= */
+ЭКРАНЫ.род = function(набор){
+  шапка('der die das · ' + набор.имя);
+  var слова = [];
+  var было = {};
+  набор.карточки.forEach(function(c){
+    var м = c.de.match(/^(der|die|das)\s+(.+)/i);
+    if (!м) return;
+    var чистое = м[2].trim();
+    if (было[чистое.toLowerCase()]) return;
+    было[чистое.toLowerCase()] = 1;
+    слова.push({ род: м[1].toLowerCase(), слово: чистое, c: c,
+                 k: 'g_' + c.k, урок: 'zubr', de: c.de, deHtml: c.deHtml, ответ: c.ответ, mp3: c.mp3 });
+  });
+  if (слова.length < 3) return $('экран').innerHTML = '<div class="пусто">В этом наборе почти нет существительных с артиклем.</div>';
+
+  var очер = перемешать(слова).slice(0, 30), i = 0, верных = 0, всего = очер.length;
+  шаг();
+  function шаг(){
+    if (!очер.length){
+      return $('экран').innerHTML = '<div class="итоги"><div class="эмо">' +
+        (верных === всего ? '🏆' : '🎨') + '</div><div class="балл">' +
+        Math.round(верных/всего*100) + '%</div><h2>Разобрано ' + всего + '</h2>' +
+        '<button class="кн главная широкая" id="ещёРод">Ещё раз</button></div>',
+        $('ещёРод').onclick = function(){ показать('род', набор, true); };
+    }
+    var с = очер[0];
+    $('экран').innerHTML =
+      '<div class="счёт"><span><b>' + верных + '</b> / ' + всего + '</span></div>' +
+      '<div class="вопрос" style="margin-top:30px">' + экр(с.слово) + '</div>' +
+      '<div class="вопрос-под">' + экр(с.ответ) + '</div>' +
+      '<div class="плитки" style="grid-template-columns:repeat(3,1fr);margin-top:26px">' +
+        ['der','die','das'].map(function(а){
+          var цвет = {der:'#4A63D6',die:'#EC6A86',das:'#E8A33D'}[а];
+          return '<button class="плитка" data-а="' + а + '" style="font-size:22px;font-weight:800;min-height:86px;color:' + цвет + '">' + а + '</button>';
+        }).join('') + '</div><div id="откл"></div>';
+    document.querySelectorAll('[data-а]').forEach(function(b){
+      b.onclick = function(){
+        var верно = b.dataset.а === с.род;
+        document.querySelectorAll('[data-а]').forEach(function(x){
+          x.disabled = true;
+          if (x.dataset.а === с.род) x.classList.add('выбрана');
+          else if (x === b) x.classList.add('мимо');
+        });
+        оценить(с, верно ? 3 : 1);
+        if (верно) верных++;
+        сказать(с);
+        очер.shift();
+        if (!верно) очер.push(с);
+        setTimeout(шаг, верно ? 420 : 1100);
+      };
+    });
+  }
+};
+
+/* ================= экран: модальные глаголы =================
+   Дано предложение с дыркой и инфинитив. Надо поставить глагол в нужную
+   форму — то есть выбрать окончание под лицо. Половина заданий с вводом
+   руками, половина выбором из четырёх форм того же глагола: так быстрее
+   на телефоне, но всё равно приходится думать про окончание. */
+
+var ФОРМЫ = {
+  'müssen':  ['muss','musst','muss','müssen','müsst','müssen'],
+  'sollen':  ['soll','sollst','soll','sollen','sollt','sollen'],
+  'können':  ['kann','kannst','kann','können','könnt','können'],
+  'dürfen':  ['darf','darfst','darf','dürfen','dürft','dürfen'],
+  'wollen':  ['will','willst','will','wollen','wollt','wollen'],
+  'möchten': ['möchte','möchtest','möchte','möchten','möchtet','möchten']
+};
+var ЛИЦА = { ich:'ich (я)', du:'du (ты)', er:'er / sie / es (он, она)',
+             wir:'wir (мы)', ihr:'ihr (вы, свои)', Sie:'Sie (Вы, вежливо)',
+             sie_pl:'sie (они)' };
+
+ЭКРАНЫ.модальные = function(набор){
+  шапка('Модальные глаголы');
+  $('экран').innerHTML = '<div class="пусто">Готовлю предложения…</div>';
+
+  fetch('words/modal.json?v=' + (window.ЗУБР_ВЕРСИЯ || '1'))
+    .then(function(r){ return r.json(); })
+    .then(function(список){
+      if (!список || !список.length) return $('экран').innerHTML = '<div class="пусто">Предложения не загрузились.</div>';
+      играть(список);
+    })
+    .catch(function(){ $('экран').innerHTML = '<div class="пусто">Не удалось загрузить предложения.</div>'; });
+
+  function играть(список){
+    var очередь = перемешать(список), всего = очередь.length, верных = 0, сделано = 0, ошибки = [];
+    шаг();
+
+    function карточкаДля(п){
+      return { de: п.de, deHtml: экр(п.de), ru: п.ru, ответ: п.ru,
+               k: 'm_' + п.id, урок: 'zubr', mp3: 'zvuk/zubr/' + п.k + '.mp3', фраза: true };
+    }
+
+    function шаг(){
+      if (!очередь.length){
+        var процент = Math.round(верных / всего * 100);
+        итогТеста('модальные', процент);
+        return $('экран').innerHTML =
+          '<div class="итоги"><div class="эмо">' + (процент === 100 ? '🏆' : процент >= 70 ? '👏' : '💪') + '</div>' +
+          '<div class="балл">' + процент + '%</div><h2>' + верных + ' из ' + всего + '</h2>' +
+          '<p>' + (процент >= 80 ? 'Окончания сидят крепко.' : 'Ещё покрути — окончания у модальных путаются чаще всего.') + '</p>' +
+          (ошибки.length ? '<div class="раздел">Где ошибся</div><div class="термины">' +
+            ошибки.slice(0,12).map(function(п){
+              return '<div class="термин"><span class="тексты"><span class="де">' + экр(п.de) + '</span>' +
+                     '<span class="ру">' + экр(п.ru) + '</span></span></div>';
+            }).join('') + '</div>' : '') +
+          '<div style="height:16px"></div>' +
+          '<button class="кн главная широкая" id="ещёМод">Ещё раз</button></div>',
+          $('ещёМод').onclick = function(){ показать('модальные', набор, true); };
+      }
+
+      var п = очередь[0];
+      var карт = карточкаДля(п);
+      var выбором = сделано % 2 === 1;          // чередуем ввод и выбор
+
+      $('экран').innerHTML =
+        '<div class="счёт"><span><b>' + сделано + '</b> / ' + всего + '</span>' +
+          '<span class="кучка з"><i></i><b>' + верных + '</b></span></div>' +
+        '<div class="вопрос" style="font-size:clamp(19px,4.8vw,26px);line-height:1.4">' +
+          экр(п.с_пропуском).replace('___', '<span class="дырка">___</span>') + '</div>' +
+        '<div class="вопрос-под">' + экр(п.ru) + '</div>' +
+        '<div class="строка" style="justify-content:center;gap:8px">' +
+          '<span class="имя" style="flex:none;text-align:center"><b>' + п.инф + '</b>' +
+          '<small>' + (ЛИЦА[п.лицо] || п.лицо) + '</small></span></div>' +
+        '<div id="ответМод"></div>';
+
+      if (выбором) выбор(); else ввод();
+
+      function завершить(верно){
+        if (верно) верных++; else ошибки.push(п);
+        оценить(карт, верно ? 3 : 1);
+        сделано++;
+        очередь.shift();
+        if (!верно) очередь.push(п);
+
+        var о = document.createElement('div');
+        о.className = 'отклик видно ' + (верно ? 'хорошо' : 'плохо');
+        о.innerHTML = '<b>' + (верно ? 'Верно' : 'Правильно так:') + '</b>' +
+          '<span class="правильно">' + экр(п.de) + '</span>';
+        $('ответМод').appendChild(о);
+        сказать(карт);
+
+        var b = document.createElement('button');
+        b.className = 'кн главная широкая'; b.style.marginTop = '12px';
+        b.textContent = очередь.length ? 'Дальше →' : 'Показать результат';
+        $('ответМод').appendChild(b); b.focus();
+        b.onclick = шаг;
+      }
+
+      function ввод(){
+        $('ответМод').innerHTML =
+          '<input class="поле" id="модВвод" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="какая форма?">' +
+          умляутыHTML() + '<div style="height:12px"></div>' +
+          '<button class="кн главная широкая" id="модОк">Проверить</button>';
+        var поле = $('модВвод'); поле.focus(); подключитьУмляуты(поле);
+        поле.onkeydown = function(e){ if (e.key === 'Enter') проверить(); };
+        $('модОк').onclick = проверить;
+        function проверить(){
+          if ($('модОк').disabled) return;
+          var верно = норм(поле.value) === норм(п.форма);
+          поле.disabled = true; $('модОк').disabled = true;
+          поле.classList.add(верно ? 'верно' : 'неверно');
+          завершить(верно);
+        }
+      }
+
+      function выбор(){
+        // у разных лиц формы совпадают (ich möchte и er möchte), поэтому
+        // сначала убираем повторы, иначе в вариантах будет два одинаковых
+        var все = ФОРМЫ[п.инф] || [];
+        var уник = [], видели = {};
+        все.forEach(function(ф){ if (ф !== п.форма && !видели[ф]){ видели[ф] = 1; уник.push(ф); } });
+        var чужие = перемешать(уник).slice(0, 3);
+        // если форм не хватило, добираем у соседнего модального
+        if (чужие.length < 3){
+          var соседи = Object.keys(ФОРМЫ).filter(function(и){ return и !== п.инф; });
+          var донор = ФОРМЫ[соседи[Math.floor(Math.random() * соседи.length)]] || [];
+          донор.forEach(function(ф){
+            if (чужие.length < 3 && ф !== п.форма && !видели[ф]){ видели[ф] = 1; чужие.push(ф); }
+          });
+        }
+        var вар = перемешать([п.форма].concat(чужие));
+        $('ответМод').innerHTML = '<div class="варианты">' + вар.map(function(ф, k){
+          return '<button class="вариант" data-k="' + k + '" style="justify-content:center;font-size:18px;font-weight:700">' +
+                 '<span class="текстВарианта">' + экр(ф) + '</span>' +
+                 '<span class="разъяснение"></span></button>';
+        }).join('') + '</div>';
+        var кн = document.querySelectorAll('.вариант');
+        кн.forEach(function(b, k){
+          b.onclick = function(){
+            var верно = вар[k] === п.форма;
+            звукОтвета(верно);
+            раскрытьВКнопках(кн, вар, п.форма, b,
+              '<b>Верно</b>' + экр(п.de) + '<span class="перев">' + экр(п.ru) + '</span>');
+            завершить(верно);
+          };
+        });
+      }
+    }
+  }
+};
+
+/* ================= экран: добавить слово ================= */
+ЭКРАНЫ.добавить = function(){
+  шапка('Своё слово');
+  $('экран').innerHTML =
+    '<h1 class="большой">Новое слово</h1>' +
+    '<p class="подзаголовок">Попадёт в «Мой словарик» сразу. Клипа у него пока нет — прочитает системный голос, пока Claude не запишет нормальный.</p>' +
+    '<input class="поле" id="нДе" placeholder="слово по-немецки" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">' +
+    умляутыHTML() +
+    '<div style="height:12px"></div>' +
+    '<input class="поле" id="нРу" placeholder="перевод" autocomplete="off">' +
+    '<div style="height:16px"></div>' +
+    '<button class="кн главная широкая" id="кСохранить">Добавить</button>' +
+    '<p class="подзаголовок" id="сказ" style="text-align:center;margin-top:12px"></p>' +
+    '<div class="раздел">Уже добавлено</div><div class="термины" id="мои"></div>' +
+    '<div style="height:12px"></div>' +
+    '<button class="кн широкая" id="кСкопировать">Скопировать весь список</button>';
+
+  var поле = $('нДе'); поле.focus(); подключитьУмляуты(поле);
+  function читать(){ try{ return JSON.parse(localStorage.getItem('nemeckiy_zubr_' + ПРОФИЛЬ) || '[]'); }catch(e){ return []; } }
+  function писать(с){ localStorage.setItem('nemeckiy_zubr_' + ПРОФИЛЬ, JSON.stringify(с)); показатьМои(); }
+
+  function показатьМои(){
+    var с = читать();
+    $('мои').innerHTML = с.length ? с.map(function(c,i){
+      return '<div class="термин"><span class="тексты"><span class="де">' + экр(c.de) + '</span>' +
+             '<span class="ру">' + экр(c.ru) + '</span></span><button data-у="' + i + '">✕</button></div>';
+    }).join('') : '<div class="пусто" style="padding:18px">Пока пусто.</div>';
+    document.querySelectorAll('[data-у]').forEach(function(b){
+      b.onclick = function(){ var с = читать(); с.splice(+b.dataset.у,1); писать(с); };
+    });
+  }
+  показатьМои();
+
+  $('кСохранить').onclick = function(){
+    var de = $('нДе').value.trim(), ru = $('нРу').value.trim();
+    if (!de || !ru){ $('сказ').textContent = 'Заполни оба поля.'; return; }
+    var с = читать();
+    if (с.some(function(x){ return x.de.toLowerCase() === de.toLowerCase(); })){
+      $('сказ').textContent = '«' + de + '» уже есть.'; return;
+    }
+    с.push({ de:de, ru:ru, t:Date.now() });
+    писать(с);
+    $('сказ').textContent = '«' + de + '» добавлено.';
+    $('нДе').value = ''; $('нРу').value = ''; $('нДе').focus();
+    var мой = НАБОРЫ[0];
+    мой.карточки = мой.карточки.concat([карточка(de, ru, 'my' + Date.now(), null, '')]);
+  };
+  $('кСкопировать').onclick = function(){
+    var текст = читать().map(function(c){ return c.de + ' = ' + c.ru; }).join('\n');
+    if (!текст){ $('сказ').textContent = 'Пока нечего копировать.'; return; }
+    (navigator.clipboard ? navigator.clipboard.writeText(текст) : Promise.reject())
+      .then(function(){ $('сказ').textContent = 'Скопировано — можно отправить Claude на озвучку.'; })
+      .catch(function(){ prompt('Скопируй вручную:', текст); });
+  };
+};
+
+/* ================= запуск ================= */
+$('назад').onclick = назад;
+загрузить(function(){
+  var изУрока = изАдреса();
+  if (изУрока){
+    $('экран').innerHTML = '<div class="пусто">Собираю слова урока…</div>';
+    return открытьУрок(изУрока, function(набор){
+      текущийЭкран = 'главный';           // чтобы «назад» вёл к списку наборов
+      показать('набор', набор);
+    });
+  }
+  показать('главный', null, true);
+});
+
+document.addEventListener('keydown', function(e){
+  var а = document.activeElement;
+  if (а && (а.tagName === 'INPUT' || а.tagName === 'TEXTAREA')) return;
+  if (e.key === 'Escape') назад();
+});
+})();
+
+</script>
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

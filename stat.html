@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Статистика — курс немецкого</title>
+<style>
+
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; min-height:100vh; }
+  .lp h1 { font-family:Georgia,"Iowan Old Style",serif; font-size:clamp(23px,5vw,31px); font-weight:600; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:64ch; }
+  .who { display:flex; align-items:center; gap:9px; margin-top:14px; flex-wrap:wrap; }
+  .who .lbl { font-size:13px; color:var(--ink-muted); }
+  .who button { background:var(--surface); border:1px solid var(--line); color:var(--ink); border-radius:999px; padding:8px 16px; font-size:13.5px; font-family:inherit; cursor:pointer; min-height:40px; }
+  .who button.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); font-weight:600; }
+
+  .cards { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin-top:24px; }
+  .card { background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:15px 16px; }
+  .card .n { font-family:Georgia,serif; font-size:30px; font-weight:600; color:var(--accent); font-variant-numeric:tabular-nums; line-height:1.1; }
+  .card .n.warm { color:var(--play); }
+  .card .t { font-size:12.5px; color:var(--ink-muted); margin-top:3px; }
+
+  .block { margin-top:30px; }
+  .block h2 { font-family:Georgia,serif; font-size:18px; font-weight:600; margin:0 0 4px; }
+  .block .sub { font-size:13px; color:var(--ink-muted); margin:0 0 14px; }
+
+  .heat { display:grid; grid-auto-flow:column; grid-template-rows:repeat(7,1fr); gap:3px; overflow-x:auto; padding-bottom:4px; }
+  .heat i { width:13px; height:13px; border-radius:3px; background:var(--line); display:block; }
+  .heat i.l1, .heat-legend i.l1 { background:color-mix(in srgb, var(--accent) 30%, var(--line)); }
+  .heat i.l2, .heat-legend i.l2 { background:color-mix(in srgb, var(--accent) 55%, var(--line)); }
+  .heat i.l3, .heat-legend i.l3 { background:color-mix(in srgb, var(--accent) 78%, var(--line)); }
+  .heat i.l4, .heat-legend i.l4 { background:var(--accent); }
+  .heat-legend { display:flex; align-items:center; gap:6px; font-size:11.5px; color:var(--ink-faint); margin-top:9px; }
+  .heat-legend i { width:11px; height:11px; border-radius:3px; display:block; background:var(--line); }
+
+  .fore { display:grid; grid-template-columns:repeat(7,1fr); gap:7px; align-items:end; height:130px; }
+  .fore .col { display:flex; flex-direction:column; justify-content:flex-end; align-items:center; height:100%; gap:5px; }
+  .fore .bar { width:100%; background:var(--accent); border-radius:6px 6px 0 0; min-height:3px; transition:height .3s ease; }
+  .fore .bar.today { background:var(--play); }
+  .fore .cap { font-size:11px; color:var(--ink-muted); text-align:center; }
+  .fore .val { font-size:12px; font-variant-numeric:tabular-nums; color:var(--ink); font-weight:600; }
+
+  .decks { display:grid; gap:7px; }
+  .deck-row { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--line); border-radius:9px; padding:10px 13px; font-size:13.5px; }
+  .deck-row .nm { flex:1; min-width:0; }
+  .deck-row .pb { width:110px; height:7px; border-radius:999px; background:var(--line); overflow:hidden; flex-shrink:0; }
+  .deck-row .pb i { display:block; height:100%; background:var(--accent); }
+  .deck-row .cnt { font-size:12.5px; color:var(--ink-muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .empty { color:var(--ink-muted); font-size:14px; padding:22px 0; }
+  @media (max-width:520px){ .heat i { width:11px; height:11px; } }
+</style>
+</head>
+<body>
+<a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+
+<div class="lp">
+  <div class="eyebrow">Курс немецкого · статистика</div>
+  <h1>Как идут дела</h1>
+  <p class="lede">Считается по всем колодам сразу — уроки, занятия с Дашей и ЗУБР. Данные лежат в этом устройстве, поэтому на телефоне и на маке картина будет своя.</p>
+
+  <div class="who">
+    <span class="lbl">Чья статистика:</span>
+    <button data-p="grigoriy">Григорий</button>
+    <button data-p="polina">Полина</button>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="block">
+    <h2>Занятия</h2>
+    <p class="sub">Каждый квадрат — день. Чем темнее, тем больше слов прошло за день.</p>
+    <div class="heat" id="heat"></div>
+    <div class="heat-legend"><span>реже</span><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><span>чаще</span></div>
+  </div>
+
+  <div class="block">
+    <h2>Что ждёт на неделе</h2>
+    <p class="sub">Сколько слов подойдёт к повторению в ближайшие дни. Новые слова сюда не входят — их количество вы задаёте сами.</p>
+    <div class="fore" id="fore"></div>
+  </div>
+
+  <div class="block">
+    <h2>По колодам</h2>
+    <p class="sub">Сколько слов из каждого урока уже держится в памяти дольше трёх недель.</p>
+    <div class="decks" id="decks"></div>
+  </div>
+</div>
+
+<a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+
+<script>
+(function(){
+"use strict";
+var ДЕНЬ = 86400000;
+var PROFILE = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+
+document.querySelectorAll('.who button').forEach(function(b){
+  b.classList.toggle('on', b.getAttribute('data-p') === PROFILE);
+  b.onclick = function(){
+    localStorage.setItem('nemeckiy_profile', b.getAttribute('data-p'));
+    location.reload();
+  };
+});
+
+function сегодня(){ var d = new Date(); d.setHours(0,0,0,0); return d.getTime(); }
+function датаКлюч(ts){
+  var d = new Date(ts);
+  return d.getFullYear() + '-' + ('0'+(d.getMonth()+1)).slice(-2) + '-' + ('0'+d.getDate()).slice(-2);
+}
+function скл(n, a, b, c){ n = Math.abs(n) % 100; var d = n % 10;
+  if (n > 10 && n < 20) return c; if (d > 1 && d < 5) return b; if (d === 1) return a; return c; }
+
+/* ---- собираем все карточки этого профиля ---- */
+var префикс = 'nemeckiy_f_' + PROFILE + '_';
+var состояния = [], поУрокам = {};
+for (var i = 0; i < localStorage.length; i++){
+  var k = localStorage.key(i);
+  if (!k || k.indexOf(префикс) !== 0) continue;
+  var с; try { с = JSON.parse(localStorage.getItem(k)); } catch(e){ continue; }
+  if (!с || !с.S) continue;
+  состояния.push(с);
+  var хвост = k.slice(префикс.length);
+  var урок = хвост.split('_interactive')[0];
+  if (хвост.indexOf('_interactive') < 0) урок = 'zubr';
+  (поУрокам[урок] = поУрокам[урок] || []).push(с);
+}
+
+var выучено = состояния.filter(function(с){ return с.S >= 21; }).length;
+var всего = состояния.length;
+var провалов = состояния.reduce(function(a, с){ return a + (с.lapses || 0); }, 0);
+
+/* ---- журнал ---- */
+var журнал = {};
+try { журнал = JSON.parse(localStorage.getItem('nemeckiy_log_' + PROFILE) || '{}'); } catch(e){}
+var ответовВсего = 0, ответовВерно = 0;
+Object.keys(журнал).forEach(function(д){ ответовВсего += журнал[д][0]; ответовВерно += журнал[д][1]; });
+
+var подряд = 0;
+(function(){
+  var д = сегодня();
+  if (!журнал[датаКлюч(д)]) д -= ДЕНЬ;      // сегодня ещё могли не заниматься
+  while (журнал[датаКлюч(д)]) { подряд++; д -= ДЕНЬ; }
+})();
+
+var доля = ответовВсего ? Math.round(ответовВерно / ответовВсего * 100) : null;
+
+document.getElementById('cards').innerHTML =
+  плитка(выучено, 'слов держится в памяти') +
+  плитка(всего - выучено, 'ещё в работе', true) +
+  плитка(подряд, скл(подряд,'день','дня','дней') + ' подряд') +
+  (доля === null ? '' : плитка(доля + '%', 'ответов верных'));
+
+function плитка(n, t, тепло){
+  return '<div class="card"><div class="n' + (тепло ? ' warm' : '') + '">' + n + '</div><div class="t">' + t + '</div></div>';
+}
+
+/* ---- календарь ---- */
+(function(){
+  var недель = 20, эл = document.getElementById('heat');
+  var конец = сегодня();
+  var деньНедели = (new Date(конец).getDay() + 6) % 7;      // понедельник = 0
+  var начало = конец - (деньНедели + (недель - 1) * 7) * ДЕНЬ;
+  var html = '';
+  for (var d = начало; d <= конец; d += ДЕНЬ){
+    var з = журнал[датаКлюч(d)];
+    var n = з ? з[0] : 0;
+    var кл = n === 0 ? '' : n < 10 ? 'l1' : n < 25 ? 'l2' : n < 50 ? 'l3' : 'l4';
+    html += '<i class="' + кл + '" title="' + датаКлюч(d) + (n ? ' — ' + n + ' ' + скл(n,'слово','слова','слов') : '') + '"></i>';
+  }
+  эл.innerHTML = html;
+})();
+
+/* ---- прогноз ---- */
+(function(){
+  var дни = [], макс = 1;
+  for (var i = 0; i < 7; i++){
+    var d = сегодня() + i * ДЕНЬ;
+    var n = состояния.filter(function(с){
+      return с.due <= d + ДЕНЬ - 1 && с.due > (i === 0 ? -Infinity : d - 1);
+    }).length;
+    if (i === 0) n = состояния.filter(function(с){ return с.due <= d; }).length;
+    дни.push(n); if (n > макс) макс = n;
+  }
+  var имена = ['сегодня','завтра'];
+  document.getElementById('fore').innerHTML = дни.map(function(n, i){
+    var подпись = i < 2 ? имена[i]
+      : new Date(сегодня() + i * ДЕНЬ).toLocaleDateString('ru', { weekday:'short' });
+    return '<div class="col"><span class="val">' + n + '</span>' +
+           '<div class="bar' + (i === 0 ? ' today' : '') + '" style="height:' + Math.round(n / макс * 88) + '%"></div>' +
+           '<span class="cap">' + подпись + '</span></div>';
+  }).join('');
+})();
+
+/* ---- по колодам ---- */
+(function(){
+  var имена = { zubr: 'ЗУБР — свой словарь' };
+  var ключи = Object.keys(поУрокам).sort();
+  if (!ключи.length){
+    document.getElementById('decks').innerHTML = '<div class="empty">Пока ничего не изучено. Загляни в любой урок или в ЗУБР.</div>';
+    return;
+  }
+  document.getElementById('decks').innerHTML = ключи.map(function(к){
+    var список = поУрокам[к];
+    var знаю = список.filter(function(с){ return с.S >= 21; }).length;
+    var имя = имена[к] || к.replace(/^urok(\d+)$/, 'Урок $1')
+                            .replace(/^dasha(\d+)$/, 'Занятие $1 с Дашей')
+                            .replace(/^polya(\d+)$/, 'Занятие $1 Полины');
+    return '<div class="deck-row"><span class="nm">' + имя + '</span>' +
+           '<span class="pb"><i style="width:' + Math.round(знаю / список.length * 100) + '%"></i></span>' +
+           '<span class="cnt">' + знаю + ' из ' + список.length + '</span></div>';
+  }).join('');
+})();
+})();
+</script>
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

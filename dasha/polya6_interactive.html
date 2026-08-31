@@ -1,0 +1,1448 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие 6 Полины с Дашей — конспект со звуком</title>
+
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --pk:#b0407a; --pk-bg:#fbeaf2; --tr:#8a2be2;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --pk:#e88fb8; --pk-bg:#2b1620; --tr:#c9a4f0;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --pk:#e88fb8; --pk-bg:#2b1620; --tr:#c9a4f0;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--pk); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(23px,5vw,31px); font-weight:600; }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:64ch; }
+  .meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .chip-meta { font-size:12.5px; background:var(--surface); border:1px solid var(--line); padding:6px 12px; border-radius:999px; color:var(--ink-muted); }
+  .chip-meta b { color:var(--ink); }
+  .hint { display:inline-flex; align-items:center; gap:6px; margin-top:10px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  .toc { background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:22px; }
+  .toc b { font-size:13px; color:var(--ink-muted); display:block; margin-bottom:8px; }
+  .toc ol { margin:0; padding-left:20px; columns:2; column-gap:24px; font-size:13.5px; }
+  .toc li { margin:3px 0; break-inside:avoid; }
+  .toc a { color:var(--accent); text-decoration:none; } .toc a:hover { text-decoration:underline; }
+  section.block { margin-top:36px; scroll-margin-top:62px; }
+  .block h2 { font-size:19px; font-weight:600; display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--pk); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:64ch; }
+  button.play { flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .warn-box { background:var(--warn-bg); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .warn-box b { color:var(--warn); } .warn-box .big { font-size:15px; color:var(--ink); font-weight:700; display:block; margin-bottom:4px; }
+  .dasha-box { background:var(--pk-bg); border:1px solid var(--line); border-left:4px solid var(--pk); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .dasha-box b { color:var(--pk); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:8px; }
+  .grid3 { display:grid; grid-template-columns:repeat(auto-fill,minmax(124px,1fr)); gap:8px; }
+  .wcard { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 12px; box-shadow:var(--shadow); }
+  .wcard.der { border-left:4px solid var(--der); } .wcard.die { border-left:4px solid var(--die); } .wcard.das { border-left:4px solid var(--das); }
+  .wcard .txt { flex:1; min-width:0; }
+  .wcard .de { font-family:Georgia,serif; font-weight:700; font-size:15px; overflow-wrap:anywhere; }
+  .wcard .de .art-der { color:var(--der); } .wcard .de .art-die { color:var(--die); } .wcard .de .art-das { color:var(--das); }
+  .wcard .de b { color:var(--play); }
+  .wcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:1px; }
+  .wcard .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .wcard button.play { width:30px; height:30px; font-size:13px; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .pcard { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 15px; box-shadow:var(--shadow); }
+  .pcard .txt { flex:1; min-width:0; }
+  .pcard .de { font-family:Georgia,serif; font-size:15.5px; font-weight:600; }
+  .pcard .de b { color:var(--play); }
+  .pcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pcard .ru { font-size:12.5px; color:var(--ink-muted); margin-top:1px; }
+  .conj { display:flex; flex-direction:column; gap:6px; }
+  .conj-row { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:8px 10px 8px 13px; box-shadow:var(--shadow); }
+  .conj-row.odd { background:var(--surface-2); }
+  .conj-row .pron { flex:0 0 112px; font-size:12.5px; color:var(--ink-muted); }
+  .conj-row .form { flex:1; min-width:0; }
+  .conj-row .form .de { font-family:Georgia,serif; font-size:16px; font-weight:700; }
+  .conj-row .form .de em { font-style:normal; color:var(--play); }
+  .conj-row .form .tr { font-size:11.5px; color:var(--tr); font-weight:600; }
+  .conj-row button.play { width:30px; height:30px; font-size:13px; }
+  /* сравнение пар */
+  .vs { display:grid; grid-template-columns:1fr; gap:10px; }
+  @media(min-width:600px){ .vs { grid-template-columns:1fr 1fr; } }
+  .vs-card { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow); }
+  .vs-card .head { font-family:Georgia,serif; font-weight:700; font-size:17px; color:var(--accent); margin-bottom:3px; }
+  .vs-card .sub { font-size:12px; color:var(--ink-muted); margin-bottom:9px; }
+  .vs-card .ex { display:flex; align-items:center; gap:9px; }
+  .vs-card .ex .txt { flex:1; min-width:0; }
+  .vs-card .ex .de { font-family:Georgia,serif; font-size:14px; font-weight:600; }
+  .vs-card .ex .tr { font-size:11px; color:var(--tr); font-weight:600; }
+  .vs-card .ex .ru { font-size:11.5px; color:var(--ink-muted); }
+  .vs-card .ex button.play { width:30px; height:30px; font-size:13px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:82%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .bubble .txt .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw-box { background:var(--pk-bg); border:1px solid var(--line); border-left:4px solid var(--pk); border-radius:10px; padding:16px 18px; }
+  .hw-item { display:flex; gap:10px; align-items:flex-start; padding:9px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .hw-item:last-child { border-bottom:none; }
+  .hw-item input { width:18px; height:18px; margin-top:2px; accent-color:var(--pk); flex-shrink:0; cursor:pointer; }
+  .hw-item label { cursor:pointer; flex:1; }
+  .hw-item.done label { text-decoration:line-through; color:var(--ink-faint); }
+  .hw-progress { font-size:13px; color:var(--ink-muted); margin-bottom:12px; }
+  .ex-box { background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:14px 16px;
+    margin-top:10px; font-family:Georgia,serif; font-size:14.5px; line-height:2.15; }
+  .ex-box .n { font-family:-apple-system,sans-serif; font-size:12px; color:var(--ink-faint); margin-right:2px; }
+  .ex-box .hint-ru { font-family:-apple-system,sans-serif; font-size:12px; color:var(--ink-muted); }
+  .ex-box .blank { display:inline-block; min-width:92px; border-bottom:1.5px solid var(--play); }
+  .ex-box .blank2 { display:inline-block; min-width:180px; border-bottom:1.5px solid var(--play); }
+  .src-note { font-size:11.5px; color:var(--ink-faint); margin-top:7px; line-height:1.45; }
+  .mat-link { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); padding:12px 14px; text-decoration:none; color:var(--ink);
+    box-shadow:var(--shadow); margin-top:8px; font-size:14px; }
+  .mat-link .ico { font-size:21px; }
+  .mat-link .sub { font-size:12px; color:var(--ink-muted); }
+  .mat-link:hover { border-color:var(--pk); }
+  .postab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface-2);
+    border-radius:10px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:6px; }
+  .postab th, .postab td { padding:9px 11px; border:1px solid var(--line); text-align:center; }
+  .postab th { background:var(--accent); color:var(--accent-ink); font-weight:600; font-size:12.5px;
+    letter-spacing:.03em; text-transform:uppercase; }
+  .postab td { font-family:Georgia,serif; font-size:15px; }
+  .postab td b { color:var(--play); }
+  .hwbox { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play);
+    border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+  .hwbox .hwnum { display:inline-block; background:var(--play); color:var(--play-ink); font-weight:700;
+    font-size:12px; padding:2px 9px; border-radius:999px; margin-bottom:8px; }
+  .hwbox h3 { margin:0 0 8px; font-size:15.5px; font-family:Georgia,serif; }
+  .hwtext { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+    margin:10px 0; font-family:Georgia,serif; font-size:14.5px; line-height:1.65; }
+  .hwtext p { margin:0 0 10px; } .hwtext p:last-child { margin-bottom:0; }
+  .hwtext b { color:var(--play); }
+  .para { display:flex; gap:11px; align-items:flex-start; background:var(--surface); border:1px solid var(--line);
+    border-left:4px solid var(--accent); border-radius:9px; padding:12px 13px; margin-bottom:9px; box-shadow:var(--shadow); }
+  .para .ptxt { flex:1; min-width:0; }
+  .para .pde { font-family:Georgia,serif; font-size:14.5px; line-height:1.6; }
+  .para .pde b { color:var(--play); }
+  .para .pru { font-size:12.5px; color:var(--ink-muted); margin-top:7px; padding-top:7px; border-top:1px dashed var(--line); line-height:1.5; }
+  .para button.play { flex-shrink:0; width:32px; height:32px; font-size:13px; margin-top:2px; }
+  .hwrow { display:flex; align-items:flex-start; gap:10px; margin:8px 0; }
+  .hwrow .n { flex-shrink:0; font-weight:700; color:var(--accent); font-size:13px; min-width:26px; padding-top:7px; }
+  .hwrow .q { flex:1; min-width:0; }
+  .fld { width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:7px 10px;
+    border:1px solid var(--line); border-radius:7px; background:var(--surface); color:var(--ink); }
+  .fld:focus { outline:2px solid var(--accent); outline-offset:1px; }
+  .fld.short { max-width:190px; }
+  textarea.fld { min-height:62px; resize:vertical; line-height:1.5; }
+  .opt { display:flex; align-items:flex-start; gap:8px; margin:5px 0; font-size:13.5px; cursor:pointer; }
+  .opt input { margin-top:3px; flex-shrink:0; width:17px; height:17px; accent-color:var(--accent); }
+  .mv { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:9px 0; font-size:14px; line-height:1.7; }
+  .mv .num { font-weight:700; color:var(--accent); font-size:12.5px; }
+  .mv .fld { width:130px; }
+  .hint-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn);
+    border-radius:8px; padding:11px 13px; font-size:13px; color:var(--ink-muted); margin:10px 0; }
+  .origlink { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--accent);
+    text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:5px 12px; margin-top:8px; }
+  .saveinfo { font-size:12px; color:var(--ink-faint); margin-top:10px; }
+  footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+</style>
+
+
+<style id="backbar-css">
+  .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    padding:7px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar a.bb-link:active{ transform:scale(0.97); }
+  .backbar .bb-title{ color:rgba(255,255,255,0.72); font-size:12.5px; margin-left:auto;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52%; }
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+</style>
+
+</head>
+<body>
+<div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Занятие 6 с Дашей — 22.08.2026</span></div>
+
+<div class="lp">
+  <div class="eyebrow">Занятия Полины с Дашей · конспект 6</div>
+  <h1>Занятие 6. Вопросы, позиция глагола и описание картинки</h1>
+  <p class="lede">22 августа 2026, 52 минуты. Разобрали домашку с вопросительными словами, докопались до правила «глагол на второй <b>позиции</b>», выяснили, куда ставить <i>nicht</i> и почему в одном месте нельзя <i>kein</i>, прочитали два текста из учебника и научились описывать картинку. У каждой фразы озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+
+  <div class="toc">
+    <b>Что в занятии</b>
+    <ol>
+      <li><a href="#s1">Домашка: вопросительные слова</a></li>
+      <li><a href="#s2">⚠️ leben или wohnen</a></li>
+      <li><a href="#s3">⚠️ wie или welche</a></li>
+      <li><a href="#s4">⭐ Глагол на второй позиции</a></li>
+      <li><a href="#s5">Рассказ о себе</a></li>
+      <li><a href="#s6">⭐ После haben — Akkusativ</a></li>
+      <li><a href="#s7">⭐ Куда ставить nicht</a></li>
+      <li><a href="#s8">Тексты: Paco и Nicole</a></li>
+      <li><a href="#s9">Новые слова</a></li>
+      <li><a href="#s10">Описание картинки</a></li>
+      <li><a href="#s11">📚 Домашка от Даши</a></li>
+    </ol>
+  </div>
+
+  <section class="block" id="s1">
+    <h2><span class="num">1</span> Разбор домашки: вопросительные слова</h2>
+    <p class="desc">Продолжение прошлого занятия. К каждому ответу нужно было построить вопрос.</p>
+    <div class="card-list" id="hw"></div>
+  </section>
+
+  <section class="block" id="s2">
+    <h2><span class="num">2</span> ⚠️ leben или wohnen</h2>
+    <div class="warn-box">
+      <span class="big">Ошибкой не будет ни то, ни другое — но оттенок разный</span>
+      <b>wohnen</b> — жить физически, по адресу. Это основное слово для «я живу в…».<br>
+      <b>leben</b> — больше про <b>образ жизни</b>, про то, как человек живёт.<br><br>
+      Даша: «Можно и то, и то использовать синонимично, ошибки не будет».
+    </div>
+    <div class="card-list" id="lw"></div>
+  </section>
+
+  <section class="block" id="s3">
+    <h2><span class="num">3</span> ⚠️ wie или welche — здесь Полина споткнулась</h2>
+    <div class="warn-box">
+      <span class="big">wie — «каков», welche — «который из»</span>
+      <b>wie</b> спрашивает про <b>качество</b>: какая она — добрая, строгая, весёлая?<br>
+      <b>welche</b> спрашивает про <b>выбор из группы</b>: которая из этих бабушек твоя?<br><br>
+      Полина сказала <i>Welche ist deine Großmutter?</i>, имея в виду качество. Даша объяснила: если бы стояла группа бабушек и надо было показать свою — тогда <i>welche</i>. А про характер — <i>wie</i>.
+    </div>
+    <div class="card-list" id="wiewelche"></div>
+  </section>
+
+  <section class="block" id="s4">
+    <h2><span class="num">4</span> ⭐ Главное: глагол на второй ПОЗИЦИИ, а не на втором слове</h2>
+    <div class="warn-box">
+      <span class="big">Полина решила, что правило не работает — и это правильный вопрос</span>
+      В <i>Wie viele Kinder habt ihr?</i> глагол стоит третьим словом. Значит, правило сломалось? Нет.<br><br>
+      <b>Второе место — это не второе слово, а вторая позиция.</b> А <i>wie viele Kinder</i> — это <b>одна неразрывная позиция целиком</b>. Её нельзя разделить: нельзя сказать <i>Wie Kinder habt ihr viele</i>.
+    </div>
+    <table class="postab">
+      <tr><th>Позиция 1</th><th>Позиция 2</th><th>дальше</th></tr>
+      <tr><td>Wie viele Kinder</td><td><b>habt</b></td><td>ihr?</td></tr>
+    </table>
+    <div class="grammar-box" style="margin-top:14px">
+      <b class="hl">wie viel</b> или <b class="hl">wie viele</b>? С исчисляемыми — <b>wie viele</b> (детей можно посчитать). Полина догадалась сама.
+    </div>
+    <p class="desc" style="margin-top:14px">Тот же вопрос можно задать ещё несколькими способами:</p>
+    <div class="card-list" id="pos"></div>
+  </section>
+
+  <section class="block" id="s5">
+    <h2><span class="num">5</span> Рассказ о себе — импровизация</h2>
+    <div class="link-box">
+      💬 <b>Даша похвалила:</b> «Вообще замечательный рассказ, даже артикль вставили». Полина призналась, что смотрела видео про Akkusativ — и это сразу стало заметно.
+    </div>
+    <div class="card-list" id="self"></div>
+  </section>
+
+  <section class="block" id="s6">
+    <h2><span class="num">6</span> ⭐ После haben — всегда Akkusativ</h2>
+    <div class="warn-box">
+      <span class="big">Правило без исключений, Полина спросила про него сама</span>
+      После <b>haben</b> — <b>всегда Akkusativ</b>. И в <b>95% случаев</b> там будет неопределённый артикль.<br><br>
+      Логика простая: <i>иметь</i> — кого? что? Это и есть вопросы винительного падежа.<br>
+      Мужской род в Akkusativ даёт <b class="hl">einen</b>.
+    </div>
+    <div class="card-list" id="akk"></div>
+  </section>
+
+  <section class="block" id="s7">
+    <h2><span class="num">7</span> ⭐ Куда ставить nicht — и почему тут нельзя kein</h2>
+    <div class="grammar-box">
+      Полина помнила «nicht ставится в конец» и применила это не туда. Даша уточнила правило:<br><br>
+      Отрицаем <b class="hl">глагол</b> → <i>nicht</i> идёт <b>в конец</b>.<br>
+      Отрицаем <b class="hl">другую часть речи</b> → <i>nicht</i> встаёт <b>прямо перед ней</b>.
+    </div>
+    <div class="card-list" id="nicht"></div>
+    <div class="warn-box" style="margin-top:14px">
+      <span class="big">Почему нельзя «arbeitet als kein Verkäuferin»</span>
+      <b>kein обязан стоять непосредственно перед существительным.</b> А здесь перед существительным уже сидит предлог <i>als</i>, и подвинуть его некуда — <i>kein</i> просто не влезает.<br><br>
+      Поэтому только <b>nicht als Verkäuferin</b>. Зато без предлога <i>kein</i> прекрасно работает: <b>Patricia ist keine Verkäuferin</b> — она не продавщица.
+    </div>
+  </section>
+
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> Учебник Menschen A1, стр. 21 — два текста</h2>
+    <p class="desc">Задание было найти и исправить ошибки в предложениях про Пако.</p>
+    <div class="card-list" id="paco"></div>
+    <p class="desc" style="margin-top:16px">Второй текст — про Николь Мозер из Австрии:</p>
+    <div class="card-list" id="nicole"></div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Новые слова</h2>
+    <div class="grid2" id="vocab"></div>
+    <div class="link-box" style="margin-top:14px">
+      💡 <b>Мнемоника от Даши:</b> <b>Sternzeichen</b> легко запомнить через <b>Morgenstern</b> — утренняя звезда. <i>Stern</i> = звезда, <i>Zeichen</i> = знак. Вместе «звёздный знак» = знак зодиака.
+    </div>
+    <div class="card-list" id="morgen" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> Описание картинки — новый навык</h2>
+    <div class="grammar-box">
+      Даша дала два выражения и велела записать: их используют всегда, когда описывают картинку.<br><br>
+      Плюс важная мелочь: <b class="hl">auf dem Bild</b> — «на картинке», всегда так (не <i>in der Bild</i>). И глагол <b class="hl">ansehen</b> — смотреть <b>на</b> что-то: приставка <i>an-</i> даёт направленность.
+    </div>
+    <div class="grid2" id="plan"></div>
+    <p class="desc" style="margin-top:14px">Образец описания, который дала Даша:</p>
+    <div class="card-list" id="beispiel"></div>
+    <p class="desc" style="margin-top:16px">Формулировки заданий в учебнике:</p>
+    <div class="card-list" id="auftrag"></div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> 📚 Домашка от Даши</h2>
+    <p class="desc">Прислана в Telegram 22.08.2026. Всё можно заполнять прямо здесь — написанное сохраняется в этом браузере, ничего не потеряется, если закрыть страницу.</p>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 1</span>
+      <h3>Прочитать текст, перевести, выписать незнакомые слова</h3>
+      <p class="desc" style="margin:0 0 6px">Каждый абзац озвучен — слушай и читай глазами одновременно.</p>
+      <div class="card-list" id="hwText"></div>
+      <div class="hint-box">
+        💡 <b>Слова, на которых обычно спотыкаются</b> — послушай их отдельно, они все есть в тексте:
+      </div>
+      <div class="grid2" id="hwWords"></div>
+      <p class="desc" style="margin-top:12px">Выпиши сюда свои незнакомые слова:</p>
+      <textarea class="fld" id="f_words" rows="5" placeholder="слово — перевод, по одному в строке"></textarea>
+      <a class="origlink" href="polya6_hw_text.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 2</span>
+      <h3>Hast du den Text verstanden? — ответить на вопросы</h3>
+      <div id="hwQuiz"></div>
+      <a class="origlink" href="polya6_hw_fragen.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 3</span>
+      <h3>Перевести второй текст с русского на немецкий</h3>
+      <div class="hwtext" style="font-family:-apple-system,sans-serif; font-size:13.5px">
+        <p><b>Моя семья</b></p>
+        <p>У меня большая семья из шести человек: я, мама, папа, старшая сестра, бабушка и дедушка. Мы живём все вместе с собакой Бимом и кошкой Муркой в большом доме в деревне. Мой папа встаёт раньше всех, потому что ему рано на работу. Он работает доктором. Обычно бабушка готовит нам завтрак. Я обожаю овсяную кашу, а моя сестра Аня — блины.</p>
+        <p>После завтрака мы собираемся и идём в школу. Моя сестра учится в пятом классе, а я — во втором. Мы любим учиться и играть с друзьями. Больше всего я люблю географию. Когда мы приходим домой из школы, мы смотрим телевизор, а потом ужинаем и делаем уроки. Иногда мы помогаем бабушке и маме в огороде, где они выращивают овощи и фрукты.</p>
+      </div>
+      <div class="hint-box">
+        💡 <b>Подсказки по лексике:</b> деревня — <i>das Dorf</i> · овсяная каша — <i>der Haferbrei</i> · блины — <i>die Pfannkuchen</i> · огород — <i>der Garten</i> · выращивать — <i>anbauen</i> · собираться — <i>sich fertig machen</i> · класс — <i>die Klasse</i>.<br>
+        Не забудь: <b>после haben — Akkusativ</b> (это как раз с занятия), и глагол на <b>второй позиции</b>.
+      </div>
+      <textarea class="fld" id="f_uebersetzung" rows="10" placeholder="Meine Familie&#10;&#10;Ich habe eine große Familie..."></textarea>
+      <a class="origlink" href="polya6_hw_ru.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 4</span>
+      <h3>Составить 7 вопросов по тексту</h3>
+      <div class="hint-box">
+        💡 Используй вопросительные слова с занятия: <b>Wer? Was? Wo? Wie viele? Wie alt? Wie? Welche?</b><br>
+        И помни про <b>вторую позицию</b>: <i>Wie viele Geschwister <b>hat</b> die Mutter?</i>
+      </div>
+      <div id="hwSieben"></div>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 5</span>
+      <h3>Вставить подходящие модальные глаголы</h3>
+      <div class="hint-box">
+        💡 Выбирай из: <b>können</b> (мочь, уметь) · <b>müssen</b> (быть должным) · <b>dürfen</b> (иметь разрешение) · <b>wollen</b> (хотеть) · <b>sollen</b> (следует) · <b>möchten</b> (хотел бы).<br>
+        Не забудь <b>проспрягать</b> под лицо — модальный глагол стоит на второй позиции, а смысловой уходит в конец в инфинитиве.
+      </div>
+      <div id="hwModal"></div>
+      <a class="origlink" href="polya6_hw_modal.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 6</span>
+      <h3>Аудирование — Teil 1 и Teil 2</h3>
+      <p class="desc" style="margin:0">Даша прислала ссылку на аудирование в Telegram. Сделать первые две части и отправить ей, как получилось.</p>
+      <div class="hwrow" style="margin-top:10px">
+        <span class="n">Teil 1</span>
+        <span class="q"><input class="fld" id="f_teil1" placeholder="что получилось, вопросы"></span>
+      </div>
+      <div class="hwrow">
+        <span class="n">Teil 2</span>
+        <span class="q"><input class="fld" id="f_teil2" placeholder="что получилось, вопросы"></span>
+      </div>
+    </div>
+
+    <p class="saveinfo">💾 Всё, что ты напечатала, сохраняется автоматически в этом браузере. На другом устройстве не появится.</p>
+  </section>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+<!--QUIZ-START-->
+<style>
+  .взубр{ margin:44px 0 0; }
+  .взубр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .взубр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+  .взубр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .взубр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#4A63D6,#EC6A86); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(74,99,214,.3); }
+  .взубр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .взубр-карта p{ font-size:14px; color:#6C7291; margin:2px 0 18px; line-height:1.45; }
+  :root[data-theme="dark"] .взубр-карта p{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта p{ color:#9AA0BE; } }
+  .взубр-кн{ display:flex; flex-direction:column; gap:10px; }
+  .взубр-кн a{
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700;
+    color:#fff; background:linear-gradient(135deg,#4A63D6,#EC6A86);
+    box-shadow:0 10px 24px rgba(74,99,214,.32); transition:transform .12s ease;
+  }
+  .взубр-кн a.второй{ background:#F3F4FA; color:#1C2242; box-shadow:0 6px 16px rgba(40,50,110,.12); }
+  :root[data-theme="dark"] .взубр-кн a.второй{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-кн a.второй{ background:#252949; color:#EDEFF8; } }
+  .взубр-кн a:active{ transform:scale(.98); }
+  .взубр-кн a small{ display:block; font-weight:500; font-size:12.5px; opacity:.8; margin-top:1px; }
+  .взубр-кн a span{ flex:1; }
+  .взубр-кн a i{ font-style:normal; font-size:20px; }
+</style>
+
+<section class="взубр" id="взубр">
+  <div class="взубр-карта">
+    <div class="взубр-верх">
+      <div class="взубр-знак">🐃</div>
+      <h2>Учить слова этого урока</h2>
+    </div>
+    <p>Все слова и фразы урока уже собраны в колоду ЗУБРа — с карточками, тестом, диктантом и расписанием повторений. Прогресс общий с остальными уроками.</p>
+    <div class="взубр-кн" id="взубрКнопки"></div>
+  </div>
+</section>
+
+<script>
+/* Ссылки собираем на месте: имя урока берём из адреса страницы,
+   чтобы один и тот же блок годился для всех двадцати шести. */
+(function(){
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  var м = файл.match(/^([a-z]+)(\d+)$/);
+  if (!м){ document.getElementById('взубр').style.display = 'none'; return; }
+
+  var семья = м[1], номер = +м[2];
+  var первый = семья === 'polya' ? 5 : семья === 'dasha' ? 1 : 0;
+  var корень = '../zubr.html?урок=' + файл;
+
+  var html = '<a href="' + корень + '"><i>📖</i><span>Слова этого урока' +
+             '<small>только то, что разбирали здесь</small></span></a>';
+
+  if (номер > первый){
+    var подпись = семья === 'urok' ? 'уроки с 0 по ' + номер
+                : 'занятия с ' + первый + ' по ' + номер;
+    html += '<a class="второй" href="' + корень + '&повтор=1"><i>🔁</i>' +
+            '<span>Этот урок и все предыдущие<small>' + подпись + '</small></span></a>';
+  }
+  document.getElementById('взубрКнопки').innerHTML = html;
+
+  // ссылка в оглавление урока, чтобы не мотать страницу
+  var toc = document.querySelector('.toc ol');
+  if (toc){
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#взубр">🐃 Учить слова урока</a>';
+    toc.appendChild(li);
+  }
+})();
+</script>
+<!--QUIZ-END-->
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <footer class="lp-foot">Конспект занятия Полины с Дашей · 22.08.2026 · собран из записи занятия · озвучка Anna (Premium), голос Apple.</footer>
+</div>
+
+<script>
+const AUDIO = {"h1": "../zvuk/polya6/h1.mp3", "h2": "../zvuk/polya6/h2.mp3", "h3": "../zvuk/polya6/h3.mp3", "h4": "../zvuk/polya6/h4.mp3", "h5": "../zvuk/polya6/h5.mp3", "h6": "../zvuk/polya6/h6.mp3", "lw1": "../zvuk/polya6/lw1.mp3", "lw2": "../zvuk/polya6/lw2.mp3", "w1": "../zvuk/polya6/w1.mp3", "w2": "../zvuk/polya6/w2.mp3", "p1": "../zvuk/polya6/p1.mp3", "p2": "../zvuk/polya6/p2.mp3", "p3": "../zvuk/polya6/p3.mp3", "p4": "../zvuk/polya6/p4.mp3", "p5": "../zvuk/polya6/p5.mp3", "s1": "../zvuk/polya6/s1.mp3", "s2": "../zvuk/polya6/s2.mp3", "s3": "../zvuk/polya6/s3.mp3", "s4": "../zvuk/polya6/s4.mp3", "s5": "../zvuk/polya6/s5.mp3", "a1": "../zvuk/polya6/a1.mp3", "n1": "../zvuk/polya6/n1.mp3", "n2": "../zvuk/polya6/n2.mp3", "n3": "../zvuk/polya6/n3.mp3", "n4": "../zvuk/polya6/n4.mp3", "t1": "../zvuk/polya6/t1.mp3", "t2": "../zvuk/polya6/t2.mp3", "t3": "../zvuk/polya6/t3.mp3", "t4": "../zvuk/polya6/t4.mp3", "t5": "../zvuk/polya6/t5.mp3", "t6": "../zvuk/polya6/t6.mp3", "t7": "../zvuk/polya6/t7.mp3", "nm1": "../zvuk/polya6/nm1.mp3", "nm2": "../zvuk/polya6/nm2.mp3", "nm3": "../zvuk/polya6/nm3.mp3", "nm4": "../zvuk/polya6/nm4.mp3", "nm5": "../zvuk/polya6/nm5.mp3", "nm6": "../zvuk/polya6/nm6.mp3", "nm7": "../zvuk/polya6/nm7.mp3", "nm8": "../zvuk/polya6/nm8.mp3", "v_stern": "../zvuk/polya6/v_stern.mp3", "v_geschw": "../zvuk/polya6/v_geschw.mp3", "v_heimat": "../zvuk/polya6/v_heimat.mp3", "v_zurzeit": "../zvuk/polya6/v_zurzeit.mp3", "v_famstand": "../zvuk/polya6/v_famstand.mp3", "v_ledig": "../zvuk/polya6/v_ledig.mp3", "v_verh": "../zvuk/polya6/v_verh.mp3", "v_gesch": "../zvuk/polya6/v_gesch.mp3", "v_arblos": "../zvuk/polya6/v_arblos.mp3", "v_selbst": "../zvuk/polya6/v_selbst.mp3", "v_mutter": "../zvuk/polya6/v_mutter.mp3", "v_fremd": "../zvuk/polya6/v_fremd.mp3", "v_kranken": "../zvuk/polya6/v_kranken.mp3", "v_verk": "../zvuk/polya6/v_verk.mp3", "v_leider": "../zvuk/polya6/v_leider.mp3", "v_zurueck": "../zvuk/polya6/v_zurueck.mp3", "v_morgen": "../zvuk/polya6/v_morgen.mp3", "b1": "../zvuk/polya6/b1.mp3", "b2": "../zvuk/polya6/b2.mp3", "b3": "../zvuk/polya6/b3.mp3", "b4": "../zvuk/polya6/b4.mp3", "b5": "../zvuk/polya6/b5.mp3", "b6": "../zvuk/polya6/b6.mp3", "b7": "../zvuk/polya6/b7.mp3", "b8": "../zvuk/polya6/b8.mp3", "b9": "../zvuk/polya6/b9.mp3", "hw1": "../zvuk/polya6/hw1.mp3", "hw2": "../zvuk/polya6/hw2.mp3", "hw3": "../zvuk/polya6/hw3.mp3", "hw4": "../zvuk/polya6/hw4.mp3", "hw5": "../zvuk/polya6/hw5.mp3", "k_verw": "../zvuk/polya6/k_verw.mp3", "k_umg": "../zvuk/polya6/k_umg.mp3", "k_feier": "../zvuk/polya6/k_feier.mp3", "k_ins": "../zvuk/polya6/k_ins.mp3", "k_einz": "../zvuk/polya6/k_einz.mp3", "k_liebste": "../zvuk/polya6/k_liebste.mp3", "k_unter": "../zvuk/polya6/k_unter.mp3", "k_kuemm": "../zvuk/polya6/k_kuemm.mp3", "k_nichte": "../zvuk/polya6/k_nichte.mp3", "k_neffe": "../zvuk/polya6/k_neffe.mp3", "k_mittl": "../zvuk/polya6/k_mittl.mp3", "k_leben": "../zvuk/polya6/k_leben.mp3", "k_ehe": "../zvuk/polya6/k_ehe.mp3", "k_enkel": "../zvuk/polya6/k_enkel.mp3", "k_gest": "../zvuk/polya6/k_gest.mp3"};
+
+/* звук вынесен в zvuk/ */
+// Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
+window.addEventListener('load', function () {
+  if (!navigator.onLine) return;
+  setTimeout(function () {
+    var список = Object.values(AUDIO), i = 0;
+    (function дальше() {
+      if (i >= список.length) return;
+      fetch(список[i++]).catch(function () {}).then(function () {
+        setTimeout(дальше, 60);
+      });
+    })();
+  }, 2500);
+});
+
+function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
+  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
+function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
+function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+
+phrases('hw',[
+  ["h1","<b>Wie alt</b> ist dein Bruder?","ви альт ист дайн брудэр","Сколько лет твоему брату?"],
+  ["h2","<b>Wo</b> leben deine Eltern?","во лебэн дайнэ эльтэрн","Где живут твои родители?"],
+  ["h3","<b>Wer</b> ist das?","вэа ист дас","Кто это?"],
+  ["h5","Das ist mein Onkel.","дас ист майн онкэль","Это мой дядя."],
+  ["h4","<b>Was</b> ist dein Vater <b>von Beruf</b>?","вас ист дайн фатэр фон бэруф","Кто твой отец по профессии?"],
+  ["h6","Mein Vater ist Ingenieur.","майн фатэр ист инжэниöр","Мой отец инженер."],
+]);
+
+phrases('lw',[
+  ["lw1","Ich <b>wohne</b> in Moskau.","ихь вонэ ин москау","Я живу в Москве. (физически, по адресу)"],
+  ["lw2","Er <b>lebt</b> glücklich.","эа лепт глюклихь","Он живёт счастливо. (образ жизни)"],
+], 'hb');
+
+phrases('wiewelche',[
+  ["w1","<b>Wie</b> ist deine Großmutter?","ви ист дайнэ гросмуттэр","Какая твоя бабушка? (по характеру)"],
+  ["w2","<b>Welche</b> ist deine Großmutter?","вэльхе ист дайнэ гросмуттэр","Которая из них твоя бабушка? (выбор)"],
+], 'wn');
+
+phrases('pos',[
+  ["p1","<b>Wie viele Kinder</b> habt ihr?","ви филе киндэр хапт иа","Сколько у вас детей?"],
+  ["p2","Wie viele Schwestern und Brüder hast du?","ви филе швэстэрн унт брюдэр хаст ду","Сколько у тебя сестёр и братьев?"],
+  ["p3","<b>Hast du Geschwister?</b>","хаст ду гэшвистэр","Есть ли у тебя братья и сёстры? (проще всего)"],
+  ["p4","Wie <b>groß</b> ist deine Familie?","ви грос ист дайнэ фамилье","Насколько большая у тебя семья?"],
+  ["p5","Ist deine Familie groß oder klein?","ист дайнэ фамилье грос одэр кляйн","Твоя семья большая или маленькая?"],
+]);
+
+phrases('self',[
+  ["s1","Ich heiße Polina, ich bin siebenundzwanzig Jahre alt.","ихь хайсэ полина, ихь бин зибэнунтцванцихь ярэ альт","Меня зовут Полина, мне 27 лет."],
+  ["s2","Ich bin <b>Ärztin</b>, ich arbeite <b>im Krankenhaus</b>.","ихь бин эрцтин, ихь арбайтэ им кранкэнхаус","Я врач, работаю в больнице."],
+  ["s3","Ich habe eine kleine Familie: <b>einen</b> Mann und <b>eine</b> Tochter.","ихь хабэ айнэ кляйнэ фамилье: айнэн ман унт айнэ тохтэр","У меня маленькая семья: муж и дочь."],
+  ["s4","Mein Mann ist zweiunddreißig und arbeitet <b>als Arzt</b> in einer Klinik.","майн ман ист цвайунтдрайсихь унт арбайтэт альс арцт ин айнэр клиник","Моему мужу 32, он работает врачом в клинике."],
+  ["s5","Ich bin <b>fertig</b>.","ихь бин фэртихь","Я закончила."],
+]);
+
+phrases('akk',[
+  ["a1","Er hat <b>einen</b> Bruder.","эа хат айнэн брудэр","У него есть брат. (haben → Akkusativ → einen)"],
+], 'sn');
+
+phrases('nicht',[
+  ["n1","Ich sehe den Hund <b>nicht</b>.","ихь зээ дэн хунт нихьт","Я не вижу собаку. (отрицаем глагол → в конец)"],
+  ["n2","Paco ist <b>nicht</b> arbeitslos.","пако ист нихьт арбайтслос","Пако не безработный. (отрицаем прилагательное → перед ним)"],
+  ["n3","Patricia arbeitet <b>nicht als</b> Verkäuferin.","патрисия арбайтэт нихьт альс фэркойфэрин","Патрисия работает не продавщицей."],
+  ["n4","Patricia ist <b>keine</b> Verkäuferin.","патрисия ист кайнэ фэркойфэрин","Патрисия не продавщица. (здесь kein можно!)"],
+]);
+
+phrases('paco',[
+  ["t1","Paco kommt aus <b>Mexiko</b>.","пако коммт аус мексико","Пако из Мексики. (не из Испании — ошибка в задании)"],
+  ["t2","Paco ist <b>Student</b>.","пако ист штудэнт","Пако студент. (значит, не arbeitslos)"],
+  ["t3","Er studiert <b>Biochemie</b>.","эа штудирт биохеми","Он изучает биохимию."],
+  ["t4","Er wohnt in München.","эа вонт ин мюнхен","Он живёт в Мюнхене."],
+  ["t5","Miguel ist nicht geschieden, Miguel ist <b>verheiratet</b>.","мигэль ист нихьт гэшидэн, мигэль ист фэрхайратэт","Мигель не разведён, Мигель женат."],
+  ["t6","Patricia ist <b>seine Frau</b>.","патрисия ист зайнэ фрау","Патрисия — его жена."],
+  ["t7","Sie arbeitet <b>als Krankenschwester</b>.","зи арбайтэт альс кранкэншвэстэр","Она работает медсестрой."],
+]);
+
+phrases('nicole',[
+  ["nm1","Ich heiße Nicole Moser.","ихь хайсэ николь мозэр","Меня зовут Николь Мозер."],
+  ["nm2","Meine <b>Heimatstadt</b> ist Wien.","майнэ хайматштат ист вин","Мой родной город — Вена."],
+  ["nm3","<b>Zurzeit</b> wohne und studiere ich in München.","цурцайт вонэ унт штудирэ ихь ин мюнхен","В настоящее время живу и учусь в Мюнхене."],
+  ["nm4","Ich bin <b>ledig</b>.","ихь бин лéдихь","Я не замужем."],
+  ["nm5","Mein <b>Sternzeichen</b> ist <b>Waage</b>.","майн штэрнцайхен ист вагэ","Мой знак зодиака — Весы."],
+  ["nm6","Er spricht vier <b>Fremdsprachen</b> perfekt.","эа шприхьт фиа фрэмтшпрахэн пэрфэкт","Он идеально говорит на четырёх иностранных языках."],
+  ["nm7","Er studiert <b>Betriebswirtschaft</b> in Barcelona.","эа штудирт бэтрипсвиртшафт ин барцэлона","Он изучает экономику предприятия в Барселоне."],
+  ["nm8","Er ist <b>bald fertig</b> und geht dann <b>zurück</b> nach Österreich.","эа ист бальт фэртихь унт гейт дан цурюк нах östэррайхь","Он скоро закончит и поедет обратно в Австрию."],
+]);
+
+words('vocab',[
+  ["v_stern","das <b>Sternzeichen</b>","штэрнцайхен","знак зодиака"],
+  ["v_geschw","die <b>Geschwister</b>","гэшвистэр","братья и сёстры (одним словом)"],
+  ["v_heimat","die <b>Heimatstadt</b>","хайматштат","родной город"],
+  ["v_zurzeit","<b>zurzeit</b>","цурцайт","в настоящее время"],
+  ["v_famstand","der <b>Familienstand</b>","фамильенштант","семейное положение"],
+  ["v_ledig","<b>ledig</b>","лéдихь","не женат / не замужем"],
+  ["v_verh","<b>verheiratet</b>","фэрхайратэт","женат / замужем"],
+  ["v_gesch","<b>geschieden</b>","гэшидэн","разведён"],
+  ["v_arblos","<b>arbeitslos</b>","арбайтслос","безработный"],
+  ["v_selbst","<b>selbstständig</b>","зэльпстштэндихь","самозанятый (слитно!)"],
+  ["v_mutter","die <b>Muttersprache</b>","муттэршпрахэ","родной язык"],
+  ["v_fremd","die <b>Fremdsprache</b>","фрэмтшпрахэ","иностранный язык"],
+  ["v_kranken","die <b>Krankenschwester</b>","кранкэншвэстэр","медсестра"],
+  ["v_verk","die <b>Verkäuferin</b>","фэркойфэрин","продавщица"],
+  ["v_leider","<b>leider</b>","ляйдэр","к сожалению"],
+  ["v_zurueck","<b>zurück</b>","цурюк","обратно"],
+]);
+
+phrases('morgen',[
+  ["v_morgen","der <b>Morgenstern</b>","моргэнштэрн","утренняя звезда — вот откуда Stern"],
+], 'sn');
+
+words('plan',[
+  ["b1","im <b>Vordergrund</b>","им фордэргрунт","на переднем плане"],
+  ["b2","im <b>Hintergrund</b>","им хинтэргрунт","на заднем плане"],
+], 'hb');
+
+phrases('beispiel',[
+  ["b3","Ich sehe <b>auf dem Bild</b> zwei Menschen.","ихь зээ ауф дэм бильт цвай мэншен","Я вижу на картинке двух человек."],
+  ["b4","<b>Im Vordergrund</b> sehe ich einen Mann und eine Frau.","им фордэргрунт зээ ихь айнэн ман унт айнэ фрау","На переднем плане я вижу мужчину и женщину."],
+  ["b5","<b>Im Hintergrund</b> hängt ein Foto.","им хинтэргрунт хэнгт айн фото","На заднем плане висит фотография."],
+  ["b6","Die Frau und der Mann <b>sehen</b> das Foto <b>an</b>.","ди фрау унт дэа ман зээн дас фото ан","Женщина и мужчина смотрят на фотографию."],
+]);
+
+// ===== ДОМАШКА =====
+function paras(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,ru])=>`
+  <div class="para"><div class="ptxt"><div class="pde">${de}</div><div class="pru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+
+paras('hwText',[
+  ["hw1","Ich habe sehr viele <b>Verwandte</b>, die ich auch fast alle kenne. Meine Familie ist groß, weil meine Eltern beide viele Geschwister haben. Meine Mutter hat vier Schwestern. Sie ist die jüngste. Die Kinder meiner Tanten sind meine Cousinen und Cousins. Sie leben nicht alle in meiner <b>Umgebung</b>, manche wohnen sehr weit entfernt. Aber zu <b>Familienfeiern</b> kommen meistens alle angereist.",
+   "У меня очень много родни, и почти всех я знаю. Семья большая, потому что у обоих родителей много братьев и сестёр. У мамы четыре сестры, она младшая. Дети моих тёть — мои кузины и кузены. Живут не все рядом, некоторые очень далеко. Но на семейные праздники обычно приезжают все."],
+  ["hw2","Auch mein Vater hat nicht nur einen Bruder oder eine Schwester, sondern <b>insgesamt</b> vier Geschwister. Mein ältester Onkel ist aber schon <b>gestorben</b>. Er ist auch <b>der einzige</b>, der keine Kinder hatte.",
+   "У отца тоже не один брат или сестра, а всего четверо. Но старший дядя уже умер. Он же единственный, у кого не было детей."],
+  ["hw3","Ich habe auch von der Seite meines Vaters viele Cousins und Cousinen. Aber meine <b>liebste</b> Cousine ist die Tochter meiner ältesten Tante, der Schwester meiner Mutter.",
+   "Со стороны отца у меня тоже много кузенов и кузин. Но моя любимая кузина — дочь моей старшей тёти, сестры мамы."],
+  ["hw4","Ich mag alle Kinder meiner Onkel und Tanten, ob Söhne oder Töchter. Wir verstehen uns sehr gut, auch wenn wir sehr <b>unterschiedlich</b> sind. Meine Onkel und Tanten <b>kümmern sich</b> sehr <b>um</b> die anderen in der Familie. Auch um mich und meine Geschwister als ihre <b>Nichten</b> und <b>Neffen</b>. Ich habe eine Schwester und einen Bruder. Ich bin <b>die mittlere</b>.",
+   "Мне нравятся все дети моих дядь и тёть, будь то сыновья или дочери. Мы очень хорошо ладим, хотя мы совсем разные. Дяди и тёти очень заботятся об остальных в семье. И обо мне с братом и сестрой — как о своих племянницах и племянниках. У меня есть сестра и брат. Я средняя."],
+  ["hw5","Meine Großeltern sind nicht mehr alle <b>am Leben</b>. Meine Großmutter ist schon 90 Jahre alt. Ihr <b>Ehemann</b>, also mein Großvater, ist vor zwei Jahren gestorben. Er war schon 93. Sie haben sehr viele <b>Enkel und Enkelinnen</b>.",
+   "Не все мои бабушки и дедушки ещё живы. Бабушке уже 90 лет. Её супруг, то есть мой дедушка, умер два года назад. Ему было уже 93. У них очень много внуков и внучек."],
+]);
+
+words('hwWords',[
+  ["k_verw","die <b>Verwandten</b>","фэрвандтэн","родственники, родня"],
+  ["k_umg","die <b>Umgebung</b>","умгебунг","окрестности, округа"],
+  ["k_feier","die <b>Familienfeier</b>","фамильенфайэр","семейный праздник"],
+  ["k_ins","<b>insgesamt</b>","инсгэзамт","в общей сложности, всего"],
+  ["k_einz","der <b>einzige</b>","айнцигэ","единственный"],
+  ["k_liebste","meine <b>liebste</b> Cousine","либстэ кузинэ","любимая кузина"],
+  ["k_unter","<b>unterschiedlich</b>","унтэршидлихь","разные, непохожие"],
+  ["k_kuemm","sich <b>kümmern um</b>","зихь кюммэрн ум","заботиться о"],
+  ["k_nichte","die <b>Nichte</b>","нихьтэ","племянница"],
+  ["k_neffe","der <b>Neffe</b>","нэффэ","племянник"],
+  ["k_mittl","die <b>mittlere</b>","миттлэрэ","средняя (по возрасту)"],
+  ["k_leben","<b>am Leben</b> sein","ам лебэн зайн","быть в живых"],
+  ["k_ehe","der <b>Ehemann</b>","ээман","супруг, муж"],
+  ["k_enkel","die <b>Enkel</b> und Enkelinnen","энкэль унт энкэлиннэн","внуки и внучки"],
+  ["k_gest","<b>gestorben</b>","гэшторбэн","умерший (от sterben)"],
+]);
+
+const QUIZ = [
+  ["Wieviele Geschwister hat die Mutter?",
+   ["sie hat vier Brüder","sie hat vier Geschwister","sie hat Schwestern","sie hat zwei Brüder und zwei Schwestern"]],
+  ["Wer ist bereits gestorben?",
+   ["Die Großmutter und der Großvater","Der jüngste Bruder der Mutter","Beide Großeltern","Der Großvater und der älteste Bruder des Vaters"]],
+  ["Wer ist die liebste Cousine der Erzählerin?",
+   ["Die Tochter der ältesten Schwester ihrer Mutter","Die Tochter des jüngsten Bruders der Mutter","Die Tochter der jüngsten Schwester der Mutter","Die Tochter des ältesten Bruders des Vaters"]],
+  ["Hat die Erzählerin selbst Geschwister?",
+   ["Nein","Ja, einen Bruder und eine Schwester","Ja, zwei Brüder","Eine Schwester, der Bruder ist gestorben"]],
+  ["Wer kümmert sich sehr um die Familie?",
+   ["Die Eltern der Erzählerin","Die Großeltern","Die Cousinen und Cousins","Die Onkel und Tanten der Erzählerin"]],
+];
+document.getElementById('hwQuiz').innerHTML = QUIZ.map(([q,opts],i)=>`
+  <div style="margin-bottom:14px">
+    <div style="font-weight:600; font-size:14px; margin-bottom:6px">${i+1}) ${q}</div>
+    ${opts.map((o,j)=>`<label class="opt"><input type="checkbox" data-quiz="q${i}_${j}"><span>${'abcd'[j]}) ${o}</span></label>`).join('')}
+  </div>`).join('');
+
+document.getElementById('hwSieben').innerHTML = Array.from({length:7},(_,i)=>`
+  <div class="hwrow"><span class="n">${i+1}.</span><span class="q"><input class="fld" data-save="f_frage${i}" placeholder="вопрос по-немецки"></span></div>`).join('');
+
+const MODAL = [
+  ["Am Wochenende","ich ins Kino gehen."],
+  ["Ich","am Montag leider nicht mitkommen, denn ich habe keine Zeit."],
+  ["Sie","heute bis 17 Uhr arbeiten."],
+  ["Er","Deutsch lernen, denn er mag Sprachen."],
+  ["Mein Auto ist kaputt, deshalb","ich mit dem Bus fahren."],
+  ["","Sie mir bitte helfen?"],
+  ["Was","du am Samstagabend machen?"],
+  ["Im Park","man spazieren gehen."],
+  ["Ich","ein Glas Wasser, bitte."],
+  ["Wir","im Sommer nach Deutschland reisen."],
+  ["Ich","nicht gut schwimmen."],
+  ["Ich habe keine Zeit, denn ich","meine Hausaufgaben machen."],
+  ["Es ist spät. Ich","jetzt leider nach Hause gehen."],
+  ["Du","gut Klavier spielen."],
+  ["","Sie einen Kaffee trinken?"],
+];
+document.getElementById('hwModal').innerHTML = MODAL.map(([a,b],i)=>`
+  <div class="mv"><span class="num">${String(i+1).padStart(2,'0')}.</span>
+    <span>${a}</span><input class="fld" data-save="f_modal${i}" placeholder="…"><span>${b}</span></div>`).join('');
+
+// ===== сохранение всего, что напечатано =====
+(function(){
+  const KEY = 'polya6_hw_';
+  document.querySelectorAll('[data-save], #f_words, #f_uebersetzung, #f_teil1, #f_teil2').forEach(el=>{
+    const k = KEY + (el.dataset.save || el.id);
+    const saved = localStorage.getItem(k);
+    if(saved !== null) el.value = saved;
+    el.addEventListener('input', ()=> localStorage.setItem(k, el.value));
+  });
+  document.querySelectorAll('[data-quiz]').forEach(cb=>{
+    const k = KEY + cb.dataset.quiz;
+    if(localStorage.getItem(k) === '1') cb.checked = true;
+    cb.addEventListener('change', ()=>{
+      if(cb.checked) localStorage.setItem(k,'1'); else localStorage.removeItem(k);
+    });
+  });
+})();
+
+phrases('auftrag',[
+  ["b7","<b>Sehen Sie</b> das Foto <b>an</b>.","зээн зи дас фото ан","Посмотрите на фотографию."],
+  ["b8","<b>Hören Sie</b> und <b>kreuzen Sie an</b>.","хёрэн зи унт кройцэн зи ан","Послушайте и отметьте."],
+  ["b9","<b>Beschreiben Sie</b> das Bild <b>kurz</b>.","бэшрайбэн зи дас бильт курц","Опишите картинку коротко."],
+], 'hb');
+</script>
+
+<a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+</body>
+</html>

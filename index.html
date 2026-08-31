@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Немецкий для врачей — курс Григория и Полины</title>
+<style>
+  /* Оформление то же, что в ЗУБРе: лавандовый фон, белые карточки,
+     мягкие тени, Figtree. Акцент разный по профилю — у Григория синий,
+     у Полины розовый, чтобы с одного взгляда было видно, чей это экран. */
+  :root{
+    --bg:#E9EBF6; --surface:#FFFFFF; --surface-2:#F3F4FA;
+    --ink:#1C2242; --ink-muted:#6C7291; --ink-faint:#9AA0BE; --line:#DCE0F0;
+    --accent:#4A63D6; --accent-ink:#FFFFFF; --градиент:linear-gradient(135deg,#4A63D6,#7A8FE8);
+    --play:#E8A33D; --play-ink:#FFFFFF;
+    --done-bg:#E4F7EC; --done-line:#22A06B;
+    --dasha:#7A5AF8; --dasha-bg:#EFEBFF; --polya:#EC6A86; --polya-bg:#FBE6EA;
+    --тень:0 12px 30px rgba(40,50,110,.12);
+    --радиус:22px;
+  }
+  :root[data-кто="polina"]{
+    --accent:#EC6A86; --градиент:linear-gradient(135deg,#EC6A86,#F5A0B4);
+    --dasha:#EC6A86; --dasha-bg:#FBE6EA;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+      --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291; --line:#2A2E52;
+      --accent:#7A8FE8; --accent-ink:#12142A;
+      --done-bg:#16321F; --done-line:#5FD0A0;
+      --dasha:#A78BFA; --dasha-bg:#241C42; --polya:#F5A0B4; --polya-bg:#3A1620;
+      --тень:0 12px 30px rgba(0,0,0,.35);
+    }
+    :root:not([data-theme="light"])[data-кто="polina"]{ --accent:#F5A0B4; }
+  }
+  :root[data-theme="dark"]{
+    --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+    --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291; --line:#2A2E52;
+    --accent:#7A8FE8; --accent-ink:#12142A;
+    --done-bg:#16321F; --done-line:#5FD0A0;
+    --dasha:#A78BFA; --dasha-bg:#241C42; --polya:#F5A0B4; --polya-bg:#3A1620;
+    --тень:0 12px 30px rgba(0,0,0,.35);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
+    line-height:1.45;
+  }
+  .wrap{max-width:920px; margin:0 auto; padding:28px 18px 60px;}
+  header{margin-bottom:22px;}
+  header h1{font-size:clamp(26px,7vw,34px); font-weight:800; margin:0 0 4px; letter-spacing:-0.02em;}
+  header p{margin:0; color:var(--ink-muted); font-size:0.95rem;}
+
+  .profile-bar{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    background:var(--surface); border:1px solid var(--line); border-radius:14px;
+    padding:12px 14px; margin:18px 0;
+  }
+  .profile-bar span.label{color:var(--ink-muted); font-size:0.88rem; margin-right:4px;}
+  .profile-btn{
+    border:1px solid var(--line); background:transparent; color:var(--ink);
+    padding:7px 16px; border-radius:999px; font-size:0.92rem; cursor:pointer;
+    transition:all .15s;
+  }
+  .profile-btn.active{background:var(--accent); color:var(--accent-ink); border-color:var(--accent);}
+  .progress-note{margin-left:auto; color:var(--ink-muted); font-size:0.88rem; white-space:nowrap;}
+
+  .folders{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:10px; margin-top:22px;}
+  .folder{display:flex; align-items:center; gap:11px; padding:13px 15px; border:1px solid var(--line);
+    border-radius:var(--радиус); background:var(--surface); color:var(--ink); cursor:pointer; font-family:inherit;
+    text-align:left; transition:box-shadow .15s, border-color .15s;}
+  .folder:hover{border-color:var(--accent);}
+  .folder .f-ico{font-size:21px; flex-shrink:0; line-height:1;}
+  .folder .f-txt{flex:1; min-width:0;}
+  .folder .f-name{font-weight:600; font-size:14.5px;}
+  .folder .f-sub{font-size:11.5px; color:var(--ink-muted); margin-top:2px;}
+  .folder.active{border-color:var(--accent); box-shadow:inset 0 0 0 2px var(--accent);}
+  .folder.trainer,.folder.zubr{text-decoration:none; color:inherit;}
+  .folder.zubr:hover{border-color:var(--play);}
+  .folder.trainer:hover{border-color:var(--play);}
+  .folder.trainer .f-ico{color:var(--accent);}
+  .folder.dasha:hover{border-color:var(--dasha);}
+  .folder.dasha.active{border-color:var(--dasha); box-shadow:inset 0 0 0 2px var(--dasha);}
+  @media(max-width:760px){ .folders{grid-template-columns:1fr;} }
+  .lvl-tabs{display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:16px;}
+  .lvl-tab{display:flex; flex-direction:column; align-items:center; gap:2px; padding:9px 4px;
+    border:1px solid var(--line); border-top:3px solid var(--lvl); border-radius:12px;
+    background:var(--surface); color:var(--ink); cursor:pointer; font-family:inherit;
+    transition:background .15s, color .15s;}
+  .lvl-tab:hover{border-color:var(--lvl);}
+  .lvl-tab.active{background:var(--lvl); color:#fff; border-color:var(--lvl);}
+  .lvl-tab .lvl-code{font-weight:700; font-size:15px; letter-spacing:.02em;}
+  .lvl-tab .lvl-name{font-size:10.5px; opacity:.72; white-space:nowrap;}
+  .lvl-tab .lvl-badge{font-size:11.5px; font-weight:600; opacity:.9; font-variant-numeric:tabular-nums;}
+  .lvl-tab.locked{opacity:.55;}
+  @media(max-width:520px){ .lvl-tab .lvl-name{display:none;} }
+  .lvl-empty{padding:24px 18px; text-align:center; color:var(--ink-muted); background:var(--surface);
+    border:1px dashed var(--line); border-radius:12px; margin-top:14px; font-size:14px; line-height:1.5;}
+  .grid{display:grid; grid-template-columns:1fr; gap:14px; margin-top:18px;}
+  @media(min-width:680px){ .grid{grid-template-columns:1fr 1fr;} }
+
+  /* ===== панель прогресса по уровням ===== */
+  .progress-panel{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--радиус);
+    padding:18px 20px; margin:18px 0 4px;
+  }
+  .pp-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;}
+  .pp-title{font-size:1rem; font-weight:600;}
+  .pp-total{font-size:1.65rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; line-height:1;}
+  .pp-bar-big{
+    height:16px; background:var(--bg); border:1px solid var(--line); border-radius:999px;
+    overflow:hidden; margin-top:12px;
+  }
+  .pp-fill-big{
+    height:100%; width:0%; border-radius:999px; transition:width .5s ease;
+    background:linear-gradient(90deg,#2e9e5b 0%,#1f8fb5 33%,#8a5cc7 66%,#c9552b 100%);
+    background-size:calc(100% * var(--scale,1)) 100%;
+  }
+  .pp-left{margin-top:8px; font-size:0.85rem; color:var(--ink-muted);}
+  .pp-left b{color:var(--ink);}
+
+  .pp-levels{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; margin-top:16px;}
+  @media(min-width:680px){ .pp-levels{grid-template-columns:repeat(4,1fr);} }
+  .lvl{cursor:pointer; border:1px solid transparent; border-radius:10px; padding:8px; transition:all .15s;}
+  .lvl:hover{background:var(--bg);}
+  .lvl.active{border-color:var(--line); background:var(--bg);}
+  .lvl-top{display:flex; align-items:baseline; justify-content:space-between; gap:6px;}
+  .lvl-code{font-weight:700; font-size:0.95rem;}
+  .lvl-pct{font-size:0.85rem; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink-muted);}
+  .lvl-name{font-size:0.72rem; color:var(--ink-faint); margin-top:1px;}
+  .lvl-bar{height:7px; background:var(--bg); border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:6px;}
+  .lvl.active .lvl-bar{background:var(--surface);}
+  .lvl-fill{height:100%; width:0%; border-radius:999px; transition:width .4s ease;}
+  .lvl-done{font-size:0.72rem; color:var(--ink-faint); margin-top:4px;}
+
+  .pp-toggle{
+    margin-top:14px; border:1px solid var(--line); background:transparent; color:var(--ink-muted);
+    padding:7px 14px; border-radius:999px; font-size:0.85rem; cursor:pointer;
+  }
+  .pp-toggle:hover{background:var(--bg); color:var(--ink);}
+  .pp-topics{margin-top:14px; border-top:1px solid var(--line); padding-top:14px;}
+  .pp-topics h4{margin:0 0 10px; font-size:0.9rem; font-weight:600;}
+  .topic-list{display:grid; grid-template-columns:1fr; gap:5px;}
+  @media(min-width:680px){ .topic-list{grid-template-columns:1fr 1fr;} }
+  .topic{display:flex; gap:8px; align-items:flex-start; font-size:0.84rem; padding:4px 0;}
+  .topic .tick{flex-shrink:0; width:16px; text-align:center;}
+  .topic.ok .tick{color:var(--done-line); font-weight:700;}
+  .topic.ok span.tt{color:var(--ink);}
+  .topic:not(.ok) .tick{color:var(--ink-faint);}
+  .topic:not(.ok) span.tt{color:var(--ink-faint);}
+  .topic .src{font-size:0.72rem; color:var(--ink-faint);}
+
+  .sec-head{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    font-size:1.1rem; font-weight:600; margin:34px 0 0; padding-bottom:10px;
+    border-bottom:2px solid var(--accent); color:var(--ink);
+  }
+  .sec-head.sec-dasha{border-bottom-color:var(--dasha);}
+  .sec-ico{font-size:1.25rem;}
+  .sec-note{font-size:0.82rem; font-weight:400; color:var(--ink-muted);}
+  .next-lesson{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    background:var(--dasha-bg); border:1px solid var(--dasha); border-radius:12px;
+    padding:12px 16px; margin-top:16px; font-size:0.92rem;
+  }
+  .next-lesson b{color:var(--dasha);}
+  .card.dasha{border-left:4px solid var(--dasha);}
+  .card.dasha.done{border-left-color:var(--done-line);}
+  .card .num.dasha-num{color:var(--dasha);}
+  .btn.photos{color:var(--ink-muted);}
+  .sec-head.sec-polya{border-bottom-color:var(--polya);}
+  .next-lesson.next-polya{background:var(--polya-bg); border-color:var(--polya);}
+  .next-lesson.next-polya b{color:var(--polya);}
+  .card.polya{border-left:4px solid var(--polya);}
+  .card.polya.done{border-left-color:var(--done-line);}
+  .card .num.polya-num{color:var(--polya);}
+  .btn.trainer{background:var(--dasha); border-color:var(--dasha); color:#fff; font-weight:600;}
+  @media (prefers-color-scheme: dark){ .btn.trainer{color:#1a1020;} }
+
+  .card{
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--радиус);
+    padding:16px 18px; transition:border-color .15s;
+  }
+  .card.done{background:var(--done-bg); border-color:var(--done-line);}
+  .card .num{
+    display:inline-block; font-size:0.72rem; font-weight:700; color:var(--accent);
+    letter-spacing:.04em; text-transform:uppercase; margin-bottom:4px;
+  }
+  .card h2{margin:0 0 6px; font-size:1.08rem;}
+  .card p.topic{margin:0 0 12px; color:var(--ink-muted); font-size:0.88rem;}
+  .card .actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
+  .btn{
+    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
+    font-size:0.85rem; padding:7px 12px; border-radius:10px; border:1px solid var(--line);
+    color:var(--ink); background:var(--bg);
+  }
+  .btn.audio{background:var(--play); border-color:var(--play); color:var(--play-ink); font-weight:600;}
+  .btn.pdf{color:var(--ink-muted);}
+  .btn.disabled{opacity:.45; pointer-events:none;}
+
+  label.check{
+    display:flex; align-items:center; gap:8px; font-size:0.86rem; color:var(--ink-muted);
+    cursor:pointer; user-select:none;
+  }
+  label.check input{width:16px; height:16px; accent-color:var(--accent);}
+  .card.done label.check{color:var(--done-line); font-weight:600;}
+
+  footer{margin-top:34px; color:var(--ink-faint); font-size:0.82rem; text-align:center;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<!--ПЕРЕВОДЧИК-->
+<script>
+/* Транскрипция немецкого русскими буквами.
+   Точной её не сделать — русских букв не хватает на немецкие звуки,
+   но задача не в точности, а в том, чтобы врач мог прочитать слово
+   вслух и его поняли. Правила идут от длинных сочетаний к коротким:
+   иначе «sch» распадётся на «s» + «ch» и получится ерунда. */
+window.Транскрипция = (function(){
+"use strict";
+
+var ГЛАСНЫЕ = 'aeiouäöüy';
+
+// Короткие служебные слова проще выписать руками, чем выводить правилами:
+// на них общие правила как раз и спотыкаются («der» → «да» вместо «дэа»).
+var СЛОВАРЬ = {
+  der:'дэа', die:'ди', das:'дас', den:'дэн', dem:'дэм', des:'дэс',
+  ein:'айн', eine:'айнэ', einen:'айнэн', einem:'айнэм', einer:'айнэа',
+  er:'эа', sie:'зи', es:'эс', wir:'виа', ihr:'иа', ich:'ихь', du:'ду',
+  wer:'вэа', wie:'ви', wo:'во', was:'вас', und:'унт', oder:'одэа',
+  mehr:'мэа', sehr:'зэа', hier:'хиа', vier:'фиа', mir:'миа', dir:'диа',
+  nicht:'нихьт', auch:'аух', aber:'абэа', immer:'иммэа', wieder:'видэа',
+  über:'юба', unter:'унтэа', vor:'фоа', für:'фюа', durch:'дурхь',
+  bei:'бай', mit:'мит', nach:'нах', von:'фон', zu:'цу', aus:'аус',
+  seit:'зайт', ist:'ист', sind:'зинт', war:'вар', hat:'хат', habe:'хабэ'
+};
+
+function слово(w){
+  var чистое = w.toLowerCase();
+  if (СЛОВАРЬ[чистое]) return СЛОВАРЬ[чистое];
+
+  var s = ' ' + чистое + ' ';
+
+  // --- заимствования на -tion, -tient: ti читается как «ци» ---
+  s = s.replace(/tion/g, '§цион');
+  s = s.replace(/tient/g, '§циэнт');
+  s = s.replace(/tiell/g, '§циэль');
+
+  // --- длинные сочетания, их разбирать первыми ---
+  s = s.replace(/dsch/g, '§дж');
+  s = s.replace(/sch/g, '§ш');
+  s = s.replace(/chs/g, '§кс');
+
+  // st и sp в начале слова читаются «шт» и «шп»
+  s = s.replace(/(^|\s|-)st/g, '$1§шт');
+  s = s.replace(/(^|\s|-)sp/g, '$1§шп');
+
+  // ch: после a, o, u, au — твёрдое «х», в остальных случаях мягкое «хь»
+  s = s.replace(/([aou])ch/g, '$1§х');
+  s = s.replace(/auch/g, 'ау§х');
+  s = s.replace(/ch/g, '§хь');
+
+  s = s.replace(/ck/g, '§к');
+  s = s.replace(/ph/g, '§ф');
+  s = s.replace(/th/g, '§т');
+  s = s.replace(/qu/g, '§кв');
+
+  // --- гласные сочетания ---
+  s = s.replace(/eu/g, '§ой');
+  s = s.replace(/äu/g, '§ой');
+  s = s.replace(/ei/g, '§ай');
+  s = s.replace(/ai/g, '§ай');
+  s = s.replace(/ie/g, '§и');
+  s = s.replace(/aa/g, '§а');
+  s = s.replace(/ee/g, '§э');
+  s = s.replace(/oo/g, '§о');
+
+  // h после гласной не читается, а только удлиняет её
+  s = s.replace(new RegExp('([' + ГЛАСНЫЕ + '])h(?![' + ГЛАСНЫЕ + '])', 'g'), '$1');
+
+  // --- окончания ---
+  s = s.replace(/er(\s|$)/g, '§а$1');      // Vater → фата
+  s = s.replace(/ig(\s|$)/g, '§ихь$1');    // richtig → рихьтихь
+  s = s.replace(/ung(\s|$)/g, '§унг$1');
+
+  // --- согласные ---
+  s = s.replace(/ß/g, '§с');
+  s = s.replace(/ss/g, '§с');
+  // s перед гласной звучит звонко
+  s = s.replace(new RegExp('s(?=[' + ГЛАСНЫЕ + '])', 'g'), '§з');
+  s = s.replace(/s/g, '§с');
+  s = s.replace(/tz/g, '§ц');
+  s = s.replace(/z/g, '§ц');
+  s = s.replace(/w/g, '§в');
+  s = s.replace(/v/g, '§ф');
+  s = s.replace(/j/g, '§й');
+  s = s.replace(/h/g, '§х');
+  s = s.replace(/x/g, '§кс');
+
+  // --- одиночные буквы ---
+  var буквы = {
+    a:'а', b:'б', c:'к', d:'д', e:'э', f:'ф', g:'г', i:'и', k:'к', l:'л',
+    m:'м', n:'н', o:'о', p:'п', r:'р', t:'т', u:'у',
+    'ä':'э', 'ö':'ё', 'ü':'ю', y:'ю'
+  };
+  s = s.replace(/[a-zäöü]/g, function(б){ return буквы[б] || б; });
+
+  s = s.replace(/§/g, '').trim();
+  // двойная согласная в немецком не удваивает звук, а укорачивает гласную
+  return s.replace(/([бвгджзклмнпрстфхцчшщ])\1/g, '$1');
+}
+
+function текст(t){
+  return (t || '').split(/(\s+|[.,!?;:()«»"'-])/).map(function(ч){
+    return /^[a-zA-ZäöüÄÖÜß]+$/.test(ч) ? слово(ч) : ч;
+  }).join('').replace(/\s+/g, ' ').trim();
+}
+
+return { слово: слово, текст: текст };
+})();
+
+</script>
+<style>
+  .пер{ background:var(--surface,#fff); border-radius:var(--радиус,22px);
+    box-shadow:var(--тень,0 12px 30px rgba(40,50,110,.12)); padding:18px 18px 16px; margin-bottom:18px; }
+  .пер-верх{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .пер-знак{ width:38px; height:38px; border-radius:11px; flex-shrink:0; font-size:19px;
+    background:var(--градиент,linear-gradient(135deg,#4A63D6,#EC6A86)); display:flex;
+    align-items:center; justify-content:center; box-shadow:0 5px 12px rgba(74,99,214,.28); }
+  .пер-верх b{ font-size:16px; font-weight:800; flex:1; }
+  .пер-смена{ border:none; background:var(--surface-2,#F3F4FA); color:var(--ink,#1C2242);
+    border-radius:999px; padding:8px 14px; font-size:13px; font-weight:700; cursor:pointer;
+    font-family:inherit; white-space:nowrap; }
+  .пер-смена:active{ transform:scale(.95); }
+  .пер-поле{ position:relative; }
+  .пер-поле textarea{ width:100%; min-height:74px; resize:vertical; background:var(--surface-2,#F3F4FA);
+    border:2px solid transparent; border-radius:14px; padding:14px 52px 14px 14px; font-size:17px;
+    font-family:inherit; color:var(--ink,#1C2242); line-height:1.35; }
+  .пер-поле textarea:focus{ outline:none; border-color:var(--accent,#4A63D6); }
+  .пер-микро{ position:absolute; right:8px; top:8px; width:38px; height:38px; border-radius:50%;
+    border:none; background:var(--surface,#fff); box-shadow:var(--тень,0 4px 12px rgba(40,50,110,.14));
+    font-size:17px; cursor:pointer; color:var(--ink,#1C2242); }
+  .пер-микро.слушает{ background:#E0455E; color:#fff; animation:пульс 1s ease-in-out infinite; }
+  @keyframes пульс{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
+  .пер-кн{ display:flex; gap:9px; margin-top:11px; }
+  .пер-кн button{ flex:1; border:none; border-radius:14px; padding:13px; font-size:15px; font-weight:700;
+    font-family:inherit; cursor:pointer; min-height:48px; }
+  .пер-главная{ background:var(--градиент,linear-gradient(135deg,#4A63D6,#EC6A86)); color:#fff;
+    box-shadow:0 8px 20px rgba(74,99,214,.3); }
+  .пер-простая{ background:var(--surface-2,#F3F4FA); color:var(--ink,#1C2242); }
+  .пер-итог{ margin-top:14px; padding:15px; border-radius:14px; background:var(--surface-2,#F3F4FA); display:none; }
+  .пер-итог.видно{ display:block; }
+  .пер-итог .слово{ font-size:21px; font-weight:800; line-height:1.3; }
+  .пер-итог .транс{ color:var(--accent,#4A63D6); font-size:15px; margin-top:6px; font-weight:600; }
+  .пер-итог .низ{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+  .пер-итог .низ button{ border:none; background:var(--surface,#fff); color:var(--ink,#1C2242);
+    border-radius:999px; padding:9px 15px; font-size:13px; font-weight:700; cursor:pointer;
+    font-family:inherit; box-shadow:0 3px 10px rgba(40,50,110,.1); }
+  .пер-ошибка{ color:#E0455E; font-size:13.5px; margin-top:10px; }
+  .пер-ждём{ color:var(--ink-muted,#6C7291); font-size:13.5px; margin-top:10px; }
+</style>
+
+<section class="пер" id="пер">
+  <div class="пер-верх">
+    <div class="пер-знак">🌐</div>
+    <b id="перНазвание">Немецкий → русский</b>
+    <button class="пер-смена" id="перСмена">⇄ поменять</button>
+  </div>
+  <div class="пер-поле">
+    <textarea id="перВвод" placeholder="Введи слово или фразу…" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+    <button class="пер-микро" id="перМикро" title="Сказать голосом">🎙</button>
+  </div>
+  <div class="пер-кн">
+    <button class="пер-простая" id="перОчистить">Очистить</button>
+    <button class="пер-главная" id="перПеревести">Перевести</button>
+  </div>
+  <div class="пер-итог" id="перИтог"></div>
+</section>
+
+<script>
+(function(){
+"use strict";
+var $ = function(id){ return document.getElementById(id); };
+var сНемецкого = true;                    // куда переводим
+var последний = null;                     // {исходник, перевод, немецкое}
+
+function обновитьПодпись(){
+  $('перНазвание').textContent = сНемецкого ? 'Немецкий → русский' : 'Русский → немецкий';
+  $('перВвод').placeholder = сНемецкого ? 'Введи немецкое слово или фразу…' : 'Введи русское слово или фразу…';
+}
+обновитьПодпись();
+
+$('перСмена').onclick = function(){
+  сНемецкого = !сНемецкого;
+  обновитьПодпись();
+  $('перИтог').classList.remove('видно');
+};
+$('перОчистить').onclick = function(){
+  $('перВвод').value = '';
+  $('перИтог').classList.remove('видно');
+  $('перВвод').focus();
+};
+
+/* ---- перевод ----
+   Основной путь — открытый эндпойнт Google Translate: он даёт лучшее
+   качество и отвечает за секунду. Запасной — MyMemory, он бесплатный
+   и без ключа, но переводит заметно хуже. */
+function перевести(текст, откуда, куда){
+  var гугл = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' +
+             откуда + '&tl=' + куда + '&dt=t&q=' + encodeURIComponent(текст);
+  return fetch(гугл)
+    .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(j){ return j[0].map(function(ч){ return ч[0]; }).join(''); })
+    .catch(function(){
+      var память = 'https://api.mymemory.translated.net/get?q=' +
+                   encodeURIComponent(текст) + '&langpair=' + откуда + '|' + куда;
+      return fetch(память).then(function(r){ return r.json(); })
+        .then(function(j){
+          if (!j.responseData || !j.responseData.translatedText) throw 0;
+          return j.responseData.translatedText;
+        });
+    });
+}
+
+$('перПеревести').onclick = пуск;
+$('перВвод').onkeydown = function(e){
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) пуск();
+};
+
+function пуск(){
+  var текст = $('перВвод').value.trim();
+  if (!текст) return;
+  var итог = $('перИтог');
+  итог.className = 'пер-итог видно';
+  итог.innerHTML = '<div class="пер-ждём">Перевожу…</div>';
+
+  var откуда = сНемецкого ? 'de' : 'ru';
+  var куда = сНемецкого ? 'ru' : 'de';
+
+  перевести(текст, откуда, куда).then(function(перевод){
+    var немецкое = сНемецкого ? текст : перевод;
+    var русское = сНемецкого ? перевод : текст;
+    последний = { немецкое: немецкое, русское: русское };
+
+    var транс = window.Транскрипция ? window.Транскрипция.текст(немецкое) : '';
+    итог.innerHTML =
+      '<div class="слово">' + экр(перевод) + '</div>' +
+      (транс ? '<div class="транс">[' + экр(сНемецкого ? window.Транскрипция.текст(текст) : транс) + ']</div>' : '') +
+      '<div class="низ">' +
+        '<button id="перСлушать">🔊 Послушать по-немецки</button>' +
+        '<button id="перКопия">Скопировать</button>' +
+        '<button id="перВЗубр">➕ В мой словарик</button>' +
+      '</div>';
+
+    $('перСлушать').onclick = function(){ озвучить(немецкое); };
+    $('перКопия').onclick = function(){
+      (navigator.clipboard ? navigator.clipboard.writeText(перевод) : Promise.reject())
+        .catch(function(){ prompt('Скопируй:', перевод); });
+    };
+    $('перВЗубр').onclick = function(){ вЗубр(немецкое, русское, this); };
+    озвучить(немецкое);
+  }).catch(function(){
+    итог.innerHTML = '<div class="пер-ошибка">Не получилось перевести. Проверь интернет и попробуй ещё раз.</div>';
+  });
+}
+
+function экр(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---- добавить в свой словарик ЗУБРа ---- */
+function вЗубр(немецкое, русское, кнопка){
+  var профиль = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+  var ключ = 'nemeckiy_zubr_' + профиль, список = [];
+  try{ список = JSON.parse(localStorage.getItem(ключ) || '[]'); }catch(e){}
+  var есть = список.some(function(c){ return c.de.toLowerCase() === немецкое.toLowerCase(); });
+  if (есть){ кнопка.textContent = 'уже в словарике'; return; }
+  список.push({ de: немецкое, ru: русское, t: Date.now() });
+  try{ localStorage.setItem(ключ, JSON.stringify(список)); }catch(e){}
+  кнопка.textContent = '✓ добавлено в ЗУБР';
+  if (window.ЗУБР_обновить) window.ЗУБР_обновить();
+}
+
+/* ---- озвучка немецкого ---- */
+var голос;
+function озвучить(текст){
+  if (!window.speechSynthesis || !текст) return;
+  if (голос === undefined){
+    var все = [];
+    try{ все = speechSynthesis.getVoices() || []; }catch(e){}
+    var нем = все.filter(function(v){ return (v.lang||'').toLowerCase().indexOf('de') === 0; });
+    голос = нем.filter(function(v){ return /anna/i.test(v.name); })[0] || нем[0] || null;
+    if (!все.length) голос = undefined;
+  }
+  if (!голос) return;
+  try{
+    var у = new SpeechSynthesisUtterance(текст);
+    у.voice = голос; у.lang = голос.lang || 'de-DE'; у.rate = .88;
+    speechSynthesis.cancel(); speechSynthesis.speak(у);
+  }catch(e){}
+}
+if (window.speechSynthesis){
+  try{ speechSynthesis.onvoiceschanged = function(){ голос = undefined; }; }catch(e){}
+}
+
+/* ---- голосовой ввод ---- */
+var Слушалка = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!Слушалка){
+  $('перМикро').style.display = 'none';
+} else {
+  var слушает = false, узнавалка = null;
+  $('перМикро').onclick = function(){
+    if (слушает){ if (узнавалка) узнавалка.stop(); return; }
+    узнавалка = new Слушалка();
+    узнавалка.lang = сНемецкого ? 'de-DE' : 'ru-RU';
+    узнавалка.interimResults = true;
+    узнавалка.continuous = false;
+
+    узнавалка.onstart = function(){
+      слушает = true;
+      $('перМикро').classList.add('слушает');
+      $('перВвод').placeholder = 'Говори…';
+    };
+    узнавалка.onresult = function(e){
+      var текст = '';
+      for (var i = 0; i < e.results.length; i++) текст += e.results[i][0].transcript;
+      $('перВвод').value = текст;
+    };
+    узнавалка.onerror = function(){
+      $('перИтог').className = 'пер-итог видно';
+      $('перИтог').innerHTML = '<div class="пер-ошибка">Микрофон не сработал. Разреши доступ к микрофону в настройках браузера.</div>';
+    };
+    узнавалка.onend = function(){
+      слушает = false;
+      $('перМикро').classList.remove('слушает');
+      обновитьПодпись();
+      if ($('перВвод').value.trim()) пуск();
+    };
+    try{ узнавалка.start(); }catch(e){}
+  };
+}
+})();
+</script>
+
+<!--/ПЕРЕВОДЧИК-->
+
+
+
+
+
+
+
+
+
+
+  <header>
+    <h1>🇩🇪 Немецкий для врачей</h1>
+    <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
+  </header>
+
+  <div class="profile-bar">
+    <span class="label">Кто занимается:</span>
+    <button class="profile-btn" data-profile="grigoriy">Григорий</button>
+    <button class="profile-btn" data-profile="polina">Полина</button>
+    <span class="progress-note" id="progressNote"></span>
+  </div>
+
+  <div class="progress-panel">
+    <div class="pp-head">
+      <span class="pp-title">🎯 Путь к B2 — допуск врача (Approbation)</span>
+      <span class="pp-total" id="ppTotal">0%</span>
+    </div>
+    <div class="pp-bar-big"><div class="pp-fill-big" id="ppFillBig"></div></div>
+    <div class="pp-left" id="ppLeft"></div>
+
+    <div class="pp-levels" id="ppLevels"></div>
+
+    <button class="pp-toggle" id="ppToggle">Показать темы уровня ▾</button>
+    <div class="pp-topics" id="ppTopics" hidden></div>
+  </div>
+
+  <div class="folders" id="folders"></div>
+
+  <section id="secClaude">
+    <h2 class="sec-head"><span class="sec-ico">🤖</span> Уроки с Claude <span class="sec-note">— ежедневно, между занятиями</span></h2>
+    <div class="lvl-tabs" id="lvlTabs"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="secDasha" hidden>
+    <h2 class="sec-head sec-dasha"><span class="sec-ico">👩‍🏫</span> <span id="dashaTitle">Занятия с Дашей</span> <span class="sec-note" id="dashaNote"></span></h2>
+    <div class="next-lesson" id="nextLesson"></div>
+    <div class="grid" id="gridDasha"></div>
+  </section>
+
+  <footer>Прогресс хранится в этом браузере отдельно для каждого профиля и не синхронизируется между устройствами.</footer>
+</div>
+
+<script>
+const LESSONS = [
+  {id:'0', title:'Урок 0 — Алфавит и правила чтения', topic:'Алфавит со звуком, дифтонги, долгие/краткие, оглушение — база произношения.', pdf:'lessons/urok0_pdf.pdf', audio:'lessons/urok0_interactive.html', level:'A1'},
+  {id:'1', title:'Урок 1 — Приветствие и знакомство', topic:'Sich vorstellen, глагол sein, du vs Sie (с пациентами — Sie).', pdf:'lessons/urok1_pdf.pdf', audio:'lessons/urok1_interactive.html', level:'A1'},
+  {id:'2', title:'Урок 2 — Wie geht\'s, числа, артикли', topic:'Числа 0–20, der/die/das, возраст пациента, диалог на ресепшене.', pdf:'lessons/urok2_pdf.pdf', audio:'lessons/urok2_interactive.html', level:'A1'},
+  {id:'3', title:'Урок 3 — Глаголы Präsens, порядок слов', topic:'Спряжение в настоящем времени, глагол на 2-й позиции, вопросы.', pdf:'lessons/urok3_pdf.pdf', audio:'lessons/urok3_interactive.html', level:'A1'},
+  {id:'4', title:'Урок 4 — haben, Akkusativ, отрицание', topic:'«У меня есть/болит», винительный падеж, kein vs nicht, приём у врача.', pdf:'lessons/urok4_pdf.pdf', audio:'lessons/urok4_interactive.html', level:'A1'},
+  {id:'5', title:'Урок 5 — Все числа + порядковые', topic:'0–1000, ловушка «задом наперёд», порядковые (1-й, 2-й…), давление/пульс/дата.', pdf:'lessons/urok5_pdf.pdf', audio:'lessons/urok5_interactive.html', level:'A1'},
+  {id:'6', title:'Урок 6 — Времена года и месяцы', topic:'Времена года, 12 месяцев, im + месяц, дата рождения, запись на приём.', pdf:'lessons/urok6_pdf.pdf', audio:'lessons/urok6_interactive.html', level:'A1'},
+  {id:'7', title:'Урок 7 — Цвета (die Farben)', topic:'Цвета, оттенки hell-/dunkel-, цвет симптома (bleiche Haut, blauer Fleck).', pdf:'lessons/urok7_pdf.pdf', audio:'lessons/urok7_interactive.html', level:'A1'},
+  {id:'8', title:'Урок 8 — Неправильные глаголы и W-Fragen', topic:'sein/haben, глаголы-хамелеоны (du sprichst), все вопросы на W у врача.', pdf:'lessons/urok8_pdf.pdf', audio:'lessons/urok8_interactive.html', level:'A1'},
+  {id:'9', title:'Урок 9 — Части тела (der Körper)', topic:'Части тела с артиклями (der/die/das цветом), «где болит?», жалобы на ноги/вены.', pdf:'lessons/urok9_pdf.pdf', audio:'lessons/urok9_interactive.html', level:'A1'},
+  {id:'10', title:'Урок 10 — Дни недели и время (Uhrzeit)', topic:'Дни недели, часы, ловушка halb (9:30!), официальное 24ч, запись пациента на приём.', pdf:'lessons/urok10_pdf.pdf', audio:'lessons/urok10_interactive.html', level:'A1'},
+  {id:'11', title:'Урок 11 — Предлоги места (Wo? + Dativ)', topic:'9 предлогов места, падеж Dativ (dem/der/den), im/am/zum/zur, где болит/где аптека. Новый голос Yannick.', pdf:'lessons/urok11_pdf.pdf', audio:'lessons/urok11_interactive.html', level:'A1'},
+  {id:'12', title:'Урок 12 — Прошедшее время (Perfekt)', topic:'Язык анамнеза: haben/sein + Partizip II, сильные глаголы, когда без ge-, «когда начались боли».', pdf:'lessons/urok12_pdf.pdf', audio:'lessons/urok12_interactive.html', level:'A1'},
+  {id:'13', title:'Урок 13 — Повелительное наклонение (Imperativ)', topic:'Язык осмотра: «лягте на спину», «дышите глубоко», «покажите ногу». Форма на Sie, du, ihr, смягчение bitte/mal/doch, 15 команд приёма.', pdf:'lessons/urok13_pdf.pdf', audio:'lessons/urok13_interactive.html', level:'A1'},
+  {id:'14', title:'Урок 14 — Еда и напитки (Essen und Trinken)', topic:'Продукты и напитки с артиклями (род цветом), essen-хамелеон, gern/mögen/schmecken, кафе, «вы натощак?» и советы по питанию.', pdf:'lessons/urok14_pdf.pdf', audio:'lessons/urok14_interactive.html', level:'A1'},
+  {id:'15', title:'Урок 15 — Квартира и жильё (Wohnung und Haus)', topic:'Снять квартиру в Германии: комнаты и мебель, три денежные ловушки (счёт комнат, этажи, Kalt- vs Warmmiete), вопросы маклеру, жильё в анамнезе.', pdf:'lessons/urok15_pdf.pdf', audio:'lessons/urok15_interactive.html', level:'A1'},
+  {id:'16', title:'Урок 16 — Погода (das Wetter)', topic:'Безличное «es», прилагательные и явления, градусы, прогноз через werden, small talk — и жара как клинический фактор для вен. Закрывает A1.', pdf:'lessons/urok16_pdf.pdf', audio:'lessons/urok16_interactive.html', level:'A1'},
+  {id:'17', title:'Урок 17 — Куда? Wohin? + Akkusativ', topic:'Первый урок A2. Девять предлогов-переключателей, Wo?→Dativ vs Wohin?→Akkusativ, слияния ins/ans/aufs, глаголы-близнецы stehen/stellen, команды «куда» на осмотре.', pdf:'lessons/urok17_pdf.pdf', audio:'lessons/urok17_interactive.html', level:'A2'},
+  {id:'18', title:'Урок 18 — Возвратные глаголы (sich waschen)', topic:'Немецкое «-ся» отдельным словом: шесть местоимений, ловушка mich/mir, русское «-ся» не подсказчик, 14 глаголов осмотра и главный вопрос Wie fühlen Sie sich?', pdf:'lessons/urok18_pdf.pdf', audio:'lessons/urok18_interactive.html', level:'A2'},
+  {id:'19', title:'Урок 19 — Präteritum: war, hatte, модальные', topic:'Долг с урока 12. Слова, которые в разговоре НЕ ставят в Perfekt: war, hatte и модальные (умляут исчезает). Ловушка konnte/könnte, 13 фраз анамнеза, язык Arztbrief.', pdf:'lessons/urok19_pdf.pdf', audio:'lessons/urok19_interactive.html', level:'A2'},
+];
+
+// Занятия с репетитором Дашей (Австрия) — раз в неделю, воскресенье 20:00
+const DASHA = [
+  {id:'d3', num:'Занятие 3', date:'27.08.2026', title:'Спряжение глаголов: три категории',
+   topic:'Главная механика немецкого глагола. Все глаголы делятся на три группы: правильные (90–95%!), с изменяемой гласной и пять исключений. Плюс правило «буква меняется только у du и er/sie/es», разборы kennen/können, wohnen/leben, studieren/lernen, zu Hause / nach Hause и мелкие исключения в письме.',
+   pdf:'dasha/dasha3_pdf.pdf', audio:'dasha/dasha3_interactive.html',
+   photos:['dasha/dasha3_praesentation.pdf','dasha/dasha3_hw_modal.jpg','dasha/dasha3_hw_modal2.jpg','dasha/dasha3_hw_verben.jpg'],
+   photoLabels:['Презентация Даши (PDF)','Домашка: модальные','Домашка: модальные 2','Домашка: Verben 1']},
+  {id:'d2', num:'Занятие 2', date:'17.08.2026', title:'Модальные глаголы + семья',
+   topic:'Шесть модальных глаголов (müssen, sollen, können, dürfen, wollen, möchten) — все формы и правило «смысловой глагол в конец, в инфинитиве». Повторение местоимений, старт темы «семья».',
+   pdf:'dasha/dasha2_pdf.pdf', audio:'dasha/dasha2_interactive.html',
+   trainer:'dasha/trainer_modal.html', trainerName:'🎯 Тренажёр: 60 предложений',
+   photos:[]},
+  {id:'d1', num:'Занятие 1', date:'12.08.2026', title:'Числа, местоимения, базовая лексика',
+   topic:'Числа «задом наперёд» и порядковые, личные + притяжательные (правило -e), артикли, цвета, время суток, месяцы (im), дни недели (am), наречия частотности.',
+   pdf:'dasha/dasha1_pdf.pdf', audio:'dasha/dasha1_interactive.html',
+   photos:['dasha/dasha1_foto1.jpg','dasha/dasha1_foto2.jpg','dasha/dasha1_foto3.jpg']},
+];
+const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
+
+// Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
+const POLYA = [
+  {id:'p8', num:'Занятие 8', date:'31.08.2026', title:'Профессии, национальности и множественное число',
+   topic:'Продолжение женского рода: 16 профессий из учебника (стр. 14–15) и 9 национальностей — везде одно правило der→die и суффикс -in. ⚠️ Ловушки: der Arzt→die Ärztin и der Koch→die Köchin (меняется гласная), а der Deutsche/die Deutsche вообще исключение. Разобрали разницу aufräumen (навести порядок) и putzen (помыть), отделяемую приставку (räumt auf, ruft an) и нулевой артикль — когда артикль не нужен вовсе. ⭐⭐ Новая большая тема: множественное число — артикль всегда die, а форма слова меняется четырьмя способами.',
+   pdf:'', audio:'dasha/polya8_interactive.html',
+   photos:['dasha/polya8_hw_berufe1.jpg','dasha/polya8_hw_berufe2.jpg','dasha/polya8_hw_taetigkeiten.jpg'],
+   photoLabels:['Профессии, лист 1','Профессии, лист 2','Кто чем занимается']},
+  {id:'p7', num:'Занятие 7', date:'26.08.2026', title:'Разбор текста и феминитивы',
+   topic:'Дочитали текст про изучение языков (vor allem, Spaß machen, aufschreiben), ловушка vor/nach во времени («vor zwei Tagen» = два дня НАЗАД), почему у «Kinderbücher haben viele Bilder» нет артикля. ⭐ Новая тема: женский род профессий (-in) и его множественное (-innen) — единственное железное правило множественного в немецком. ✍️ Внутри: оригинал текста целиком с озвучкой, 12 наречий времени по шкале частоты и вся домашка с полями.',
+   pdf:'dasha/polya7_pdf.pdf', audio:'dasha/polya7_interactive.html',
+   photos:['dasha/polya7_hw_text.jpg','dasha/polya7_hw_adverbien.jpg'],
+   photoLabels:['Текст Deutsch lernen (A1)','Карта наречий времени']},
+  {id:'p6', num:'Занятие 6', date:'22.08.2026', title:'Вопросы, позиция глагола и описание картинки',
+   topic:'Разбор домашки (leben vs wohnen, wie vs welche), правило «глагол на второй ПОЗИЦИИ», после haben всегда Akkusativ, куда ставить nicht и почему нельзя kein, тексты Menschen A1 стр. 21, описание картинки (im Vordergrund / im Hintergrund). ✍️ Вся домашка от Даши внутри — с полями для заполнения и озвученным текстом «Meine Familie».',
+   pdf:'dasha/polya6_pdf.pdf', audio:'dasha/polya6_interactive.html',
+   photos:['dasha/polya6_hw_text.jpg','dasha/polya6_hw_fragen.jpg','dasha/polya6_hw_modal.jpg','dasha/polya6_hw_ru.jpg'],
+   photoLabels:['Текст Meine Familie','Вопросы к тексту','Модальные глаголы','Текст на перевод']},
+  {id:'p5', num:'Занятие 5', date:'19.08.2026', title:'Семья и вопросительные слова',
+   topic:'Глаголы-исключения (haben, werden, sein, tun, wissen), вся лексика семьи и семейного положения, вопросительные слова + 4 пары, где путаются: wie/welche, wie viel/wie viele, wer/wen, nach/in. Плюс вся домашка от Даши с полями для заполнения.',
+   pdf:'dasha/polya5_pdf.pdf', audio:'dasha/polya5_interactive.html'},
+];
+const NEXT_POLYA = {date:'пятница', time:'8:00'};
+
+// ===== ПРОГРАММА CEFR: темы по уровням, привязанные к урокам =====
+// lessons: какие уроки закрывают тему. l0..l11 = уроки с Claude, d1 = занятие с Дашей.
+// Веса уровней = доля в общем пути к B2 (по учебным часам Goethe-Institut).
+const LEVELS = [
+  {code:'A1', name:'Начальный', weight:0.15, color:'#2e9e5b', topics:[
+    {t:'Алфавит и правила чтения', l:['l0']},
+    {t:'Приветствие и знакомство', l:['l1','d1']},
+    {t:'Личные местоимения (ich, du, er…)', l:['l1','d1','d2']},
+    {t:'Глагол sein', l:['l1','d1']},
+    {t:'Глагол haben', l:['l4','l8']},
+    {t:'Präsens правильных глаголов', l:['l3']},
+    {t:'Сильные глаголы (du sprichst, er fährt)', l:['l8']},
+    {t:'Род существительных, артикли der/die/das', l:['l2','d1']},
+    {t:'Неопределённый артикль ein/eine', l:['l4']},
+    {t:'Отрицание kein и nicht', l:['l4']},
+    {t:'Именительный падеж (Nominativ)', l:['l2']},
+    {t:'Винительный падеж (Akkusativ)', l:['l4']},
+    {t:'Дательный падеж (Dativ) — база', l:['l11']},
+    {t:'Притяжательные местоимения (mein, dein)', l:['d1','d2']},
+    {t:'Порядок слов: глагол на 2-м месте', l:['l3']},
+    {t:'Вопросы с W-словом (W-Fragen)', l:['l8']},
+    {t:'Вопросы да/нет', l:['l3']},
+    {t:'Предлоги места (in, auf, unter + Dativ)', l:['l11','l15']},
+    {t:'Множественное число существительных', l:['l9','d1']},
+    {t:'Числа 0–1 000 000', l:['l2','l5','d1']},
+    {t:'Порядковые числительные', l:['l5','d1']},
+    {t:'Цвета', l:['l7','d1']},
+    {t:'Время суток, распорядок дня', l:['d1']},
+    {t:'Дни недели, месяцы, времена года', l:['l6','d1']},
+    {t:'Который час (Uhrzeit)', l:['l10']},
+    {t:'Части тела', l:['l9']},
+    {t:'Наречия частотности (immer, oft, nie)', l:['d1']},
+    {t:'Профессия и работа', l:['l1']},
+    {t:'Модальные глаголы (können, müssen, dürfen)', l:['d2']},
+    {t:'Повелительное наклонение (Imperativ)', l:['l13']},
+    {t:'Отделяемые приставки (aufstehen, einkaufen)', l:['l12','l13']},
+    {t:'Прошедшее время Perfekt', l:['l12']},
+    {t:'Семья и родственники', l:['d2']},
+    {t:'Еда и напитки', l:['l14']},
+    {t:'Квартира и жильё', l:['l15']},
+    {t:'Погода', l:['l16']},
+  ]},
+  {code:'A2', name:'Базовый', weight:0.20, color:'#1f8fb5', topics:[
+    {t:'Perfekt со всеми глаголами', l:[]},
+    {t:'Präteritum (sein, haben, модальные)', l:['l19']},
+    {t:'Возвратные глаголы (sich waschen)', l:['l18']},
+    {t:'Дательный падеж полностью + глаголы с Dativ', l:[]},
+    {t:'Предлоги Wo? / Wohin? (Wechselpräpositionen)', l:['l17']},
+    {t:'Предлоги с Dativ (mit, nach, bei, seit)', l:[]},
+    {t:'Предлоги с Akkusativ (für, ohne, gegen)', l:[]},
+    {t:'Сравнительная степень (größer, am größten)', l:[]},
+    {t:'Придаточные с weil / denn', l:[]},
+    {t:'Придаточные с dass', l:[]},
+    {t:'Придаточные с wenn / als', l:[]},
+    {t:'Склонение прилагательных (база)', l:[]},
+    {t:'Konjunktiv II вежливости (würde, hätte, könnte)', l:[]},
+    {t:'Будущее время (Futur I)', l:[]},
+    {t:'Императив во всех формах', l:['l13']},
+    {t:'Infinitiv mit zu', l:[]},
+    {t:'Родительный падеж (Genitiv) — база', l:[]},
+    {t:'Пассив — введение', l:[]},
+    {t:'Косвенный вопрос (ob)', l:[]},
+    {t:'Глаголы с предлогами', l:[]},
+    {t:'Медицина: симптомы и жалобы пациента', l:[]},
+    {t:'Здоровье и самочувствие', l:[]},
+    {t:'Покупки и магазины', l:[]},
+    {t:'Путешествия и транспорт', l:[]},
+    {t:'Работа, офис, документы', l:[]},
+    {t:'Жильё: аренда, мебель', l:['l15']},
+    {t:'Свободное время и хобби', l:[]},
+    {t:'Чувства и эмоции', l:[]},
+  ]},
+  {code:'B1', name:'Средний', weight:0.30, color:'#8a5cc7', topics:[
+    {t:'Konjunktiv II полностью', l:[]},
+    {t:'Пассив во всех временах', l:[]},
+    {t:'Относительные придаточные (der, die, das)', l:[]},
+    {t:'Genitiv полностью', l:[]},
+    {t:'Склонение прилагательных полностью', l:[]},
+    {t:'Partizip I и II как определение', l:[]},
+    {t:'Infinitivkonstruktionen (um zu, ohne zu, statt zu)', l:[]},
+    {t:'Сложные союзы (obwohl, trotzdem, deshalb, falls)', l:[]},
+    {t:'Временные придаточные (bevor, nachdem, während)', l:[]},
+    {t:'Plusquamperfekt', l:[]},
+    {t:'Косвенная речь — введение', l:[]},
+    {t:'Модальные глаголы в субъективном значении', l:[]},
+    {t:'Предлоги с Genitiv (wegen, trotz, während)', l:[]},
+    {t:'Двойные союзы (sowohl…als auch, entweder…oder)', l:[]},
+    {t:'Nomen-Verb-Verbindungen', l:[]},
+    {t:'Медицина: сбор анамнеза', l:[]},
+    {t:'Медицина: осмотр и обследование', l:[]},
+    {t:'Медицина: объяснение диагноза пациенту', l:[]},
+    {t:'Профессиональная коммуникация', l:[]},
+    {t:'Выражение мнения и аргументация', l:[]},
+    {t:'Резюме и собеседование', l:[]},
+    {t:'Учреждения, документы, бюрократия', l:[]},
+    {t:'Телефонные разговоры', l:[]},
+    {t:'Рассказ о событиях в прошлом', l:[]},
+    {t:'Описание процессов', l:[]},
+    {t:'Дискуссия и спор', l:[]},
+    {t:'Понимание сложных текстов', l:[]},
+    {t:'Письмо: официальное и личное', l:[]},
+  ]},
+  {code:'B2', name:'Цель — Approbation', weight:0.35, color:'#c9552b', topics:[
+    {t:'Konjunktiv I (косвенная речь)', l:[]},
+    {t:'Заменители пассива (sich lassen, sein + zu)', l:[]},
+    {t:'Partizipialkonstruktionen', l:[]},
+    {t:'Номинализация (Nominalstil)', l:[]},
+    {t:'Расширенные определения', l:[]},
+    {t:'Сложные коннекторы', l:[]},
+    {t:'Модальность во всех оттенках', l:[]},
+    {t:'Стилистика: формальный и разговорный регистр', l:[]},
+    {t:'Идиомы и устойчивые выражения', l:[]},
+    {t:'Продвинутые приставки глаголов', l:[]},
+    {t:'Функциональные глаголы (Funktionsverbgefüge)', l:[]},
+    {t:'Типы текстов и их структура', l:[]},
+    {t:'FSP: сбор анамнеза у пациента', l:[]},
+    {t:'FSP: врачебное письмо (Arztbrief)', l:[]},
+    {t:'FSP: доклад коллеге о пациенте', l:[]},
+    {t:'Медицинская терминология (латынь ↔ немецкий)', l:[]},
+    {t:'Разговор с пациентом простым языком', l:[]},
+    {t:'Информированное согласие (Aufklärung)', l:[]},
+    {t:'Неотложные состояния', l:[]},
+    {t:'Медицинская документация', l:[]},
+    {t:'Коммуникация с коллегами и медсёстрами', l:[]},
+    {t:'Флебология: своя специальность по-немецки', l:[]},
+    {t:'Профессиональная дискуссия', l:[]},
+    {t:'Презентация и доклад', l:[]},
+    {t:'Переговоры', l:[]},
+    {t:'Критика и возражение', l:[]},
+    {t:'Понимание беглой речи и диалектов', l:[]},
+    {t:'Формальное письмо', l:[]},
+  ]},
+];
+
+const grid = document.getElementById('grid');
+const gridDasha = document.getElementById('gridDasha');
+const progressNote = document.getElementById('progressNote');
+let profile = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+document.documentElement.setAttribute('data-кто', profile);
+
+function выученоСлов(){
+  const пре = 'nemeckiy_q_' + profile + '_';
+  let n = 0;
+  for (let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if (k && k.startsWith(пре) && localStorage.getItem(k) === '3') n++;
+  }
+  return n;
+}
+function progressKey(p, lessonId){ return 'nemeckiy_done_' + p + '_' + lessonId; }
+
+// ===== расчёт прогресса по уровням CEFR =====
+let activeLevel = localStorage.getItem('nemeckiy_lvl') || 'A1';
+
+function doneLessonIds(){
+  const s = new Set();
+  LESSONS.forEach(l=>{ if(localStorage.getItem(progressKey(profile,l.id))==='1') s.add('l'+l.id); });
+  dashaListFor(profile).forEach(l=>{ if(localStorage.getItem(progressKey(profile,l.id))==='1') s.add(l.id); });
+  return s;
+}
+
+function computeProgress(){
+  const done = doneLessonIds();
+  const levels = LEVELS.map(lv=>{
+    let ok = 0;
+    const topics = lv.topics.map(tp=>{
+      const covered = tp.l.length>0 && tp.l.some(id=>done.has(id));
+      if(covered) ok++;
+      return {...tp, covered};
+    });
+    return {...lv, topics, ok, total:lv.topics.length, pct: lv.topics.length ? Math.round(ok/lv.topics.length*100) : 0};
+  });
+  const total = Math.round(levels.reduce((a,lv)=> a + lv.weight * (lv.ok/lv.total), 0) * 100);
+  return {levels, total};
+}
+
+function renderProgress(){
+  const {levels, total} = computeProgress();
+
+  document.getElementById('ppTotal').textContent = total + '%';
+  const fill = document.getElementById('ppFillBig');
+  fill.style.width = total + '%';
+  // градиент растягиваем на всю шкалу, чтобы цвет отражал реальную позицию на пути
+  fill.style.backgroundSize = (total>0 ? (100/total*100) : 100) + '% 100%';
+
+  const cur = levels.find(l=>l.pct<100) || levels[levels.length-1];
+  document.getElementById('ppLeft').innerHTML =
+    `Сейчас идёшь по уровню <b>${cur.code}</b> — пройдено <b>${cur.ok} из ${cur.total}</b> тем. ` +
+    `До цели B2 осталось <b>${100-total}%</b> пути.`;
+
+  document.getElementById('ppLevels').innerHTML = levels.map(lv=>`
+    <div class="lvl ${lv.code===activeLevel?'active':''}" data-lvl="${lv.code}">
+      <div class="lvl-top"><span class="lvl-code" style="color:${lv.color}">${lv.code}</span><span class="lvl-pct">${lv.pct}%</span></div>
+      <div class="lvl-name">${lv.name}</div>
+      <div class="lvl-bar"><div class="lvl-fill" style="width:${lv.pct}%;background:${lv.color}"></div></div>
+      <div class="lvl-done">${lv.ok} из ${lv.total} тем</div>
+    </div>`).join('');
+
+  document.querySelectorAll('.lvl').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      activeLevel = el.dataset.lvl;
+      localStorage.setItem('nemeckiy_lvl', activeLevel);
+      renderProgress();
+      const box = document.getElementById('ppTopics');
+      if(box.hidden){ box.hidden=false; document.getElementById('ppToggle').textContent='Скрыть темы уровня ▴'; }
+    });
+  });
+
+  const lv = levels.find(l=>l.code===activeLevel) || levels[0];
+  document.getElementById('ppTopics').innerHTML =
+    `<h4>Уровень ${lv.code} — ${lv.name}: ${lv.ok} из ${lv.total} тем</h4>
+     <div class="topic-list">` +
+    lv.topics.map(tp=>{
+      const src = tp.l.length ? tp.l.map(x=> x.startsWith('d') ? 'Даша '+x.slice(1) : 'Урок '+x.slice(1)).join(', ') : '';
+      return `<div class="topic ${tp.covered?'ok':''}">
+        <span class="tick">${tp.covered?'✓':'○'}</span>
+        <span class="tt">${tp.t}${src?` <span class="src">— ${src}</span>`:''}</span>
+      </div>`;
+    }).join('') + '</div>';
+}
+
+document.getElementById('ppToggle').addEventListener('click', ()=>{
+  const box = document.getElementById('ppTopics');
+  box.hidden = !box.hidden;
+  document.getElementById('ppToggle').textContent = box.hidden ? 'Показать темы уровня ▾' : 'Скрыть темы уровня ▴';
+});
+
+// какие занятия с Дашей принадлежат профилю: у Григория своя линия, у Полины своя
+function dashaListFor(prof){ return prof === 'polina' ? POLYA : DASHA; }
+function dashaNextFor(prof){ return prof === 'polina' ? NEXT_POLYA : NEXT_LESSON; }
+
+const SECTIONS = ['claude','dasha'];
+let currentSection = localStorage.getItem('nemeckiy_section') || 'claude';
+if(!SECTIONS.includes(currentSection)) currentSection = 'claude';
+
+function renderFolders(){
+  const list = dashaListFor(profile);
+  const claudeDone = LESSONS.filter(l=>localStorage.getItem(progressKey(profile,l.id))==='1').length;
+  const dashaDone  = list.filter(l=>localStorage.getItem(progressKey(profile,l.id))==='1').length;
+  const who = profile === 'polina' ? 'Занятия Полины с Дашей' : 'Занятия с Дашей';
+  document.getElementById('folders').innerHTML = `
+    <button class="folder${currentSection==='claude'?' active':''}" data-section="claude">
+      <span class="f-ico">🤖</span>
+      <span class="f-txt"><span class="f-name">Уроки с Claude</span>
+      <span class="f-sub">${claudeDone} из ${LESSONS.length} пройдено · по уровням A1–B2</span></span>
+    </button>
+    <button class="folder dasha${currentSection==='dasha'?' active':''}" data-section="dasha">
+      <span class="f-ico">👩‍🏫</span>
+      <span class="f-txt"><span class="f-name">${who}</span>
+      <span class="f-sub">${list.length ? dashaDone + ' из ' + list.length + ' разобрано' : 'занятий пока нет'} · репетитор, раз в неделю</span></span>
+    </button>
+    <a class="folder trainer" href="trenazhyor.html">
+      <span class="f-ico">★</span>
+      <span class="f-txt"><span class="f-name">Тренажёр слов</span>
+      <span class="f-sub">${выученоСлов()} слов выучено · все уроки вперемешку</span></span>
+    </a>
+    <a class="folder zubr" href="zubr.html">
+      <span class="f-ico">🐃</span>
+      <span class="f-txt"><span class="f-name">ЗУБР</span>
+      <span class="f-sub">свой словарик и домашка от Даши</span></span>
+    </a>
+    <a class="folder trainer" href="slushat.html">
+      <span class="f-ico">🎧</span>
+      <span class="f-txt"><span class="f-name">Слушать</span>
+      <span class="f-sub">тексты с озвучкой и вопросами</span></span>
+    </a>
+    <a class="folder trainer" href="stat.html">
+      <span class="f-ico">📊</span>
+      <span class="f-txt"><span class="f-name">Статистика</span>
+      <span class="f-sub">занятия, прогноз, что уже держится</span></span>
+    </a>`;
+  document.querySelectorAll('button.folder').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      currentSection = b.dataset.section;
+      localStorage.setItem('nemeckiy_section', currentSection);
+      render();
+    });
+  });
+  document.getElementById('secClaude').hidden = currentSection !== 'claude';
+  document.getElementById('secDasha').hidden  = currentSection !== 'dasha';
+}
+
+const LEVEL_ORDER = ['A1','A2','B1','B2'];
+function levelOf(l){ return l.level || 'A1'; }
+function defaultLevel(){
+  const have = LEVEL_ORDER.filter(c => LESSONS.some(l => levelOf(l) === c));
+  return have.length ? have[have.length - 1] : 'A1';
+}
+let currentLevel = localStorage.getItem('nemeckiy_level') || defaultLevel();
+if(!LEVEL_ORDER.includes(currentLevel)) currentLevel = defaultLevel();
+
+function renderLevelTabs(){
+  const el = document.getElementById('lvlTabs');
+  el.innerHTML = LEVEL_ORDER.map(code=>{
+    const lv = LEVELS.find(x => x.code === code) || {};
+    const list = LESSONS.filter(l => levelOf(l) === code);
+    const done = list.filter(l => localStorage.getItem(progressKey(profile, l.id)) === '1').length;
+    const badge = list.length ? `${done}/${list.length}` : '—';
+    return `<button class="lvl-tab${code === currentLevel ? ' active' : ''}${list.length ? '' : ' locked'}"
+      data-level="${code}" style="--lvl:${lv.color || '#888888'}">
+      <span class="lvl-code">${code}</span>
+      <span class="lvl-name">${lv.name || ''}</span>
+      <span class="lvl-badge">${badge}</span>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('.lvl-tab').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      currentLevel = b.dataset.level;
+      localStorage.setItem('nemeckiy_level', currentLevel);
+      render();
+    });
+  });
+}
+
+function render(){
+  document.querySelectorAll('.profile-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.profile === profile);
+    document.documentElement.setAttribute('data-кто', profile);
+  });
+
+  grid.innerHTML = '';
+  let doneCount = 0;
+  LESSONS.forEach(l=>{ if(localStorage.getItem(progressKey(profile, l.id)) === '1') doneCount++; });
+
+  renderLevelTabs();
+
+  const shown = LESSONS.filter(l => levelOf(l) === currentLevel);
+  if(!shown.length){
+    const lv = LEVELS.find(x => x.code === currentLevel) || {};
+    grid.innerHTML = `<div class="lvl-empty">Уроков уровня <b>${currentLevel}</b>${lv.name ? ' («' + lv.name + '»)' : ''} пока нет.<br>Дойдём — появятся здесь.</div>`;
+  }
+  shown.forEach(l=>{
+    const done = localStorage.getItem(progressKey(profile, l.id)) === '1';
+
+    const card = document.createElement('div');
+    card.className = 'card' + (done ? ' done' : '');
+
+    const audioBtn = l.audio
+      ? `<a class="btn audio" href="${l.audio}" target="_blank" rel="noopener">🔊 Интерактив со звуком</a>`
+      : `<span class="btn audio disabled">🔊 скоро будет</span>`;
+
+    card.innerHTML = `
+      <span class="num">${l.title.split('—')[0].trim()}</span>
+      <h2>${l.title.split('—')[1] ? l.title.split('—')[1].trim() : l.title}</h2>
+      <p class="topic">${l.topic}</p>
+      <div class="actions">
+        ${audioBtn}
+        <a class="btn pdf" href="${l.pdf}" target="_blank" rel="noopener">📄 PDF для печати</a>
+      </div>
+      <label class="check">
+        <input type="checkbox" ${done ? 'checked' : ''} data-lesson="${l.id}">
+        Урок пройден
+      </label>
+    `;
+    grid.appendChild(card);
+  });
+
+  // --- Занятия с Дашей: показываем только линию текущего профиля ---
+  renderFolders();
+
+  const dashaList = dashaListFor(profile);
+  const dashaNext = dashaNextFor(profile);
+  document.getElementById('dashaTitle').textContent =
+    profile === 'polina' ? 'Занятия Полины с Дашей' : 'Занятия с Дашей';
+  document.getElementById('dashaNote').textContent =
+    profile === 'polina' ? '— её собственная линия, она идёт впереди по программе' : '— репетитор, раз в неделю по воскресеньям';
+  document.getElementById('nextLesson').innerHTML = dashaNext
+    ? `📅 Следующее занятие: <b>${dashaNext.date}, ${dashaNext.time}</b>`
+    : '';
+
+  gridDasha.innerHTML = '';
+  if(!dashaList.length){
+    gridDasha.innerHTML = `<div class="lvl-empty">Занятий с Дашей в этом профиле пока нет.</div>`;
+  }
+  dashaList.forEach(l=>{
+    const done = localStorage.getItem(progressKey(profile, l.id)) === '1';
+    if(done) doneCount++;
+
+    const card = document.createElement('div');
+    card.className = 'card ' + (profile === 'polina' ? 'polya' : 'dasha') + (done ? ' done' : '');
+
+    const photoLabels = l.photoLabels || [];
+    const photoBtns = (l.photos||[]).map((p,i)=>
+      `<a class="btn photos" href="${p}" target="_blank" rel="noopener">🖼️ ${photoLabels[i] || 'Доска ' + (i+1)}</a>`).join('');
+    const trainerBtn = l.trainer
+      ? `<a class="btn trainer" href="${l.trainer}" target="_blank" rel="noopener">${l.trainerName||'🎯 Тренажёр'}</a>`
+      : '';
+    const extras = (trainerBtn || photoBtns) ? `<div class="actions">${trainerBtn}${photoBtns}</div>` : '';
+
+    card.innerHTML = `
+      <span class="num ${profile === 'polina' ? 'polya-num' : 'dasha-num'}">${l.num} · ${l.date}</span>
+      <h2>${l.title}</h2>
+      <p class="topic">${l.topic}</p>
+      <div class="actions">
+        <a class="btn audio" href="${l.audio}" target="_blank" rel="noopener">🔊 Конспект со звуком + домашка</a>
+        <a class="btn pdf" href="${l.pdf}" target="_blank" rel="noopener">📄 PDF для печати</a>
+      </div>
+      ${extras}
+      <label class="check">
+        <input type="checkbox" ${done ? 'checked' : ''} data-lesson="${l.id}">
+        Занятие разобрано, домашка сделана
+      </label>
+    `;
+    gridDasha.appendChild(card);
+  });
+
+  progressNote.textContent = `Пройдено: ${doneCount} из ${LESSONS.length + dashaListFor(profile).length}`;
+  renderProgress();
+
+  gridDasha.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', e=>{
+      const id = e.target.dataset.lesson;
+      const key = progressKey(profile, id);
+      if(e.target.checked){ localStorage.setItem(key, '1'); }
+      else{ localStorage.removeItem(key); }
+      render();
+    });
+  });
+
+  grid.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', e=>{
+      const id = e.target.dataset.lesson;
+      const key = progressKey(profile, id);
+      if(e.target.checked){ localStorage.setItem(key, '1'); }
+      else{ localStorage.removeItem(key); }
+      render();
+    });
+  });
+}
+
+document.querySelectorAll('.profile-btn').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    profile = b.dataset.profile;
+    localStorage.setItem('nemeckiy_profile', profile);
+    render();
+    document.getElementById('folders').scrollIntoView({block:'nearest'});
+  });
+});
+
+render();
+</script>
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>

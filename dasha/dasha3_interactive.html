@@ -1,0 +1,1605 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие 3 с Дашей — спряжение глаголов</title>
+
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(23px,5vw,31px); font-weight:600; }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:64ch; }
+  .hint { display:inline-flex; align-items:center; gap:6px; margin-top:12px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  .toc { background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:22px; }
+  .toc b { font-size:13px; color:var(--ink-muted); display:block; margin-bottom:8px; }
+  .toc ol { margin:0; padding-left:20px; columns:2; column-gap:24px; font-size:13.5px; }
+  .toc li { margin:3px 0; break-inside:avoid; }
+  .toc a { color:var(--accent); text-decoration:none; } .toc a:hover { text-decoration:underline; }
+  section.block { margin-top:36px; scroll-margin-top:62px; }
+  .block h2 { font-size:19px; font-weight:600; display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:64ch; }
+  button.play { flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .warn-box { background:var(--warn-bg); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .warn-box b { color:var(--warn); } .warn-box .big { font-size:15px; color:var(--ink); font-weight:700; display:block; margin-bottom:4px; }
+  .link-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .link-box b { color:var(--sn); }
+  .artikel-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; font-size:13px; }
+  .artikel-legend span { display:inline-flex; align-items:center; gap:5px; }
+  .artikel-legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
+  .wcard { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 12px; box-shadow:var(--shadow); }
+  .wcard.hb { border-left-color:var(--hb); } .wcard.sn { border-left-color:var(--sn); }
+  .wcard.der { border-left-color:var(--der); } .wcard.die { border-left-color:var(--die); } .wcard.das { border-left-color:var(--das); }
+  .wcard .de .art-der { color:var(--der); } .wcard .de .art-die { color:var(--die); } .wcard .de .art-das { color:var(--das); }
+  .wcard .txt { flex:1; min-width:0; }
+  .wcard .de { font-family:Georgia,serif; font-weight:700; font-size:15px; overflow-wrap:anywhere; }
+  .wcard .de b { color:var(--play); }
+  .wcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:1px; }
+  .wcard .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .wcard button.play { width:30px; height:30px; font-size:13px; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .pcard { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 15px; box-shadow:var(--shadow); }
+  .pcard.hb { border-left:4px solid var(--hb); } .pcard.sn { border-left:4px solid var(--sn); } .pcard.wn { border-left:4px solid var(--warn); }
+  .pcard .txt { flex:1; min-width:0; }
+  .pcard .de { font-family:Georgia,serif; font-size:15.5px; font-weight:600; }
+  .pcard .de b { color:var(--play); }
+  .pcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pcard .ru { font-size:12.5px; color:var(--ink-muted); margin-top:1px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:82%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .bubble .txt .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
+  .hwbox { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play);
+    border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+  .hwbox .hwnum { display:inline-block; background:var(--play); color:var(--play-ink); font-weight:700;
+    font-size:12px; padding:2px 9px; border-radius:999px; margin-bottom:8px; }
+  .hwbox h3 { margin:0 0 8px; font-size:15.5px; font-family:Georgia,serif; }
+  .hwtext { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+    margin:10px 0; font-family:Georgia,serif; font-size:14.5px; line-height:1.65; }
+  .hwtext p { margin:0 0 10px; } .hwtext p:last-child { margin-bottom:0; }
+  .hwtext b { color:var(--play); }
+  .para { display:flex; gap:11px; align-items:flex-start; background:var(--surface); border:1px solid var(--line);
+    border-left:4px solid var(--accent); border-radius:9px; padding:12px 13px; margin-bottom:9px; box-shadow:var(--shadow); }
+  .para .ptxt { flex:1; min-width:0; }
+  .para .pde { font-family:Georgia,serif; font-size:14.5px; line-height:1.6; }
+  .para .pde b { color:var(--play); }
+  .para .pru { font-size:12.5px; color:var(--ink-muted); margin-top:7px; padding-top:7px; border-top:1px dashed var(--line); line-height:1.5; }
+  .para button.play { flex-shrink:0; width:32px; height:32px; font-size:13px; margin-top:2px; }
+  .hwrow { display:flex; align-items:flex-start; gap:10px; margin:8px 0; }
+  .hwrow .n { flex-shrink:0; font-weight:700; color:var(--accent); font-size:13px; min-width:26px; padding-top:7px; }
+  .hwrow .q { flex:1; min-width:0; }
+  .fld { width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:7px 10px;
+    border:1px solid var(--line); border-radius:7px; background:var(--surface); color:var(--ink); }
+  .fld:focus { outline:2px solid var(--accent); outline-offset:1px; }
+  .fld.short { max-width:190px; }
+  textarea.fld { min-height:62px; resize:vertical; line-height:1.5; }
+  .opt { display:flex; align-items:flex-start; gap:8px; margin:5px 0; font-size:13.5px; cursor:pointer; }
+  .opt input { margin-top:3px; flex-shrink:0; width:17px; height:17px; accent-color:var(--accent); }
+  .mv { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:9px 0; font-size:14px; line-height:1.7; }
+  .mv .num { font-weight:700; color:var(--accent); font-size:12.5px; }
+  .mv .fld { width:130px; }
+  .hint-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn);
+    border-radius:8px; padding:11px 13px; font-size:13px; color:var(--ink-muted); margin:10px 0; }
+  .origlink { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--accent);
+    text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:5px 12px; margin-top:8px; }
+  .saveinfo { font-size:12px; color:var(--ink-faint); margin-top:10px; }
+  footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+
+  .casetab { width:100%; border-collapse:collapse; font-size:13.5px; background:var(--surface-2); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:14px; }
+  .casetab th, .casetab td { padding:8px 10px; border:1px solid var(--line); text-align:center; }
+  .casetab th { background:var(--accent); color:var(--accent-ink); font-weight:600; font-size:12.5px; }
+  .casetab td.lbl { text-align:left; font-weight:600; color:var(--ink-muted); background:var(--surface); }
+  .casetab .wo { color:var(--hb); font-weight:700; } .casetab .wohin { color:var(--play); font-weight:700; }
+  .pairs { display:flex; flex-direction:column; gap:12px; }
+  .pair { border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); }
+  .pair .prow { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface); }
+  .pair .prow + .prow { border-top:1px dashed var(--line); }
+  .pair .prow.wo { border-left:4px solid var(--hb); }
+  .pair .prow.wohin { border-left:4px solid var(--play); }
+  .pair .tag { flex-shrink:0; font-size:10.5px; font-weight:700; letter-spacing:.04em; padding:3px 7px; border-radius:6px; }
+  .pair .prow.wo .tag { background:var(--hb-bg); color:var(--hb); }
+  .pair .prow.wohin .tag { background:var(--bubble-m); color:var(--play); }
+  .pair .txt { flex:1; min-width:0; }
+  .pair .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .pair .de b { color:var(--play); }
+  .pair .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .pair button.play { width:30px; height:30px; font-size:13px; }
+</style>
+
+
+<style id="backbar-css">
+  .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    padding:7px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar a.bb-link:active{ transform:scale(0.97); }
+  .backbar .bb-title{ color:rgba(255,255,255,0.72); font-size:12.5px; margin-left:auto;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52%; }
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+</style>
+
+</head>
+<body>
+<div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Занятие 3 с Дашей — 27.08.2026</span></div>
+
+<div class="lp">
+  <div class="eyebrow">Занятия с Дашей · конспект 3</div>
+  <h1>Занятие 3. Спряжение глаголов: три категории</h1>
+  <p class="lede">27 августа 2026, 79 минут — самое длинное занятие. Разобрали <b>главную механику немецкого глагола</b>: как он меняется под разные лица. Даша разделила все глаголы на три группы, и дальше всё станет проще — потому что почти любой глагол попадает в первую, самую лёгкую. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+
+  <div class="toc">
+    <b>Что в занятии</b>
+    <ol>
+      <li><a href="#s1">Как отвечать «как дела»</a></li>
+      <li><a href="#s2">Повторили цвета</a></li>
+      <li><a href="#s3">Повторили модальные</a></li>
+      <li><a href="#s4">⭐ Правило, которое решает всё</a></li>
+      <li><a href="#s5">Времена: их всего три</a></li>
+      <li><a href="#s6">⭐⭐ Три категории глаголов</a></li>
+      <li><a href="#s7">Категория 1: правильные</a></li>
+      <li><a href="#s8">Тренировка на трёх глаголах</a></li>
+      <li><a href="#s9">Новые глаголы + разборы</a></li>
+      <li><a href="#s10">⚠️ zu Hause и nach Hause</a></li>
+      <li><a href="#s11">⭐ Категория 2: меняют гласную</a></li>
+      <li><a href="#s12">Категория 3: исключения</a></li>
+      <li><a href="#s13">⚠️ Мелкие исключения в письме</a></li>
+      <li><a href="#s14">🩺 Wien / Wein / Vene</a></li>
+      <li><a href="#s15">📚 Домашка от Даши</a></li>
+    </ol>
+  </div>
+
+  <section class="block" id="s1">
+    <h2><span class="num">1</span> С чего начали: как отвечать на «как дела»</h2>
+    <div class="grammar-box">
+      Тут есть одна логика, которую стоит понять сразу, и дальше она будет работать всегда.<br><br>
+      Когда тебя спрашивают <b>Wie geht es <span class="hl">dir</span>?</b> — это буквально «как оно идёт <b>тебе</b>?». Не «как ты», а «как <b>тебе</b> идётся». Поэтому и отвечаешь ты не «я хорошо», а <b>Mir geht es gut</b> — «<b>мне</b> идётся хорошо».<br><br>
+      То есть в вопросе <b class="hl">dir</b> (тебе) → в ответе <b class="hl">mir</b> (мне). Вежливо спросят <b>Ihnen</b> (Вам) — отвечаешь всё равно <b>mir</b>, потому что говоришь про себя.
+    </div>
+    <div class="card-list" id="wiegeht"></div>
+    <div class="link-box" style="margin-top:14px">
+      💬 На занятии Григорий рассказал, что завёл словарик незнакомых слов — там уже <b>74 слова</b>. Даша похвалила и сказала, что этим словариком они будут активно пользоваться.
+    </div>
+  </section>
+
+  <section class="block" id="s2">
+    <h2><span class="num">2</span> Повторили цвета</h2>
+    <p class="desc">Даша прогнала по памяти — вспомнилось почти всё. Вот полный список, чтобы был под рукой.</p>
+    <div class="grid2" id="farben"></div>
+  </section>
+
+  <section class="block" id="s3">
+    <h2><span class="num">3</span> Повторили модальные глаголы</h2>
+    <div class="grammar-box">
+      Их <b class="hl">шесть</b>. Григорий назвал все шесть сам — Даша осталась довольна. Плюс отдельно всплыл седьмой, <i>mögen</i>, с интересной историей (см. ниже).
+    </div>
+    <div class="grid2" id="modal"></div>
+    <div class="warn-box" style="margin-top:14px">
+      <span class="big">Осторожно: sollen и müssen — оба «должен», но по-разному</span>
+      <b>müssen</b> — «обязан», жёсткая необходимость. Так надо, деваться некуда.<br>
+      <b>sollen</b> — «следует, нужно». Мягче: так правильно, так советуют, так положено.<br><br>
+      И ещё: <b>dürfen</b> — это не «я разрешаю», а <b>«мне разрешено»</b>. Разрешение получаю я, а не выдаю.
+    </div>
+    <p class="desc" style="margin-top:16px">Форма для <b>ich</b> — с неё удобно вспоминать остальные:</p>
+    <div class="grid2" id="modalIch"></div>
+    <div class="link-box" style="margin-top:14px">
+      🔍 <b>История про mögen.</b> Раньше это был полноценный модальный глагол. Потом от него отпочковался <i>möchten</i> («хотел бы») и забрал себе роль модального. А сам <i>mögen</i> роль потерял, но <b>спрягаться по-модальному не разучился</b>. Поэтому сегодня он значит просто <b>«нравиться»</b> и с другими глаголами в паре не ходит: <i>Ich mag Käse</i> — «мне нравится сыр», и точка.
+    </div>
+    <div class="grammar-box" style="margin-top:14px">
+      И главное про модальные, что уже было: когда модальный стоит с другим глаголом, <b class="hl">второй глагол уезжает в самый конец предложения и стоит там в начальной форме</b> (с окончанием -en).
+    </div>
+    <div class="card-list" id="rahmen"></div>
+  </section>
+
+  <section class="block" id="s4">
+    <h2><span class="num">4</span> ⭐ Правило, которое Даша просила запомнить «раз и навсегда»</h2>
+    <div class="warn-box">
+      <span class="big">Если в глаголе меняется буква — она меняется только у du и er/sie/es</span>
+      Это самое полезное правило всего занятия. Оно избавляет от половины сомнений.<br><br>
+      Смотри: у некоторых глаголов при спряжении <b>меняется гласная внутри слова</b> (не окончание, а сама буква в середине). Так вот — это происходит <b>только в двух местах</b>:<br><br>
+      ✅ у <b class="hl">du</b> (ты)<br>
+      ✅ у <b class="hl">er / sie / es</b> (он / она / оно)<br><br>
+      ❌ У <b>ich</b>, <b>wir</b>, <b>ihr</b>, <b>sie</b>, <b>Sie</b> внутри слова <b>никогда ничего не меняется</b>. Они спрягаются по обычным правилам.<br><br>
+      Даша сказала это так: <i>«множественное число никогда не трогается»</i>. У модальных глаголов есть небольшое отличие — там меняется ещё и в <i>ich</i>. Но у обычных глаголов правило работает железно.
+    </div>
+  </section>
+
+  <section class="block" id="s5">
+    <h2><span class="num">5</span> Времена: в немецком их всего три</h2>
+    <div class="link-box">
+      😌 <b>Хорошая новость от Даши.</b> В английском времён шестнадцать и куча подводных камней. В немецком — <b>три</b>: прошлое, настоящее и будущее, как мы привыкли по-русски.<br><br>
+      Единственное усложнение: прошедших времён <b>два</b>. Но и там, по словам Даши, «не так всё сложно, как в английском» — просто две формы, и всё. Пока это не трогаем.
+    </div>
+    <table class="casetab">
+      <tr><th>Прошлое</th><th>Настоящее</th><th>Будущее</th></tr>
+      <tr><td>Vergangenheit</td><td><b>Präsens</b></td><td>Futur</td></tr>
+      <tr><td>я делал</td><td><b>я делаю</b></td><td>я буду делать</td></tr>
+    </table>
+    <div class="grammar-box" style="margin-top:14px">
+      Сегодня занимаемся <b>Präsens</b> — настоящим временем. Что такое «спряжение»? Ровно то же самое, что в русском: <i>я дела<b>ю</b>, ты дела<b>ешь</b>, он дела<b>ет</b></i>. Окончание глагола меняется в зависимости от того, <b>кто</b> действует. По-немецки принцип точно такой же.
+    </div>
+  </section>
+
+  <section class="block" id="s6">
+    <h2><span class="num">6</span> ⭐⭐ Главное: все глаголы делятся на три категории</h2>
+    <div class="grammar-box">
+      Вот схема, ради которой было всё занятие. Даша разложила все немецкие глаголы на три кучки — и это сразу снимает страх, потому что первая кучка почти всё и покрывает.
+    </div>
+    <table class="casetab">
+      <tr><th>Категория</th><th>Сколько их</th><th>Что делают</th></tr>
+      <tr><td class="lbl"><b>1. Правильные</b></td><td><b>90–95%</b></td><td>просто добавляют окончание</td></tr>
+      <tr><td class="lbl"><b>2. С изменяемой гласной</b><br><span style="font-size:11px">Vokalwechselverben</span></td><td>небольшой список</td><td>окончание + меняют букву внутри</td></tr>
+      <tr><td class="lbl"><b>3. Исключения</b></td><td>около пяти</td><td>своя форма, просто учим</td></tr>
+    </table>
+    <div class="link-box" style="margin-top:14px">
+      💡 <b>Почему это радостная новость.</b> Девять из десяти глаголов — первая категория. То есть выучив одно правило, ты уже умеешь спрягать <b>почти любой</b> немецкий глагол. Вторая категория — это список, который просто заучивается. Третья — пять штук, их знают наизусть все.
+    </div>
+  </section>
+
+  <section class="block" id="s7">
+    <h2><span class="num">7</span> Категория 1: правильные глаголы — одно правило на всё</h2>
+    <div class="grammar-box">
+      Сначала два слова, которые надо понимать:<br><br>
+      <b class="hl">Инфинитив</b> — это глагол в словарной форме, как он записан в словаре. У немецких глаголов он почти всегда кончается на <b>-en</b>: <i>machen</i> (делать), <i>kommen</i> (приходить).<br>
+      <b class="hl">Основа</b> — это глагол <b>без этого -en</b>. У <i>machen</i> основа <b>mach-</b>. У <i>kommen</i> — <b>komm-</b>.<br><br>
+      А дальше всё просто: <b>берём основу и прилепляем окончание</b>. Окончаний всего четыре разных: <b>-e, -st, -t, -en</b>.
+    </div>
+    <table class="casetab">
+      <tr><th>Кто</th><th>Окончание</th><th>machen (делать)</th></tr>
+      <tr><td class="lbl">ich (я)</td><td><b>-e</b></td><td>ich mach<b>e</b></td></tr>
+      <tr><td class="lbl">du (ты)</td><td><b>-st</b></td><td>du mach<b>st</b></td></tr>
+      <tr><td class="lbl">er / sie / es (он/она/оно)</td><td><b>-t</b></td><td>er mach<b>t</b></td></tr>
+      <tr><td class="lbl">wir (мы)</td><td><b>-en</b></td><td>wir mach<b>en</b></td></tr>
+      <tr><td class="lbl">ihr (вы, свои)</td><td><b>-t</b></td><td>ihr mach<b>t</b></td></tr>
+      <tr><td class="lbl">sie / Sie (они / Вы)</td><td><b>-en</b></td><td>sie mach<b>en</b></td></tr>
+    </table>
+    <div class="grid2" id="machen"></div>
+    <div class="warn-box" style="margin-top:14px">
+      <span class="big">Две подсказки, которые снимают путаницу</span>
+      1️⃣ <b>У du ВСЕГДА -st.</b> Это самая надёжная примета во всём немецком. Видишь <i>du</i> — жди <b>-st</b>. Даша повторила это раз пять за занятие.<br><br>
+      2️⃣ <b>wir и sie/Sie — это просто инфинитив.</b> Ничего не меняем, берём словарную форму как есть: <i>wir machen</i>, <i>sie machen</i>. Ноль работы.<br><br>
+      Григорий на занятии пару раз путал <b>ich</b> и <b>ihr</b> (<i>ich wohne</i> / <i>ihr wohnt</i>) — это частая путаница, тут просто внимание: у <b>ihr</b> на конце <b>-t</b>, у <b>ich</b> — <b>-e</b>.
+    </div>
+  </section>
+
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> Тренировка: kommen, wohnen, trinken</h2>
+    <div class="grammar-box">
+      <b class="hl">kommen aus …</b> — «быть родом из». Предлог <b>aus</b> = «из». Так ты говоришь, откуда ты.
+    </div>
+    <div class="card-list" id="kommen"></div>
+    <p class="desc" style="margin-top:16px">И на других двух глаголах — <b>wohnen</b> (жить) и <b>trinken</b> (пить):</p>
+    <div class="card-list" id="wohnentrinken"></div>
+    <div class="link-box" style="margin-top:14px">
+      🗺️ Между делом выяснили: <b>Frankreich</b> [франкрайхь] — Франция. Сочетание <b>ei</b> читается как <b>«ай»</b>, а <b>ch</b> в конце — мягкий «хь».
+    </div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Новые глаголы — и три разбора, где легко перепутать</h2>
+    <div class="grid2" id="verben"></div>
+
+    <div class="warn-box" style="margin-top:16px">
+      <span class="big">Разбор 1: kennen или können — одна точка меняет смысл</span>
+      <b>kennen</b> (без точек над o) — <b>знать</b> кого-то или что-то. <i>Ich kenne Eva</i> — я знаю Еву.<br>
+      <b>können</b> (с точками) — <b>мочь, уметь</b>. Это модальный глагол.<br><br>
+      Слова похожи на вид, но это совершенно разные вещи. Даша специально остановилась: «не забываем, это не können, здесь нет смешной о».
+    </div>
+    <div class="card-list" id="kennenkoennen"></div>
+
+    <div class="warn-box" style="margin-top:16px">
+      <span class="big">Разбор 2: wohnen или leben — оба «жить»</span>
+      <b>wohnen</b> — жить <b>где-то физически</b>: город, страна, квартира. Про адрес.<br>
+      <b>leben</b> — про жизнь <b>вообще</b>, более отвлечённо: «жить счастливо», «жить хорошо».<br><br>
+      Даша успокоила: если перепутать — <b>ошибкой не будет</b>, их можно употреблять как синонимы. <i>Ich wohne in Moskau</i> и <i>Ich lebe in Moskau</i> — оба правильно.
+    </div>
+
+    <div class="warn-box" style="margin-top:16px">
+      <span class="big">Разбор 3: studieren или lernen — оба «учиться»</span>
+      <b>studieren</b> — учиться <b>в университете</b>, на специальности. Область применения узкая: только про вуз. <i>Ich studiere Physik</i> — я учусь на физика.<br>
+      <b>lernen</b> — <b>учить что-то</b>: предмет, язык, материал. <i>Du lernst Deutsch</i> — ты учишь немецкий.
+    </div>
+
+    <div class="link-box" style="margin-top:16px">
+      🛒 <b>Запоминалка от Даши.</b> Есть немецкий магазин <b>Kaufland</b> — он по всей Европе. Название складывается из <b>kaufen</b> (покупать) + <b>Land</b> (страна). Получается «страна покупок». Увидел вывеску — вспомнил глагол.
+    </div>
+  </section>
+
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> ⚠️ zu Hause и nach Hause — маленькая тема, которую все путают</h2>
+    <div class="grammar-box">
+      Слово <b class="hl">das Haus</b> — дом, средний род, пишется без всяких окончаний.<br><br>
+      Но есть два предлога, <b>zu</b> и <b>nach</b>, в паре с которыми это слово <b class="hl">отращивает на конце -e</b> и превращается фактически в наречие. Получаются две устойчивые формы, которые надо просто запомнить:
+    </div>
+    <table class="casetab">
+      <tr><th>Форма</th><th>Значение</th><th>Вопрос</th></tr>
+      <tr><td><b>zu Hause</b></td><td>дома</td><td class="wo">где?</td></tr>
+      <tr><td><b>nach Hause</b></td><td>домой</td><td class="wohin">куда?</td></tr>
+    </table>
+    <div class="grammar-box" style="margin-top:14px">
+      Логика простая: <b>nach</b> — предлог направления (куда-то движемся), поэтому <i>nach Hause</i> = домой. А <b>zu</b> тут про нахождение, поэтому <i>zu Hause</i> = дома.
+    </div>
+    <div class="card-list" id="hause"></div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> ⭐ Категория 2: глаголы, которые меняют гласную</h2>
+    <div class="grammar-box">
+      Эти глаголы делают <b>две вещи сразу</b>:<br>
+      1️⃣ добавляют обычные окончания, как все нормальные глаголы;<br>
+      2️⃣ <b class="hl">плюс меняют гласную внутри слова</b> — и только у <b>du</b> и <b>er/sie/es</b>, как мы договорились в разделе 4.<br><br>
+      <b>Как понять, что глагол из этой группы?</b> Никак. Честно. Даша прямо сказала: <i>«У нас нет никаких указателей на то, что глагол будет относиться к этой категории. Просто мы их заучиваем»</i>. Списка не избежать — но он небольшой, около сорока штук, и Даша пришлёт карточки.
+    </div>
+    <div class="warn-box">
+      <span class="big">Зато когда ты уже знаешь, что глагол из этой группы — работают два чётких правила</span>
+      1️⃣ Если в инфинитиве <b class="hl">e</b> → меняется на <b>i</b> или на <b>ie</b><br>
+      2️⃣ Если в инфинитиве <b class="hl">a</b> → меняется на <b>ä</b> (a с точками)
+    </div>
+
+    <p class="desc" style="margin-top:16px"><b>Правило 1: e → i / ie</b></p>
+    <div class="grid2" id="eIe"></div>
+    <p class="desc" style="margin-top:14px">И то же самое в форме <b>du</b> — не забываем, что окончание <b>-st</b> никуда не делось:</p>
+    <div class="grid2" id="eIeDu"></div>
+
+    <p class="desc" style="margin-top:20px"><b>Правило 2: a → ä</b></p>
+    <div class="grid2" id="aAe"></div>
+    <p class="desc" style="margin-top:14px">И в форме <b>du</b>:</p>
+    <div class="grid2" id="aAeDu"></div>
+
+    <div class="grammar-box" style="margin-top:16px">
+      <b>Важно не потерять окончание.</b> Григорий на занятии сказал <i>«du спрехт»</i> — забыл про <b>-st</b>. Даша поправила: меняем гласную <b>И</b> добавляем окончание. Оба действия, не одно вместо другого. Правильно — <b>du sprichst</b>.
+    </div>
+    <div class="card-list" id="beispiele"></div>
+  </section>
+
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Категория 3: глаголы-исключения (их всего пять)</h2>
+    <div class="grammar-box">
+      Эти не подчиняются никаким правилам вообще — ни обычным, ни «с изменяемой гласной». У них свои формы, которые просто заучивают наизусть. Хорошая новость: их пять, и два из них ты уже знаешь.
+    </div>
+    <p class="desc"><b>sein</b> — быть. Самый главный глагол языка:</p>
+    <div class="grid2" id="sein"></div>
+    <p class="desc" style="margin-top:16px"><b>haben</b> — иметь. Второй по важности:</p>
+    <div class="grid2" id="haben"></div>
+    <p class="desc" style="margin-top:16px">И ещё три, послушай их целиком:</p>
+    <div class="card-list" id="drei"></div>
+  </section>
+
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> ⚠️ Мелкие исключения: когда буква добавляется или пропадает</h2>
+    <div class="grammar-box">
+      Это не отдельная категория, а маленькие поправки внутри <b>правильных</b> глаголов. Они правильные, но с крошечными орфографическими причудами — исключительно ради удобства произношения.
+    </div>
+
+    <div class="warn-box">
+      <span class="big">Случай 1: основа кончается на -t или -d → добавляется лишняя e</span>
+      Возьми <b>arbeiten</b> (работать), основа <b>arbeit-</b>. Попробуй сказать «arbeitst» — язык сломается. Поэтому вставляют <b class="hl">-e-</b> для передышки:<br><br>
+      du arbeit<b>e</b>st &nbsp;·&nbsp; er arbeit<b>e</b>t &nbsp;·&nbsp; ihr arbeit<b>e</b>t<br><br>
+      А у <i>ich arbeite</i>, <i>wir arbeiten</i> ничего лишнего не нужно — там и так удобно.
+    </div>
+    <div class="grid2" id="arbeiten"></div>
+
+    <div class="warn-box" style="margin-top:16px">
+      <span class="big">Случай 2: основа кончается на -z, -s, -ß → у du пропадает s</span>
+      У <b>tanzen</b> (танцевать) основа <b>tanz-</b>. По правилу у <i>du</i> должно быть <b>-st</b>, получилось бы «tanzst» — два свистящих подряд, неудобно. Поэтому <b class="hl">s выбрасывают</b>, остаётся только <b>-t</b>:<br><br>
+      du tanz<b>t</b> — и это совпадает с формой <i>er tanzt</i>.<br><br>
+      То же самое с <b>heißen</b> (зваться): <i>du heißt</i>. Ты это уже говорил в первом уроке — <i>Wie heißt du?</i>
+    </div>
+    <div class="grid2" id="tanzen"></div>
+
+    <div class="warn-box" style="margin-top:16px">
+      <span class="big">Случай 3: глаголы на -eln → у ich выпадает e</span>
+      Глаголы вроде <b>bügeln</b> (гладить), <b>sammeln</b> (собирать), <b>lächeln</b> (улыбаться), <b>googeln</b> (гуглить). У формы <i>ich</i> буква <b>e</b> перед <b>l</b> <b class="hl">выпадает</b>:<br><br>
+      <i>ich büg<b>l</b>e</i> (не «bügele») &nbsp;·&nbsp; <i>ich samm<b>l</b>e</i><br><br>
+      Всё остальное спрягается обычно.
+    </div>
+    <div class="grid2" id="eln"></div>
+  </section>
+
+  <section class="block" id="s14">
+    <h2><span class="num">14</span> 🩺 Wien, Wein и Vene — три слова, которые тебе точно нужны</h2>
+    <div class="link-box">
+      Это всплыло на занятии живьём: разбирали предложение <i>Hanna lebt in Wien</i>, и Григорий сначала прочитал <b>Wien</b> как «вино». А потом заметил профессиональное совпадение — он же флеболог, занимается венами, и как раз в Вене работает известный флеболог, который говорит, что «настоящий флеболог должен жить в Вене».<br><br>
+      Три слова звучат похоже, но это совсем разные вещи. Разбери их один раз — и путать перестанешь.
+    </div>
+    <div class="card-list" id="wien"></div>
+    <div class="grammar-box" style="margin-top:14px">
+      Итог: <b>Wien</b> — город (пишется с большой буквы, как все города). <b>der Wein</b> — вино. <b>die Vene</b> — вена, а во множественном <b>die Venen</b> с <b>-n</b> на конце. Последние два — твои рабочие слова.
+    </div>
+  </section>
+
+  <section class="block" id="s15">
+    <h2><span class="num">15</span> 📚 Домашка от Даши</h2>
+    <p class="desc">Прислана в Telegram 27.08.2026 в 2 часа ночи. Восемь пунктов — можно заполнять прямо здесь, написанное сохраняется в браузере.</p>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 1</span>
+      <h3>Прочитать и понять презентацию ещё раз</h3>
+      <p class="desc" style="margin:0">Файл <i>Verb - Konjugation.pdf</i> — 17 слайдов. Всё, что в ней есть, разобрано выше в этом конспекте, так что можно читать параллельно.</p>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 2</span>
+      <h3>Семь предложений с днями недели</h3>
+      <div class="hint-box">
+        💡 С днями недели используем предлог <b>am</b>: <i>am Montag</i>, <i>am Dienstag</i>. Схема простая — <b>местоимение + глагол + день</b>.<br>
+        Пример Даши: <b>Ich spiele Tennis am Montag.</b>
+      </div>
+      <div class="grid2" id="tage"></div>
+      <div id="hwTage" style="margin-top:12px"></div>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 3</span>
+      <h3>Вставить модальный глагол в правильной форме</h3>
+      <div class="hint-box">
+        💡 В скобках даны варианты — надо выбрать подходящий по смыслу <b>и поставить в нужную форму</b>. Формы модальных — в разделе 3 этого конспекта.
+      </div>
+      <div id="hwModal"></div>
+      <a class="origlink" href="dasha3_hw_modal.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 4</span>
+      <h3>Ещё модальные глаголы — три блока</h3>
+      <p class="desc" style="margin:0 0 8px">Даша добавила: «не забывайте про свой словарик». Здесь надо выбрать между двумя-тремя модальными по смыслу.</p>
+      <div class="hint-box">
+        Блок 1 — <b>können или müssen?</b> · Блок 2 — <b>können, wollen или müssen?</b> · Блок 3 — <b>sollen или müssen?</b><br>
+        Подсказка по смыслу: <b>können</b> = могу/умею · <b>müssen</b> = обязан · <b>wollen</b> = хочу · <b>sollen</b> = следует, положено.
+      </div>
+      <a class="origlink" href="dasha3_hw_modal2.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 5</span>
+      <h3>Выбрать правильный глагол и поставить в нужную форму</h3>
+      <p class="desc" style="margin:0 0 8px">Лист <i>Verben 1</i>. В каждой четвёрке предложений — четыре глагола сверху, <b>каждый используется один раз</b>.</p>
+      <div class="hint-box">
+        💡 Обрати внимание: рядом с каждым глаголом уже дана подсказка-форма (например <i>kochen/kocht</i>) — это намёк, в каком лице он понадобится.
+      </div>
+      <a class="origlink" href="dasha3_hw_verben.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 6</span>
+      <h3>Десять предложений с глаголами из категории 2</h3>
+      <div class="hint-box">
+        💡 Взять <b>10 глаголов с изменяемой гласной</b> (лучше те, что были на занятии — раздел 11) и составить простые предложения, добавив <b>наречия регулярности</b>: <i>oft</i> (часто), <i>immer</i> (всегда), <i>manchmal</i> (иногда), <i>nie</i> (никогда), <i>selten</i> (редко).<br>
+        Пример Даши: <b>Du siehst oft deine Mutter.</b>
+      </div>
+      <div id="hwVokal"></div>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 7</span>
+      <h3>Видео: выписать диалог и перевести все выражения</h3>
+      <p class="desc" style="margin:0 0 8px">Даша прислала ссылку на видео — надо выписать оттуда диалог и перевести выражения.</p>
+      <a class="origlink" href="https://youtu.be/vnlu1X6xJuE" target="_blank" rel="noopener">▶️ Открыть видео на YouTube</a>
+      <textarea class="fld" id="f_video" rows="6" placeholder="диалог из видео + перевод выражений" style="margin-top:10px"></textarea>
+    </div>
+
+    <div class="hwbox">
+      <span class="hwnum">Задание 8</span>
+      <h3>Продолжать учить всю лексику</h3>
+      <p class="desc" style="margin:0">Всё, что было на занятиях, плюс карточки. Даша пришлёт отдельный список глаголов с изменяемой гласной — их около сорока.</p>
+    </div>
+
+    <p class="saveinfo">💾 Всё, что ты напечатал, сохраняется автоматически в этом браузере. На другом устройстве не появится.</p>
+  </section>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+<!--QUIZ-START-->
+<style>
+  .взубр{ margin:44px 0 0; }
+  .взубр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .взубр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+  .взубр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .взубр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#4A63D6,#EC6A86); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(74,99,214,.3); }
+  .взубр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .взубр-карта p{ font-size:14px; color:#6C7291; margin:2px 0 18px; line-height:1.45; }
+  :root[data-theme="dark"] .взубр-карта p{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта p{ color:#9AA0BE; } }
+  .взубр-кн{ display:flex; flex-direction:column; gap:10px; }
+  .взубр-кн a{
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700;
+    color:#fff; background:linear-gradient(135deg,#4A63D6,#EC6A86);
+    box-shadow:0 10px 24px rgba(74,99,214,.32); transition:transform .12s ease;
+  }
+  .взубр-кн a.второй{ background:#F3F4FA; color:#1C2242; box-shadow:0 6px 16px rgba(40,50,110,.12); }
+  :root[data-theme="dark"] .взубр-кн a.второй{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-кн a.второй{ background:#252949; color:#EDEFF8; } }
+  .взубр-кн a:active{ transform:scale(.98); }
+  .взубр-кн a small{ display:block; font-weight:500; font-size:12.5px; opacity:.8; margin-top:1px; }
+  .взубр-кн a span{ flex:1; }
+  .взубр-кн a i{ font-style:normal; font-size:20px; }
+</style>
+
+<section class="взубр" id="взубр">
+  <div class="взубр-карта">
+    <div class="взубр-верх">
+      <div class="взубр-знак">🐃</div>
+      <h2>Учить слова этого урока</h2>
+    </div>
+    <p>Все слова и фразы урока уже собраны в колоду ЗУБРа — с карточками, тестом, диктантом и расписанием повторений. Прогресс общий с остальными уроками.</p>
+    <div class="взубр-кн" id="взубрКнопки"></div>
+  </div>
+</section>
+
+<script>
+/* Ссылки собираем на месте: имя урока берём из адреса страницы,
+   чтобы один и тот же блок годился для всех двадцати шести. */
+(function(){
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  var м = файл.match(/^([a-z]+)(\d+)$/);
+  if (!м){ document.getElementById('взубр').style.display = 'none'; return; }
+
+  var семья = м[1], номер = +м[2];
+  var первый = семья === 'polya' ? 5 : семья === 'dasha' ? 1 : 0;
+  var корень = '../zubr.html?урок=' + файл;
+
+  var html = '<a href="' + корень + '"><i>📖</i><span>Слова этого урока' +
+             '<small>только то, что разбирали здесь</small></span></a>';
+
+  if (номер > первый){
+    var подпись = семья === 'urok' ? 'уроки с 0 по ' + номер
+                : 'занятия с ' + первый + ' по ' + номер;
+    html += '<a class="второй" href="' + корень + '&повтор=1"><i>🔁</i>' +
+            '<span>Этот урок и все предыдущие<small>' + подпись + '</small></span></a>';
+  }
+  document.getElementById('взубрКнопки').innerHTML = html;
+
+  // ссылка в оглавление урока, чтобы не мотать страницу
+  var toc = document.querySelector('.toc ol');
+  if (toc){
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#взубр">🐃 Учить слова урока</a>';
+    toc.appendChild(li);
+  }
+})();
+</script>
+<!--QUIZ-END-->
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <footer class="lp-foot">Конспект занятия с Дашей · 27.08.2026 · собран из записи занятия и презентации · озвучка Anna (Premium), голос Apple.</footer>
+</div>
+
+<script>
+const AUDIO = {"g1": "../zvuk/dasha3/g1.mp3", "g2": "../zvuk/dasha3/g2.mp3", "g3": "../zvuk/dasha3/g3.mp3", "g4": "../zvuk/dasha3/g4.mp3", "g5": "../zvuk/dasha3/g5.mp3", "g6": "../zvuk/dasha3/g6.mp3", "g7": "../zvuk/dasha3/g7.mp3", "c_rot": "../zvuk/dasha3/c_rot.mp3", "c_blau": "../zvuk/dasha3/c_blau.mp3", "c_weiss": "../zvuk/dasha3/c_weiss.mp3", "c_schwarz": "../zvuk/dasha3/c_schwarz.mp3", "c_rosa": "../zvuk/dasha3/c_rosa.mp3", "c_grau": "../zvuk/dasha3/c_grau.mp3", "c_lila": "../zvuk/dasha3/c_lila.mp3", "c_gruen": "../zvuk/dasha3/c_gruen.mp3", "c_orange": "../zvuk/dasha3/c_orange.mp3", "c_gelb": "../zvuk/dasha3/c_gelb.mp3", "c_braun": "../zvuk/dasha3/c_braun.mp3", "c_beige": "../zvuk/dasha3/c_beige.mp3", "m_koennen": "../zvuk/dasha3/m_koennen.mp3", "m_muessen": "../zvuk/dasha3/m_muessen.mp3", "m_duerfen": "../zvuk/dasha3/m_duerfen.mp3", "m_wollen": "../zvuk/dasha3/m_wollen.mp3", "m_sollen": "../zvuk/dasha3/m_sollen.mp3", "m_moechten": "../zvuk/dasha3/m_moechten.mp3", "m_moegen": "../zvuk/dasha3/m_moegen.mp3", "k_kann": "../zvuk/dasha3/k_kann.mp3", "k_muss": "../zvuk/dasha3/k_muss.mp3", "k_darf": "../zvuk/dasha3/k_darf.mp3", "k_will": "../zvuk/dasha3/k_will.mp3", "k_soll": "../zvuk/dasha3/k_soll.mp3", "k_moechte": "../zvuk/dasha3/k_moechte.mp3", "k_mag": "../zvuk/dasha3/k_mag.mp3", "r1": "../zvuk/dasha3/r1.mp3", "r2": "../zvuk/dasha3/r2.mp3", "ma1": "../zvuk/dasha3/ma1.mp3", "ma2": "../zvuk/dasha3/ma2.mp3", "ma3": "../zvuk/dasha3/ma3.mp3", "ma4": "../zvuk/dasha3/ma4.mp3", "ma5": "../zvuk/dasha3/ma5.mp3", "ma6": "../zvuk/dasha3/ma6.mp3", "ko1": "../zvuk/dasha3/ko1.mp3", "ko2": "../zvuk/dasha3/ko2.mp3", "ko3": "../zvuk/dasha3/ko3.mp3", "ko4": "../zvuk/dasha3/ko4.mp3", "ko5": "../zvuk/dasha3/ko5.mp3", "ko6": "../zvuk/dasha3/ko6.mp3", "ko7": "../zvuk/dasha3/ko7.mp3", "wt1": "../zvuk/dasha3/wt1.mp3", "wt2": "../zvuk/dasha3/wt2.mp3", "wt3": "../zvuk/dasha3/wt3.mp3", "wt4": "../zvuk/dasha3/wt4.mp3", "v_hoeren": "../zvuk/dasha3/v_hoeren.mp3", "v_kaufen": "../zvuk/dasha3/v_kaufen.mp3", "v_leben": "../zvuk/dasha3/v_leben.mp3", "v_wohnen": "../zvuk/dasha3/v_wohnen.mp3", "v_studieren": "../zvuk/dasha3/v_studieren.mp3", "v_lernen": "../zvuk/dasha3/v_lernen.mp3", "v_kennen": "../zvuk/dasha3/v_kennen.mp3", "v_gehen": "../zvuk/dasha3/v_gehen.mp3", "v_machen": "../zvuk/dasha3/v_machen.mp3", "v_trinken": "../zvuk/dasha3/v_trinken.mp3", "kk1": "../zvuk/dasha3/kk1.mp3", "kk2": "../zvuk/dasha3/kk2.mp3", "h1": "../zvuk/dasha3/h1.mp3", "h2": "../zvuk/dasha3/h2.mp3", "h3": "../zvuk/dasha3/h3.mp3", "e1": "../zvuk/dasha3/e1.mp3", "e2": "../zvuk/dasha3/e2.mp3", "e3": "../zvuk/dasha3/e3.mp3", "e4": "../zvuk/dasha3/e4.mp3", "e5": "../zvuk/dasha3/e5.mp3", "e6": "../zvuk/dasha3/e6.mp3", "e7": "../zvuk/dasha3/e7.mp3", "e8": "../zvuk/dasha3/e8.mp3", "a1": "../zvuk/dasha3/a1.mp3", "a2": "../zvuk/dasha3/a2.mp3", "a3": "../zvuk/dasha3/a3.mp3", "a4": "../zvuk/dasha3/a4.mp3", "a5": "../zvuk/dasha3/a5.mp3", "a6": "../zvuk/dasha3/a6.mp3", "x1": "../zvuk/dasha3/x1.mp3", "x2": "../zvuk/dasha3/x2.mp3", "x3": "../zvuk/dasha3/x3.mp3", "s1": "../zvuk/dasha3/s1.mp3", "s2": "../zvuk/dasha3/s2.mp3", "s3": "../zvuk/dasha3/s3.mp3", "s4": "../zvuk/dasha3/s4.mp3", "s5": "../zvuk/dasha3/s5.mp3", "s6": "../zvuk/dasha3/s6.mp3", "hb1": "../zvuk/dasha3/hb1.mp3", "hb2": "../zvuk/dasha3/hb2.mp3", "hb3": "../zvuk/dasha3/hb3.mp3", "hb4": "../zvuk/dasha3/hb4.mp3", "hb5": "../zvuk/dasha3/hb5.mp3", "hb6": "../zvuk/dasha3/hb6.mp3", "w1": "../zvuk/dasha3/w1.mp3", "w2": "../zvuk/dasha3/w2.mp3", "w3": "../zvuk/dasha3/w3.mp3", "o1": "../zvuk/dasha3/o1.mp3", "o2": "../zvuk/dasha3/o2.mp3", "o3": "../zvuk/dasha3/o3.mp3", "o4": "../zvuk/dasha3/o4.mp3", "o5": "../zvuk/dasha3/o5.mp3", "o6": "../zvuk/dasha3/o6.mp3", "wien1": "../zvuk/dasha3/wien1.mp3", "wien2": "../zvuk/dasha3/wien2.mp3", "wien3": "../zvuk/dasha3/wien3.mp3", "wien4": "../zvuk/dasha3/wien4.mp3", "d_mo": "../zvuk/dasha3/d_mo.mp3", "d_di": "../zvuk/dasha3/d_di.mp3", "d_mi": "../zvuk/dasha3/d_mi.mp3", "d_do": "../zvuk/dasha3/d_do.mp3", "d_fr": "../zvuk/dasha3/d_fr.mp3", "d_sa": "../zvuk/dasha3/d_sa.mp3", "d_so": "../zvuk/dasha3/d_so.mp3", "d_bsp": "../zvuk/dasha3/d_bsp.mp3"};
+
+/* звук вынесен в zvuk/ */
+// Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
+window.addEventListener('load', function () {
+  if (!navigator.onLine) return;
+  setTimeout(function () {
+    var список = Object.values(AUDIO), i = 0;
+    (function дальше() {
+      if (i >= список.length) return;
+      fetch(список[i++]).catch(function () {}).then(function () {
+        setTimeout(дальше, 60);
+      });
+    })();
+  }, 2500);
+});
+
+function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
+  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
+function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
+function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+
+phrases('wiegeht',[
+  ["g1","Wie geht es <b>dir</b>?","ви гейт эс диа","Как у тебя дела? (буквально «как оно идёт тебе»)"],
+  ["g2","Wie geht es <b>Ihnen</b>?","ви гейт эс инэн","Как у Вас дела? (вежливо)"],
+  ["g3","<b>Mir</b> geht es gut.","миа гейт эс гут","У меня всё хорошо."],
+  ["g4","<b>Mir</b> geht es nicht so gut.","миа гейт эс нихьт зо гут","У меня не очень."],
+  ["g5","<b>Mir</b> geht es schlecht.","миа гейт эс шлехьт","У меня плохо."],
+  ["g6","Alles ist <b>in Ordnung</b>.","аллес ист ин орднунг","Всё в порядке."],
+  ["g7","Alles ist ok.","аллес ист окей","Всё нормально."],
+]);
+
+words('farben',[
+  ["c_rot","rot","рот","красный"],
+  ["c_blau","blau","блау","синий"],
+  ["c_weiss","weiß","вайс","белый"],
+  ["c_schwarz","schwarz","шварц","чёрный"],
+  ["c_rosa","rosa","роза","розовый"],
+  ["c_grau","grau","грау","серый"],
+  ["c_lila","lila","лила","фиолетовый, лиловый"],
+  ["c_gruen","grün","грюн","зелёный"],
+  ["c_orange","orange","оранжэ","оранжевый"],
+  ["c_gelb","gelb","гэльп","жёлтый"],
+  ["c_braun","braun","браун","коричневый"],
+  ["c_beige","beige","бэж","бежевый"],
+]);
+
+words('modal',[
+  ["m_koennen","<b>können</b>","кённэн","мочь, уметь"],
+  ["m_muessen","<b>müssen</b>","мюссэн","быть должным, обязанным"],
+  ["m_duerfen","<b>dürfen</b>","дюрфэн","иметь разрешение (мне разрешено)"],
+  ["m_wollen","<b>wollen</b>","воллэн","хотеть"],
+  ["m_sollen","<b>sollen</b>","золлэн","следует, нужно (мягче müssen)"],
+  ["m_moechten","<b>möchten</b>","мёхьтэн","хотел бы (вежливо)"],
+  ["m_moegen","<b>mögen</b>","мёгэн","нравиться (бывший модальный)"],
+]);
+
+words('modalIch',[
+  ["k_kann","ich <b>kann</b>","ихь кан","я могу (ö → a)"],
+  ["k_muss","ich <b>muss</b>","ихь мус","я должен (ü → u)"],
+  ["k_darf","ich <b>darf</b>","ихь дарф","мне разрешено (ü → a)"],
+  ["k_will","ich <b>will</b>","ихь виль","я хочу (o → i)"],
+  ["k_soll","ich <b>soll</b>","ихь золь","мне следует (без изменений)"],
+  ["k_moechte","ich <b>möchte</b>","ихь мёхьтэ","я хотел бы"],
+  ["k_mag","ich <b>mag</b>","ихь маг","мне нравится (ö → a)"],
+], 'hb');
+
+phrases('rahmen',[
+  ["r1","Ich <b>muss</b> meine Hausaufgabe <b>machen</b>.","ихь мус майнэ хаусауфгабэ махэн","Я должен сделать домашнее задание."],
+  ["r2","Ich <b>kann</b> gut Deutsch <b>sprechen</b>.","ихь кан гут дойч шпрэхен","Я хорошо могу говорить по-немецки."],
+], 'sn');
+
+words('machen',[
+  ["ma1","ich mach<b>e</b>","ихь махэ","я делаю"],
+  ["ma2","du mach<b>st</b>","ду махст","ты делаешь"],
+  ["ma3","er/sie/es mach<b>t</b>","эа махт","он делает"],
+  ["ma4","wir mach<b>en</b>","виа махэн","мы делаем"],
+  ["ma5","ihr mach<b>t</b>","иа махт","вы делаете (свои)"],
+  ["ma6","sie/Sie mach<b>en</b>","зи махэн","они / Вы делаете"],
+]);
+
+phrases('kommen',[
+  ["ko1","Maria komm<b>t</b> aus Rom.","мария коммт аус ром","Мария родом из Рима. (Мария = она → -t)"],
+  ["ko2","Wir komm<b>en</b> aus Madrid.","виа коммэн аус мадрит","Мы родом из Мадрида."],
+  ["ko3","Ich komm<b>e</b> aus Moskau.","ихь коммэ аус москау","Я родом из Москвы."],
+  ["ko4","Karl und Eva komm<b>en</b> aus Passau.","карль унт эва коммэн аус пассау","Карл и Эва родом из Пассау. (двое → они)"],
+  ["ko5","Ihr komm<b>t</b> aus Frankreich.","иа коммт аус франкрайхь","Вы родом из Франции."],
+  ["ko6","Sie komm<b>en</b> aus Polen.","зи коммэн аус полен","Вы родом из Польши. (вежливое Sie)"],
+  ["ko7","Ich komme aus <b>Russland</b>.","ихь коммэ аус русланд","Я из России. — так ответишь про себя"],
+]);
+
+phrases('wohnentrinken',[
+  ["wt1","Ich wohn<b>e</b> in Passau.","ихь вонэ ин пассау","Я живу в Пассау."],
+  ["wt2","Du trink<b>st</b> Orangensaft.","ду тринкст оранжензафт","Ты пьёшь апельсиновый сок."],
+  ["wt3","Ihr trink<b>t</b> Kaffee.","иа тринкт каффэ","Вы пьёте кофе."],
+  ["wt4","Robert trink<b>t</b> Mineralwasser.","роберт тринкт минэральвассэр","Роберт пьёт минеральную воду."],
+], 'hb');
+
+words('verben',[
+  ["v_machen","<b>machen</b>","махэн","делать"],
+  ["v_gehen","<b>gehen</b>","гээн","идти"],
+  ["v_hoeren","<b>hören</b>","хёрэн","слышать, слушать"],
+  ["v_kaufen","<b>kaufen</b>","кауфэн","покупать"],
+  ["v_trinken","<b>trinken</b>","тринкэн","пить"],
+  ["v_wohnen","<b>wohnen</b>","вонэн","жить (по адресу)"],
+  ["v_leben","<b>leben</b>","лебэн","жить (вообще)"],
+  ["v_studieren","<b>studieren</b>","штудирэн","учиться в вузе"],
+  ["v_lernen","<b>lernen</b>","лернэн","учить (предмет, язык)"],
+  ["v_kennen","<b>kennen</b>","кэннэн","знать (кого-то, что-то)"],
+]);
+
+phrases('kennenkoennen',[
+  ["kk1","Ich <b>kenne</b> Eva.","ихь кэннэ эва","Я знаю Еву. — kennen, знать"],
+  ["kk2","Ich <b>kann</b> Deutsch.","ихь кан дойч","Я умею по-немецки. — können, мочь"],
+], 'wn');
+
+phrases('hause',[
+  ["h1","das <b>Haus</b>","дас хаус","дом (само слово, средний род)"],
+  ["h2","Ich bin <b>zu Hause</b>.","ихь бин цу хаузэ","Я дома. — где?"],
+  ["h3","Wir gehen <b>nach Hause</b>.","виа гээн нах хаузэ","Мы идём домой. — куда?"],
+], 'wn');
+
+words('eIe',[
+  ["e1","sprechen → er <b>spricht</b>","шпрэхен → эа шприхьт","говорить (e → i)"],
+  ["e2","geben → er <b>gibt</b>","гебэн → эа гипт","давать (e → i)"],
+  ["e3","sehen → er <b>sieht</b>","зээн → эа зит","видеть, смотреть (e → ie)"],
+  ["e4","essen → er <b>isst</b>","эссэн → эа ист","есть, кушать (e → i)"],
+  ["e5","lesen → er <b>liest</b>","лезэн → эа лист","читать (e → ie)"],
+]);
+words('eIeDu',[
+  ["e6","du <b>sprichst</b>","ду шприхьст","ты говоришь (гласная + окончание!)"],
+  ["e7","du <b>gibst</b>","ду гипст","ты даёшь"],
+  ["e8","du <b>siehst</b>","ду зист","ты видишь"],
+], 'hb');
+
+words('aAe',[
+  ["a1","fahren → er <b>fährt</b>","фарэн → эа фэрт","ехать (a → ä)"],
+  ["a2","schlafen → er <b>schläft</b>","шлафэн → эа шлэфт","спать (a → ä)"],
+  ["a3","tragen → er <b>trägt</b>","трагэн → эа трэкт","носить, нести (a → ä)"],
+]);
+words('aAeDu',[
+  ["a4","du <b>fährst</b>","ду фэрст","ты едешь"],
+  ["a5","du <b>schläfst</b>","ду шлэфст","ты спишь"],
+  ["a6","du <b>trägst</b>","ду трэкст","ты носишь"],
+], 'hb');
+
+phrases('beispiele',[
+  ["x1","Du <b>fährst</b> nach Moskau.","ду фэрст нах москау","Ты едешь в Москву. (nach — направление)"],
+  ["x2","Ich <b>schlafe</b> heute bis zehn Uhr.","ихь шлафэ хойтэ бис цэн уа","Я сегодня сплю до десяти. (у ich не меняется!)"],
+  ["x3","Er <b>sieht</b> einen Film im Kino.","эа зит айнэн фильм им кино","Он смотрит фильм в кино."],
+]);
+
+words('sein',[
+  ["s1","ich <b>bin</b>","ихь бин","я есть"],
+  ["s2","du <b>bist</b>","ду бист","ты есть"],
+  ["s3","er/sie/es <b>ist</b>","эа ист","он есть"],
+  ["s4","wir <b>sind</b>","виа зинт","мы есть"],
+  ["s5","ihr <b>seid</b>","иа зайт","вы есть (свои)"],
+  ["s6","sie/Sie <b>sind</b>","зи зинт","они / Вы есть"],
+], 'sn');
+
+words('haben',[
+  ["hb1","ich <b>habe</b>","ихь хабэ","у меня есть"],
+  ["hb2","du <b>hast</b>","ду хаст","у тебя есть"],
+  ["hb3","er/sie/es <b>hat</b>","эа хат","у него есть"],
+  ["hb4","wir <b>haben</b>","виа хабэн","у нас есть"],
+  ["hb5","ihr <b>habt</b>","иа хапт","у вас есть (свои)"],
+  ["hb6","sie/Sie <b>haben</b>","зи хабэн","у них / у Вас есть"],
+], 'sn');
+
+phrases('drei',[
+  ["w1","<b>werden</b> — ich werde, du wirst, er wird","вэрдэн — ихь вэрдэ, ду вирст, эа вирт","становиться"],
+  ["w2","<b>wissen</b> — ich weiß, du weißt, er weiß","виссэн — ихь вайс, ду вайст, эа вайс","знать (факт)"],
+  ["w3","<b>tun</b> — ich tue, du tust, er tut","тун — ихь туэ, ду туст, эа тут","делать"],
+]);
+
+words('arbeiten',[
+  ["o1","arbeiten → du <b>arbeitest</b>","арбайтэн → ду арбайтэст","работать (+e для удобства)"],
+  ["o2","er <b>arbeitet</b>","эа арбайтэт","он работает (тоже +e)"],
+], 'wn');
+words('tanzen',[
+  ["o3","tanzen → du <b>tanzt</b>","танцэн → ду танцт","танцевать (s пропал!)"],
+  ["o4","heißen → du <b>heißt</b>","хайсэн → ду хайст","зваться (тоже без s)"],
+], 'wn');
+words('eln',[
+  ["o5","bügeln → ich <b>bügle</b>","бюгэльн → ихь бюгле","гладить (e выпала)"],
+  ["o6","sammeln → ich <b>sammle</b>","заммэльн → ихь заммле","собирать (e выпала)"],
+], 'wn');
+
+phrases('wien',[
+  ["wien1","<b>Wien</b>","вин","Вена — город (с большой буквы)"],
+  ["wien2","der <b>Wein</b>","дэа вайн","вино"],
+  ["wien3","die <b>Vene</b>","ди вэнэ","вена (сосуд) — твоё рабочее слово"],
+  ["wien4","die <b>Venen</b>","ди вэнэн","вены (мн. ч., с -n на конце)"],
+], 'sn');
+
+words('tage',[
+  ["d_mo","am <b>Montag</b>","ам монтак","в понедельник"],
+  ["d_di","am <b>Dienstag</b>","ам динстак","во вторник"],
+  ["d_mi","am <b>Mittwoch</b>","ам митвох","в среду"],
+  ["d_do","am <b>Donnerstag</b>","ам доннэрстак","в четверг"],
+  ["d_fr","am <b>Freitag</b>","ам фрайтак","в пятницу"],
+  ["d_sa","am <b>Samstag</b>","ам замстак","в субботу"],
+  ["d_so","am <b>Sonntag</b>","ам зонтак","в воскресенье"],
+  ["d_bsp","Ich spiele Tennis am Montag.","ихь шпиле тэннис ам монтак","Я играю в теннис в понедельник. — образец"],
+]);
+
+// поля для домашки
+const TAGE = ['Montag','Dienstag','Mittwoch','Donnerstag','Freitag','Samstag','Sonntag'];
+document.getElementById('hwTage').innerHTML = TAGE.map((t,i)=>`
+  <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
+    <input class="fld" data-save="f_tag${i}" placeholder="… am ${t}"></span></div>`).join('');
+
+const MODAL_HW = [
+  ["(KÖNNEN – DÜRFEN)","Sandra ist 10 Jahre alt. Sie ______ nicht rauchen."],
+  ["(KÖNNEN – DÜRFEN)","Ich ______ nicht Fußball spielen."],
+  ["(MÜSSEN – SOLLEN)","Ich ______ zum Arzt!"],
+  ["(MÜSSEN – SOLLEN)","Wir ______ morgen um 7 Uhr aufstehen."],
+  ["(KÖNNEN – DÜRFEN)","Hier ______ Maria und Anna nicht parken. Das ist verboten."],
+  ["(KÖNNEN – DÜRFEN)","______ du bitte helfen?"],
+  ["(WOLLEN – MÖGEN – MÖCHTEN)","Ich ______ nach Hause!"],
+  ["(WOLLEN – MÖCHTEN)","Was ______ Sie essen?"],
+  ["(KÖNNEN – DÜRFEN)","Wer ______ hier gut Englisch sprechen?"],
+  ["(MÜSSEN – SOLLEN)","Du ______ im Zimmer bleiben!"],
+  ["(WOLLEN – MÖGEN)","______ du Volksmusik?"],
+  ["(WOLLEN – MÖGEN)","Wann ______ du dein Studium beginnen?"],
+  ["(WOLLEN – MÖGEN)","______ du auch ins Kino?"],
+  ["(WOLLEN – MÖCHTEN)","______ Orangensaft oder Fanta trinken?"],
+  ["(KÖNNEN – DÜRFEN)","Bis wann ______ du im Büro bleiben?"],
+  ["(MÜSSEN – SOLLEN)","Wie lange ______ ihr am Wochenende arbeiten?"],
+  ["(KÖNNEN – DÜRFEN)","______ ich bitte eine Cola haben?"],
+  ["(WOLLEN – MÖCHTEN)","______ Sie noch Wein?"],
+];
+document.getElementById('hwModal').innerHTML = MODAL_HW.map(([opt,sent],i)=>`
+  <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
+    <div style="font-size:13.5px; margin-bottom:5px"><span style="color:var(--ink-faint); font-size:11.5px">${opt}</span><br>${sent}</div>
+    <input class="fld short" data-save="f_mod${i}" placeholder="форма глагола"></span></div>`).join('');
+
+document.getElementById('hwVokal').innerHTML = Array.from({length:10},(_,i)=>`
+  <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
+    <input class="fld" data-save="f_vok${i}" placeholder="предложение с глаголом из категории 2 + наречие"></span></div>`).join('');
+
+// сохранение
+(function(){
+  const KEY = 'dasha3_hw_';
+  document.querySelectorAll('[data-save], #f_video').forEach(el=>{
+    const k = KEY + (el.dataset.save || el.id);
+    const saved = localStorage.getItem(k);
+    if(saved !== null) el.value = saved;
+    el.addEventListener('input', ()=> localStorage.setItem(k, el.value));
+  });
+})();
+</script>
+
+<a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+</body>
+</html>

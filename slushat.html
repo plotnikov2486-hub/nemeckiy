@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Слушать — тексты немецкого</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --фон:#E9EBF6; --бел:#FFFFFF; --фон2:#F3F4FA;
+    --текст:#1C2242; --текст2:#6C7291; --текст3:#9AA0BE; --линия:#DCE0F0;
+    --синий:#4A63D6; --розовый:#EC6A86; --зелёный:#22A06B; --зелёныйФон:#E4F7EC;
+    --красный:#E0455E; --красныйФон:#FCE8EC;
+    --градиент:linear-gradient(135deg,#4A63D6,#EC6A86);
+    --тень:0 12px 30px rgba(40,50,110,.12);
+    --радиус:22px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --фон:#12142A; --бел:#1E2140; --фон2:#191C36; --текст:#EDEFF8;
+      --текст2:#9AA0BE; --текст3:#6C7291; --линия:#2A2E52;
+      --зелёныйФон:#16321F; --красныйФон:#3A1620; --тень:0 12px 30px rgba(0,0,0,.35); }
+  }
+  *{box-sizing:border-box}
+  body{ margin:0; background:var(--фон); color:var(--текст);
+    font-family:Figtree,-apple-system,system-ui,sans-serif; line-height:1.45;
+    -webkit-text-size-adjust:100%; }
+
+  .шапка{ position:sticky; top:0; z-index:20; background:var(--фон);
+    padding:14px 16px 10px; display:flex; align-items:center; gap:12px;
+    max-width:720px; margin:0 auto; }
+  .назад{ width:44px; height:44px; border-radius:50%; border:none; flex-shrink:0;
+    background:var(--бел); box-shadow:var(--тень); color:var(--текст);
+    font-size:19px; cursor:pointer; }
+  .титул{ flex:1; font-size:17px; font-weight:800; letter-spacing:-.01em;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+
+  .экран{ max-width:720px; margin:0 auto; padding:4px 16px 40px; }
+  h1{ font-size:clamp(26px,7vw,34px); font-weight:800; margin:0 0 6px; letter-spacing:-.02em; }
+  .лид{ color:var(--текст2); font-size:15px; margin:0 0 22px; }
+
+  .ступень{ font-size:13px; font-weight:800; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--текст3); margin:24px 0 10px; }
+  .текстик{ display:flex; align-items:center; gap:13px; background:var(--бел);
+    border:2px solid transparent; border-radius:var(--радиус); padding:15px 16px;
+    margin-bottom:10px; box-shadow:var(--тень); cursor:pointer; width:100%;
+    font-family:inherit; color:inherit; text-align:left;
+    transition:transform .12s ease, border-color .12s ease; }
+  .текстик:active{ transform:scale(.985) }
+  .текстик:hover{ border-color:var(--синий) }
+  .текстик .знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0;
+    background:var(--фон2); display:flex; align-items:center; justify-content:center; font-size:22px; }
+  .текстик .подпись{ flex:1; min-width:0 }
+  .текстик .подпись b{ display:block; font-size:16px; font-weight:700 }
+  .текстик .подпись small{ display:block; font-size:13px; color:var(--текст2); margin-top:2px }
+  .текстик .стрелка{ color:var(--текст3); font-size:20px }
+  .метка{ font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px;
+    background:var(--фон2); color:var(--текст2); margin-left:6px; }
+
+  /* ── чтение ── */
+  .управление{ display:flex; gap:9px; margin-bottom:16px; flex-wrap:wrap; }
+  .упр{ border:none; border-radius:999px; padding:11px 17px; font:inherit; font-size:14px;
+    font-weight:700; cursor:pointer; background:var(--бел); color:var(--текст);
+    box-shadow:var(--тень); min-height:44px; }
+  .упр.главная{ background:var(--градиент); color:#fff; box-shadow:0 8px 20px rgba(74,99,214,.3) }
+  .упр.вкл{ background:var(--синий); color:#fff }
+
+  .абзац{ background:var(--бел); border-radius:16px; padding:14px 15px; margin-bottom:9px;
+    box-shadow:var(--тень); cursor:pointer; border-left:4px solid transparent;
+    transition:border-color .15s ease, background .15s ease; }
+  .абзац.звучит{ border-left-color:var(--синий); background:var(--фон2) }
+  .абзац .де{ font-size:17px; font-weight:600; line-height:1.4 }
+  .абзац .кто{ font-size:11px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--текст3); margin-bottom:4px; }
+  .абзац .ру{ font-size:14.5px; color:var(--текст2); margin-top:7px; display:none }
+  .абзац.открыт .ру{ display:block }
+  .абзац .играть{ float:right; width:34px; height:34px; border-radius:50%; border:none;
+    background:var(--фон2); color:var(--текст); font-size:15px; cursor:pointer; margin-left:10px; }
+
+  /* ── вопросы ── */
+  .вопросы{ margin-top:26px }
+  .вопрос{ background:var(--бел); border-radius:16px; padding:16px; margin-bottom:11px;
+    box-shadow:var(--тень) }
+  .вопрос .в{ font-size:16px; font-weight:700; margin-bottom:11px }
+  .вопрос .вар{ display:block; width:100%; text-align:left; border:2px solid var(--линия);
+    background:var(--фон2); color:var(--текст); border-radius:12px; padding:12px 14px;
+    font:inherit; font-size:15px; cursor:pointer; margin-bottom:7px; min-height:46px; }
+  .вопрос .вар:disabled{ cursor:default }
+  .вопрос .вар.верно{ border-color:var(--зелёный); background:var(--зелёныйФон); font-weight:700 }
+  .вопрос .вар.неверно{ border-color:var(--красный); background:var(--красныйФон) }
+  .итогТеста{ background:var(--бел); border-radius:var(--радиус); padding:20px; text-align:center;
+    box-shadow:var(--тень); margin-top:14px }
+  .итогТеста .балл{ font-size:38px; font-weight:900; color:var(--синий); line-height:1 }
+  .итогТеста p{ color:var(--текст2); font-size:14.5px; margin:8px 0 0 }
+  .пусто{ color:var(--текст2); text-align:center; padding:40px 12px }
+</style>
+</head>
+<body>
+
+<div class="шапка">
+  <button class="назад" id="назад" style="visibility:hidden">‹</button>
+  <div class="титул" id="титул">Слушать</div>
+</div>
+
+<main class="экран" id="экран"><div class="пусто">Загружаю тексты…</div></main>
+
+<script>
+"use strict";
+var $ = function(id){ return document.getElementById(id); };
+var ТЕКСТЫ = [], текущий = null, плеер = new Audio();
+var показыватьПеревод = false, поОдному = false;
+
+fetch('words/texty.json?v=' + Date.now())
+  .then(function(r){ return r.json(); })
+  .then(function(д){ ТЕКСТЫ = д; списокТекстов(); })
+  .catch(function(){ $('экран').innerHTML = '<div class="пусто">Не удалось загрузить тексты.</div>'; });
+
+function экр(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ─────────── список ─────────── */
+function списокТекстов(){
+  текущий = null;
+  $('назад').style.visibility = 'hidden';
+  $('титул').textContent = 'Слушать';
+  плеер.pause();
+
+  var поУровням = {};
+  ТЕКСТЫ.forEach(function(т){ (поУровням[т.уровень] = поУровням[т.уровень] || []).push(т); });
+
+  var html = '<h1>Слушать</h1>' +
+    '<p class="лид">Короткие тексты с озвучкой. Сначала слушай не подглядывая, потом открывай перевод. ' +
+    'В конце — три вопроса на понимание.</p>';
+
+  ['A1','A2','B1','B2'].forEach(function(у){
+    if (!поУровням[у]) return;
+    html += '<div class="ступень">' + у + ' · ' + поУровням[у].length + ' ' +
+            скл(поУровням[у].length,'текст','текста','текстов') + '</div>';
+    html += поУровням[у].map(function(т){
+      return '<button class="текстик" data-к="' + т.к + '">' +
+        '<span class="знак">' + т.знак + '</span>' +
+        '<span class="подпись"><b>' + экр(т.имя) + '<span class="метка">' + т.уровень + '</span></b>' +
+        '<small>' + экр(т.имяРу) + ' — ' + экр(т.про) + '</small></span>' +
+        '<span class="стрелка">›</span></button>';
+    }).join('');
+  });
+
+  $('экран').innerHTML = html;
+  document.querySelectorAll('.текстик').forEach(function(b){
+    b.onclick = function(){ открыть(b.getAttribute('data-к')); };
+  });
+}
+
+function скл(n,a,b,c){ n=Math.abs(n)%100; var d=n%10;
+  if(n>10&&n<20) return c; if(d>1&&d<5) return b; if(d===1) return a; return c; }
+
+/* ─────────── чтение ─────────── */
+function открыть(к){
+  текущий = ТЕКСТЫ.filter(function(т){ return т.к === к; })[0];
+  if (!текущий) return;
+  $('назад').style.visibility = 'visible';
+  $('титул').textContent = текущий.имя;
+  window.scrollTo(0,0);
+
+  var html =
+    '<div class="управление">' +
+      '<button class="упр главная" id="слушатьВсё">▶︎ Слушать целиком</button>' +
+      '<button class="упр" id="кПеревод">Перевод</button>' +
+      '<button class="упр" id="кВопросы">Вопросы</button>' +
+    '</div>' +
+    текущий.абзацы.map(function(а, i){
+      var кто = а.кто === 'м' ? 'он' : а.кто === 'ж' ? 'она' : 'рассказчик';
+      return '<div class="абзац' + (показыватьПеревод ? ' открыт' : '') + '" data-i="' + i + '">' +
+        '<button class="играть" data-и="' + i + '">🔊</button>' +
+        '<div class="кто">' + кто + '</div>' +
+        '<div class="де">' + экр(а.de) + '</div>' +
+        '<div class="ру">' + экр(а.ru) + '</div>' +
+      '</div>';
+    }).join('') +
+    '<div id="местоВопросов"></div>';
+
+  $('экран').innerHTML = html;
+
+  $('слушатьВсё').onclick = слушатьПодряд;
+  $('кПеревод').onclick = function(){
+    показыватьПеревод = !показыватьПеревод;
+    this.classList.toggle('вкл', показыватьПеревод);
+    document.querySelectorAll('.абзац').forEach(function(э){
+      э.classList.toggle('открыт', показыватьПеревод);
+    });
+  };
+  $('кВопросы').onclick = показатьВопросы;
+
+  document.querySelectorAll('.играть').forEach(function(b){
+    b.onclick = function(e){ e.stopPropagation(); играть(+b.getAttribute('data-и')); };
+  });
+  document.querySelectorAll('.абзац').forEach(function(э){
+    э.onclick = function(){ э.classList.toggle('открыт'); };
+  });
+}
+
+function играть(i, потом){
+  плеер.pause();
+  document.querySelectorAll('.абзац').forEach(function(э){ э.classList.remove('звучит'); });
+  var э = document.querySelector('.абзац[data-i="' + i + '"]');
+  if (э){
+    э.classList.add('звучит');
+    э.scrollIntoView({ block:'center', behavior:'smooth' });
+  }
+  плеер.src = 'zvuk/texty/' + текущий.абзацы[i].id + '.mp3';
+  плеер.onended = потом || function(){ if (э) э.classList.remove('звучит'); };
+  плеер.play().catch(function(){});
+}
+
+function слушатьПодряд(){
+  var i = 0;
+  var кнопка = $('слушатьВсё');
+  кнопка.textContent = '⏸ Остановить';
+  кнопка.onclick = function(){
+    плеер.pause();
+    document.querySelectorAll('.абзац').forEach(function(э){ э.classList.remove('звучит'); });
+    кнопка.textContent = '▶︎ Слушать целиком';
+    кнопка.onclick = слушатьПодряд;
+  };
+  (function дальше(){
+    if (i >= текущий.абзацы.length){
+      кнопка.textContent = '▶︎ Слушать целиком';
+      кнопка.onclick = слушатьПодряд;
+      document.querySelectorAll('.абзац').forEach(function(э){ э.classList.remove('звучит'); });
+      return;
+    }
+    играть(i, function(){ i++; setTimeout(дальше, 350); });
+  })();
+}
+
+/* ─────────── вопросы ─────────── */
+function показатьВопросы(){
+  var верных = 0, отвечено = 0;
+  var всего = текущий.вопросы.length;
+
+  $('местоВопросов').innerHTML = '<div class="вопросы">' +
+    '<div class="ступень">Проверь себя</div>' +
+    текущий.вопросы.map(function(в, ви){
+      return '<div class="вопрос" data-в="' + ви + '"><div class="в">' + экр(в.в) + '</div>' +
+        в.варианты.map(function(вар, ки){
+          return '<button class="вар" data-в="' + ви + '" data-к="' + ки + '">' + экр(вар) + '</button>';
+        }).join('') + '</div>';
+    }).join('') + '<div id="итогТеста"></div></div>';
+
+  $('местоВопросов').scrollIntoView({ behavior:'smooth', block:'start' });
+
+  document.querySelectorAll('.вар').forEach(function(b){
+    b.onclick = function(){
+      var ви = +b.getAttribute('data-в'), ки = +b.getAttribute('data-к');
+      var блок = document.querySelector('.вопрос[data-в="' + ви + '"]');
+      if (блок.dataset.готово) return;
+      блок.dataset.готово = '1';
+
+      var верный = текущий.вопросы[ви].верный;
+      блок.querySelectorAll('.вар').forEach(function(x, k){
+        x.disabled = true;
+        if (k === верный) x.classList.add('верно');
+        else if (k === ки) x.classList.add('неверно');
+      });
+      if (ки === верный) верных++;
+      отвечено++;
+      if (отвечено === всего) подвести(верных, всего);
+    };
+  });
+}
+
+function подвести(верных, всего){
+  var процент = Math.round(верных / всего * 100);
+  $('итогТеста').innerHTML = '<div class="итогТеста">' +
+    '<div class="балл">' + верных + ' из ' + всего + '</div>' +
+    '<p>' + (процент === 100 ? 'Всё понял — можно брать текст посложнее.'
+           : процент >= 60 ? 'Неплохо. Послушай ещё раз то, где ошибся.'
+           : 'Пока трудно. Послушай целиком с открытым переводом.') + '</p></div>';
+  $('итогТеста').scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+$('назад').onclick = списокТекстов;
+</script>
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+</body>
+</html>
