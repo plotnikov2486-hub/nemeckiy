@@ -99,7 +99,7 @@
 <body>
 
 <div class="шапка">
-  <button class="назад" id="назад" style="visibility:hidden">‹</button>
+  <button class="назад" id="назад" title="На главную сайта">‹</button>
   <div class="титул" id="титул">Слушать</div>
 </div>
 
@@ -121,7 +121,11 @@ function экр(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 /* ─────────── список ─────────── */
 function списокТекстов(){
   текущий = null;
-  $('назад').style.visibility = 'hidden';
+  // Кнопку не прячем: в установленном приложении кнопок браузера нет,
+  // и без выхода на главную страница становится тупиком.
+  $('назад').style.visibility = 'visible';
+  $('назад').title = 'На главную сайта';
+  наГлавную = true;
   $('титул').textContent = 'Слушать';
   плеер.pause();
 
@@ -154,11 +158,15 @@ function списокТекстов(){
 function скл(n,a,b,c){ n=Math.abs(n)%100; var d=n%10;
   if(n>10&&n<20) return c; if(d>1&&d<5) return b; if(d===1) return a; return c; }
 
+var наГлавную = true;   // где сейчас: в списке или внутри текста
+
 /* ─────────── чтение ─────────── */
 function открыть(к){
   текущий = ТЕКСТЫ.filter(function(т){ return т.к === к; })[0];
   if (!текущий) return;
   $('назад').style.visibility = 'visible';
+  $('назад').title = 'К списку текстов';
+  наГлавную = false;
   $('титул').textContent = текущий.имя;
   window.scrollTo(0,0);
 
@@ -279,7 +287,10 @@ function подвести(верных, всего){
   $('итогТеста').scrollIntoView({ behavior:'smooth', block:'center' });
 }
 
-$('назад').onclick = списокТекстов;
+$('назад').onclick = function(){
+  // из списка текстов выходим на главную сайта, из текста — к списку
+  if (наГлавную) location.href = 'index.html'; else списокТекстов();
+};
 </script>
 <script>
 /* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.

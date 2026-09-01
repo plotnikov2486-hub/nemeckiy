@@ -722,6 +722,74 @@
   }
 })();
 </script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+})();
+</script>
 <!--QUIZ-START-->
 <style>
   .взубр{ margin:44px 0 0; }
@@ -835,6 +903,10 @@
   }
 })();
 </script>
+
+
+
+
 
 
 
