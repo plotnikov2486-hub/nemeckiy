@@ -329,6 +329,16 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   box-shadow:var(--тень); padding:16px; font-size:18px; font-family:inherit; color:var(--текст); min-height:56px; }
 .поле:focus{ outline:none; border-color:var(--синий); }
 .поле.верно{ border-color:var(--зелёный); } .поле.неверно{ border-color:var(--красный); }
+.микрофоны{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+.микрофоны .микро{ flex:1; min-width:150px; padding:11px 12px; border-radius:12px; border:none;
+  background:var(--бел); color:var(--текст); font:inherit; font-size:14px; font-weight:600;
+  cursor:pointer; box-shadow:var(--теньКнопки); display:flex; align-items:center;
+  justify-content:center; gap:6px; }
+.микрофоны .микро:active{ transform:scale(.97); }
+.микрофоны .микро.слушает{ background:var(--градиент); color:#fff; animation:пульс 1.1s infinite; }
+@keyframes пульс{ 0%,100%{ opacity:1 } 50%{ opacity:.62 } }
+@media (prefers-reduced-motion: reduce){ .микрофоны .микро.слушает{ animation:none } }
+
 .умляуты{ display:flex; gap:7px; margin-top:10px; flex-wrap:wrap; }
 .умляуты button{ width:44px; height:42px; border-radius:11px; border:none; background:var(--бел);
   box-shadow:var(--тень); font-size:17px; font-weight:700; color:var(--текст); cursor:pointer; font-family:inherit; }
@@ -375,7 +385,7 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202608311440';</script>
+<script>window.ЗУБР_ВЕРСИЯ = '202609011440';</script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -903,6 +913,7 @@ function формаДобавления(куда, послеДобавления
       '<small>перевод подставится сам — можно не заполнять</small></div>' +
       '<input class="поле" id="новоеDe" placeholder="слово по-немецки" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false">' +
       умляутыHTML() +
+      микрофоныHTML() +
       '<div style="height:9px"></div>' +
       '<input class="поле" id="новоеRu" placeholder="перевод (подставится сам)" autocomplete="off">' +
       '<div style="height:11px"></div>' +
@@ -912,6 +923,7 @@ function формаДобавления(куда, послеДобавления
 
   var поле = $('новоеDe'), перевод = $('новоеRu'), сказ = $('новоеСказ');
   подключитьУмляуты(поле);
+  подключитьМикрофоны(поле, перевод, сказ);
 
   var таймер = null, переводим = false;
   поле.oninput = function(){
@@ -1647,6 +1659,82 @@ function печатьТеста(набор, н){
     $('кНабор2').onclick = function(){ показать('набор', набор, true); };
   }
 };
+
+/* ================= голосовой ввод слова =================
+   Врач увидел слово в жизни и хочет забрать себе — проще сказать,
+   чем печатать немецкое слово с умляутами на телефоне.
+   Две кнопки: сказать по-немецки (слово ложится как есть)
+   и сказать по-русски (тогда немецкое слово подберём переводом). */
+function микрофоныHTML(){
+  if (!(window.SpeechRecognition || window.webkitSpeechRecognition)) return '';
+  return '<div class="микрофоны">' +
+    '<button type="button" class="микро" data-язык="de">🎙 сказать по-немецки</button>' +
+    '<button type="button" class="микро" data-язык="ru">🎙 сказать по-русски</button>' +
+  '</div>';
+}
+
+function подключитьМикрофоны(поле, перевод, сказ){
+  var Слушалка = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!Слушалка) return;
+  var узнавалка = null, слушает = null;
+
+  document.querySelectorAll('.микро').forEach(function(кн){
+    кн.onclick = function(){
+      // повторное нажатие на ту же кнопку — остановить
+      if (слушает === кн){ if (узнавалка) узнавалка.stop(); return; }
+      if (узнавалка) { try{ узнавалка.abort(); }catch(e){} }
+
+      var поРусски = кн.dataset.язык === 'ru';
+      узнавалка = new Слушалка();
+      узнавалка.lang = поРусски ? 'ru-RU' : 'de-DE';
+      узнавалка.interimResults = true;
+      узнавалка.continuous = false;
+      var услышано = '';
+
+      узнавалка.onstart = function(){
+        слушает = кн;
+        кн.classList.add('слушает');
+        сказ.textContent = поРусски ? 'слушаю по-русски…' : 'слушаю по-немецки…';
+      };
+      узнавалка.onresult = function(e){
+        услышано = '';
+        for (var i = 0; i < e.results.length; i++) услышано += e.results[i][0].transcript;
+        услышано = услышано.trim();
+        // показываем сразу, чтобы было видно, что расслышалось
+        if (!поРусски) поле.value = услышано; else перевод.value = услышано;
+      };
+      узнавалка.onerror = function(e){
+        сказ.textContent = e && e.error === 'not-allowed'
+          ? 'Микрофон запрещён — разреши доступ в настройках браузера.'
+          : 'Микрофон не сработал, попробуй ещё раз.';
+      };
+      узнавалка.onend = function(){
+        слушает = null;
+        кн.classList.remove('слушает');
+        if (!услышано){ сказ.textContent = 'Ничего не расслышал.'; return; }
+
+        if (!поРусски){
+          // сказал по-немецки: слово на месте, перевод подтянется сам
+          поле.value = услышано;
+          delete перевод.dataset.авто;
+          поле.dispatchEvent(new Event('input'));
+        } else {
+          // сказал по-русски: немецкое слово надо подобрать
+          перевод.value = услышано;
+          перевод.dataset.авто = '1';
+          сказ.textContent = 'подбираю немецкое слово…';
+          перевестиСлово(услышано, 'ru', 'de').then(function(п){
+            поле.value = п;
+            сказ.textContent = 'подставил «' + п + '» — поправь, если не то';
+          }).catch(function(){
+            сказ.textContent = 'немецкое слово не подтянулось, впиши сам';
+          });
+        }
+      };
+      try{ узнавалка.start(); }catch(e){ сказ.textContent = 'Микрофон занят, попробуй ещё раз.'; }
+    };
+  });
+}
 
 function умляутыHTML(){
   return '<div class="умляуты">' + ['ä','ö','ü','ß','Ä','Ö','Ü'].map(function(ч){
