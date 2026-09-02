@@ -253,6 +253,7 @@ function слово(w){
   s = s.replace(/tiell/g, '§циэль');
 
   // --- длинные сочетания, их разбирать первыми ---
+  s = s.replace(/tsch/g, '§ч');      // Deutsch → дойч, а не «дойтш»
   s = s.replace(/dsch/g, '§дж');
   s = s.replace(/sch/g, '§ш');
   s = s.replace(/chs/g, '§кс');
@@ -289,13 +290,22 @@ function слово(w){
   s = s.replace(/ig(\s|$)/g, '§ихь$1');    // richtig → рихьтихь
   s = s.replace(/ung(\s|$)/g, '§унг$1');
 
+  // В конце слова звонкие оглушаются: Hund → хунт, Tag → так, halb → хальп.
+  // Идёт ПОСЛЕ -ig/-ung: иначе «richtig» превратится в «рихьтик».
+  s = s.replace(/b(\s|$)/g, '§п$1');
+  s = s.replace(/d(\s|$)/g, '§т$1');
+  s = s.replace(/g(\s|$)/g, '§к$1');
+
   // --- согласные ---
   s = s.replace(/ß/g, '§с');
   s = s.replace(/ss/g, '§с');
   // s перед гласной звучит звонко
   s = s.replace(new RegExp('s(?=[' + ГЛАСНЫЕ + '])', 'g'), '§з');
   s = s.replace(/s/g, '§с');
-  s = s.replace(/tz/g, '§ц');
+  // tz звучит как «ц» только после гласной: Katze → кацэ, jetzt → ецт.
+  // На стыке слов t остаётся: achtzehn → ахтцэн, hundertzwei → хундэртцвай.
+  s = s.replace(new RegExp('([' + ГЛАСНЫЕ + '])tz', 'g'), '$1§ц');
+  s = s.replace(/tz/g, '§тц');
   s = s.replace(/z/g, '§ц');
   s = s.replace(/w/g, '§в');
   s = s.replace(/v/g, '§ф');
@@ -547,6 +557,7 @@ if (!Слушалка){
 </script>
 
 <!--/ПЕРЕВОДЧИК-->
+
 
 
 
