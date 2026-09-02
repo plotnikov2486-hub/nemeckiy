@@ -144,6 +144,7 @@
   .pp-toggle:hover{background:var(--bg); color:var(--ink);}
   .pp-topics{margin-top:14px; border-top:1px solid var(--line); padding-top:14px;}
   .pp-topics h4{margin:0 0 10px; font-size:0.9rem; font-weight:600;}
+  .l-мера{font-size:0.78rem; color:var(--ink-faint); margin:2px 0 0; letter-spacing:.01em;}
   .topic-list{display:grid; grid-template-columns:1fr; gap:5px;}
   @media(min-width:680px){ .topic-list{grid-template-columns:1fr 1fr;} }
   .topic{display:flex; gap:8px; align-items:flex-start; font-size:0.84rem; padding:4px 0;}
@@ -566,6 +567,7 @@ if (!Слушалка){
 
 
 
+
   <header>
     <h1>🇩🇪 Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
@@ -611,48 +613,48 @@ if (!Слушалка){
 
 <script>
 const LESSONS = [
-  {id:'0', title:'Урок 0 — Алфавит и правила чтения', topic:'Алфавит со звуком, дифтонги, долгие/краткие, оглушение — база произношения.', pdf:'lessons/urok0_pdf.pdf', audio:'lessons/urok0_interactive.html', level:'A1'},
-  {id:'1', title:'Урок 1 — Приветствие и знакомство', topic:'Sich vorstellen, глагол sein, du vs Sie (с пациентами — Sie).', pdf:'lessons/urok1_pdf.pdf', audio:'lessons/urok1_interactive.html', level:'A1'},
-  {id:'2', title:'Урок 2 — Wie geht\'s, числа, артикли', topic:'Числа 0–20, der/die/das, возраст пациента, диалог на ресепшене.', pdf:'lessons/urok2_pdf.pdf', audio:'lessons/urok2_interactive.html', level:'A1'},
-  {id:'3', title:'Урок 3 — Глаголы Präsens, порядок слов', topic:'Спряжение в настоящем времени, глагол на 2-й позиции, вопросы.', pdf:'lessons/urok3_pdf.pdf', audio:'lessons/urok3_interactive.html', level:'A1'},
-  {id:'4', title:'Урок 4 — haben, Akkusativ, отрицание', topic:'«У меня есть/болит», винительный падеж, kein vs nicht, приём у врача.', pdf:'lessons/urok4_pdf.pdf', audio:'lessons/urok4_interactive.html', level:'A1'},
-  {id:'5', title:'Урок 5 — Все числа + порядковые', topic:'0–1000, ловушка «задом наперёд», порядковые (1-й, 2-й…), давление/пульс/дата.', pdf:'lessons/urok5_pdf.pdf', audio:'lessons/urok5_interactive.html', level:'A1'},
-  {id:'6', title:'Урок 6 — Времена года и месяцы', topic:'Времена года, 12 месяцев, im + месяц, дата рождения, запись на приём.', pdf:'lessons/urok6_pdf.pdf', audio:'lessons/urok6_interactive.html', level:'A1'},
-  {id:'7', title:'Урок 7 — Цвета (die Farben)', topic:'Цвета, оттенки hell-/dunkel-, цвет симптома (bleiche Haut, blauer Fleck).', pdf:'lessons/urok7_pdf.pdf', audio:'lessons/urok7_interactive.html', level:'A1'},
-  {id:'8', title:'Урок 8 — Неправильные глаголы и W-Fragen', topic:'sein/haben, глаголы-хамелеоны (du sprichst), все вопросы на W у врача.', pdf:'lessons/urok8_pdf.pdf', audio:'lessons/urok8_interactive.html', level:'A1'},
-  {id:'9', title:'Урок 9 — Части тела (der Körper)', topic:'Части тела с артиклями (der/die/das цветом), «где болит?», жалобы на ноги/вены.', pdf:'lessons/urok9_pdf.pdf', audio:'lessons/urok9_interactive.html', level:'A1'},
-  {id:'10', title:'Урок 10 — Дни недели и время (Uhrzeit)', topic:'Дни недели, часы, ловушка halb (9:30!), официальное 24ч, запись пациента на приём.', pdf:'lessons/urok10_pdf.pdf', audio:'lessons/urok10_interactive.html', level:'A1'},
-  {id:'11', title:'Урок 11 — Предлоги места (Wo? + Dativ)', topic:'9 предлогов места, падеж Dativ (dem/der/den), im/am/zum/zur, где болит/где аптека. Новый голос Yannick.', pdf:'lessons/urok11_pdf.pdf', audio:'lessons/urok11_interactive.html', level:'A1'},
-  {id:'12', title:'Урок 12 — Прошедшее время (Perfekt)', topic:'Язык анамнеза: haben/sein + Partizip II, сильные глаголы, когда без ge-, «когда начались боли».', pdf:'lessons/urok12_pdf.pdf', audio:'lessons/urok12_interactive.html', level:'A1'},
-  {id:'13', title:'Урок 13 — Повелительное наклонение (Imperativ)', topic:'Язык осмотра: «лягте на спину», «дышите глубоко», «покажите ногу». Форма на Sie, du, ihr, смягчение bitte/mal/doch, 15 команд приёма.', pdf:'lessons/urok13_pdf.pdf', audio:'lessons/urok13_interactive.html', level:'A1'},
-  {id:'14', title:'Урок 14 — Еда и напитки (Essen und Trinken)', topic:'Продукты и напитки с артиклями (род цветом), essen-хамелеон, gern/mögen/schmecken, кафе, «вы натощак?» и советы по питанию.', pdf:'lessons/urok14_pdf.pdf', audio:'lessons/urok14_interactive.html', level:'A1'},
-  {id:'15', title:'Урок 15 — Квартира и жильё (Wohnung und Haus)', topic:'Снять квартиру в Германии: комнаты и мебель, три денежные ловушки (счёт комнат, этажи, Kalt- vs Warmmiete), вопросы маклеру, жильё в анамнезе.', pdf:'lessons/urok15_pdf.pdf', audio:'lessons/urok15_interactive.html', level:'A1'},
-  {id:'16', title:'Урок 16 — Погода (das Wetter)', topic:'Безличное «es», прилагательные и явления, градусы, прогноз через werden, small talk — и жара как клинический фактор для вен. Закрывает A1.', pdf:'lessons/urok16_pdf.pdf', audio:'lessons/urok16_interactive.html', level:'A1'},
-  {id:'17', title:'Урок 17 — Куда? Wohin? + Akkusativ', topic:'Первый урок A2. Девять предлогов-переключателей, Wo?→Dativ vs Wohin?→Akkusativ, слияния ins/ans/aufs, глаголы-близнецы stehen/stellen, команды «куда» на осмотре.', pdf:'lessons/urok17_pdf.pdf', audio:'lessons/urok17_interactive.html', level:'A2'},
-  {id:'18', title:'Урок 18 — Возвратные глаголы (sich waschen)', topic:'Немецкое «-ся» отдельным словом: шесть местоимений, ловушка mich/mir, русское «-ся» не подсказчик, 14 глаголов осмотра и главный вопрос Wie fühlen Sie sich?', pdf:'lessons/urok18_pdf.pdf', audio:'lessons/urok18_interactive.html', level:'A2'},
-  {id:'19', title:'Урок 19 — Präteritum: war, hatte, модальные', topic:'Долг с урока 12. Слова, которые в разговоре НЕ ставят в Perfekt: war, hatte и модальные (умляут исчезает). Ловушка konnte/könnte, 13 фраз анамнеза, язык Arztbrief.', pdf:'lessons/urok19_pdf.pdf', audio:'lessons/urok19_interactive.html', level:'A2'},
+  {id:'0', title:'Урок 0 — Алфавит и правила чтения', topic:'Алфавит со звуком, дифтонги, долгие/краткие, оглушение — база произношения.', pdf:'lessons/urok0_pdf.pdf', audio:'lessons/urok0_interactive.html', mins:20, hard:'Средне', cards:45, level:'A1'},
+  {id:'1', title:'Урок 1 — Приветствие и знакомство', topic:'Sich vorstellen, глагол sein, du vs Sie (с пациентами — Sie).', pdf:'lessons/urok1_pdf.pdf', audio:'lessons/urok1_interactive.html', mins:15, hard:'Легко', cards:23, level:'A1'},
+  {id:'2', title:'Урок 2 — Wie geht\'s, числа, артикли', topic:'Числа 0–20, der/die/das, возраст пациента, диалог на ресепшене.', pdf:'lessons/urok2_pdf.pdf', audio:'lessons/urok2_interactive.html', mins:15, hard:'Легко', cards:14, level:'A1'},
+  {id:'3', title:'Урок 3 — Глаголы Präsens, порядок слов', topic:'Спряжение в настоящем времени, глагол на 2-й позиции, вопросы.', pdf:'lessons/urok3_pdf.pdf', audio:'lessons/urok3_interactive.html', mins:15, hard:'Легко', cards:16, level:'A1'},
+  {id:'4', title:'Урок 4 — haben, Akkusativ, отрицание', topic:'«У меня есть/болит», винительный падеж, kein vs nicht, приём у врача.', pdf:'lessons/urok4_pdf.pdf', audio:'lessons/urok4_interactive.html', mins:15, hard:'Легко', cards:21, level:'A1'},
+  {id:'5', title:'Урок 5 — Все числа + порядковые', topic:'0–1000, ловушка «задом наперёд», порядковые (1-й, 2-й…), давление/пульс/дата.', pdf:'lessons/urok5_pdf.pdf', audio:'lessons/urok5_interactive.html', mins:30, hard:'Средне', cards:70, level:'A1'},
+  {id:'6', title:'Урок 6 — Времена года и месяцы', topic:'Времена года, 12 месяцев, im + месяц, дата рождения, запись на приём.', pdf:'lessons/urok6_pdf.pdf', audio:'lessons/urok6_interactive.html', mins:15, hard:'Легко', cards:16, level:'A1'},
+  {id:'7', title:'Урок 7 — Цвета (die Farben)', topic:'Цвета, оттенки hell-/dunkel-, цвет симптома (bleiche Haut, blauer Fleck).', pdf:'lessons/urok7_pdf.pdf', audio:'lessons/urok7_interactive.html', mins:15, hard:'Легко', cards:13, level:'A1'},
+  {id:'8', title:'Урок 8 — Неправильные глаголы и W-Fragen', topic:'sein/haben, глаголы-хамелеоны (du sprichst), все вопросы на W у врача.', pdf:'lessons/urok8_pdf.pdf', audio:'lessons/urok8_interactive.html', mins:15, hard:'Легко', cards:21, level:'A1'},
+  {id:'9', title:'Урок 9 — Части тела (der Körper)', topic:'Части тела с артиклями (der/die/das цветом), «где болит?», жалобы на ноги/вены.', pdf:'lessons/urok9_pdf.pdf', audio:'lessons/urok9_interactive.html', mins:15, hard:'Легко', cards:24, level:'A1'},
+  {id:'10', title:'Урок 10 — Дни недели и время (Uhrzeit)', topic:'Дни недели, часы, ловушка halb (9:30!), официальное 24ч, запись пациента на приём.', pdf:'lessons/urok10_pdf.pdf', audio:'lessons/urok10_interactive.html', mins:20, hard:'Легко', cards:40, level:'A1'},
+  {id:'11', title:'Урок 11 — Предлоги места (Wo? + Dativ)', topic:'9 предлогов места, падеж Dativ (dem/der/den), im/am/zum/zur, где болит/где аптека. Новый голос Yannick.', pdf:'lessons/urok11_pdf.pdf', audio:'lessons/urok11_interactive.html', mins:20, hard:'Легко', cards:35, level:'A1'},
+  {id:'12', title:'Урок 12 — Прошедшее время (Perfekt)', topic:'Язык анамнеза: haben/sein + Partizip II, сильные глаголы, когда без ge-, «когда начались боли».', pdf:'lessons/urok12_pdf.pdf', audio:'lessons/urok12_interactive.html', mins:25, hard:'Средне', cards:59, level:'A1'},
+  {id:'13', title:'Урок 13 — Повелительное наклонение (Imperativ)', topic:'Язык осмотра: «лягте на спину», «дышите глубоко», «покажите ногу». Форма на Sie, du, ihr, смягчение bitte/mal/doch, 15 команд приёма.', pdf:'lessons/urok13_pdf.pdf', audio:'lessons/urok13_interactive.html', mins:30, hard:'Средне', cards:70, level:'A1'},
+  {id:'14', title:'Урок 14 — Еда и напитки (Essen und Trinken)', topic:'Продукты и напитки с артиклями (род цветом), essen-хамелеон, gern/mögen/schmecken, кафе, «вы натощак?» и советы по питанию.', pdf:'lessons/urok14_pdf.pdf', audio:'lessons/urok14_interactive.html', mins:35, hard:'Плотно', cards:93, level:'A1'},
+  {id:'15', title:'Урок 15 — Квартира и жильё (Wohnung und Haus)', topic:'Снять квартиру в Германии: комнаты и мебель, три денежные ловушки (счёт комнат, этажи, Kalt- vs Warmmiete), вопросы маклеру, жильё в анамнезе.', pdf:'lessons/urok15_pdf.pdf', audio:'lessons/urok15_interactive.html', mins:30, hard:'Плотно', cards:78, level:'A1'},
+  {id:'16', title:'Урок 16 — Погода (das Wetter)', topic:'Безличное «es», прилагательные и явления, градусы, прогноз через werden, small talk — и жара как клинический фактор для вен. Закрывает A1.', pdf:'lessons/urok16_pdf.pdf', audio:'lessons/urok16_interactive.html', mins:25, hard:'Средне', cards:67, level:'A1'},
+  {id:'17', title:'Урок 17 — Куда? Wohin? + Akkusativ', topic:'Первый урок A2. Девять предлогов-переключателей, Wo?→Dativ vs Wohin?→Akkusativ, слияния ins/ans/aufs, глаголы-близнецы stehen/stellen, команды «куда» на осмотре.', pdf:'lessons/urok17_pdf.pdf', audio:'lessons/urok17_interactive.html', mins:25, hard:'Средне', cards:65, level:'A2'},
+  {id:'18', title:'Урок 18 — Возвратные глаголы (sich waschen)', topic:'Немецкое «-ся» отдельным словом: шесть местоимений, ловушка mich/mir, русское «-ся» не подсказчик, 14 глаголов осмотра и главный вопрос Wie fühlen Sie sich?', pdf:'lessons/urok18_pdf.pdf', audio:'lessons/urok18_interactive.html', mins:25, hard:'Средне', cards:56, level:'A2'},
+  {id:'19', title:'Урок 19 — Präteritum: war, hatte, модальные', topic:'Долг с урока 12. Слова, которые в разговоре НЕ ставят в Perfekt: war, hatte и модальные (умляут исчезает). Ловушка konnte/könnte, 13 фраз анамнеза, язык Arztbrief.', pdf:'lessons/urok19_pdf.pdf', audio:'lessons/urok19_interactive.html', mins:25, hard:'Средне', cards:55, level:'A2'},
 ];
 
 // Занятия с репетитором Дашей (Австрия) — раз в неделю, воскресенье 20:00
 const DASHA = [
   {id:'d4', num:'Занятие 4', date:'31.08.2026', title:'Спряжение глаголов на практике',
    topic:'Всё занятие — одно большое упражнение: 25 предложений, в каждом надо поставить глагол в правильную форму. Заодно Даша собрала всю систему в кучу: три категории глаголов (правильные 90–95%, с изменяемой гласной, пять исключений sein/haben/werden/wissen/tun). ⚠️ Разобрали, почему у arbeiten добавляется e, а у tanzen выбрасывается s; как отличить sie «она» от sie «они» и вежливого Sie; почему mögen больше не модальный и его заменяет gern. Плюс: spielen и sprechen без предлогов, mit dem Zug («с поездом»), spazieren gehen, Urlaub machen, обращение Herr/Frau и первая встреча с отделяемой приставкой (fernsehen).',
-   pdf:'', audio:'dasha/dasha4_interactive.html',
+   pdf:'', audio:'dasha/dasha4_interactive.html', mins:35, hard:'Плотно', cards:92,
    photos:['dasha/dasha4_praesentation.pdf','dasha/dasha4_hw_sein_haben.jpg','dasha/dasha4_hw_sein.jpg','dasha/dasha4_hw_uebung3.jpg'],
    photoLabels:['Презентация Verb-Konjugation (PDF)','Домашка: sein oder haben','Домашка: спряжение sein','Домашка: Übung 3']},
   {id:'d3', num:'Занятие 3', date:'27.08.2026', title:'Спряжение глаголов: три категории',
    topic:'Главная механика немецкого глагола. Все глаголы делятся на три группы: правильные (90–95%!), с изменяемой гласной и пять исключений. Плюс правило «буква меняется только у du и er/sie/es», разборы kennen/können, wohnen/leben, studieren/lernen, zu Hause / nach Hause и мелкие исключения в письме.',
-   pdf:'dasha/dasha3_pdf.pdf', audio:'dasha/dasha3_interactive.html',
+   pdf:'dasha/dasha3_pdf.pdf', audio:'dasha/dasha3_interactive.html', mins:40, hard:'Плотно', cards:117,
    photos:['dasha/dasha3_praesentation.pdf','dasha/dasha3_hw_modal.jpg','dasha/dasha3_hw_modal2.jpg','dasha/dasha3_hw_verben.jpg'],
    photoLabels:['Презентация Даши (PDF)','Домашка: модальные','Домашка: модальные 2','Домашка: Verben 1']},
   {id:'d2', num:'Занятие 2', date:'17.08.2026', title:'Модальные глаголы + семья',
    topic:'Шесть модальных глаголов (müssen, sollen, können, dürfen, wollen, möchten) — все формы и правило «смысловой глагол в конец, в инфинитиве». Повторение местоимений, старт темы «семья».',
-   pdf:'dasha/dasha2_pdf.pdf', audio:'dasha/dasha2_interactive.html',
+   pdf:'dasha/dasha2_pdf.pdf', audio:'dasha/dasha2_interactive.html', mins:25, hard:'Средне', cards:57,
    trainer:'dasha/trainer_modal.html', trainerName:'🎯 Тренажёр: 60 предложений',
    photos:[]},
   {id:'d1', num:'Занятие 1', date:'12.08.2026', title:'Числа, местоимения, базовая лексика',
    topic:'Числа «задом наперёд» и порядковые, личные + притяжательные (правило -e), артикли, цвета, время суток, месяцы (im), дни недели (am), наречия частотности.',
-   pdf:'dasha/dasha1_pdf.pdf', audio:'dasha/dasha1_interactive.html',
+   pdf:'dasha/dasha1_pdf.pdf', audio:'dasha/dasha1_interactive.html', mins:40, hard:'Плотно', cards:125,
    photos:['dasha/dasha1_foto1.jpg','dasha/dasha1_foto2.jpg','dasha/dasha1_foto3.jpg']},
 ];
 const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
@@ -661,22 +663,22 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 const POLYA = [
   {id:'p8', num:'Занятие 8', date:'31.08.2026', title:'Профессии, национальности и множественное число',
    topic:'Продолжение женского рода: 16 профессий из учебника (стр. 14–15) и 9 национальностей — везде одно правило der→die и суффикс -in. ⚠️ Ловушки: der Arzt→die Ärztin и der Koch→die Köchin (меняется гласная), а der Deutsche/die Deutsche вообще исключение. Разобрали разницу aufräumen (навести порядок) и putzen (помыть), отделяемую приставку (räumt auf, ruft an) и нулевой артикль — когда артикль не нужен вовсе. ⭐⭐ Новая большая тема: множественное число — артикль всегда die, а форма слова меняется четырьмя способами.',
-   pdf:'', audio:'dasha/polya8_interactive.html',
+   pdf:'', audio:'dasha/polya8_interactive.html', mins:45, hard:'Плотно', cards:138,
    photos:['dasha/polya8_hw_berufe1.jpg','dasha/polya8_hw_berufe2.jpg','dasha/polya8_hw_taetigkeiten.jpg'],
    photoLabels:['Профессии, лист 1','Профессии, лист 2','Кто чем занимается']},
   {id:'p7', num:'Занятие 7', date:'26.08.2026', title:'Разбор текста и феминитивы',
    topic:'Дочитали текст про изучение языков (vor allem, Spaß machen, aufschreiben), ловушка vor/nach во времени («vor zwei Tagen» = два дня НАЗАД), почему у «Kinderbücher haben viele Bilder» нет артикля. ⭐ Новая тема: женский род профессий (-in) и его множественное (-innen) — единственное железное правило множественного в немецком. ✍️ Внутри: оригинал текста целиком с озвучкой, 12 наречий времени по шкале частоты и вся домашка с полями.',
-   pdf:'dasha/polya7_pdf.pdf', audio:'dasha/polya7_interactive.html',
+   pdf:'dasha/polya7_pdf.pdf', audio:'dasha/polya7_interactive.html', mins:25, hard:'Средне', cards:66,
    photos:['dasha/polya7_hw_text.jpg','dasha/polya7_hw_adverbien.jpg'],
    photoLabels:['Текст Deutsch lernen (A1)','Карта наречий времени']},
   {id:'p6', num:'Занятие 6', date:'22.08.2026', title:'Вопросы, позиция глагола и описание картинки',
    topic:'Разбор домашки (leben vs wohnen, wie vs welche), правило «глагол на второй ПОЗИЦИИ», после haben всегда Akkusativ, куда ставить nicht и почему нельзя kein, тексты Menschen A1 стр. 21, описание картинки (im Vordergrund / im Hintergrund). ✍️ Вся домашка от Даши внутри — с полями для заполнения и озвученным текстом «Meine Familie».',
-   pdf:'dasha/polya6_pdf.pdf', audio:'dasha/polya6_interactive.html',
+   pdf:'dasha/polya6_pdf.pdf', audio:'dasha/polya6_interactive.html', mins:30, hard:'Плотно', cards:81,
    photos:['dasha/polya6_hw_text.jpg','dasha/polya6_hw_fragen.jpg','dasha/polya6_hw_modal.jpg','dasha/polya6_hw_ru.jpg'],
    photoLabels:['Текст Meine Familie','Вопросы к тексту','Модальные глаголы','Текст на перевод']},
   {id:'p5', num:'Занятие 5', date:'19.08.2026', title:'Семья и вопросительные слова',
    topic:'Глаголы-исключения (haben, werden, sein, tun, wissen), вся лексика семьи и семейного положения, вопросительные слова + 4 пары, где путаются: wie/welche, wie viel/wie viele, wer/wen, nach/in. Плюс вся домашка от Даши с полями для заполнения.',
-   pdf:'dasha/polya5_pdf.pdf', audio:'dasha/polya5_interactive.html'},
+   pdf:'dasha/polya5_pdf.pdf', audio:'dasha/polya5_interactive.html', mins:30, hard:'Плотно', cards:90},
 ];
 const NEXT_POLYA = {date:'пятница', time:'8:00'};
 
@@ -941,6 +943,11 @@ function renderFolders(){
       <span class="f-txt"><span class="f-name">ЗУБР</span>
       <span class="f-sub">свой словарик и домашка от Даши</span></span>
     </a>
+    <a class="folder trainer" href="itog.html">
+      <span class="f-ico">🎓</span>
+      <span class="f-txt"><span class="f-name">Итоговый тест</span>
+      <span class="f-sub">проверка уровня целиком</span></span>
+    </a>
     <a class="folder trainer" href="pravila.html">
       <span class="f-ico">📐</span>
       <span class="f-txt"><span class="f-name">Правила</span>
@@ -1030,6 +1037,7 @@ function render(){
       <span class="num">${l.title.split('—')[0].trim()}</span>
       <h2>${l.title.split('—')[1] ? l.title.split('—')[1].trim() : l.title}</h2>
       <p class="topic">${l.topic}</p>
+      ${l.mins ? `<p class="l-мера">⏱ ${l.mins} мин · ${l.hard} · ${l.cards} слов</p>` : ''}
       <div class="actions">
         ${audioBtn}
         <a class="btn pdf" href="${l.pdf}" target="_blank" rel="noopener">📄 PDF для печати</a>
@@ -1078,6 +1086,7 @@ function render(){
       <span class="num ${profile === 'polina' ? 'polya-num' : 'dasha-num'}">${l.num} · ${l.date}</span>
       <h2>${l.title}</h2>
       <p class="topic">${l.topic}</p>
+      ${l.mins ? `<p class="l-мера">⏱ ${l.mins} мин · ${l.hard} · ${l.cards} слов</p>` : ''}
       <div class="actions">
         <a class="btn audio" href="${l.audio}" target="_blank" rel="noopener">🔊 Конспект со звуком + домашка</a>
         <a class="btn pdf" href="${l.pdf}" target="_blank" rel="noopener">📄 PDF для печати</a>

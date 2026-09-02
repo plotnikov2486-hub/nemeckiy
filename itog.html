@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Итоговый тест по уровню</title>
+
+<style id="backbar-css">
+  .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    padding:7px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar a.bb-link:active{ transform:scale(0.97); }
+  .backbar .bb-title{ color:rgba(255,255,255,0.72); font-size:12.5px; margin-left:auto;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52%; }
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+</style>
+
+
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(23px,5vw,31px); font-weight:600; }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:64ch; }
+  .hint { display:inline-flex; align-items:center; gap:6px; margin-top:12px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  .toc { background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:22px; }
+  .toc b { font-size:13px; color:var(--ink-muted); display:block; margin-bottom:8px; }
+  .toc ol { margin:0; padding-left:20px; columns:2; column-gap:24px; font-size:13.5px; }
+  .toc li { margin:3px 0; break-inside:avoid; }
+  .toc a { color:var(--accent); text-decoration:none; } .toc a:hover { text-decoration:underline; }
+  section.block { margin-top:36px; scroll-margin-top:62px; }
+  .block h2 { font-size:19px; font-weight:600; display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:64ch; }
+  button.play { flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .warn-box { background:var(--warn-bg); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .warn-box b { color:var(--warn); } .warn-box .big { font-size:15px; color:var(--ink); font-weight:700; display:block; margin-bottom:4px; }
+  .link-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .link-box b { color:var(--sn); }
+  .artikel-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; font-size:13px; }
+  .artikel-legend span { display:inline-flex; align-items:center; gap:5px; }
+  .artikel-legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
+  .wcard { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 12px; box-shadow:var(--shadow); }
+  .wcard.hb { border-left-color:var(--hb); } .wcard.sn { border-left-color:var(--sn); }
+  .wcard.der { border-left-color:var(--der); } .wcard.die { border-left-color:var(--die); } .wcard.das { border-left-color:var(--das); }
+  .wcard .de .art-der { color:var(--der); } .wcard .de .art-die { color:var(--die); } .wcard .de .art-das { color:var(--das); }
+  .wcard .txt { flex:1; min-width:0; }
+  .wcard .de { font-family:Georgia,serif; font-weight:700; font-size:15px; overflow-wrap:anywhere; }
+  .wcard .de b { color:var(--play); }
+  .wcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:1px; }
+  .wcard .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .wcard button.play { width:30px; height:30px; font-size:13px; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .pcard { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 15px; box-shadow:var(--shadow); }
+  .pcard.hb { border-left:4px solid var(--hb); } .pcard.sn { border-left:4px solid var(--sn); } .pcard.wn { border-left:4px solid var(--warn); }
+  .pcard .txt { flex:1; min-width:0; }
+  .pcard .de { font-family:Georgia,serif; font-size:15.5px; font-weight:600; }
+  .pcard .de b { color:var(--play); }
+  .pcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pcard .ru { font-size:12.5px; color:var(--ink-muted); margin-top:1px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:82%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .bubble .txt .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
+  .hwbox { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play);
+    border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+  .hwbox .hwnum { display:inline-block; background:var(--play); color:var(--play-ink); font-weight:700;
+    font-size:12px; padding:2px 9px; border-radius:999px; margin-bottom:8px; }
+  .hwbox h3 { margin:0 0 8px; font-size:15.5px; font-family:Georgia,serif; }
+  .hwtext { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+    margin:10px 0; font-family:Georgia,serif; font-size:14.5px; line-height:1.65; }
+  .hwtext p { margin:0 0 10px; } .hwtext p:last-child { margin-bottom:0; }
+  .hwtext b { color:var(--play); }
+  .para { display:flex; gap:11px; align-items:flex-start; background:var(--surface); border:1px solid var(--line);
+    border-left:4px solid var(--accent); border-radius:9px; padding:12px 13px; margin-bottom:9px; box-shadow:var(--shadow); }
+  .para .ptxt { flex:1; min-width:0; }
+  .para .pde { font-family:Georgia,serif; font-size:14.5px; line-height:1.6; }
+  .para .pde b { color:var(--play); }
+  .para .pru { font-size:12.5px; color:var(--ink-muted); margin-top:7px; padding-top:7px; border-top:1px dashed var(--line); line-height:1.5; }
+  .para button.play { flex-shrink:0; width:32px; height:32px; font-size:13px; margin-top:2px; }
+  .hwrow { display:flex; align-items:flex-start; gap:10px; margin:8px 0; }
+  .hwrow .n { flex-shrink:0; font-weight:700; color:var(--accent); font-size:13px; min-width:26px; padding-top:7px; }
+  .hwrow .q { flex:1; min-width:0; }
+  .fld { width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:7px 10px;
+    border:1px solid var(--line); border-radius:7px; background:var(--surface); color:var(--ink); }
+  .fld:focus { outline:2px solid var(--accent); outline-offset:1px; }
+  .fld.short { max-width:190px; }
+  textarea.fld { min-height:62px; resize:vertical; line-height:1.5; }
+  .opt { display:flex; align-items:flex-start; gap:8px; margin:5px 0; font-size:13.5px; cursor:pointer; }
+  .opt input { margin-top:3px; flex-shrink:0; width:17px; height:17px; accent-color:var(--accent); }
+  .mv { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:9px 0; font-size:14px; line-height:1.7; }
+  .mv .num { font-weight:700; color:var(--accent); font-size:12.5px; }
+  .mv .fld { width:130px; }
+  .hint-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn);
+    border-radius:8px; padding:11px 13px; font-size:13px; color:var(--ink-muted); margin:10px 0; }
+  .origlink { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--accent);
+    text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:5px 12px; margin-top:8px; }
+  .saveinfo { font-size:12px; color:var(--ink-faint); margin-top:10px; }
+  footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+
+  .casetab { width:100%; border-collapse:collapse; font-size:13.5px; background:var(--surface-2); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:14px; }
+  .casetab th, .casetab td { padding:8px 10px; border:1px solid var(--line); text-align:center; }
+  .casetab th { background:var(--accent); color:var(--accent-ink); font-weight:600; font-size:12.5px; }
+  .casetab td.lbl { text-align:left; font-weight:600; color:var(--ink-muted); background:var(--surface); }
+  .casetab .wo { color:var(--hb); font-weight:700; } .casetab .wohin { color:var(--play); font-weight:700; }
+  .pairs { display:flex; flex-direction:column; gap:12px; }
+  .pair { border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); }
+  .pair .prow { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface); }
+  .pair .prow + .prow { border-top:1px dashed var(--line); }
+  .pair .prow.wo { border-left:4px solid var(--hb); }
+  .pair .prow.wohin { border-left:4px solid var(--play); }
+  .pair .tag { flex-shrink:0; font-size:10.5px; font-weight:700; letter-spacing:.04em; padding:3px 7px; border-radius:6px; }
+  .pair .prow.wo .tag { background:var(--hb-bg); color:var(--hb); }
+  .pair .prow.wohin .tag { background:var(--bubble-m); color:var(--play); }
+  .pair .txt { flex:1; min-width:0; }
+  .pair .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .pair .de b { color:var(--play); }
+  .pair .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .pair button.play { width:30px; height:30px; font-size:13px; }
+</style>
+
+<style>
+  .ит-выбор{ display:flex; flex-direction:column; gap:11px; margin-top:6px; }
+  .ит-ур{ display:flex; align-items:center; gap:14px; text-align:left; width:100%;
+    padding:17px 18px; border-radius:18px; border:1.5px solid var(--line);
+    background:var(--surface); color:inherit; font-family:inherit; cursor:pointer;
+    box-shadow:var(--shadow); }
+  .ит-ур:active{ transform:scale(.99); }
+  .ит-ур .знак{ width:52px; height:52px; border-radius:15px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
+    font-size:19px; font-weight:800; color:#fff;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); }
+  .ит-ур.a2 .знак{ background:linear-gradient(135deg,#4A63D6,#8E6AD6); }
+  .ит-ур .текст{ flex:1; min-width:0; }
+  .ит-ур b{ font-size:17px; display:block; }
+  .ит-ур small{ font-size:13px; color:var(--ink-faint); display:block; margin-top:2px; }
+  .ит-ур .балл{ font-size:13px; font-weight:700; color:var(--accent); }
+
+  .ит-шкала{ height:7px; border-radius:99px; background:var(--line); overflow:hidden; margin-bottom:14px; }
+  .ит-шкала i{ display:block; height:100%; border-radius:99px;
+    background:linear-gradient(90deg,#2E9E6B,#7FC55F); transition:width .25s ease; }
+  .ит-счёт{ font-size:12.5px; color:var(--ink-faint); margin-bottom:12px;
+    display:flex; justify-content:space-between; }
+  .ит-тип{ font-size:12px; letter-spacing:.06em; text-transform:uppercase;
+    font-weight:700; color:var(--accent); margin-bottom:7px; }
+  .ит-вопрос{ font-family:Georgia,serif; font-size:22px; font-weight:700;
+    line-height:1.35; margin-bottom:4px; overflow-wrap:anywhere; }
+  .ит-подпись{ font-size:13px; color:var(--ink-faint); margin-bottom:16px; }
+  .ит-вар{ display:flex; flex-direction:column; gap:9px; }
+  .ит-вар button{ text-align:left; padding:14px 15px; border-radius:14px; font-size:15px;
+    border:1.5px solid var(--line); background:var(--surface); color:inherit;
+    cursor:pointer; font-family:inherit; line-height:1.35; }
+  .ит-вар button.верно{ border-color:#2E9E6B; background:rgba(46,158,107,.13); font-weight:700; }
+  .ит-вар button.мимо{ border-color:#D9534F; background:rgba(217,83,79,.12); }
+  .ит-поле{ width:100%; padding:14px 15px; border-radius:14px; font-size:16px;
+    font-family:inherit; border:1.5px solid var(--line); background:var(--surface);
+    color:inherit; box-sizing:border-box; }
+  .ит-поле.верно{ border-color:#2E9E6B; } .ит-поле.мимо{ border-color:#D9534F; }
+  .ит-умл{ display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+  .ит-умл button{ width:42px; height:40px; border-radius:11px; border:1.5px solid var(--line);
+    background:var(--surface); color:inherit; font-size:16px; cursor:pointer; font-family:inherit; }
+  .ит-низ{ margin-top:14px; display:flex; gap:9px; }
+  .ит-низ button{ flex:1; padding:14px; border-radius:14px; border:none; font-size:15px;
+    font-weight:700; font-family:inherit; cursor:pointer;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); color:#fff; }
+  .ит-низ button.тихая{ background:var(--surface); color:inherit; border:1.5px solid var(--line); }
+  .ит-отклик{ margin-top:12px; font-size:14.5px; line-height:1.45; min-height:22px; }
+  .ит-отклик .ок{ color:#2E9E6B; font-weight:700; }
+  .ит-отклик .нет{ color:#D9534F; font-weight:700; }
+
+  .ит-итог{ text-align:center; padding:6px 0 2px; }
+  .ит-итог .число{ font-size:48px; font-weight:900; line-height:1.1;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); -webkit-background-clip:text;
+    background-clip:text; color:transparent; }
+  .ит-итог .слово{ font-size:15px; margin:4px 0 16px; }
+  .ит-слабые{ text-align:left; margin-top:8px; }
+  .ит-слабые h3{ font-size:14.5px; margin:0 0 9px; font-family:inherit; }
+  .ит-слабые a{ display:flex; justify-content:space-between; align-items:center;
+    gap:10px; padding:11px 13px; border-radius:12px; margin-bottom:7px;
+    background:rgba(217,83,79,.1); text-decoration:none; color:inherit; font-size:14px; }
+  .ит-слабые a b{ color:var(--accent); font-weight:700; white-space:nowrap; }
+  .ит-ошибки{ text-align:left; margin-top:14px; }
+  .ит-ошибки div{ font-size:13.5px; padding:9px 12px; border-radius:11px;
+    margin-bottom:6px; background:rgba(127,127,127,.1); line-height:1.4; }
+  .ит-ошибки .де{ font-family:Georgia,serif; font-weight:700; }
+</style>
+</head>
+<body>
+
+<div class="backbar">
+  <a class="bb-link" href="index.html">&#8592; На главную</a>
+  <span class="bb-title">Итоговый тест</span>
+</div>
+
+<div class="lp">
+  <div class="eyebrow">Проверка уровня целиком</div>
+  <h1>Итоговый тест</h1>
+  <p class="lede">В конце каждого урока есть своя проверка. Здесь — проверка <b>всего уровня сразу</b>: слова берутся из всех уроков, поэтому забытое из третьего урока всплывёт, когда вы уже на шестнадцатом. 30 заданий, проверка строгая.</p>
+  <div id="итЭкран"></div>
+</div>
+
+<script>
+const УРОВНИ = {"A1": ["urok0", "urok1", "urok2", "urok3", "urok4", "urok5", "urok6", "urok7", "urok8", "urok9", "urok10", "urok11", "urok12", "urok13", "urok14", "urok15", "urok16"], "A2": ["urok17", "urok18", "urok19"]};
+const ЗАНЯТИЯ = ["dasha1", "dasha2", "dasha3", "dasha4", "polya5", "polya6", "polya7", "polya8"];
+const ВСЕГО = 30;
+const $ = id => document.getElementById(id);
+const ПРОФИЛЬ = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+
+/* ── проверка ответа: один в один как в ЗУБРе ── */
+function норм(s){
+  return (s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+    .replace(/ß/g,'ss').replace(/ё/g,'е').replace(/[.,!?;:()«»"'’\-–—/]/g,' ')
+    .replace(/\s+/g,' ').trim();
+}
+function чисто(s){
+  return (s||'').split(/\s+[—–→]\s+/)[0].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();
+}
+function сверить(ответ, правильно){
+  const u = норм(ответ); if (!u) return false;
+  let вар = String(правильно||'').split(/\s*[,/]\s*|\s+или\s+/).map(норм).filter(Boolean);
+  if (!вар.length) вар = [норм(правильно)];
+  return вар.includes(u);
+}
+function безТегов(s){ return (s||'').replace(/<[^>]+>/g,''); }
+function перемешать(a){
+  a = a.slice();
+  for (let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; }
+  return a;
+}
+function имяУрока(код){
+  const м = код.match(/^([a-z]+)(\d+)$/); if (!м) return код;
+  return {urok:'Урок ', dasha:'Занятие ', polya:'Занятие '}[м[1]] + м[2] +
+         (м[1]==='dasha' ? ' с Дашей' : м[1]==='polya' ? ' Полины' : '');
+}
+function ссылкаУрока(код){
+  return (код.startsWith('urok') ? 'lessons/' : 'dasha/') + код + '_interactive.html';
+}
+
+/* ── экран выбора уровня ── */
+function выбор(){
+  const карточки = Object.entries(УРОВНИ).map(([ур, уроки]) => {
+    let л = null;
+    try{ л = JSON.parse(localStorage.getItem(`nemeckiy_itog_${ПРОФИЛЬ}_${ур}`) || 'null'); }catch(e){}
+    return `<button class="ит-ур ${ур.toLowerCase()}" data-ур="${ур}">
+      <span class="знак">${ур}</span>
+      <span class="текст"><b>Уровень ${ур}</b>
+        <small>${уроки.length} ${скл(уроки.length,'урок','урока','уроков')} · ${ВСЕГО} заданий</small></span>
+      ${л ? `<span class="балл">${л.процент}%</span>` : ''}
+    </button>`;
+  }).join('');
+
+  let лз = null;
+  try{ лз = JSON.parse(localStorage.getItem(`nemeckiy_itog_${ПРОФИЛЬ}_дaша`) || 'null'); }catch(e){}
+
+  $('итЭкран').innerHTML = `<div class="ит-выбор">${карточки}
+    <button class="ит-ур a2" data-ур="дaша">
+      <span class="знак">Д</span>
+      <span class="текст"><b>Занятия с Дашей</b>
+        <small>${ЗАНЯТИЯ.length} ${скл(ЗАНЯТИЯ.length,'занятие','занятия','занятий')} · всё вместе</small></span>
+      ${лз ? `<span class="балл">${лз.процент}%</span>` : ''}
+    </button></div>`;
+
+  $('итЭкран').querySelectorAll('[data-ур]').forEach(b => {
+    b.onclick = () => запустить(b.dataset.ур);
+  });
+}
+
+/* ── сбор словарей уровня ── */
+async function запустить(ключ){
+  const уроки = ключ === 'дaша' ? ЗАНЯТИЯ : УРОВНИ[ключ];
+  $('итЭкран').innerHTML = '<div style="text-align:center;padding:40px">Собираю слова…</div>';
+
+  const части = await Promise.all(уроки.map(async у => {
+    try{
+      const r = await fetch(`words/${у}.json`);
+      if (!r.ok) return [];
+      return (await r.json()).map(с => ({
+        id: у + '_' + с[0], урок: у,
+        de: безТегов(с[1]), тр: с[2], ru: чисто(с[3]),
+        фраза: !!с[4], html: с[5] || с[1]
+      }));
+    }catch(e){ return []; }
+  }));
+
+  const было = new Set(), все = [];
+  части.flat().forEach(к => {
+    const кл = к.de.toLowerCase();
+    if (!к.de || !к.ru || было.has(кл)) return;
+    было.add(кл); все.push(к);
+  });
+
+  if (все.length < 10){
+    $('итЭкран').innerHTML = '<div class="пусто">Слов пока мало — тест не собрать.</div>';
+    return;
+  }
+  тест(ключ, все);
+}
+
+/* ── сам тест ── */
+function тест(ключ, слова){
+  const задания = собрать(слова);
+  let шаг = 0, верных = 0, ошибки = [];
+
+  показать();
+
+  function собрать(слова){
+    const простые = слова.filter(к => !к.фраза);
+    const спропуском = слова.filter(к => /<b>[^<]{2,}<\/b>/.test(к.html));
+    const артикльные = простые.filter(к => /^(der|die|das)\s+\S/i.test(к.de));
+    const з = [];
+
+    function варианты(верный, поле){
+      const чужие = перемешать(простые.filter(к => к.id !== верный.id
+        && норм(к[поле]) !== норм(верный[поле]))).slice(0,3);
+      return чужие.length === 3 ? перемешать(чужие.concat([верный])) : null;
+    }
+    perem: {
+      перемешать(простые).slice(0, 40).forEach(к => {
+        if (з.length >= 12) return;
+        const в = варианты(к, 'ru'); if (в) з.push({тип:'выбор-ru', к, вар:в});
+      });
+      перемешать(простые).slice(0, 40).forEach(к => {
+        if (з.length >= 20) return;
+        const в = варианты(к, 'de'); if (в) з.push({тип:'выбор-de', к, вар:в});
+      });
+      перемешать(артикльные).slice(0,4).forEach(к => з.push({тип:'артикль', к}));
+      перемешать(простые).slice(0,4).forEach(к => з.push({тип:'вписать', к}));
+      перемешать(спропуском).slice(0,4).forEach(к => з.push({тип:'пропуск', к}));
+    }
+    const видели = new Set(), итог = [];
+    перемешать(з).forEach(x => {
+      const кл = x.тип + '|' + x.к.id;
+      if (видели.has(кл)) return; видели.add(кл); итог.push(x);
+    });
+    return итог.slice(0, ВСЕГО);
+  }
+
+  function показать(){
+    if (шаг >= задания.length) return итог();
+    const з = задания[шаг];
+    const проц = Math.round(шаг / задания.length * 100);
+    let тело = '';
+
+    if (з.тип === 'выбор-ru' || з.тип === 'выбор-de'){
+      const вопрос = з.тип === 'выбор-ru' ? з.к.de : з.к.ru;
+      const поле = з.тип === 'выбор-ru' ? 'ru' : 'de';
+      тело = `<div class="ит-тип">${з.тип==='выбор-ru'?'Что это значит?':'Как это по-немецки?'}</div>
+        <div class="ит-вопрос">${вопрос}</div>
+        <div class="ит-подпись">${з.тип==='выбор-ru' && з.к.тр ? '['+з.к.тр+']' : ''}</div>
+        <div class="ит-вар">${з.вар.map(в=>`<button data-id="${в.id}">${в[поле]}</button>`).join('')}</div>`;
+    } else if (з.тип === 'артикль'){
+      тело = `<div class="ит-тип">Какой артикль?</div>
+        <div class="ит-вопрос">… ${з.к.de.replace(/^(der|die|das)\s+/i,'')}</div>
+        <div class="ит-подпись">${з.к.ru}</div>
+        <div class="ит-вар">${['der','die','das'].map(а=>`<button data-арт="${а}">${а}</button>`).join('')}</div>`;
+    } else if (з.тип === 'вписать'){
+      тело = `<div class="ит-тип">Напиши по-немецки</div>
+        <div class="ит-вопрос">${з.к.ru}</div>
+        <div class="ит-подпись">артикль тоже нужен, если он есть</div>
+        <input class="ит-поле" id="итПоле" autocomplete="off" autocorrect="off"
+               autocapitalize="off" spellcheck="false" placeholder="по-немецки">${умляуты()}`;
+    } else {
+      const спрятано = з.к.html.match(/<b>([^<]+)<\/b>/)[1];
+      з.ответ = спрятано;
+      тело = `<div class="ит-тип">Вставь пропущенное</div>
+        <div class="ит-вопрос">${з.к.html.replace(/<b>[^<]+<\/b>/, '<b>____</b>')}</div>
+        <div class="ит-подпись">${з.к.ru}</div>
+        <input class="ит-поле" id="итПоле" autocomplete="off" autocorrect="off"
+               autocapitalize="off" spellcheck="false" placeholder="одно слово">${умляуты()}`;
+    }
+
+    $('итЭкран').innerHTML =
+      `<div class="ит-шкала"><i style="width:${проц}%"></i></div>
+       <div class="ит-счёт"><span>Задание ${шаг+1} из ${задания.length}</span>
+       <span>верно: ${верных}</span></div>${тело}
+       <div class="ит-отклик" id="итОтклик"></div>
+       <div class="ит-низ" id="итНиз"></div>`;
+
+    if (з.тип === 'выбор-ru' || з.тип === 'выбор-de'){
+      $('итЭкран').querySelectorAll('.ит-вар button').forEach(b => {
+        b.onclick = () => выбран(b, b.dataset.id === з.к.id, з.к[з.тип==='выбор-ru'?'ru':'de']);
+      });
+    } else if (з.тип === 'артикль'){
+      const верный = (з.к.de.match(/^(der|die|das)/i)||[''])[0].toLowerCase();
+      $('итЭкран').querySelectorAll('.ит-вар button').forEach(b => {
+        b.onclick = () => выбран(b, b.dataset.арт === верный, з.к.de, верный);
+      });
+    } else {
+      const поле = $('итПоле');
+      подключитьУмляуты(поле);
+      поле.onkeydown = e => { if (e.key === 'Enter') проверить(з); };
+      $('итНиз').innerHTML = '<button id="итОК">Проверить</button>';
+      $('итОК').onclick = () => проверить(з);
+      поле.focus();
+    }
+  }
+
+  function выбран(кнопка, верно, правильный, верныйАрт){
+    const з = задания[шаг];
+    $('итЭкран').querySelectorAll('.ит-вар button').forEach(b => {
+      b.disabled = true;
+      const это = верныйАрт ? b.dataset.арт === верныйАрт : b.dataset.id === з.к.id;
+      if (это) b.classList.add('верно');
+    });
+    if (!верно) кнопка.classList.add('мимо');
+    засчитать(верно, правильный);
+  }
+
+  function проверить(з){
+    const поле = $('итПоле'); if (!поле || поле.disabled) return;
+    const правильно = з.тип === 'пропуск' ? з.ответ : з.к.de;
+    const верно = сверить(поле.value, правильно);
+    поле.disabled = true; поле.classList.add(верно ? 'верно' : 'мимо');
+    $('итОК').disabled = true;
+    засчитать(верно, правильно);
+  }
+
+  function засчитать(верно, правильный){
+    const з = задания[шаг];
+    if (верно) верных++; else ошибки.push({...з.к, надо: правильный});
+    try{
+      if (localStorage.getItem('nemeckiy_zvuk_выкл') !== '1'){
+        const имя = верно ? (localStorage.getItem('nemeckiy_zvuk_верно')||'верно2')
+                          : (localStorage.getItem('nemeckiy_zvuk_мимо')||'мимо2');
+        new Audio(`zvuk/otvet/${имя}.mp3`).play().catch(()=>{});
+      }
+    }catch(e){}
+    $('итОтклик').innerHTML = верно
+      ? `<span class="ок">✓ Верно.</span> ${з.к.тр ? '['+з.к.тр+']' : ''}`
+      : `<span class="нет">✗ Мимо.</span> Правильно: <b>${правильный}</b>${з.к.тр ? ' ['+з.к.тр+']' : ''}`;
+    $('итНиз').innerHTML = `<button id="итДальше">${
+      шаг + 1 >= задания.length ? 'Показать результат' : 'Дальше'}</button>`;
+    $('итДальше').onclick = () => { шаг++; показать(); };
+  }
+
+  function итог(){
+    const проц = Math.round(верных / задания.length * 100);
+    const слово = проц >= 90 ? 'Уровень уверенно закрыт.'
+                : проц >= 75 ? 'Хорошо. Пара слабых мест — ниже.'
+                : проц >= 50 ? 'Половина есть. Стоит вернуться к урокам ниже.'
+                : 'Рано. Пройдите уроки заново — список ниже.';
+
+    // считаем, из каких уроков ошибки — это и есть слабые места
+    const по = {};
+    ошибки.forEach(о => { по[о.урок] = (по[о.урок]||0)+1; });
+    const слабые = Object.entries(по).sort((a,b)=>b[1]-a[1]).slice(0,5);
+
+    let л = null;
+    try{ л = JSON.parse(localStorage.getItem(`nemeckiy_itog_${ПРОФИЛЬ}_${ключ}`)||'null'); }catch(e){}
+    if (!л || проц > л.процент){
+      try{ localStorage.setItem(`nemeckiy_itog_${ПРОФИЛЬ}_${ключ}`,
+        JSON.stringify({процент:проц, верных, всего:задания.length, когда:Date.now()})); }catch(e){}
+    }
+
+    $('итЭкран').innerHTML =
+      `<div class="ит-итог"><div class="число">${проц}%</div>
+        <div class="слово">${верных} из ${задания.length} · ${слово}</div></div>` +
+      (слабые.length ? `<div class="ит-слабые"><h3>Куда вернуться:</h3>` +
+        слабые.map(([у,н]) => `<a href="${ссылкаУрока(у)}">
+          <span>${имяУрока(у)} — ${н} ${скл(н,'ошибка','ошибки','ошибок')}</span>
+          <b>открыть →</b></a>`).join('') + '</div>' : '') +
+      (ошибки.length ? `<div class="ит-ошибки">` + ошибки.map(о =>
+        `<div><span class="де">${о.надо}</span> — ${о.ru}</div>`).join('') + '</div>' : '') +
+      `<div class="ит-низ"><button id="итЕщё">Пройти ещё раз</button>
+       <button class="тихая" id="итНазад">К выбору уровня</button></div>`;
+    $('итЕщё').onclick = () => запустить(ключ);
+    $('итНазад').onclick = выбор;
+  }
+}
+
+function умляуты(){
+  return '<div class="ит-умл">' + ['ä','ö','ü','ß'].map(ч =>
+    `<button type="button" data-ч="${ч}">${ч}</button>`).join('') + '</div>';
+}
+function подключитьУмляуты(поле){
+  $('итЭкран').querySelectorAll('.ит-умл button').forEach(b => {
+    b.onclick = () => {
+      const s = поле.selectionStart ?? поле.value.length;
+      const e = поле.selectionEnd ?? s;
+      поле.value = поле.value.slice(0,s) + b.dataset.ч + поле.value.slice(e);
+      поле.focus(); поле.selectionStart = поле.selectionEnd = s + 1;
+    };
+  });
+}
+function скл(n, од, дв, мн){
+  const a = Math.abs(n) % 100, b = a % 10;
+  if (a > 10 && a < 20) return мн;
+  if (b > 1 && b < 5) return дв;
+  if (b === 1) return од;
+  return мн;
+}
+
+выбор();
+</script>
+
+<a class="bb-top" href="index.html">&#8592; На главную</a>
+</body>
+</html>
