@@ -184,6 +184,7 @@
 <!--ТЕМА-JS-START-->
 <script src="../tema.js"></script>
 <!--ТЕМА-JS-END-->
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -245,6 +246,27 @@ body{ background:var(--bg); color:var(--ink); }
    с русским пояснением. */
 body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+}
+
+/* Профиль: у Гриши синий, у Полины розовый. Атрибут data-кто ставит
+   tema.js — здесь только меняем акцент под него. Градиенты трогаем
+   тоже, иначе розовая страница осталась бы с синими кнопками. */
+:root[data-кто="polina"]{
+  --accent:#EC6A86; --hb:#EC6A86; --hb-bg:#FBE9EE;
+}
+:root[data-кто="polina"] .block h2 .num,
+:root[data-кто="polina"] .play,
+:root[data-кто="polina"] .bb-top{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C) !important;
+  box-shadow:0 6px 16px rgba(236,106,134,.32);
+}
+:root[data-кто="polina"] .lp h1{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C);
+  -webkit-background-clip:text; background-clip:text;
+}
+:root[data-кто="polina"][data-theme="dark"]{ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
+@media (prefers-color-scheme: dark){
+  :root[data-кто="polina"]:not([data-theme="light"]){ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
 }
 
 /* ── Главное отличие от прошлой попытки ──
@@ -1092,8 +1114,6 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-
-
 
 
   <footer class="lp-foot">Конспект занятия Полины с Дашей · 26.08.2026 · собран из записи занятия · озвучка Anna (Premium), голос Apple.</footer>

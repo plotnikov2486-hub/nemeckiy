@@ -40,8 +40,20 @@ function применить(тема){
 }
 function k_set(к, тема){ к.setAttribute('data-theme', тема); }
 
-// ── ставим тему СРАЗУ, ещё до отрисовки страницы ──
+// ── профиль: у Гриши синий, у Полины розовый ──
+// Раньше это работало только на главной. Ставим здесь же, чтобы цвет
+// был единым на всех страницах и вставал до первой отрисовки.
+function профиль(){
+  try{ return localStorage.getItem('nemeckiy_profile') === 'polina' ? 'polina' : 'grigoriy'; }
+  catch(e){ return 'grigoriy'; }
+}
+function применитьПрофиль(){
+  document.documentElement.setAttribute('data-кто', профиль());
+}
+
+// ── ставим тему и профиль СРАЗУ, ещё до отрисовки страницы ──
 применить(выбранная());
+применитьПрофиль();
 
 // ── кнопка появляется, когда страница готова ──
 function кнопку(){
@@ -100,6 +112,7 @@ if (window.matchMedia){
 
 // вкладка в другом окне сменила тему — синхронизируемся
 window.addEventListener('storage', function(e){
+  if (e.key === 'nemeckiy_profile') применитьПрофиль();
   if (e.key === КЛЮЧ){
     применить(выбранная());
     var б = document.getElementById('переклТемы');
