@@ -127,7 +127,6 @@
 <!--ТЕМА-JS-START-->
 <script src="../tema.js"></script>
 <!--ТЕМА-JS-END-->
-
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1113,7 +1112,24 @@ words('infin',[
   ["i_duerfen","dürfen","дюрфэн","можно, разрешено"],
   ["i_wollen","wollen","воллэн","хочу (твёрдо)"],
   ["i_moechten","möchten","мёхьтэн","хотел бы (вежливо)"],
+,
+  ["i_moegen","<b>mögen</b>","мёгэн","любить, нравиться — <b>псевдомодальный</b>"]
 ]);
+
+/* mögen — седьмой в списке, но особый: врач просил вписать его в таблицу
+   и подписать, что он псевдомодальный. Разбирали это на занятии 4. */
+document.getElementById('infin').insertAdjacentHTML('afterend',
+  '<div class="warn-box" style="margin-top:14px">' +
+  '<span class="big">⭐ mögen — псевдомодальный</span>' +
+  'Седьмой глагол, который стоит рядом с модальными, но модальным уже не считается.<br><br>' +
+  '<b>Формы у него модальные</b> — такие же особенные, как у остальных шести:<br>' +
+  'ich <b>mag</b> · du <b>magst</b> · er <b>mag</b> · wir <b>mögen</b> · ihr <b>mögt</b> · sie <b>mögen</b>' +
+  playBtn('i_moegen_formen') + '<br><br>' +
+  '<b>А ведёт себя иначе.</b> После настоящего модального ставится второй глагол ' +
+  '(<i>Ich muss arbeiten</i>). После mögen — <b>существительное</b>:<br>' +
+  '<i>Ich mag Musik.</i>' + playBtn('i_moegen_bsp') + ' — мне нравится музыка.<br><br>' +
+  '❌ <i>Ich mag schwimmen</i> — так в современном немецком уже не говорят. ' +
+  'Чтобы сказать «мне нравится плавать», берут <b>gern</b>: <i>Ich schwimme gern</i>.');
 
 phrases('rules',[
   ["r1","Ich <b>muss</b> heute lange arbeiten.","ихь мусс хойтэ лангэ арбайтэн","Я должен сегодня долго работать."],
