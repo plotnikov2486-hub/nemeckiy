@@ -329,6 +329,27 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   box-shadow:var(--тень); padding:16px; font-size:18px; font-family:inherit; color:var(--текст); min-height:56px; }
 .поле:focus{ outline:none; border-color:var(--синий); }
 .поле.верно{ border-color:var(--зелёный); } .поле.неверно{ border-color:var(--красный); }
+/* Значок уровня на карточке колоды: A1 → C1.
+   Цвет идёт от «начинай отсюда» к «это уже вершина», поэтому
+   зелёный на A1 и фиолетовый на C1 — видно с одного взгляда. */
+.урвн{ display:inline-block; margin-left:7px; padding:1px 7px; border-radius:99px;
+  font-size:10.5px; font-weight:800; font-style:normal; letter-spacing:.04em;
+  vertical-align:middle; color:#fff; }
+.урвн.уA1{ background:#22A06B; }
+.урвн.уA2{ background:#4A63D6; }
+.урвн.уB1{ background:#E8A33D; }
+.урвн.уB2{ background:#EC6A86; }
+.урвн.уC1{ background:#8E6AD6; }
+
+/* Полоса фильтра по уровню — над списком колод */
+.уровни{ display:flex; gap:7px; margin:0 0 14px; flex-wrap:wrap; }
+.уровни button{ padding:7px 14px; border-radius:99px; border:1.5px solid var(--линия);
+  background:var(--бел); color:var(--текст); font:inherit; font-size:13.5px;
+  font-weight:700; cursor:pointer; }
+.уровни button.выбран{ background:var(--градиент); color:#fff; border-color:transparent;
+  box-shadow:var(--теньКнопки); }
+.уровни button:active{ transform:scale(.96); }
+
 .микрофоны{ display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
 .микрофоны .микро{ flex:1; min-width:150px; padding:11px 12px; border-radius:12px; border:none;
   background:var(--бел); color:var(--текст); font:inherit; font-size:14px; font-weight:600;
@@ -385,7 +406,7 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202609031619';</script>
+<script>window.ЗУБР_ВЕРСИЯ = '202609031808';</script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -783,6 +804,7 @@ function загрузить(готово){
         НАБОРЫ.push({
           ключ: н.файл, имя: н.имя,
           раздел: н.раздел || 'Разное', разделЗнак: н.разделЗнак || '📦',
+          уровень: н.уровень || '',
           под: н.под || 'набор слов',
           знак: н.знак || '📄',
           карточки: н.карточки.map(function(c){ return карточка(c.de, c.ru, c.k, null, '', c.тема); })
@@ -848,6 +870,39 @@ function сводка(набор){
   return { усвоено:усвоено, улучшено:улучшено, ново:ново, пора:пора, порция:порция, всего:набор.карточки.length };
 }
 
+/* Фильтр по уровню. Колод под семьдесят, и врачу нужно понимать,
+   что учить сейчас, а что потом. Выбор запоминается: вернулся в ЗУБР —
+   список остался таким, каким его оставили. */
+function выбранныйУровень(){
+  try{ return localStorage.getItem('nemeckiy_уровень_' + ПРОФИЛЬ) || ''; }
+  catch(e){ return ''; }
+}
+function видимыеНаборы(){
+  var у = выбранныйУровень();
+  return НАБОРЫ.map(function(н, i){ return {н:н, i:i}; })
+    .filter(function(п){
+      if (!у) return true;
+      if (п.н.свой) return true;          // свой словарик показываем всегда
+      return п.н.уровень === у;
+    });
+}
+
+function фильтрУровней(){
+  var есть = [];
+  НАБОРЫ.forEach(function(н){
+    if (н.уровень && есть.indexOf(н.уровень) < 0) есть.push(н.уровень);
+  });
+  if (есть.length < 2) return '';
+  есть.sort();
+  var текущий = выбранныйУровень();
+  return '<div class="уровни" id="уровни">' +
+    '<button data-у=""' + (текущий ? '' : ' class="выбран"') + '>Все</button>' +
+    есть.map(function(у){
+      return '<button data-у="' + у + '"' + (текущий === у ? ' class="выбран"' : '') +
+             '>' + у + '</button>';
+    }).join('') + '</div>';
+}
+
 /* ================= экран: список наборов ================= */
 var ЭКРАНЫ = {};
 
@@ -858,12 +913,16 @@ var ЭКРАНЫ = {};
     '<h1 class="большой">ЗУБР</h1>' +
     '<p class="подзаголовок">Слова, которые надо знать назубок. Учится ' + кто +
       ' · <button class="кн лёгкая" id="сменитьКого" style="padding:0;min-height:0;font-size:15px">сменить</button></p>' +
-    НАБОРЫ.map(function(н, i){
+    фильтрУровней() +
+    видимыеНаборы().map(function(пара, к){
+      var н = пара.н, i = пара.i, видимые = видимыеНаборы();
       // Колод за тридцать — рисуем заголовок раздела перед первой его колодой,
       // иначе список превращается в простыню, в которой ничего не найти.
+      // Считаем по ВИДИМЫМ: иначе при фильтре по уровню в заголовке
+      // стояло бы число колод, которых на экране нет.
       var шапкаРаздела = '';
-      if (i === 0 || НАБОРЫ[i-1].раздел !== н.раздел){
-        var число = НАБОРЫ.filter(function(x){ return x.раздел === н.раздел; }).length;
+      if (к === 0 || видимые[к-1].н.раздел !== н.раздел){
+        var число = видимые.filter(function(x){ return x.н.раздел === н.раздел; }).length;
         шапкаРаздела = '<div class="раздел">' + (н.разделЗнак || '') + ' ' +
           экр(н.раздел || '') + ' <small>' + число + ' ' +
           скл(число,'колода','колоды','колод') + '</small></div>';
@@ -873,7 +932,9 @@ var ЭКРАНЫ = {};
       var класс = !т ? '' : т.п >= 80 ? '' : т.п >= 60 ? ' средне' : ' плохо';
       return шапкаРаздела + '<button class="набор" data-i="' + i + '">' +
         '<span class="верх"><span class="знак">' + н.знак + '</span>' +
-        '<span class="имя"><b>' + экр(н.имя) + '</b><span>' + с.всего + ' ' +
+        '<span class="имя"><b>' + экр(н.имя) +
+          (н.уровень ? '<i class="урвн у' + н.уровень + '">' + н.уровень + '</i>' : '') +
+        '</b><span>' + с.всего + ' ' +
           скл(с.всего,'слово','слова','слов') + ' · ' + экр(н.под) + '</span></span>' +
         '<span class="стрелка">›</span></span>' +
         (с.всего ? '<span class="прогресс">' +
@@ -900,6 +961,17 @@ var ЭКРАНЫ = {};
   document.querySelectorAll('.набор').forEach(function(b){
     b.onclick = function(){ показать('набор', НАБОРЫ[+b.dataset.i]); };
   });
+
+  var полоса = $('уровни');
+  if (полоса) polosaКлик(полоса);
+  function polosaКлик(эл){
+    эл.querySelectorAll('[data-у]').forEach(function(b){
+      b.onclick = function(){
+        try{ localStorage.setItem('nemeckiy_уровень_' + ПРОФИЛЬ, b.dataset.у); }catch(e){}
+        ЭКРАНЫ.главный();
+      };
+    });
+  }
   $('сменитьКого').onclick = function(){
     localStorage.setItem('nemeckiy_profile', ПРОФИЛЬ === 'polina' ? 'grigoriy' : 'polina');
     location.reload();
