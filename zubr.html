@@ -406,7 +406,7 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202609041156';</script>
+<script>window.ЗУБР_ВЕРСИЯ = '202609041341';</script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -901,6 +901,23 @@ function фильтрУровней(){
       return '<button data-у="' + у + '"' + (текущий === у ? ' class="выбран"' : '') +
              '>' + у + '</button>';
     }).join('') + '</div>';
+}
+
+/* Чужие варианты для выбора из четырёх.
+   Раньше брались просто случайные карточки, и если у двух слов совпадал
+   перевод (ein и eine оба значились как «неопределённый»), на экране
+   оказывалось два одинаковых ответа — врач справедливо на это указал.
+   Теперь отсеиваем совпадающие и по правильному ответу, и между собой. */
+function чужиеВарианты(набор, c, сколько){
+  var занято = {}, итог = [];
+  занято[норм(c.ответ)] = 1;
+  перемешать(набор.карточки).forEach(function(x){
+    if (итог.length >= сколько || x === c) return;
+    var к = норм(x.ответ);
+    if (!к || занято[к]) return;
+    занято[к] = 1; итог.push(x);
+  });
+  return итог;
 }
 
 /* ================= экран: список наборов ================= */
@@ -1638,7 +1655,7 @@ function печатьТеста(набор, н){
   }
 
   function сВыбором(c, нем){
-    var чужие = перемешать(набор.карточки.filter(function(x){ return x !== c; })).slice(0,3);
+    var чужие = чужиеВарианты(набор, c, 3);
     var вар = перемешать([c].concat(чужие));
     $('телоВопроса').innerHTML =
       '<div class="вопрос">' + (нем ? c.deHtml : экр(c.ответ)) + '</div>' +
@@ -1949,14 +1966,19 @@ function очередь(набор){
     if (э.шаг === 0) выбор(); else письмо();
 
     function выбор(){
-      var чужие = перемешать(набор.карточки.filter(function(x){ return x !== c; })).slice(0,3);
+      var чужие = чужиеВарианты(набор, c, 3);
       var вар = перемешать([c].concat(чужие));
       $('тело').innerHTML =
         '<div class="вопрос">' + c.deHtml + '</div><div class="вопрос-под">Что это значит?</div>' +
+        // Слово звучит один раз само; кнопка нужна, чтобы переслушать —
+        // без неё врач слышал произношение лишь мельком.
+        '<div style="text-align:center;margin:6px 0 14px">' +
+          '<button class="круг" id="кЗвукУч" title="Послушать ещё раз">🔊</button></div>' +
         '<div class="варианты">' + вар.map(function(o,k){
           return '<button class="вариант" data-k="' + k + '"><span class="ном">' + (k+1) + '</span><span class="текстВарианта">' + экр(o.ответ) + '</span><span class="разъяснение"></span></button>';
         }).join('') + '</div><div id="откл"></div>';
       сказать(c);
+      var зв = $('кЗвукУч'); if (зв) зв.onclick = function(){ сказать(c); };
       var кн = document.querySelectorAll('.вариант');
       кн.forEach(function(b,k){
         b.onclick = function(){
@@ -2000,6 +2022,13 @@ function очередь(набор){
           '<span class="правильно">' + c.deHtml + '</span><span style="color:var(--текст2)">' + экр(c.ответ) + '</span>';
         $('откл').appendChild(о);
         сказать(c);
+        // Кнопка «послушать ещё раз» — тоже только после ответа: в режиме
+        // «напиши сам» звук до ответа был бы прямой подсказкой.
+        var зв = document.createElement('div');
+        зв.style.cssText = 'text-align:center;margin-top:10px';
+        зв.innerHTML = '<button class="круг" id="кЗвукОтв" title="Послушать ещё раз">🔊</button>';
+        $('откл').appendChild(зв);
+        $('кЗвукОтв').onclick = function(){ сказать(c); };
       }
       var b = document.createElement('button');
       b.className = 'кн главная широкая'; b.style.marginTop = '12px'; b.textContent = 'Дальше →';
