@@ -135,20 +135,25 @@ function датаКлюч(ts){
 function скл(n, a, b, c){ n = Math.abs(n) % 100; var d = n % 10;
   if (n > 10 && n < 20) return c; if (d > 1 && d < 5) return b; if (d === 1) return a; return c; }
 
-/* ---- собираем все карточки этого профиля ---- */
-var префикс = 'nemeckiy_f_' + PROFILE + '_';
-var состояния = [], поУрокам = {};
+/* ---- собираем все слова этого профиля ----
+   С 05.09 прогресс хранится по слову, а не по паре «урок+карточка»
+   (см. план, пункт A4) — ключ теперь nemeckiy_fw_<профиль>_<слово>,
+   без указания урока. Для верхних плиток и календаря урок не нужен,
+   а для разбивки «по колодам» ниже слово сверяется со списками слов
+   уроков (words/*.json), запрошенными отдельно. */
+var префикс = 'nemeckiy_fw_' + PROFILE + '_';
+function нормСлово(de){
+  return String(de || '').replace(/<[^>]+>/g, '').replace(/\s+/g, ' ').trim();
+}
+var состоянияПоСлову = {};
 for (var i = 0; i < localStorage.length; i++){
   var k = localStorage.key(i);
   if (!k || k.indexOf(префикс) !== 0) continue;
   var с; try { с = JSON.parse(localStorage.getItem(k)); } catch(e){ continue; }
   if (!с || !с.S) continue;
-  состояния.push(с);
-  var хвост = k.slice(префикс.length);
-  var урок = хвост.split('_interactive')[0];
-  if (хвост.indexOf('_interactive') < 0) урок = 'zubr';
-  (поУрокам[урок] = поУрокам[урок] || []).push(с);
+  состоянияПоСлову[k.slice(префикс.length)] = с;
 }
+var состояния = Object.keys(состоянияПоСлову).map(function(сл){ return состоянияПоСлову[сл]; });
 
 var выучено = состояния.filter(function(с){ return с.S >= 21; }).length;
 var всего = состояния.length;
@@ -216,15 +221,53 @@ function плитка(n, t, тепло){
   }).join('');
 })();
 
-/* ---- по колодам ---- */
-(function(){
-  var имена = { zubr: 'ЗУБР — свой словарь' };
-  var ключи = Object.keys(поУрокам).sort();
-  if (!ключи.length){
-    document.getElementById('decks').innerHTML = '<div class="empty">Пока ничего не изучено. Загляни в любой урок или в ЗУБР.</div>';
+/* ---- по колодам ----
+   Слово само по себе не помнит, из какого урока оно пришло (в этом и
+   смысл общего прогресса), поэтому здесь отдельно подтягиваем списки
+   слов уроков (words/*.json) и сверяем текст. Всё, что не нашлось ни в
+   одном уроке — темы ЗУБРа, BerlinerDeutsch, свой словарик — считаем
+   одной строкой, как считали раньше. */
+(async function(){
+  var деки = document.getElementById('decks');
+  var словКлючи = Object.keys(состоянияПоСлову);
+  if (!словКлючи.length){
+    деки.innerHTML = '<div class="empty">Пока ничего не изучено. Загляни в любой урок или в ЗУБР.</div>';
     return;
   }
-  document.getElementById('decks').innerHTML = ключи.map(function(к){
+
+  var поУрокам = {}, распределено = {};
+  try{
+    var индекс = await fetch('words/индекс.json').then(function(r){ return r.json(); });
+    var семьи = { claude: 'urok', dasha: 'dasha', polya: 'polya' };
+    var задачи = [];
+    Object.keys(семьи).forEach(function(семья){
+      (индекс[семья] || []).forEach(function(n){
+        var урок = семьи[семья] + n;
+        задачи.push(fetch('words/' + урок + '.json').then(function(r){ return r.json(); }).then(function(строки){
+          строки.forEach(function(строка){
+            var слово = нормСлово(строка[1]);
+            var с = состоянияПоСлову[слово];
+            if (!с) return;
+            (поУрокам[урок] = поУрокам[урок] || []).push(с);
+            распределено[слово] = true;
+          });
+        }).catch(function(){}));
+      });
+    });
+    await Promise.all(задачи);
+  }catch(e){}
+
+  var зубрСлова = словКлючи.filter(function(сл){ return !распределено[сл]; })
+                            .map(function(сл){ return состоянияПоСлову[сл]; });
+  if (зубрСлова.length) поУрокам['zubr'] = зубрСлова;
+
+  var имена = { zubr: 'ЗУБР — темы, BerlinerDeutsch, свой словарь' };
+  var ключи = Object.keys(поУрокам).sort();
+  if (!ключи.length){
+    деки.innerHTML = '<div class="empty">Пока ничего не изучено. Загляни в любой урок или в ЗУБР.</div>';
+    return;
+  }
+  деки.innerHTML = ключи.map(function(к){
     var список = поУрокам[к];
     var знаю = список.filter(function(с){ return с.S >= 21; }).length;
     var имя = имена[к] || к.replace(/^urok(\d+)$/, 'Урок $1')
