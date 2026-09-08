@@ -122,174 +122,18 @@
   .foto-link { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 14px; text-decoration:none; color:var(--ink); box-shadow:var(--shadow); margin-top:8px; font-size:14px; }
   .foto-link .ico { font-size:19px; }
   .foto-link:hover { border-color:var(--accent); }
+  /* задание 3 — шесть блоков по 8 предложений, с настоящими полями */
+  .mv-grid { display:grid; grid-template-columns:1fr; gap:14px; margin-top:14px; }
+  @media(min-width:680px){ .mv-grid { grid-template-columns:1fr 1fr; } }
+  .mv-block { background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:14px 16px; }
+  .mv-block h4 { font-family:Georgia,serif; font-size:15px; margin:0 0 8px; color:var(--accent); }
+  .mv-row { font-family:Georgia,serif; font-size:14px; line-height:1.9; }
+  .mv-row .num { color:var(--ink-faint); font-family:-apple-system,sans-serif; font-size:12px; margin-right:2px; }
+  .fld { width:76px; background:var(--surface); border:1px solid var(--line); border-radius:6px; padding:3px 7px; font-family:Georgia,serif; font-size:14px; color:var(--ink); }
+  .fld:focus { outline:none; border-color:var(--accent); }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
-<!--ТЕМА-ЗУБРА-START-->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-<style>
-/* Вид ЗУБРа для страниц уроков. Переопределяем только переменные —
-   разметка и классы остаются прежними, поэтому ничего не разъезжается. */
-:root{
-  --bg:#E9EBF6; --surface:#FFFFFF; --surface-2:#F3F4FA;
-  --ink:#1C2242; --ink-muted:#6C7291; --ink-faint:#9AA0BE;
-  --accent:#4A63D6; --accent-ink:#FFFFFF;
-  --play:#EC6A86; --play-ink:#FFFFFF;
-  --line:#DCE0F0;
-  --warn:#E0455E; --warn-bg:#FBE6EA;
-  --hb:#4A63D6; --hb-bg:#EAEDFA;
-  --sn:#8E6AD6; --sn-bg:#F0EBFA;
-  --tr:#8E6AD6;
-  --der:#4A63D6; --die:#EC6A86; --das:#E8A33D;
-  --bubble-a:#F3F4FA; --bubble-m:#FBF1DE;
-  --shadow:0 12px 30px rgba(40,50,110,.12);
-  --radius:18px;
-}
-:root[data-theme="dark"]{
-  --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
-  --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
-  --accent:#8798EC; --accent-ink:#0D1020;
-  --play:#EC6A86; --play-ink:#FFFFFF;
-  --line:#2A2E52;
-  --warn:#F08098; --warn-bg:#3A1620;
-  --hb:#8798EC; --hb-bg:#1F2445;
-  --sn:#B08CE8; --sn-bg:#2A2145;
-  --tr:#B08CE8;
-  --bubble-a:#232748; --bubble-m:#2E2718;
-  --shadow:0 12px 30px rgba(0,0,0,.35);
-}
-@media (prefers-color-scheme: dark){
-  :root:not([data-theme="light"]){
-    --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
-    --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
-    --accent:#8798EC; --accent-ink:#0D1020;
-    --play:#EC6A86; --play-ink:#FFFFFF;
-    --line:#2A2E52;
-    --warn:#F08098; --warn-bg:#3A1620;
-    --hb:#8798EC; --hb-bg:#1F2445;
-    --sn:#B08CE8; --sn-bg:#2A2145;
-    --tr:#B08CE8;
-    --bubble-a:#232748; --bubble-m:#2E2718;
-    --shadow:0 12px 30px rgba(0,0,0,.35);
-  }
-}
 
-/* Фон в уроках задан на .lp, а он не шире 800px — на большом экране
-   по бокам оставался белый фон браузера, и в тёмной теме это резало глаз.
-   Красим сам body тем же цветом. */
-body{ background:var(--bg); color:var(--ink); }
-
-/* Шрифт интерфейса — как в ЗУБРе. Немецкие слова намеренно оставляем
-   Georgia: так иностранное слово видно с первого взгляда и не сливается
-   с русским пояснением. */
-body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
-  font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
-}
-
-/* Профиль: у Гриши синий, у Полины розовый. Атрибут data-кто ставит
-   tema.js — здесь только меняем акцент под него. Градиенты трогаем
-   тоже, иначе розовая страница осталась бы с синими кнопками. */
-:root[data-кто="polina"]{
-  --accent:#EC6A86; --hb:#EC6A86; --hb-bg:#FBE9EE;
-}
-:root[data-кто="polina"] .block h2 .num,
-:root[data-кто="polina"] .play,
-:root[data-кто="polina"] .bb-top{
-  background:linear-gradient(135deg,#EC6A86,#F0A03C) !important;
-  box-shadow:0 6px 16px rgba(236,106,134,.32);
-}
-:root[data-кто="polina"] .lp h1{
-  background:linear-gradient(135deg,#EC6A86,#F0A03C);
-  -webkit-background-clip:text; background-clip:text;
-}
-:root[data-кто="polina"][data-theme="dark"]{ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
-@media (prefers-color-scheme: dark){
-  :root[data-кто="polina"]:not([data-theme="light"]){ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
-}
-
-/* ── Главное отличие от прошлой попытки ──
-   Раньше я поменял только цвета, и врач справедливо сказал, что разницы
-   не видно: блоки уроков прозрачные и без отступов, так что ни тень,
-   ни скругление на них не читались. Теперь каждый раздел урока —
-   настоящая белая плитка, как карточки на сайте-визитке. */
-.block{
-  background:var(--surface);
-  border-radius:22px;
-  padding:20px 18px;
-  margin-bottom:16px;
-  box-shadow:0 12px 30px rgba(40,50,110,.12);
-  border:none;
-}
-:root[data-theme="dark"] .block{ box-shadow:0 12px 30px rgba(0,0,0,.35); }
-@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .block{
-  box-shadow:0 12px 30px rgba(0,0,0,.35); } }
-
-/* Номер раздела — кружок с фирменным градиентом, как иконки на визитке */
-.block h2 .num{
-  display:inline-flex; align-items:center; justify-content:center;
-  width:34px; height:34px; border-radius:12px; margin-right:9px;
-  background:linear-gradient(135deg,#4A63D6,#EC6A86);
-  color:#fff; font-size:16px; font-weight:800;
-  box-shadow:0 6px 14px rgba(74,99,214,.3);
-}
-.block h2{ display:flex; align-items:center; gap:2px; flex-wrap:wrap; }
-
-/* Оглавление и врезки — тоже плитки, с мягкой тенью */
-.toc, .grammar-box, .warn-box, .link-box{
-  border-radius:18px; box-shadow:0 6px 18px rgba(40,50,110,.08);
-}
-:root[data-theme="dark"] .toc,
-:root[data-theme="dark"] .grammar-box,
-:root[data-theme="dark"] .warn-box{ box-shadow:0 6px 18px rgba(0,0,0,.3); }
-
-/* Карточки слов — приподнимаются, как плитки в приложении */
-.wcard, .pcard{
-  border-radius:16px;
-  box-shadow:0 6px 16px rgba(40,50,110,.10);
-  transition:transform .14s ease, box-shadow .14s ease;
-}
-.wcard:active, .pcard:active{ transform:scale(.99); }
-
-/* Кнопка звука — круглая, с градиентом и объёмной тенью */
-.play{
-  background:linear-gradient(135deg,#4A63D6,#EC6A86) !important;
-  color:#fff !important; border:none !important;
-  box-shadow:0 6px 16px rgba(74,99,214,.32);
-}
-
-/* Шапка — «стекло» как в айфоне: полупрозрачная, с размытием */
-.backbar{
-  position:sticky; top:0; z-index:50;
-  background:color-mix(in srgb, var(--surface) 72%, transparent);
-  -webkit-backdrop-filter:saturate(180%) blur(18px);
-  backdrop-filter:saturate(180%) blur(18px);
-  border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent);
-  box-shadow:0 1px 0 rgba(255,255,255,.35) inset;
-}
-.bb-link{ color:var(--accent); font-weight:700; }
-
-/* Нижняя ссылка возврата — кнопка-таблетка, как призыв к действию на визитке */
-.bb-top{
-  display:block; text-align:center; margin:22px auto 30px; max-width:520px;
-  padding:15px 22px; border-radius:999px; text-decoration:none;
-  background:linear-gradient(135deg,#4A63D6,#EC6A86); color:#fff !important;
-  font-weight:700; box-shadow:0 12px 26px rgba(74,99,214,.3);
-}
-
-/* Заголовок страницы — фирменный градиент */
-.lp h1{
-  background:linear-gradient(135deg,#4A63D6,#EC6A86);
-  -webkit-background-clip:text; background-clip:text; color:transparent;
-  letter-spacing:-.02em;
-}
-.eyebrow{ letter-spacing:.1em; }
-
-</style>
-<!--ТЕМА-ЗУБРА-END-->
 </head>
 <body>
 
@@ -302,7 +146,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <span class="chip-meta">⏱️ <b>75 минут</b>, Zoom</span>
     <span class="chip-meta">➡️ Следующий: <b>вс, 20:00</b></span>
   </div>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <div class="hint">🔊 &nbsp;= нажми и слушай — звук встроен в страницу, интернет не нужен</div>
 
   <div class="toc">
     <b>Что прошли на уроке</b>
@@ -489,13 +333,13 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <span class="num">5.</span> (ich / wollen / nicht / streiten) <span class="blank"></span>
     </div>
 
-    <p class="desc" style="margin-top:20px"><b>Задание 3.</b> Большой лист «Modalverben» — шесть блоков по 8 предложений (sollen, wollen, müssen, dürfen, können, mögen). Вставить правильную форму, незнакомые слова выписать в словарик.</p>
-    <div class="grammar-box">
-      📱 <b>Сам лист открывай в Telegram</b> — Даша прислала его тебе картинкой (это готовое издательское упражнение, поэтому сюда я его не копирую). Файл лежит и на компьютере: <i>AI → НЕМЕЦКИЙ → Уроки Немецкого с Дашей → modal verben.jpg</i><br><br>
-      Порядок блоков на листе: <b>sollen</b> (8) · <b>wollen</b> (8) · <b>müssen</b> (8) · <b>dürfen</b> (8) · <b>können</b> (8) · <b>mögen</b> (8). Формы всех шести глаголов — в таблице раздела 5 выше, подглядывай туда.
-    </div>
+    <p class="desc" style="margin-top:20px"><b>Задание 3.</b> Большой лист «Modalverben» — шесть блоков по 8 предложений (sollen, wollen, müssen, dürfen, können, mögen). Вставь правильную форму глагола, незнакомые слова выпиши в словарик. Формы всех шести глаголов — в таблице раздела 5 выше, подглядывай туда.</p>
+    <div class="mv-grid" id="mvGrid"></div>
+    <a class="foto-link" href="dasha2_hw_modalverben.jpg" target="_blank" rel="noopener">
+      <span class="ico">📄</span><span>Оригинал листа (на случай если хочешь свериться)</span>
+    </a>
     <div class="dasha-box" style="margin-top:14px">
-      <b>Даша просила отдельно:</b> все незнакомые слова из упражнений <b>выписывать в свой словарик</b> и потом прислать ей фото и словарика, и самой домашки. Писать от руки в тетради — она это приветствует, так лучше запоминается.
+      <b>Даша просила отдельно:</b> все незнакомые слова из упражнений <b>выписывать в свой словарик</b> и потом прислать ей фото словарика и домашки. Писать от руки в тетради — она это приветствует, так лучше запоминается.
     </div>
   </section>
 <!--QUIZ-START-->
@@ -1044,44 +888,6 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <footer class="lp-foot">Конспект урока с репетитором Дашей · собрал Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Дословная расшифровка урока — во Втором мозге.</footer>
 </div>
 
@@ -1150,24 +956,7 @@ words('infin',[
   ["i_duerfen","dürfen","дюрфэн","можно, разрешено"],
   ["i_wollen","wollen","воллэн","хочу (твёрдо)"],
   ["i_moechten","möchten","мёхьтэн","хотел бы (вежливо)"],
-,
-  ["i_moegen","<b>mögen</b>","мёгэн","любить, нравиться — <b>псевдомодальный</b>"]
 ]);
-
-/* mögen — седьмой в списке, но особый: врач просил вписать его в таблицу
-   и подписать, что он псевдомодальный. Разбирали это на занятии 4. */
-document.getElementById('infin').insertAdjacentHTML('afterend',
-  '<div class="warn-box" style="margin-top:14px">' +
-  '<span class="big">⭐ mögen — псевдомодальный</span>' +
-  'Седьмой глагол, который стоит рядом с модальными, но модальным уже не считается.<br><br>' +
-  '<b>Формы у него модальные</b> — такие же особенные, как у остальных шести:<br>' +
-  'ich <b>mag</b> · du <b>magst</b> · er <b>mag</b> · wir <b>mögen</b> · ihr <b>mögt</b> · sie <b>mögen</b>' +
-  playBtn('i_moegen_formen') + '<br><br>' +
-  '<b>А ведёт себя иначе.</b> После настоящего модального ставится второй глагол ' +
-  '(<i>Ich muss arbeiten</i>). После mögen — <b>существительное</b>:<br>' +
-  '<i>Ich mag Musik.</i>' + playBtn('i_moegen_bsp') + ' — мне нравится музыка.<br><br>' +
-  '❌ <i>Ich mag schwimmen</i> — так в современном немецком уже не говорят. ' +
-  'Чтобы сказать «мне нравится плавать», берут <b>gern</b>: <i>Ich schwimme gern</i>.');
 
 phrases('rules',[
   ["r1","Ich <b>muss</b> heute lange arbeiten.","ихь мусс хойтэ лангэ арбайтэн","Я должен сегодня долго работать."],
@@ -1268,6 +1057,91 @@ document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru]
   <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
     <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
   </div>${playBtn(id)}</div></div>`).join('');
+
+// Задание 3 — лист «Modalverben», раньше было «открой фотку», теперь
+// весь текст здесь и поля реально сохраняются (просьба Григория 07.09).
+// __ отмечает место пропуска, туда встанет <input>.
+const MODALVERBEN = {
+  'sollen': [
+    'Was __ ich nach dem Mittagessen tun, Mutter?',
+    'Du __ Einkäufe machen.',
+    'Ihr __ immer pünktlich sein!',
+    'Er __ keinen Kaffee trinken.',
+    'Die Schüler __ Mathe lernen.',
+    'Frau Schulz __ zur Post gehen.',
+    'Die Kinder __ viel Milch trinken.',
+    'Wir __ am Nachmittag das Zimmer aufräumen.',
+  ],
+  'wollen': [
+    'Ich __ heute in den ZOO gehen.',
+    '__ ihr mitkommen?',
+    '__ Sie mir helfen, Herr Schreiber?',
+    'Was __ du hier?',
+    'Hans, was __ du machen?',
+    'Ich __ Fußball spielen.',
+    'Meine Eltern __ ins Theater gehen.',
+    'Wir __ nach Hause gehen.',
+  ],
+  'müssen': [
+    '__ du in der Nacht arbeiten?',
+    'Ich __ morgen in die Schule gehen.',
+    'Wir __ heute Nachmittag dem Vater helfen.',
+    'Das Kind __ zum Arzt gehen.',
+    '__ ihr dem Opa im Garten helfen?',
+    'Sie (Pl.) __ den Brief schicken.',
+    'Die Schüler __ die Hausaufgaben machen.',
+    'Meine Eltern __ viel arbeiten.',
+  ],
+  'dürfen': [
+    'Das Kind __ kein Eis essen.',
+    '__ ich ins Kino gehen?',
+    'Du __ heute nicht fernsehen.',
+    'Wir __ kein Auto fahren.',
+    'Tobias __ seine Schwester besuchen.',
+    'Die Kinder __ keinen Kaffee trinken.',
+    'Hier __ man nicht parken.',
+    '__ ihr mich heute besuchen?',
+  ],
+  'können': [
+    'Inge __ gut Gitarre spielen.',
+    '__ ich das Fenster öffnen?',
+    '__ du schon Deutsch sprechen?',
+    'Wir __ dich morgen besuchen.',
+    '__ ihr schon lesen?',
+    'Eryk __ sehr gut schwimmen.',
+    'Er __ gut Handball spielen.',
+    'Sie (Pl.) __ schnell sprechen.',
+  ],
+  'mögen': [
+    'Das Mädchen __ keine Schokolade essen.',
+    '__ ihr Obstkuchen?',
+    'Die Schüler __ die Schule nicht.',
+    'Wer __ Tomatensuppe?',
+    '__ du einen Kaffee trinken?',
+    'Sie (Pl.) __ keine Krimifilme.',
+    'Er __ Käsekuchen essen.',
+    '__ du Cola?',
+  ],
+};
+document.getElementById('mvGrid').innerHTML = Object.entries(MODALVERBEN).map(([глагол, предложения], gi) => `
+  <div class="mv-block">
+    <h4>${gi+1}. ${глагол}</h4>
+    ${предложения.map((пр, i) => {
+      const части = пр.split('__');
+      const id = 'mv_' + глагол + (i+1);
+      return `<div class="mv-row"><span class="num">${i+1}.</span> ${части[0]}<input class="fld" data-save="${id}">${части[1]}</div>`;
+    }).join('')}
+  </div>`).join('');
+
+(function(){
+  const KEY = 'dasha2_hw_';
+  document.querySelectorAll('#mvGrid [data-save]').forEach(el=>{
+    const k = KEY + el.dataset.save;
+    const saved = localStorage.getItem(k);
+    if(saved !== null) el.value = saved;
+    el.addEventListener('input', ()=> localStorage.setItem(k, el.value));
+  });
+})();
 
 // ДОМАШКА
 const HW = [
