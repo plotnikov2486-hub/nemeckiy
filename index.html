@@ -163,6 +163,30 @@
   .sec-head.sec-dasha{border-bottom-color:var(--dasha);}
   .sec-ico{font-size:1.25rem;}
   .sec-note{font-size:0.82rem; font-weight:400; color:var(--ink-muted);}
+  /* Поиск по сайту. Просил Григорий 09.09: «вбил — и сразу нашёл, ага,
+     здесь вот урок такой-то, вот мы это проходили». Ищем и по урокам всех
+     трёх линий, и по темам грамматики: вопрос обычно звучит не «какой урок
+     номер шесть», а «где мы проходили Akkusativ». */
+  .site-search{ margin:0 0 18px; }
+  /* цвета только переменными — сайт умеет тёмную тему, а жёсткий белый
+     фон делал находки нечитаемыми */
+  .site-search input{ width:100%; box-sizing:border-box; padding:13px 15px;
+    border:2px solid var(--line); border-radius:14px; background:var(--surface);
+    font-size:16px; font-family:inherit; color:var(--ink); outline:none;
+    transition:border-color .16s ease; -webkit-appearance:none; }
+  .site-search input::placeholder{ color:var(--ink-faint); }
+  .site-search input:focus{ border-color:var(--accent, #4A63D6); }
+  #siteFound{ margin-top:10px; }
+  .sf-group{ font-size:12px; font-weight:800; letter-spacing:.06em;
+    text-transform:uppercase; color:var(--ink-muted); margin:12px 0 6px; }
+  .sf-item{ display:block; background:var(--surface); border:1px solid var(--line);
+    border-radius:12px; padding:11px 14px; margin-bottom:7px;
+    text-decoration:none; color:var(--ink); }
+  .sf-item:hover{ border-color:var(--accent, #4A63D6); }
+  .sf-item b{ display:block; font-size:15px; color:var(--ink); }
+  .sf-item span{ display:block; font-size:13px; color:var(--ink-muted); margin-top:2px; }
+  .sf-empty{ text-align:center; color:var(--ink-muted); font-size:14px; padding:14px; }
+
   .next-lesson{
     display:flex; align-items:center; gap:10px; flex-wrap:wrap;
     background:var(--dasha-bg); border:1px solid var(--dasha); border-radius:12px;
@@ -634,6 +658,12 @@ if (!Слушалка){
     <span class="progress-note" id="progressNote"></span>
   </div>
 
+  <div class="site-search">
+    <input id="siteSearch" type="search" autocomplete="off"
+           placeholder="Найти урок или тему — например, Akkusativ или числа">
+    <div id="siteFound"></div>
+  </div>
+
   <div class="progress-panel">
     <div class="pp-head">
       <span class="pp-title">🎯 Путь к B2 — допуск врача (Approbation)</span>
@@ -744,6 +774,106 @@ const POLYA = [
    pdf:'dasha/polya5_pdf.pdf', audio:'dasha/polya5_interactive.html', mins:30, hard:'Плотно', cards:90},
 ];
 const NEXT_POLYA = {date:'пятница', time:'8:00'};
+
+/* ===== ПОИСК ПО САЙТУ =====
+   Три линии уроков плюс темы грамматики лежат в разных массивах, а врачу
+   надо одно: вбил «Akkusativ» — увидел, где это проходили. Поэтому ищем
+   сразу везде и показываем ссылками прямо на нужный урок.
+   Слова тут не ищем: для слов есть ЗУБР, туда и отправляем ссылкой. */
+// экранирование живёт в другом блоке скрипта и сюда не видно — своё
+function поискЭкр(s){
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function поискНорм(s){
+  return (s || '').toLowerCase()
+    .replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss')
+    .replace(/ё/g,'е').trim();
+}
+
+function поискПоСайту(что){
+  var игла = поискНорм(что);
+  var уроки = [], темы = [];
+  if (игла.length < 2) return {уроки:уроки, темы:темы};
+
+  [[LESSONS,'Уроки с Claude'], [DASHA,'Занятия с Дашей'], [POLYA,'Занятия Полины']]
+    .forEach(function(пара){
+      (пара[0] || []).forEach(function(у){
+        var стог = поискНорм((у.title||'') + ' ' + (у.topic||'') + ' ' + (у.num||''));
+        if (стог.indexOf(игла) >= 0)
+          уроки.push({у:у, линия:пара[1]});
+      });
+    });
+
+  (LEVELS || []).forEach(function(ур){
+    (ур.topics || []).forEach(function(т){
+      if (поискНорм(т.t).indexOf(игла) >= 0) темы.push({т:т, ур:ур});
+    });
+  });
+  return {уроки:уроки, темы:темы};
+}
+
+/* Тема знает только коды уроков (l4, d1, p6) — разворачиваем их в ссылки. */
+function урокПоКоду(код){
+  var семьи = {l:LESSONS, d:DASHA, p:POLYA};
+  var список = семьи[код[0]];
+  if (!список) return null;
+  var хвост = код.slice(1);
+  for (var i = 0; i < список.length; i++){
+    var id = String(список[i].id);
+    if (id === хвост || id === код) return список[i];
+  }
+  return null;
+}
+
+function показатьПоискСайта(что){
+  var место = document.getElementById('siteFound');
+  if (!место) return;
+  if (поискНорм(что).length < 2){ место.innerHTML = ''; return; }
+
+  var р = поискПоСайту(что);
+  var куски = [];
+
+  if (р.уроки.length){
+    куски.push('<div class="sf-group">Уроки · ' + р.уроки.length + '</div>');
+    р.уроки.forEach(function(п){
+      куски.push('<a class="sf-item" href="' + (п.у.audio || п.у.pdf || '#') + '">' +
+        '<b>' + поискЭкр(п.у.title || п.у.num || '') + '</b>' +
+        '<span>' + п.линия + ' · ' + поискЭкр((п.у.topic || '').slice(0, 130)) + '</span></a>');
+    });
+  }
+
+  if (р.темы.length){
+    куски.push('<div class="sf-group">Темы грамматики · ' + р.темы.length + '</div>');
+    р.темы.forEach(function(п){
+      var ссылки = (п.т.l || []).map(урокПоКоду).filter(Boolean);
+      var первый = ссылки[0];
+      куски.push('<a class="sf-item" href="' + (первый ? (первый.audio || первый.pdf) : '#') + '">' +
+        '<b>' + поискЭкр(п.т.t) + '</b><span>' + п.ур.code + ' · ' +
+        (ссылки.length
+          ? 'проходили: ' + ссылки.map(function(у){ return поискЭкр(у.num || у.title || ''); }).join(', ')
+          : 'урока пока нет') + '</span></a>');
+    });
+  }
+
+  // Слова живут в ЗУБРе — отправляем туда, а не ищем здесь второй раз
+  куски.push('<div class="sf-group">Слова</div>' +
+    '<a class="sf-item" href="zubr.html"><b>Искать «' + поискЭкр(что) + '» среди карточек</b>' +
+    '<span>Поиск по всем колодам ЗУБРа</span></a>');
+
+  if (!р.уроки.length && !р.темы.length)
+    куски.unshift('<div class="sf-empty">Среди уроков и тем ничего не нашлось</div>');
+
+  место.innerHTML = куски.join('');
+}
+
+(function(){
+  var поле = document.getElementById('siteSearch');
+  if (поле) поле.addEventListener('input', function(){
+    показатьПоискСайта(поле.value.trim());
+  });
+})();
+
 
 // ===== ПРОГРАММА CEFR: темы по уровням, привязанные к урокам =====
 // lessons: какие уроки закрывают тему. l0..l11 = уроки с Claude, d1 = занятие с Дашей.
