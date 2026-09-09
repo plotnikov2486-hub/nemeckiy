@@ -432,6 +432,24 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
 .транМелко{ color:var(--синий); font-size:12.5px; font-weight:600; font-style:normal;
   margin-left:6px; white-space:nowrap; }
 
+/* Строка поиска на главном экране ЗУБРа. Появилась 09.09, когда колод
+   стало столько, что список глазами уже не обойти. */
+.искалка{ margin:6px 0 12px; }
+.полеПоиска{ width:100%; box-sizing:border-box; padding:13px 15px;
+  border:2px solid var(--линия); border-radius:14px; background:var(--бел);
+  font-size:16px; font-family:inherit; color:var(--текст); outline:none;
+  transition:border-color .16s ease; -webkit-appearance:none; }
+.полеПоиска::placeholder{ color:var(--текст2); }
+.полеПоиска:focus{ border-color:var(--синий); }
+#находки{ margin-bottom:6px; }
+.пустоПоиск{ text-align:center; color:var(--текст2); font-size:14.5px; padding:16px 8px; }
+/* в находках карточка колоды идёт компактнее — их там может быть много */
+.набор.мелкий{ padding-top:12px; padding-bottom:12px; }
+/* подпись, из какой колоды слово: без неё непонятно, куда идти учить */
+.гдеСлово{ color:var(--текст2); font-size:12px; font-style:normal;
+  background:var(--фон2); border-radius:6px; padding:1px 6px; margin-left:6px;
+  white-space:nowrap; }
+
 </style>
 </head>
 <body>
@@ -449,7 +467,7 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202609091312';</script>
+<script>window.ЗУБР_ВЕРСИЯ = '202609091320';</script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -1099,6 +1117,115 @@ function чужиеВарианты(набор, c, сколько){
 /* ================= экран: список наборов ================= */
 var ЭКРАНЫ = {};
 
+/* Поиск по всему ЗУБРу. Просил Григорий 09.09: «нужен какой-то поиск,
+   типа нажал — и искалось по всем карточкам, например погода, и хренакс —
+   вот карточки». Причина у него правильная: колод стало столько, что
+   глазами уже не найти.
+
+   Ищем в двух местах сразу: по названиям колод и по словам внутри них.
+   Слова показываем с подписью, в какой колоде живут, — иначе непонятно,
+   куда идти учить. */
+function нормПоиск(s){
+  return (s || '').toLowerCase()
+    .replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss')
+    .replace(/ё/g,'е').replace(/́/g,'').trim();
+}
+
+function найти(что){
+  var игла = нормПоиск(что);
+  if (игла.length < 2) return { колоды: [], слова: [] };
+
+  var колоды = [], слова = [], предел = 60;
+  НАБОРЫ.forEach(function(н, i){
+    if (нормПоиск(н.имя).indexOf(игла) >= 0 ||
+        нормПоиск(н.под).indexOf(игла) >= 0 ||
+        нормПоиск(н.раздел).indexOf(игла) >= 0)
+      колоды.push({ н: н, i: i });
+
+    if (слова.length >= предел) return;
+    (н.карточки || []).forEach(function(c){
+      if (слова.length >= предел) return;
+      if (нормПоиск(c.de).indexOf(игла) >= 0 ||
+          нормПоиск(c.ru).indexOf(игла) >= 0 ||
+          нормПоиск(c.тема || '').indexOf(игла) >= 0)
+        слова.push({ c: c, н: н, i: i });
+    });
+  });
+
+  /* Одно и то же слово часто лежит в нескольких колодах — «der Himmel»
+     есть и в «1000 базовых», и в «Ещё 400 нужных». В находках это выглядит
+     как повтор, поэтому оставляем слово один раз, а в подписи считаем,
+     сколько ещё колод его содержат. */
+  var поСлову = {};
+  слова = слова.filter(function(п){
+    var к = нормПоиск(п.c.de);
+    if (поСлову[к]){ поСлову[к].ещё = (поСлову[к].ещё || 0) + 1; return false; }
+    поСлову[к] = п;
+    return true;
+  });
+
+  // Точное совпадение важнее частичного: искал «Haus» — «das Haus»
+  // должен стоять выше, чем «das Krankenhaus».
+  слова.sort(function(а, б){
+    var та = нормПоиск(а.c.de) === игла ? 0 : 1;
+    var тб = нормПоиск(б.c.de) === игла ? 0 : 1;
+    if (та !== тб) return та - тб;
+    return (а.c.f || ЧАСТО_НЕТ) - (б.c.f || ЧАСТО_НЕТ);
+  });
+  return { колоды: колоды, слова: слова };
+}
+
+function показатьНаходки(что){
+  var р = найти(что);
+  var место = $('находки');
+  if (!место){
+    место = document.createElement('div');
+    место.id = 'находки';
+    var искалка = document.querySelector('.искалка');
+    искалка.parentNode.insertBefore(место, искалка.nextSibling);
+  }
+
+  if (!р.колоды.length && !р.слова.length){
+    место.innerHTML = '<div class="пустоПоиск">Ничего не нашлось на «' +
+      экр(что) + '»</div>';
+    return;
+  }
+
+  место.innerHTML =
+    (р.колоды.length
+      ? '<div class="раздел">Колоды · ' + р.колоды.length + '</div>' +
+        р.колоды.map(function(п){
+          return '<button class="набор мелкий" data-нi="' + п.i + '">' +
+            '<span class="верх"><span class="знак">' + п.н.знак + '</span>' +
+            '<span class="имя"><b>' + экр(п.н.имя) + '</b><span>' +
+              (п.н.карточки || []).length + ' ' +
+              скл((п.н.карточки||[]).length,'слово','слова','слов') +
+              ' · ' + экр(п.н.раздел || '') + '</span></span>' +
+            '<span class="стрелка">›</span></span></button>';
+        }).join('')
+      : '') +
+    (р.слова.length
+      ? '<div class="раздел">Слова · ' + р.слова.length +
+          (р.слова.length >= 60 ? ' и ещё' : '') + '</div>' +
+        '<div class="термины">' + р.слова.map(function(п, k){
+          return '<div class="термин"><span class="тексты">' +
+            '<span class="де">' + п.c.deHtml +
+              (п.c.тр ? ' <i class="транМелко">[' + экр(п.c.тр) + ']</i>' : '') +
+            '</span><span class="ру">' + экр(п.c.ответ) +
+              ' <i class="гдеСлово">' + экр(п.н.имя) +
+                (п.ещё ? ' +' + п.ещё : '') + '</i></span></span>' +
+            '<button data-сл="' + k + '">🔊</button></div>';
+        }).join('') + '</div>'
+      : '');
+
+  место.querySelectorAll('[data-нi]').forEach(function(b){
+    b.onclick = function(){ показать('набор', НАБОРЫ[+b.dataset.нi]); };
+  });
+  место.querySelectorAll('[data-сл]').forEach(function(b){
+    b.onclick = function(){ сказать(р.слова[+b.dataset.сл].c); };
+  });
+}
+
 ЭКРАНЫ.главный = function(){
   шапка('');
   var кто = ПРОФИЛЬ === 'polina' ? 'Полина' : 'Григорий';
@@ -1106,6 +1233,10 @@ var ЭКРАНЫ = {};
     '<h1 class="большой">ЗУБР</h1>' +
     '<p class="подзаголовок">Слова, которые надо знать назубок. Учится ' + кто +
       ' · <button class="кн лёгкая" id="сменитьКого" style="padding:0;min-height:0;font-size:15px">сменить</button></p>' +
+    '<div class="искалка">' +
+      '<input id="поиск" class="полеПоиска" type="search" autocomplete="off" ' +
+      'placeholder="Найти слово или колоду — например, погода">' +
+    '</div>' +
     фильтрУровней() +
     видимыеНаборы().map(function(пара, к){
       var н = пара.н, i = пара.i, видимые = видимыеНаборы();
@@ -1154,6 +1285,15 @@ var ЭКРАНЫ = {};
   document.querySelectorAll('.набор').forEach(function(b){
     b.onclick = function(){ показать('набор', НАБОРЫ[+b.dataset.i]); };
   });
+
+  var поле = $('поиск');
+  if (поле){
+    поле.oninput = function(){
+      var что = поле.value.trim();
+      if (что.length >= 2) показатьНаходки(что);
+      else { var м = $('находки'); if (м) м.innerHTML = ''; }
+    };
+  }
 
   var полоса = $('уровни');
   if (полоса) polosaКлик(полоса);
