@@ -654,6 +654,9 @@ if (!Слушалка){
 
 
 
+
+
+
   <header>
     <h1>🇩🇪 Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
@@ -1367,6 +1370,11 @@ render();
         .catch(function(){ /* без офлайна тоже жить можно */ });
     });
   }
+
+  // Поворот экрана на планшете — подробно в quiz_pwa.html (10.09)
+  var приложение = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (приложение && screen.orientation && screen.orientation.lock)
+    screen.orientation.lock('any').catch(function(){});
 })();
 </script>
 

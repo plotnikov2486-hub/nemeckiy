@@ -22,7 +22,26 @@
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
 
-
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
 <style>
   :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
     --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
@@ -158,7 +177,169 @@
   .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
   .pair button.play { width:30px; height:30px; font-size:13px; }
 </style>
+<!--ТЕМА-ЗУБРА-START-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Вид ЗУБРа для страниц уроков. Переопределяем только переменные —
+   разметка и классы остаются прежними, поэтому ничего не разъезжается. */
+:root{
+  --bg:#E9EBF6; --surface:#FFFFFF; --surface-2:#F3F4FA;
+  --ink:#1C2242; --ink-muted:#6C7291; --ink-faint:#9AA0BE;
+  --accent:#4A63D6; --accent-ink:#FFFFFF;
+  --play:#EC6A86; --play-ink:#FFFFFF;
+  --line:#DCE0F0;
+  --warn:#E0455E; --warn-bg:#FBE6EA;
+  --hb:#4A63D6; --hb-bg:#EAEDFA;
+  --sn:#8E6AD6; --sn-bg:#F0EBFA;
+  --tr:#8E6AD6;
+  --der:#4A63D6; --die:#EC6A86; --das:#E8A33D;
+  --bubble-a:#F3F4FA; --bubble-m:#FBF1DE;
+  --shadow:0 12px 30px rgba(40,50,110,.12);
+  --radius:18px;
+}
+:root[data-theme="dark"]{
+  --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+  --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
+  --accent:#8798EC; --accent-ink:#0D1020;
+  --play:#EC6A86; --play-ink:#FFFFFF;
+  --line:#2A2E52;
+  --warn:#F08098; --warn-bg:#3A1620;
+  --hb:#8798EC; --hb-bg:#1F2445;
+  --sn:#B08CE8; --sn-bg:#2A2145;
+  --tr:#B08CE8;
+  --bubble-a:#232748; --bubble-m:#2E2718;
+  --shadow:0 12px 30px rgba(0,0,0,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+    --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
+    --accent:#8798EC; --accent-ink:#0D1020;
+    --play:#EC6A86; --play-ink:#FFFFFF;
+    --line:#2A2E52;
+    --warn:#F08098; --warn-bg:#3A1620;
+    --hb:#8798EC; --hb-bg:#1F2445;
+    --sn:#B08CE8; --sn-bg:#2A2145;
+    --tr:#B08CE8;
+    --bubble-a:#232748; --bubble-m:#2E2718;
+    --shadow:0 12px 30px rgba(0,0,0,.35);
+  }
+}
 
+/* Фон в уроках задан на .lp, а он не шире 800px — на большом экране
+   по бокам оставался белый фон браузера, и в тёмной теме это резало глаз.
+   Красим сам body тем же цветом. */
+body{ background:var(--bg); color:var(--ink); }
+
+/* Шрифт интерфейса — как в ЗУБРе. Немецкие слова намеренно оставляем
+   Georgia: так иностранное слово видно с первого взгляда и не сливается
+   с русским пояснением. */
+body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
+  font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+}
+
+/* Профиль: у Гриши синий, у Полины розовый. Атрибут data-кто ставит
+   tema.js — здесь только меняем акцент под него. Градиенты трогаем
+   тоже, иначе розовая страница осталась бы с синими кнопками. */
+:root[data-кто="polina"]{
+  --accent:#EC6A86; --hb:#EC6A86; --hb-bg:#FBE9EE;
+}
+:root[data-кто="polina"] .block h2 .num,
+:root[data-кто="polina"] .play,
+:root[data-кто="polina"] .bb-top{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C) !important;
+  box-shadow:0 6px 16px rgba(236,106,134,.32);
+}
+:root[data-кто="polina"] .lp h1{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C);
+  -webkit-background-clip:text; background-clip:text;
+}
+:root[data-кто="polina"][data-theme="dark"]{ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
+@media (prefers-color-scheme: dark){
+  :root[data-кто="polina"]:not([data-theme="light"]){ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
+}
+
+/* ── Главное отличие от прошлой попытки ──
+   Раньше я поменял только цвета, и врач справедливо сказал, что разницы
+   не видно: блоки уроков прозрачные и без отступов, так что ни тень,
+   ни скругление на них не читались. Теперь каждый раздел урока —
+   настоящая белая плитка, как карточки на сайте-визитке. */
+.block{
+  background:var(--surface);
+  border-radius:22px;
+  padding:20px 18px;
+  margin-bottom:16px;
+  box-shadow:0 12px 30px rgba(40,50,110,.12);
+  border:none;
+}
+:root[data-theme="dark"] .block{ box-shadow:0 12px 30px rgba(0,0,0,.35); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .block{
+  box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+
+/* Номер раздела — кружок с фирменным градиентом, как иконки на визитке */
+.block h2 .num{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:12px; margin-right:9px;
+  background:linear-gradient(135deg,#4A63D6,#EC6A86);
+  color:#fff; font-size:16px; font-weight:800;
+  box-shadow:0 6px 14px rgba(74,99,214,.3);
+}
+.block h2{ display:flex; align-items:center; gap:2px; flex-wrap:wrap; }
+
+/* Оглавление и врезки — тоже плитки, с мягкой тенью */
+.toc, .grammar-box, .warn-box, .link-box{
+  border-radius:18px; box-shadow:0 6px 18px rgba(40,50,110,.08);
+}
+:root[data-theme="dark"] .toc,
+:root[data-theme="dark"] .grammar-box,
+:root[data-theme="dark"] .warn-box{ box-shadow:0 6px 18px rgba(0,0,0,.3); }
+
+/* Карточки слов — приподнимаются, как плитки в приложении */
+.wcard, .pcard{
+  border-radius:16px;
+  box-shadow:0 6px 16px rgba(40,50,110,.10);
+  transition:transform .14s ease, box-shadow .14s ease;
+}
+.wcard:active, .pcard:active{ transform:scale(.99); }
+
+/* Кнопка звука — круглая, с градиентом и объёмной тенью */
+.play{
+  background:linear-gradient(135deg,#4A63D6,#EC6A86) !important;
+  color:#fff !important; border:none !important;
+  box-shadow:0 6px 16px rgba(74,99,214,.32);
+}
+
+/* Шапка — «стекло» как в айфоне: полупрозрачная, с размытием */
+.backbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--surface) 72%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  box-shadow:0 1px 0 rgba(255,255,255,.35) inset;
+}
+.bb-link{ color:var(--accent); font-weight:700; }
+
+/* Нижняя ссылка возврата — кнопка-таблетка, как призыв к действию на визитке */
+.bb-top{
+  display:block; text-align:center; margin:22px auto 30px; max-width:520px;
+  padding:15px 22px; border-radius:999px; text-decoration:none;
+  background:linear-gradient(135deg,#4A63D6,#EC6A86); color:#fff !important;
+  font-weight:700; box-shadow:0 12px 26px rgba(74,99,214,.3);
+}
+
+/* Заголовок страницы — фирменный градиент */
+.lp h1{
+  background:linear-gradient(135deg,#4A63D6,#EC6A86);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  letter-spacing:-.02em;
+}
+.eyebrow{ letter-spacing:.1em; }
+
+</style>
+<!--ТЕМА-ЗУБРА-END-->
 </head>
 <body>
 
@@ -359,7 +540,9 @@
 
   <section class="block" id="s14">
     <h2><span class="num">14</span> 📚 Домашка от Даши</h2>
-    <p class="desc">Прислана 08.09 отдельно от занятия. Восемь заданий — поля сохраняются прямо в браузере.</p>
+    <p class="desc">Прислана 08.09 отдельно от занятия. Восемь заданий — поля сохраняются прямо в браузере.
+      У каждого предложения — кнопка <b>«перевод»</b>, а ответы открываются <b>с пояснением, почему именно так</b>.
+      Можно проверить себя самому, не дожидаясь Даши.</p>
 
     <div class="hwbox">
       <span class="hwnum">Задание 1</span>
@@ -408,8 +591,8 @@
       <span class="hwnum">Задание 6</span>
       <h3>Перевести на немецкий</h3>
       <div class="hint-box">
-        ⚠️ Даша прислала только русский текст, без немецкого оригинала. Переводы под звуком —
-        <b>мой вариант</b> для сверки, не эталон от Даши. Сначала переведи сама, потом проверь через 🔊.
+        ⚠️ Даша прислала только русский текст, без немецкого оригинала. Под каждым предложением —
+        кнопка <b>«мой вариант»</b>: это мой перевод для сверки, не эталон от Даши. Сначала переведи сам, потом открой и сравни.
       </div>
       <div id="hwPerevod"></div>
     </div>
@@ -988,51 +1171,20 @@
         .catch(function(){ /* без офлайна тоже жить можно */ });
     });
   }
+
+  /* Поворот экрана. 10.09 Григорий: на планшете (ASUS) сайт не крутится
+     горизонтально, как его ни верти. До 07.09 в manifest стояло «только
+     вертикально», и Android запомнил это, когда сайт ставили значком, —
+     поправленный manifest он подхватывает неохотно. Здесь прямая просьба
+     к системе: крутись как хочешь. Действует только в установленном
+     приложении (в браузере поворот и так свободный); где не умеет —
+     молча ничего не делает. */
+  var приложение = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (приложение && screen.orientation && screen.orientation.lock)
+    screen.orientation.lock('any').catch(function(){});
 })();
 </script>
 <!--QUIZ-END-->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   <footer class="lp-foot">Занятие 5 Гриши с Дашей · 07.09.2026 · собрано из записи занятия · озвучка Anna (Premium), голос Apple.</footer>
 </div>
 
@@ -1228,125 +1380,169 @@ words('beruf',[
 ], 'hb');
 
 // ── Домашка от Даши (пришла 08.09) ──
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
 
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
 function blanksBlock(el, items, keyPrefix){
-  document.getElementById(el).innerHTML = items.map(([текст,,clipId], i) => {
-    const части = текст.split('___');
-    let строка = '';
-    части.forEach((часть, j) => {
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
       строка += часть;
-      if (j < части.length - 1) строка += `<input class="fld" data-save="${keyPrefix}${i+1}_${j+1}" style="width:90px">`;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
     });
-    return `<div class="hwrow"><span class="n">${i+1}.</span><span class="q">${строка} ${playBtn(clipId)}</span></div>`;
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
   }).join('');
 }
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
 function showAnswers(btn, box, items){
   box.hidden = !box.hidden;
   btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
   if (!box.innerHTML){
-    box.innerHTML = '<div class="grammar-box">' + items.map(([,ответ], i) =>
-      `${i+1}. <b>${ответ}</b>`).join('<br>') + '</div>';
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
   }
 }
-
+/* Данные домашки. Пункт: [текст с ___, ответ, клип, перевод, почему].
+   Перевод и пояснение добавлены 10.09 — правило «домашка с самопроверкой». */
 const HABEN_ITEMS = [
-  ["Ich ___ keine Geschwister.","habe","hb1"],
-  ["___ du eine große Familie?","Hast","hb2"],
-  ["Tina ___ eine Katze. Sie heißt Mitzie.","hat","hb3"],
-  ["Familie Meier ___ ein Haus.","hat","hb4"],
-  ["Stefan ___ einen Freund. Er heißt Christoph.","hat","hb5"],
-  ["___ Stefan eine Schwester?","Hat","hb6"],
-  ["Wir ___ keine E-Mail-Adresse.","haben","hb7"],
-  ["___ ihr Geschwister?","Habt","hb8"],
-  ["Stefan und Tina ___ einen Onkel. Er heißt Thomas. Und sie ___ viele Freunde.","haben, haben","hb9"],
-  ["___ Sie Kinder, Frau Meier?","Haben","hb10"],
+  ["Ich ___ keine Geschwister.","habe","hb1","У меня нет братьев и сестёр.","Подлежащее <i>ich</i> — форма «я» у haben: <i>habe</i>."],
+  ["___ du eine große Familie?","Hast","hb2","У тебя большая семья?","<i>du</i> → <i>hast</i>. Вопрос «да или нет» — глагол встаёт первым, поэтому с большой буквы."],
+  ["Tina ___ eine Katze. Sie heißt Mitzie.","hat","hb3","У Тины есть кошка. Её зовут Митци.","Тина — это «она» (<i>sie</i>) → <i>hat</i>. В этой форме у haben выпадает b: не «habt», а <i>hat</i>."],
+  ["Familie Meier ___ ein Haus.","hat","hb4","У семьи Майер есть дом.","<i>die Familie</i> — одно слово в единственном числе, это «она», поэтому <i>hat</i>, хотя людей в семье много."],
+  ["Stefan ___ einen Freund. Er heißt Christoph.","hat","hb5","У Штефана есть друг. Его зовут Кристоф.","Штефан — «он» (<i>er</i>) → <i>hat</i>."],
+  ["___ Stefan eine Schwester?","Hat","hb6","У Штефана есть сестра?","«он» → <i>hat</i>; вопрос «да или нет» — глагол первым."],
+  ["Wir ___ keine E-Mail-Adresse.","haben","hb7","У нас нет адреса электронной почты.","<i>wir</i> → <i>haben</i> — совпадает со словарной формой."],
+  ["___ ihr Geschwister?","Habt","hb8","У вас есть братья и сёстры?","<i>ihr</i> (вы, свои) → <i>habt</i>; вопрос — глагол первым."],
+  ["Stefan und Tina ___ einen Onkel. Er heißt Thomas. Und sie ___ viele Freunde.","haben, haben","hb9","У Штефана и Тины есть дядя. Его зовут Томас. И у них много друзей.","Штефан и Тина — двое, то есть «они» (<i>sie</i>) → <i>haben</i>. Во втором предложении <i>sie</i> — снова они, снова <i>haben</i>."],
+  ["___ Sie Kinder, Frau Meier?","Haben","hb10","У Вас есть дети, фрау Майер?","<i>Sie</i> — вежливое «Вы» → <i>haben</i>, как словарная форма."],
 ];
 blanksBlock('hwHaben', HABEN_ITEMS, 'hb_');
-document.getElementById('кОтветыHaben').dataset.showText = 'Показать правильные формы';
+document.getElementById('кОтветыHaben').dataset.showText = 'Показать ответы и пояснения';
 document.getElementById('кОтветыHaben').dataset.hideText = 'Скрыть ответы';
 document.getElementById('кОтветыHaben').onclick = function(){
   showAnswers(this, document.getElementById('otvetyHaben'), HABEN_ITEMS);
 };
 
 const SEIN_ITEMS = [
-  ["___ du 12 Jahre alt?","Bist","sb1"],
-  ["Nein, ich ___ 13 Jahre alt.","bin","sb2"],
-  ["Tina ___ in der 8. Klasse.","ist","sb3"],
-  ["___ Renate die Mutter von Tina?","Ist","sb4"],
-  ["___ Stefan und Tina die Kinder von Renate?","Sind","sb5"],
-  ["Meine Freunde ___ Rafael und Leon.","sind","sb6"],
-  ["___ Melanie deine Lehrerin?","Ist","sb7"],
-  ["Wie viele Personen ___ ihr zu Hause?","seid","sb8"],
-  ["Wir ___ vier Personen zu Hause: meine Mutter, mein Vater, mein Bruder und ich.","sind","sb9"],
-  ["Herr und Frau Meyer ___ die Eltern von Tina und Stefan.","sind","sb10"],
-  ["Entschuldigung, ___ Sie Frau Scholz?","sind","sb11"],
-  ["Nein, ich ___ Frau Schulz.","bin","sb12"],
-  ["Wer ___ du?","bist","sb13"],
+  ["___ du 12 Jahre alt?","Bist","sb1","Тебе 12 лет?","Возраст по-немецки говорят через sein: «ты есть 12 лет». <i>du</i> → <i>bist</i>."],
+  ["Nein, ich ___ 13 Jahre alt.","bin","sb2","Нет, мне 13 лет.","<i>ich</i> → <i>bin</i>."],
+  ["Tina ___ in der 8. Klasse.","ist","sb3","Тина в восьмом классе.","Тина — «она» → <i>ist</i>."],
+  ["___ Renate die Mutter von Tina?","Ist","sb4","Ренате — мама Тины?","«она» → <i>ist</i>; вопрос «да или нет» — глагол первым."],
+  ["___ Stefan und Tina die Kinder von Renate?","Sind","sb5","Штефан и Тина — дети Ренаты?","Двое — это «они» → <i>sind</i>."],
+  ["Meine Freunde ___ Rafael und Leon.","sind","sb6","Мои друзья — Рафаэль и Леон.","<i>Freunde</i> — множественное число, «они» → <i>sind</i>."],
+  ["___ Melanie deine Lehrerin?","Ist","sb7","Мелани — твоя учительница?","«она» → <i>ist</i>."],
+  ["Wie viele Personen ___ ihr zu Hause?","seid","sb8","Сколько вас дома?","<i>ihr</i> → <i>seid</i>. Не путать с <i>sind</i>: у ihr всегда <i>seid</i>."],
+  ["Wir ___ vier Personen zu Hause: meine Mutter, mein Vater, mein Bruder und ich.","sind","sb9","Нас дома четверо: мама, папа, брат и я.","<i>wir</i> → <i>sind</i>."],
+  ["Herr und Frau Meyer ___ die Eltern von Tina und Stefan.","sind","sb10","Господин и госпожа Майер — родители Тины и Штефана.","Двое → <i>sind</i>."],
+  ["Entschuldigung, ___ Sie Frau Scholz?","sind","sb11","Извините, Вы фрау Шольц?","<i>Sie</i> (Вы) → <i>sind</i>. Глагол и тут первый в вопросе, но пишется с маленькой буквы: предложение уже началось со слова Entschuldigung."],
+  ["Nein, ich ___ Frau Schulz.","bin","sb12","Нет, я фрау Шульц.","<i>ich</i> → <i>bin</i>. Шутка задания — Scholz и Schulz: одна буква, а человек другой."],
+  ["Wer ___ du?","bist","sb13","Кто ты?","<i>du</i> → <i>bist</i>."],
 ];
 blanksBlock('hwSein', SEIN_ITEMS, 'sb_');
-document.getElementById('кОтветыSein').dataset.showText = 'Показать правильные формы';
+document.getElementById('кОтветыSein').dataset.showText = 'Показать ответы и пояснения';
 document.getElementById('кОтветыSein').dataset.hideText = 'Скрыть ответы';
 document.getElementById('кОтветыSein').onclick = function(){
   showAnswers(this, document.getElementById('otvetySein'), SEIN_ITEMS);
 };
 
 const WISSEN_Q = [
-  { q:"1. PROF. KURZ: Christa und Jonas ___ Maries Handynummer.", opts:["wissen","weiß","weißt"], correct:0, id:"wz1" },
-  { q:"2. LUKA: Professor Kurz und ihr Mann ___ viel über die Maya.", opts:["weißt","weiß","wissen"], correct:2, id:"wz2" },
-  { q:"3. JONAS: Ihr ___ vielleicht nicht, Luka muss arbeiten und kommt nicht.", opts:["wissen","weißt","wisst"], correct:2, id:"wz3" },
-  { q:"4. CHRISTA: Jonas ___ nicht, wie alt Luka ist.", opts:["weiß","weißt","wisst"], correct:0, id:"wz4" },
-  { q:"5. JASMIN: Kim ___ Maries Telefonnummer nicht.", opts:["wisst","weiß","wissen"], correct:1, id:"wz5" },
-  { q:"6. CHRISTA und JONAS: Wir ___ Maries Handynummer. Sie ist 3 45 87 21.", opts:["weiß","wissen","wisst"], correct:1, id:"wz6" },
-  { q:"7. JONAS: Ich ___ nicht, wie alt Luka ist.", opts:["weiß","wissen","wisst"], correct:0, id:"wz7" },
-  { q:"8. CHRISTA: Ich ___ Kims Adresse nicht. Aber du kannst sie anrufen.", opts:["wissen","weiß","weißt"], correct:1, id:"wz8" },
+  { q:"1. PROF. KURZ: Christa und Jonas ___ Maries Handynummer.", opts:["wissen","weiß","weißt"], correct:0, id:"wz1",
+    ru:"Криста и Йонас знают номер мобильного Мари.", почему:"Двое — «они» → <i>wissen</i>." },
+  { q:"2. LUKA: Professor Kurz und ihr Mann ___ viel über die Maya.", opts:["weißt","weiß","wissen"], correct:2, id:"wz2",
+    ru:"Профессор Курц и её муж много знают о майя.", почему:"Двое → <i>wissen</i>." },
+  { q:"3. JONAS: Ihr ___ vielleicht nicht, Luka muss arbeiten und kommt nicht.", opts:["wissen","weißt","wisst"], correct:2, id:"wz3",
+    ru:"Вы, наверное, не знаете: Лука должен работать и не придёт.", почему:"<i>ihr</i> → <i>wisst</i>." },
+  { q:"4. CHRISTA: Jonas ___ nicht, wie alt Luka ist.", opts:["weiß","weißt","wisst"], correct:0, id:"wz4",
+    ru:"Йонас не знает, сколько лет Луке.", почему:"Йонас — «он» → <i>weiß</i>. В единственном числе у wissen корень меняется, и у «он» нет окончания -t: не «weißt», а <i>weiß</i>." },
+  { q:"5. JASMIN: Kim ___ Maries Telefonnummer nicht.", opts:["wisst","weiß","wissen"], correct:1, id:"wz5",
+    ru:"Ким не знает номер телефона Мари.", почему:"Ким — «она» → <i>weiß</i>." },
+  { q:"6. CHRISTA und JONAS: Wir ___ Maries Handynummer. Sie ist 3 45 87 21.", opts:["weiß","wissen","wisst"], correct:1, id:"wz6",
+    ru:"Мы знаем номер мобильного Мари: 3 45 87 21.", почему:"<i>wir</i> → <i>wissen</i>." },
+  { q:"7. JONAS: Ich ___ nicht, wie alt Luka ist.", opts:["weiß","wissen","wisst"], correct:0, id:"wz7",
+    ru:"Я не знаю, сколько лет Луке.", почему:"<i>ich</i> → <i>weiß</i>. У «я» и «он» форма одинаковая — weiß." },
+  { q:"8. CHRISTA: Ich ___ Kims Adresse nicht. Aber du kannst sie anrufen.", opts:["wissen","weiß","weißt"], correct:1, id:"wz8",
+    ru:"Я не знаю адреса Ким. Но ты можешь ей позвонить.", почему:"<i>ich</i> → <i>weiß</i>." },
 ];
 document.getElementById('hwWissen').innerHTML = WISSEN_Q.map((в,i)=>`
-  <div class="hwrow"><span class="q"><b>${в.q}</b><br>
+  <div class="hwrow"><span class="q"><b>${в.q}</b> ${кнопкаПеревода(в.ru)}<br>
   ${в.opts.map((о,j)=>`<label style="display:block;margin:4px 0"><input type="radio" name="wzq${i}" data-save="wzq${i}" value="${j}"> ${о}</label>`).join('')}
   ${playBtn(в.id)}
   </span></div>`).join('');
-document.getElementById('кОтветыWissen').dataset.showText = 'Показать правильные ответы';
+document.getElementById('кОтветыWissen').dataset.showText = 'Показать ответы и пояснения';
 document.getElementById('кОтветыWissen').dataset.hideText = 'Скрыть ответы';
 document.getElementById('кОтветыWissen').onclick = function(){
-  const box = document.getElementById('otvetyWissen');
-  box.hidden = !box.hidden;
-  this.textContent = box.hidden ? this.dataset.showText : this.dataset.hideText;
-  if (!box.innerHTML){
-    box.innerHTML = '<div class="grammar-box">' + WISSEN_Q.map((в,i)=>
-      `${i+1}. <b>${в.opts[в.correct]}</b>`).join('<br>') + '</div>';
-  }
+  showAnswers(this, document.getElementById('otvetyWissen'),
+    WISSEN_Q.map(в => [в.q, в.opts[в.correct], в.id, в.ru, в.почему]));
 };
 
+/* Перевод: немецкий вариант раньше стоял сразу под полем — подсмотрел
+   до того, как перевёл сам, и самопроверка теряла смысл. Теперь он за
+   кнопкой «мой вариант», вместе с главной ловушкой каждой фразы. */
 const ПЕРЕВОД = [
-  ["Кто это? — Это Ута. — Откуда она? — Она из Германии. Она живёт в Берлине. — А чем она занимается? — Она студентка.","Wer ist das? — Das ist Uta. — Woher kommt sie? — Sie kommt aus Deutschland. Sie wohnt in Berlin. — Was macht sie? — Sie ist Studentin.","tr1"],
-  ["Доброе утро, господин Кюнерт! Как у Вас дела? — Спасибо, ничего. А у Вас? — Спасибо, хорошо. Чем Вы занимаетесь? — Я читаю.","Guten Morgen, Herr Kühnert! Wie geht es Ihnen? — Danke, es geht. Und Ihnen? — Danke, gut. Was machen Sie? — Ich lese.","tr2"],
-  ["Это Свен Густафсон. Он приехал из Швеции. Сейчас он живёт в Берлине и учит немецкий язык.","Das ist Sven Gustafsson. Er kommt aus Schweden. Jetzt wohnt er in Berlin und lernt Deutsch.","tr3"],
-  ["Они приехали из Болгарии? — Нет, из Венгрии. Они здесь учатся. Они изучают русский язык.","Kommen sie aus Bulgarien? — Nein, aus Ungarn. Sie studieren hier. Sie studieren Russisch.","tr4"],
-  ["Моника, как у тебя дела? — Спасибо, не очень хорошо. Я много работаю. Это нелегко.","Monika, wie geht es dir? — Danke, nicht so gut. Ich arbeite viel. Das ist nicht leicht.","tr5"],
-  ["Кто это? — Её фамилия Берг. — Как её имя? — Её зовут Паула. — А где она живёт? Во Франкфурте? — Да, она из Франкфурта. Она там учится.","Wer ist das? — Sie heißt Berg. — Wie ist ihr Vorname? — Sie heißt Paula. — Und wo wohnt sie? In Frankfurt? — Ja, sie kommt aus Frankfurt. Sie studiert dort.","tr6"],
-  ["Моя фамилия Вернер. — А как тебя зовут? — Я Моника, Моника Вернер. — Ты приехала из Швейцарии? — Нет, не из Швейцарии, а из Австрии. — А где ты живёшь? — Я живу Биркенштрассе, 20.","Ich heiße Werner. — Und wie heißt du? — Ich bin Monika, Monika Werner. — Kommst du aus der Schweiz? — Nein, nicht aus der Schweiz, sondern aus Österreich. — Und wo wohnst du? — Ich wohne in der Birkenstraße zwanzig.","tr7"],
-  ["Вы часто бываете в Австрии? — Нет, не часто. Я работаю в Германии и часто бываю в Берлине.","Sind Sie oft in Österreich? — Nein, nicht oft. Ich arbeite in Deutschland und bin oft in Berlin.","tr8"],
-  ["Чем ты занимаешься? — Я работаю. — А кем ты работаешь? — Я учитель. У меня много работы.","Was machst du? — Ich arbeite. — Und als was arbeitest du? — Ich bin Lehrer. Ich habe viel Arbeit.","tr9"],
+  ["Кто это? — Это Ута. — Откуда она? — Она из Германии. Она живёт в Берлине. — А чем она занимается? — Она студентка.","Wer ist das? — Das ist Uta. — Woher kommt sie? — Sie kommt aus Deutschland. Sie wohnt in Berlin. — Was macht sie? — Sie ist Studentin.","tr1","Профессия без артикля: <i>Sie ist Studentin</i>. «Чем занимается» — <i>Was macht sie?</i>"],
+  ["Доброе утро, господин Кюнерт! Как у Вас дела? — Спасибо, ничего. А у Вас? — Спасибо, хорошо. Чем Вы занимаетесь? — Я читаю.","Guten Morgen, Herr Kühnert! Wie geht es Ihnen? — Danke, es geht. Und Ihnen? — Danke, gut. Was machen Sie? — Ich lese.","tr2","«Ничего» в ответ на «как дела» — <i>Es geht</i>. Вежливо — <i>Ihnen</i>; по-свойски было бы <i>dir</i>."],
+  ["Это Свен Густафсон. Он приехал из Швеции. Сейчас он живёт в Берлине и учит немецкий язык.","Das ist Sven Gustafsson. Er kommt aus Schweden. Jetzt wohnt er in Berlin und lernt Deutsch.","tr3","«Приехал из» по-немецки в настоящем времени: <i>Er kommt aus</i>. После <i>Jetzt</i> глагол сразу вторым: <i>Jetzt wohnt er</i>."],
+  ["Они приехали из Болгарии? — Нет, из Венгрии. Они здесь учатся. Они изучают русский язык.","Kommen sie aus Bulgarien? — Nein, aus Ungarn. Sie studieren hier. Sie studieren Russisch.","tr4","«Учатся в вузе» — <i>studieren</i>. «Они» — <i>sie</i> с маленькой; с большой было бы «Вы»."],
+  ["Моника, как у тебя дела? — Спасибо, не очень хорошо. Я много работаю. Это нелегко.","Monika, wie geht es dir? — Danke, nicht so gut. Ich arbeite viel. Das ist nicht leicht.","tr5","С Моникой на «ты» — поэтому <i>dir</i>, а не <i>Ihnen</i>."],
+  ["Кто это? — Её фамилия Берг. — Как её имя? — Её зовут Паула. — А где она живёт? Во Франкфурте? — Да, она из Франкфурта. Она там учится.","Wer ist das? — Sie heißt Berg. — Wie ist ihr Vorname? — Sie heißt Paula. — Und wo wohnt sie? In Frankfurt? — Ja, sie kommt aus Frankfurt. Sie studiert dort.","tr6","«Её имя» — <i>ihr Vorname</i>: здесь <i>ihr</i> — притяжательное «её», то самое ihr с тремя значениями."],
+  ["Моя фамилия Вернер. — А как тебя зовут? — Я Моника, Моника Вернер. — Ты приехала из Швейцарии? — Нет, не из Швейцарии, а из Австрии. — А где ты живёшь? — Я живу Биркенштрассе, 20.","Ich heiße Werner. — Und wie heißt du? — Ich bin Monika, Monika Werner. — Kommst du aus der Schweiz? — Nein, nicht aus der Schweiz, sondern aus Österreich. — Und wo wohnst du? — Ich wohne in der Birkenstraße zwanzig.","tr7","<i>die Schweiz</i> всегда с артиклем: <i>aus der Schweiz</i>. «Не…, а…» — <i>nicht…, sondern…</i>. Адрес — <i>in der Birkenstraße</i>."],
+  ["Вы часто бываете в Австрии? — Нет, не часто. Я работаю в Германии и часто бываю в Берлине.","Sind Sie oft in Österreich? — Nein, nicht oft. Ich arbeite in Deutschland und bin oft in Berlin.","tr8","«Бывать» здесь — просто <i>sein</i>: <i>Sind Sie oft in Österreich?</i>"],
+  ["Чем ты занимаешься? — Я работаю. — А кем ты работаешь? — Я учитель. У меня много работы.","Was machst du? — Ich arbeite. — Und als was arbeitest du? — Ich bin Lehrer. Ich habe viel Arbeit.","tr9","«Кем работаешь» — <i>Als was arbeitest du?</i> Профессия без артикля: <i>Ich bin Lehrer</i>."],
 ];
-document.getElementById('hwPerevod').innerHTML = ПЕРЕВОД.map(([ru,de,aid],i)=>`
+document.getElementById('hwPerevod').innerHTML = ПЕРЕВОД.map(([ru,de,aid,почему],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
     <div style="font-size:13px;color:var(--ink-faint);margin-bottom:4px">${ru}</div>
     <input class="fld" data-save="f_tr${i}" placeholder="твой перевод на немецкий" style="width:100%;max-width:520px"><br>
-    <div style="margin-top:4px;font-size:12.5px">
-      <span style="font-family:Georgia,serif">${de}</span> ${playBtn(aid)}
-    </div>
+    <button type="button" class="hw-tr-btn" style="margin:6px 0 0" onclick="var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');">мой вариант</button><span class="hw-tr" hidden style="font-style:normal">
+      <span style="font-family:Georgia,serif;color:var(--ink)">${de}</span> ${playBtn(aid)}
+      <span class="hw-why" style="display:block">${почему}</span>
+    </span>
   </span></div>`).join('');
 
-const WFRAGEN_СЛОВА = ['wo','woher','wohin','wer','warum'];
-document.getElementById('hwWFragen').innerHTML = WFRAGEN_СЛОВА.map((сл,i)=>`
+/* Свободные задания: единственного ответа нет, поэтому — пример. */
+const WFRAGEN_СЛОВА = [
+  ["wo","Wo wohnt deine Familie?","Где живёт твоя семья?"],
+  ["woher","Woher kommt deine Mutter?","Откуда родом твоя мама?"],
+  ["wohin","Wohin fährt deine Familie im Sommer?","Куда твоя семья едет летом?"],
+  ["wer","Wer ist der Mann auf dem Foto?","Кто этот мужчина на фото?"],
+  ["warum","Warum wohnt dein Bruder nicht in Moskau?","Почему твой брат не живёт в Москве?"],
+];
+function примерКнопка(de, ru, почему){
+  return `<button type="button" class="hw-tr-btn" onclick="var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');">пример</button><span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">${de}</span> — ${ru}${почему ? `<span class="hw-why" style="display:block">${почему}</span>` : ''}</span>`;
+}
+document.getElementById('hwWFragen').innerHTML = WFRAGEN_СЛОВА.map(([сл,de,ru],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
-    <div style="font-size:12.5px;color:var(--ink-faint);margin-bottom:4px">${сл}</div>
+    <div style="font-size:12.5px;color:var(--ink-faint);margin-bottom:4px">${сл} ${примерКнопка(de, ru, 'Вопросительное слово первым, глагол — сразу вторым.')}</div>
     <input class="fld" data-save="f_wf${i}" placeholder="вопрос со словом «${сл}» про семью" style="width:100%;max-width:520px"></span></div>`).join('');
 
-const МОДАЛЬНЫЕ_СЛОВА = ['können','dürfen','möchten','müssen','sollen','wollen'];
-document.getElementById('hwModal').innerHTML = МОДАЛЬНЫЕ_СЛОВА.map((гл,i)=>`
+const МОДАЛЬНЫЕ_СЛОВА = [
+  ["können","Ich kann gut Englisch sprechen.","Я хорошо говорю по-английски.","können — умение, возможность."],
+  ["dürfen","Hier darf man nicht parken.","Здесь нельзя парковаться.","dürfen — разрешение; с nicht — запрет."],
+  ["möchten","Ich möchte heute früh schlafen gehen.","Я хотел бы сегодня рано лечь спать.","möchten — вежливое «хотел бы»."],
+  ["müssen","Ich muss morgen um sieben Uhr arbeiten.","Завтра в семь я должен работать.","müssen — необходимость, «надо»."],
+  ["sollen","Der Arzt sagt, ich soll mehr Wasser trinken.","Врач говорит, мне нужно пить больше воды.","sollen — чужая воля или совет: «мне сказали, что надо»."],
+  ["wollen","Wir wollen nach Deutschland fahren.","Мы хотим поехать в Германию.","wollen — твёрдое «хочу», намерение."],
+];
+document.getElementById('hwModal').innerHTML = МОДАЛЬНЫЕ_СЛОВА.map(([гл,de,ru,смысл],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
-    <div style="font-size:12.5px;color:var(--ink-faint);margin-bottom:4px">${гл}</div>
+    <div style="font-size:12.5px;color:var(--ink-faint);margin-bottom:4px">${гл} ${примерКнопка(de, ru, смысл + ' Модальный глагол на втором месте, смысловой — в самом конце, в словарной форме.')}</div>
     <input class="fld" data-save="f_md${i}" placeholder="предложение с «${гл}»" style="width:100%;max-width:520px"></span></div>`).join('');
 
 (function(){
