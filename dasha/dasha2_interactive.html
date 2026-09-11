@@ -133,6 +133,34 @@
   .fld:focus { outline:none; border-color:var(--accent); }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  .hw-verb { color:var(--accent); font-weight:700; }
+  #hw .grammar-box { background:var(--surface-2); border-radius:10px; padding:10px 14px; }
+  #hwZ2 input.fld { width:100% !important; max-width:360px; }
+</style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -473,29 +501,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <div class="hw-box"><div id="hwList"></div></div>
 
     <p class="desc" style="margin-top:20px"><b>Задание 1.</b> Вставь модальный глагол в правильной форме и переведи:</p>
-    <div class="ex-box">
-      <span class="num">1.</span> Ich <span class="blank"></span> heute lange arbeiten. <span class="hint-ru">(müssen)</span><br>
-      <span class="num">2.</span> Du <span class="blank"></span> gut Deutsch sprechen. <span class="hint-ru">(können)</span><br>
-      <span class="num">3.</span> Er <span class="blank"></span> seine Hausaufgaben machen. <span class="hint-ru">(sollen)</span><br>
-      <span class="num">4.</span> Sie (она) <span class="blank"></span> ins Kino gehen. <span class="hint-ru">(dürfen)</span><br>
-      <span class="num">5.</span> Es <span class="blank"></span> draußen sehr kalt sein. <span class="hint-ru">(können)</span><br>
-      <span class="num">6.</span> Wir <span class="blank"></span> morgen früh aufstehen. <span class="hint-ru">(müssen)</span><br>
-      <span class="num">7.</span> Ihr <span class="blank"></span> leise sein! <span class="hint-ru">(sollen)</span><br>
-      <span class="num">8.</span> Sie (они) <span class="blank"></span> nicht so laut sprechen. <span class="hint-ru">(dürfen)</span><br>
-      <span class="num">9.</span> Sie (вежливое Вы) <span class="blank"></span> hier nicht rauchen. <span class="hint-ru">(dürfen)</span><br>
-      <span class="num">10.</span> Ich <span class="blank"></span> heute keinen Kaffee trinken. <span class="hint-ru">(möchten)</span>
-    </div>
+    <div id="hwZ1"></div>
+    <button id="кОтветыZ1" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetyZ1" hidden style="margin-top:10px"></div>
 
     <p class="desc" style="margin-top:20px"><b>Задание 2.</b> Собери предложение из слов — не забудь: смысловой глагол в конец, в инфинитиве!</p>
-    <div class="ex-box">
-      <span class="num">1.</span> (er / können / bleiben) <span class="blank"></span><br>
-      <span class="num">2.</span> (du / sollen / nachsitzen) <span class="blank"></span><br>
-      <span class="num">3.</span> (wir / müssen / Liegestütze machen) <span class="blank"></span><br>
-      <span class="num">4.</span> (ihr / dürfen / nicht / das) <span class="blank"></span><br>
-      <span class="num">5.</span> (ich / wollen / nicht / streiten) <span class="blank"></span>
-    </div>
+    <div id="hwZ2"></div>
+    <button id="кОтветыZ2" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetyZ2" hidden style="margin-top:10px"></div>
 
-    <p class="desc" style="margin-top:20px"><b>Задание 3.</b> Большой лист «Modalverben» — шесть блоков по 8 предложений (sollen, wollen, müssen, dürfen, können, mögen). Вставь правильную форму глагола, незнакомые слова выпиши в словарик. Формы всех шести глаголов — в таблице раздела 5 выше, подглядывай туда.</p>
+    <p class="desc" style="margin-top:20px"><b>Задание 3.</b> Большой лист «Modalverben» — шесть блоков по 8 предложений (sollen, wollen, müssen, dürfen, können, mögen). Вставь правильную форму глагола, незнакомые слова выпиши в словарик. Формы всех шести глаголов — в таблице раздела 5 выше, подглядывай туда. У каждого предложения кнопка <b>«перевод»</b>, у каждого блока — <b>ответы с пояснением</b>.</p>
     <div class="mv-grid" id="mvGrid"></div>
     <a class="foto-link" href="dasha2_hw_modalverben.jpg" target="_blank" rel="noopener">
       <span class="ico">📄</span><span>Оригинал листа (на случай если хочешь свериться)</span>
@@ -1063,7 +1078,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"i_muessen": "../zvuk/dasha2/i_muessen.mp3", "i_sollen": "../zvuk/dasha2/i_sollen.mp3", "i_koennen": "../zvuk/dasha2/i_koennen.mp3", "i_duerfen": "../zvuk/dasha2/i_duerfen.mp3", "i_wollen": "../zvuk/dasha2/i_wollen.mp3", "i_moechten": "../zvuk/dasha2/i_moechten.mp3", "mu1": "../zvuk/dasha2/mu1.mp3", "mu2": "../zvuk/dasha2/mu2.mp3", "mu3": "../zvuk/dasha2/mu3.mp3", "mu4": "../zvuk/dasha2/mu4.mp3", "mu5": "../zvuk/dasha2/mu5.mp3", "mu6": "../zvuk/dasha2/mu6.mp3", "so1": "../zvuk/dasha2/so1.mp3", "so2": "../zvuk/dasha2/so2.mp3", "so3": "../zvuk/dasha2/so3.mp3", "so4": "../zvuk/dasha2/so4.mp3", "so5": "../zvuk/dasha2/so5.mp3", "so6": "../zvuk/dasha2/so6.mp3", "ko1": "../zvuk/dasha2/ko1.mp3", "ko2": "../zvuk/dasha2/ko2.mp3", "ko3": "../zvuk/dasha2/ko3.mp3", "ko4": "../zvuk/dasha2/ko4.mp3", "ko5": "../zvuk/dasha2/ko5.mp3", "ko6": "../zvuk/dasha2/ko6.mp3", "du1": "../zvuk/dasha2/du1.mp3", "du2": "../zvuk/dasha2/du2.mp3", "du3": "../zvuk/dasha2/du3.mp3", "du4": "../zvuk/dasha2/du4.mp3", "du5": "../zvuk/dasha2/du5.mp3", "du6": "../zvuk/dasha2/du6.mp3", "wo1": "../zvuk/dasha2/wo1.mp3", "wo2": "../zvuk/dasha2/wo2.mp3", "wo3": "../zvuk/dasha2/wo3.mp3", "wo4": "../zvuk/dasha2/wo4.mp3", "wo5": "../zvuk/dasha2/wo5.mp3", "wo6": "../zvuk/dasha2/wo6.mp3", "mo1": "../zvuk/dasha2/mo1.mp3", "mo2": "../zvuk/dasha2/mo2.mp3", "mo3": "../zvuk/dasha2/mo3.mp3", "mo4": "../zvuk/dasha2/mo4.mp3", "mo5": "../zvuk/dasha2/mo5.mp3", "mo6": "../zvuk/dasha2/mo6.mp3", "r1": "../zvuk/dasha2/r1.mp3", "r2": "../zvuk/dasha2/r2.mp3", "r3": "../zvuk/dasha2/r3.mp3", "r4": "../zvuk/dasha2/r4.mp3", "r5": "../zvuk/dasha2/r5.mp3", "r6": "../zvuk/dasha2/r6.mp3", "r7": "../zvuk/dasha2/r7.mp3", "m1": "../zvuk/dasha2/m1.mp3", "m2": "../zvuk/dasha2/m2.mp3", "m3": "../zvuk/dasha2/m3.mp3", "m4": "../zvuk/dasha2/m4.mp3", "m5": "../zvuk/dasha2/m5.mp3", "m6": "../zvuk/dasha2/m6.mp3", "m7": "../zvuk/dasha2/m7.mp3", "f_familie": "../zvuk/dasha2/f_familie.mp3", "f_kind": "../zvuk/dasha2/f_kind.mp3", "f_kinder": "../zvuk/dasha2/f_kinder.mp3", "f_tochter": "../zvuk/dasha2/f_tochter.mp3", "f_sohn": "../zvuk/dasha2/f_sohn.mp3", "f_mutter": "../zvuk/dasha2/f_mutter.mp3", "f_vater": "../zvuk/dasha2/f_vater.mp3", "f_eltern": "../zvuk/dasha2/f_eltern.mp3", "f_bruder": "../zvuk/dasha2/f_bruder.mp3", "f_schwester": "../zvuk/dasha2/f_schwester.mp3", "f_oma": "../zvuk/dasha2/f_oma.mp3", "f_opa": "../zvuk/dasha2/f_opa.mp3", "f_frau": "../zvuk/dasha2/f_frau.mp3", "f_mann": "../zvuk/dasha2/f_mann.mp3", "dl1": "../zvuk/dasha2/dl1.mp3", "dl2": "../zvuk/dasha2/dl2.mp3", "dl3": "../zvuk/dasha2/dl3.mp3", "dl4": "../zvuk/dasha2/dl4.mp3", "dl5": "../zvuk/dasha2/dl5.mp3", "dl6": "../zvuk/dasha2/dl6.mp3", "dl7": "../zvuk/dasha2/dl7.mp3", "p_ich": "../zvuk/dasha2/p_ich.mp3", "p_du": "../zvuk/dasha2/p_du.mp3", "p_er": "../zvuk/dasha2/p_er.mp3", "p_sie": "../zvuk/dasha2/p_sie.mp3", "p_es": "../zvuk/dasha2/p_es.mp3", "p_wir": "../zvuk/dasha2/p_wir.mp3", "p_ihr": "../zvuk/dasha2/p_ihr.mp3", "p_Sie": "../zvuk/dasha2/p_Sie.mp3", "q_mein": "../zvuk/dasha2/q_mein.mp3", "q_dein": "../zvuk/dasha2/q_dein.mp3", "q_sein": "../zvuk/dasha2/q_sein.mp3", "q_ihr": "../zvuk/dasha2/q_ihr.mp3", "q_unser": "../zvuk/dasha2/q_unser.mp3", "q_euer": "../zvuk/dasha2/q_euer.mp3", "e_buch": "../zvuk/dasha2/e_buch.mp3", "e_handy": "../zvuk/dasha2/e_handy.mp3", "e_auto": "../zvuk/dasha2/e_auto.mp3", "e_haus": "../zvuk/dasha2/e_haus.mp3"};
+const AUDIO = {"i_muessen": "../zvuk/dasha2/i_muessen.mp3", "i_sollen": "../zvuk/dasha2/i_sollen.mp3", "i_koennen": "../zvuk/dasha2/i_koennen.mp3", "i_duerfen": "../zvuk/dasha2/i_duerfen.mp3", "i_wollen": "../zvuk/dasha2/i_wollen.mp3", "i_moechten": "../zvuk/dasha2/i_moechten.mp3", "mu1": "../zvuk/dasha2/mu1.mp3", "mu2": "../zvuk/dasha2/mu2.mp3", "mu3": "../zvuk/dasha2/mu3.mp3", "mu4": "../zvuk/dasha2/mu4.mp3", "mu5": "../zvuk/dasha2/mu5.mp3", "mu6": "../zvuk/dasha2/mu6.mp3", "so1": "../zvuk/dasha2/so1.mp3", "so2": "../zvuk/dasha2/so2.mp3", "so3": "../zvuk/dasha2/so3.mp3", "so4": "../zvuk/dasha2/so4.mp3", "so5": "../zvuk/dasha2/so5.mp3", "so6": "../zvuk/dasha2/so6.mp3", "ko1": "../zvuk/dasha2/ko1.mp3", "ko2": "../zvuk/dasha2/ko2.mp3", "ko3": "../zvuk/dasha2/ko3.mp3", "ko4": "../zvuk/dasha2/ko4.mp3", "ko5": "../zvuk/dasha2/ko5.mp3", "ko6": "../zvuk/dasha2/ko6.mp3", "du1": "../zvuk/dasha2/du1.mp3", "du2": "../zvuk/dasha2/du2.mp3", "du3": "../zvuk/dasha2/du3.mp3", "du4": "../zvuk/dasha2/du4.mp3", "du5": "../zvuk/dasha2/du5.mp3", "du6": "../zvuk/dasha2/du6.mp3", "wo1": "../zvuk/dasha2/wo1.mp3", "wo2": "../zvuk/dasha2/wo2.mp3", "wo3": "../zvuk/dasha2/wo3.mp3", "wo4": "../zvuk/dasha2/wo4.mp3", "wo5": "../zvuk/dasha2/wo5.mp3", "wo6": "../zvuk/dasha2/wo6.mp3", "mo1": "../zvuk/dasha2/mo1.mp3", "mo2": "../zvuk/dasha2/mo2.mp3", "mo3": "../zvuk/dasha2/mo3.mp3", "mo4": "../zvuk/dasha2/mo4.mp3", "mo5": "../zvuk/dasha2/mo5.mp3", "mo6": "../zvuk/dasha2/mo6.mp3", "r1": "../zvuk/dasha2/r1.mp3", "r2": "../zvuk/dasha2/r2.mp3", "r3": "../zvuk/dasha2/r3.mp3", "r4": "../zvuk/dasha2/r4.mp3", "r5": "../zvuk/dasha2/r5.mp3", "r6": "../zvuk/dasha2/r6.mp3", "r7": "../zvuk/dasha2/r7.mp3", "m1": "../zvuk/dasha2/m1.mp3", "m2": "../zvuk/dasha2/m2.mp3", "m3": "../zvuk/dasha2/m3.mp3", "m4": "../zvuk/dasha2/m4.mp3", "m5": "../zvuk/dasha2/m5.mp3", "m6": "../zvuk/dasha2/m6.mp3", "m7": "../zvuk/dasha2/m7.mp3", "f_familie": "../zvuk/dasha2/f_familie.mp3", "f_kind": "../zvuk/dasha2/f_kind.mp3", "f_kinder": "../zvuk/dasha2/f_kinder.mp3", "f_tochter": "../zvuk/dasha2/f_tochter.mp3", "f_sohn": "../zvuk/dasha2/f_sohn.mp3", "f_mutter": "../zvuk/dasha2/f_mutter.mp3", "f_vater": "../zvuk/dasha2/f_vater.mp3", "f_eltern": "../zvuk/dasha2/f_eltern.mp3", "f_bruder": "../zvuk/dasha2/f_bruder.mp3", "f_schwester": "../zvuk/dasha2/f_schwester.mp3", "f_oma": "../zvuk/dasha2/f_oma.mp3", "f_opa": "../zvuk/dasha2/f_opa.mp3", "f_frau": "../zvuk/dasha2/f_frau.mp3", "f_mann": "../zvuk/dasha2/f_mann.mp3", "dl1": "../zvuk/dasha2/dl1.mp3", "dl2": "../zvuk/dasha2/dl2.mp3", "dl3": "../zvuk/dasha2/dl3.mp3", "dl4": "../zvuk/dasha2/dl4.mp3", "dl5": "../zvuk/dasha2/dl5.mp3", "dl6": "../zvuk/dasha2/dl6.mp3", "dl7": "../zvuk/dasha2/dl7.mp3", "p_ich": "../zvuk/dasha2/p_ich.mp3", "p_du": "../zvuk/dasha2/p_du.mp3", "p_er": "../zvuk/dasha2/p_er.mp3", "p_sie": "../zvuk/dasha2/p_sie.mp3", "p_es": "../zvuk/dasha2/p_es.mp3", "p_wir": "../zvuk/dasha2/p_wir.mp3", "p_ihr": "../zvuk/dasha2/p_ihr.mp3", "p_Sie": "../zvuk/dasha2/p_Sie.mp3", "q_mein": "../zvuk/dasha2/q_mein.mp3", "q_dein": "../zvuk/dasha2/q_dein.mp3", "q_sein": "../zvuk/dasha2/q_sein.mp3", "q_ihr": "../zvuk/dasha2/q_ihr.mp3", "q_unser": "../zvuk/dasha2/q_unser.mp3", "q_euer": "../zvuk/dasha2/q_euer.mp3", "e_buch": "../zvuk/dasha2/e_buch.mp3", "e_handy": "../zvuk/dasha2/e_handy.mp3", "e_auto": "../zvuk/dasha2/e_auto.mp3", "e_haus": "../zvuk/dasha2/e_haus.mp3", "zm1": "../zvuk/dasha2/zm1.mp3", "zm2": "../zvuk/dasha2/zm2.mp3", "zm3": "../zvuk/dasha2/zm3.mp3", "zm4": "../zvuk/dasha2/zm4.mp3", "zm5": "../zvuk/dasha2/zm5.mp3", "zm6": "../zvuk/dasha2/zm6.mp3", "zm7": "../zvuk/dasha2/zm7.mp3", "zm8": "../zvuk/dasha2/zm8.mp3", "zm9": "../zvuk/dasha2/zm9.mp3", "zm10": "../zvuk/dasha2/zm10.mp3", "zs1": "../zvuk/dasha2/zs1.mp3", "zs2": "../zvuk/dasha2/zs2.mp3", "zs3": "../zvuk/dasha2/zs3.mp3", "zs4": "../zvuk/dasha2/zs4.mp3", "zs5": "../zvuk/dasha2/zs5.mp3", "mvs1": "../zvuk/dasha2/mvs1.mp3", "mvs2": "../zvuk/dasha2/mvs2.mp3", "mvs3": "../zvuk/dasha2/mvs3.mp3", "mvs4": "../zvuk/dasha2/mvs4.mp3", "mvs5": "../zvuk/dasha2/mvs5.mp3", "mvs6": "../zvuk/dasha2/mvs6.mp3", "mvs7": "../zvuk/dasha2/mvs7.mp3", "mvs8": "../zvuk/dasha2/mvs8.mp3", "mvw1": "../zvuk/dasha2/mvw1.mp3", "mvw2": "../zvuk/dasha2/mvw2.mp3", "mvw3": "../zvuk/dasha2/mvw3.mp3", "mvw4": "../zvuk/dasha2/mvw4.mp3", "mvw5": "../zvuk/dasha2/mvw5.mp3", "mvw6": "../zvuk/dasha2/mvw6.mp3", "mvw7": "../zvuk/dasha2/mvw7.mp3", "mvw8": "../zvuk/dasha2/mvw8.mp3", "mvm1": "../zvuk/dasha2/mvm1.mp3", "mvm2": "../zvuk/dasha2/mvm2.mp3", "mvm3": "../zvuk/dasha2/mvm3.mp3", "mvm4": "../zvuk/dasha2/mvm4.mp3", "mvm5": "../zvuk/dasha2/mvm5.mp3", "mvm6": "../zvuk/dasha2/mvm6.mp3", "mvm7": "../zvuk/dasha2/mvm7.mp3", "mvm8": "../zvuk/dasha2/mvm8.mp3", "mvd1": "../zvuk/dasha2/mvd1.mp3", "mvd2": "../zvuk/dasha2/mvd2.mp3", "mvd3": "../zvuk/dasha2/mvd3.mp3", "mvd4": "../zvuk/dasha2/mvd4.mp3", "mvd5": "../zvuk/dasha2/mvd5.mp3", "mvd6": "../zvuk/dasha2/mvd6.mp3", "mvd7": "../zvuk/dasha2/mvd7.mp3", "mvd8": "../zvuk/dasha2/mvd8.mp3", "mvk1": "../zvuk/dasha2/mvk1.mp3", "mvk2": "../zvuk/dasha2/mvk2.mp3", "mvk3": "../zvuk/dasha2/mvk3.mp3", "mvk4": "../zvuk/dasha2/mvk4.mp3", "mvk5": "../zvuk/dasha2/mvk5.mp3", "mvk6": "../zvuk/dasha2/mvk6.mp3", "mvk7": "../zvuk/dasha2/mvk7.mp3", "mvk8": "../zvuk/dasha2/mvk8.mp3", "mvg1": "../zvuk/dasha2/mvg1.mp3", "mvg2": "../zvuk/dasha2/mvg2.mp3", "mvg3": "../zvuk/dasha2/mvg3.mp3", "mvg4": "../zvuk/dasha2/mvg4.mp3", "mvg5": "../zvuk/dasha2/mvg5.mp3", "mvg6": "../zvuk/dasha2/mvg6.mp3", "mvg7": "../zvuk/dasha2/mvg7.mp3", "mvg8": "../zvuk/dasha2/mvg8.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1294,19 +1309,84 @@ const MODALVERBEN = {
     '__ du Cola?',
   ],
 };
+
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+// ── 11.09: домашка с самопроверкой — перевод у предложений, ответы с «почему» ──
+function кнопкаОтветов(кнопкаId, блокId, данные){
+  const к = document.getElementById(кнопкаId), б = document.getElementById(блокId);
+  к.dataset.showText = 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть ответы';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){ showAnswers(this, б, данные); };
+}
+function сЗвуком(список){ return список.map(п => [п[0], '<span class="hw-verb">' + п[1] + '</span> — ' + п[5] + ' ' + playBtn(п[6]), null, п[3], п[4]]); }
+const З1 = [["Ich ___ heute lange arbeiten. <span class='hint-ru'>(müssen)</span>", "muss", null, "Сегодня мне нужно долго работать.", "ich → <i>muss</i>, без окончания. Смысловой глагол arbeiten — в конец.", "Ich muss heute lange arbeiten.", "zm1"], ["Du ___ gut Deutsch sprechen. <span class='hint-ru'>(können)</span>", "kannst", null, "Ты хорошо говоришь по-немецки.", "du → <i>kannst</i>.", "Du kannst gut Deutsch sprechen.", "zm2"], ["Er ___ seine Hausaufgaben machen. <span class='hint-ru'>(sollen)</span>", "soll", null, "Ему нужно сделать домашнее задание.", "er → <i>soll</i> — без окончания, как у ich.", "Er soll seine Hausaufgaben machen.", "zm3"], ["Sie (она) ___ ins Kino gehen. <span class='hint-ru'>(dürfen)</span>", "darf", null, "Ей можно пойти в кино.", "sie (она) → <i>darf</i>.", "Sie darf ins Kino gehen.", "zm4"], ["Es ___ draußen sehr kalt sein. <span class='hint-ru'>(können)</span>", "kann", null, "На улице может быть очень холодно.", "Здесь können — не «уметь», а «возможно»: es → <i>kann</i>.", "Es kann draußen sehr kalt sein.", "zm5"], ["Wir ___ morgen früh aufstehen. <span class='hint-ru'>(müssen)</span>", "müssen", null, "Завтра нам нужно рано вставать.", "wir → <i>müssen</i>. aufstehen стоит в конце целиком — с модальным приставка не отрывается.", "Wir müssen morgen früh aufstehen.", "zm6"], ["Ihr ___ leise sein! <span class='hint-ru'>(sollen)</span>", "sollt", null, "Вам велено вести себя тихо!", "ihr → <i>sollt</i>.", "Ihr sollt leise sein!", "zm7"], ["Sie (они) ___ nicht so laut sprechen. <span class='hint-ru'>(dürfen)</span>", "dürfen", null, "Им нельзя так громко разговаривать.", "sie (они) → <i>dürfen</i>.", "Sie dürfen nicht so laut sprechen.", "zm8"], ["Sie (вежливое Вы) ___ hier nicht rauchen. <span class='hint-ru'>(dürfen)</span>", "dürfen", null, "Вам здесь нельзя курить.", "Sie (Вы) → <i>dürfen</i> — та же форма, что у «они». 🩺 Фраза из кабинета врача.", "Sie dürfen hier nicht rauchen.", "zm9"], ["Ich ___ heute keinen Kaffee trinken. <span class='hint-ru'>(möchten)</span>", "möchte", null, "Сегодня я не хочу пить кофе.", "ich → <i>möchte</i> (и er möchte — тоже без -t). der Kaffee → <i>keinen</i> Kaffee.", "Ich möchte heute keinen Kaffee trinken.", "zm10"]];
+const З2 = [["(er / können / bleiben) ___", "Er kann bleiben.", null, "Он может остаться.", "Модальный — на 2-м месте, смысловой глагол — в самом конце, в инфинитиве.", "Er kann bleiben.", "zs1"], ["(du / sollen / nachsitzen) ___", "Du sollst nachsitzen.", null, "Тебе велено остаться после уроков.", "<i>nachsitzen</i> — «оставаться после уроков» в наказание. С модальным приставка не отрывается: nachsitzen целиком в конце.", "Du sollst nachsitzen.", "zs2"], ["(wir / müssen / Liegestütze machen) ___", "Wir müssen Liegestütze machen.", null, "Нам нужно отжиматься.", "<i>Liegestütze</i> — отжимания. machen — в конец.", "Wir müssen Liegestütze machen.", "zs3"], ["(ihr / dürfen / nicht / das) ___", "Ihr dürft das nicht.", null, "Вам этого нельзя.", "Смыслового глагола нет — его подразумевают (das nicht machen). nicht встаёт в конец. Можно и полностью: Ihr dürft das nicht machen.", "Ihr dürft das nicht.", "zs4"], ["(ich / wollen / nicht / streiten) ___", "Ich will nicht streiten.", null, "Я не хочу ссориться.", "ich → <i>will</i>. nicht — прямо перед глаголом в конце: nicht streiten.", "Ich will nicht streiten.", "zs5"]];
+blanksBlock('hwZ1', З1, 'z1_');
+blanksBlock('hwZ2', З2, 'z2_');
+кнопкаОтветов('кОтветыZ1', 'otvetyZ1', сЗвуком(З1));
+кнопкаОтветов('кОтветыZ2', 'otvetyZ2', З2.map(п => [п[0], п[5] + ' ' + playBtn(п[6]), null, п[3], п[4]]));
+
+// Большой лист: те же ключи mv_<глагол><N>, у каждого блока свои ответы
+const МВ_ОТВЕТЫ = {"sollen": {"прист": "mvs", "формы": "ich soll · du sollst · er soll · wir sollen · ihr sollt · sie/Sie sollen", "пункты": [["soll", "Was soll ich nach dem Mittagessen tun, Mutter?", "Что мне делать после обеда, мама?", "«Что мне делать?» — спрашиваешь, чего хочет другой → sollen. ich → soll."], ["sollst", "Du sollst Einkäufe machen.", "Тебе нужно сходить за покупками.", "du → sollst."], ["sollt", "Ihr sollt immer pünktlich sein!", "Вы должны всегда приходить вовремя!", "ihr → sollt."], ["soll", "Er soll keinen Kaffee trinken.", "Ему не следует пить кофе.", "er → soll. 🩺 Так и говорят о пациенте: «Er soll keinen Kaffee trinken» — врач велел."], ["sollen", "Die Schüler sollen Mathe lernen.", "Ученикам нужно учить математику.", "die Schüler = они → sollen."], ["soll", "Frau Schulz soll zur Post gehen.", "Госпоже Шульц нужно сходить на почту.", "Frau Schulz — одна (sie, она) → soll."], ["sollen", "Die Kinder sollen viel Milch trinken.", "Детям следует пить много молока.", "die Kinder — множественное → sollen."], ["sollen", "Wir sollen am Nachmittag das Zimmer aufräumen.", "После обеда нам нужно убрать комнату.", "wir → sollen. aufräumen — в конце целиком."]]}, "wollen": {"прист": "mvw", "формы": "ich will · du willst · er will · wir wollen · ihr wollt · sie/Sie wollen", "пункты": [["will", "Ich will heute in den Zoo gehen.", "Сегодня я хочу пойти в зоопарк.", "ich → will — не «wolle»! У ich и er одна форма."], ["Wollt", "Wollt ihr mitkommen?", "Хотите пойти с нами?", "ihr → wollt. Вопрос без вопросительного слова — глагол первым."], ["Wollen", "Wollen Sie mir helfen, Herr Schreiber?", "Вы хотите мне помочь, господин Шрайбер?", "Sie → wollen. (Попросить вежливее: Können Sie mir helfen?)"], ["willst", "Was willst du hier?", "Что тебе здесь надо?", "du → willst. Второго глагола нет — так тоже говорят."], ["willst", "Hans, was willst du machen?", "Ганс, что ты хочешь делать?", "du → willst."], ["will", "Ich will Fußball spielen.", "Я хочу играть в футбол.", "ich → will."], ["wollen", "Meine Eltern wollen ins Theater gehen.", "Мои родители хотят пойти в театр.", "meine Eltern = они → wollen."], ["wollen", "Wir wollen nach Hause gehen.", "Мы хотим пойти домой.", "wir → wollen."]]}, "müssen": {"прист": "mvm", "формы": "ich muss · du musst · er muss · wir müssen · ihr müsst · sie/Sie müssen", "пункты": [["Musst", "Musst du in der Nacht arbeiten?", "Тебе приходится работать ночью?", "du → musst — в ед. числе без умляута! 🩺 Ночное дежурство — der Nachtdienst."], ["muss", "Ich muss morgen in die Schule gehen.", "Завтра мне нужно идти в школу.", "ich → muss."], ["müssen", "Wir müssen heute Nachmittag dem Vater helfen.", "Сегодня после обеда нам нужно помочь отцу.", "wir → müssen. helfen + Dativ: dem Vater."], ["muss", "Das Kind muss zum Arzt gehen.", "Ребёнку нужно к врачу.", "das Kind = es → muss."], ["Müsst", "Müsst ihr dem Opa im Garten helfen?", "Вам нужно помогать дедушке в саду?", "ihr → müsst."], ["müssen", "Sie müssen den Brief schicken.", "Им нужно отправить письмо.", "Sie (Pl.) = они → müssen."], ["müssen", "Die Schüler müssen die Hausaufgaben machen.", "Ученикам нужно делать домашние задания.", "множественное → müssen."], ["müssen", "Meine Eltern müssen viel arbeiten.", "Моим родителям приходится много работать.", "множественное → müssen."]]}, "dürfen": {"прист": "mvd", "формы": "ich darf · du darfst · er darf · wir dürfen · ihr dürft · sie/Sie dürfen", "пункты": [["darf", "Das Kind darf kein Eis essen.", "Ребёнку нельзя мороженое.", "das Kind = es → darf. Запрет с существительным — через kein: kein Eis."], ["Darf", "Darf ich ins Kino gehen?", "Можно мне пойти в кино?", "«Можно мне…?» = Darf ich…? ich → darf."], ["darfst", "Du darfst heute nicht fernsehen.", "Тебе сегодня нельзя смотреть телевизор.", "du → darfst. fernsehen — в конце целиком."], ["dürfen", "Wir dürfen kein Auto fahren.", "Нам нельзя водить машину.", "wir → dürfen."], ["darf", "Tobias darf seine Schwester besuchen.", "Тобиасу можно навестить сестру.", "Tobias = er → darf."], ["dürfen", "Die Kinder dürfen keinen Kaffee trinken.", "Детям нельзя пить кофе.", "множественное → dürfen. der Kaffee → keinen (Akkusativ)."], ["darf", "Hier darf man nicht parken.", "Здесь нельзя парковаться.", "man спрягается как er → darf. Типичная надпись на табличке."], ["Dürft", "Dürft ihr mich heute besuchen?", "Вам можно навестить меня сегодня?", "ihr → dürft."]]}, "können": {"прист": "mvk", "формы": "ich kann · du kannst · er kann · wir können · ihr könnt · sie/Sie können", "пункты": [["kann", "Inge kann gut Gitarre spielen.", "Инге хорошо играет на гитаре.", "Умение; Inge = sie → kann."], ["Kann", "Kann ich das Fenster öffnen?", "Можно я открою окно?", "ich → kann. Как просьба — вежливее «Darf ich…?»."], ["Kannst", "Kannst du schon Deutsch sprechen?", "Ты уже говоришь по-немецки?", "du → kannst. Про языки говорят и без глагола: Ich kann Deutsch."], ["können", "Wir können dich morgen besuchen.", "Мы можем навестить тебя завтра.", "wir → können."], ["Könnt", "Könnt ihr schon lesen?", "Вы уже умеете читать?", "ihr → könnt."], ["kann", "Eryk kann sehr gut schwimmen.", "Эрик очень хорошо плавает.", "er → kann."], ["kann", "Er kann gut Handball spielen.", "Он хорошо играет в гандбол.", "er → kann."], ["können", "Sie können schnell sprechen.", "Они умеют говорить быстро.", "Sie (Pl.) = они → können."]]}, "mögen": {"прист": "mvg", "формы": "ich mag · du magst · er mag · wir mögen · ihr mögt · sie/Sie mögen", "пункты": [["mag", "Das Mädchen mag keine Schokolade essen.", "Девочка не любит шоколад.", "das Mädchen = es → mag. mögen со вторым глаголом звучит старомодно; сейчас сказали бы «Das Mädchen mag keine Schokolade»."], ["Mögt", "Mögt ihr Obstkuchen?", "Вы любите фруктовый пирог?", "ihr → mögt. На листе опечатка «Osbtkuchen» — правильно Obstkuchen."], ["mögen", "Die Schüler mögen die Schule nicht.", "Ученики не любят школу.", "множественное → mögen."], ["mag", "Wer mag Tomatensuppe?", "Кто любит томатный суп?", "wer спрягается как er → mag."], ["Magst", "Magst du einen Kaffee trinken?", "Хочешь выпить кофе?", "du → magst. На юге Германии и в Австрии «Magst du…?» значит «хочешь?». В обычном немецком чаще: Möchtest du einen Kaffee?"], ["mögen", "Sie mögen keine Krimifilme.", "Они не любят детективы.", "Sie (Pl.) = они → mögen."], ["mag", "Er mag Käsekuchen essen.", "Он любит творожный пирог.", "er → mag. Проще: Er mag Käsekuchen / Er isst gern Käsekuchen."], ["Magst", "Magst du Cola?", "Ты любишь колу?", "du → magst."]]}};
 document.getElementById('mvGrid').innerHTML = Object.entries(MODALVERBEN).map(([глагол, предложения], gi) => `
   <div class="mv-block">
     <h4>${gi+1}. ${глагол}</h4>
     ${предложения.map((пр, i) => {
       const части = пр.split('__');
       const id = 'mv_' + глагол + (i+1);
-      return `<div class="mv-row"><span class="num">${i+1}.</span> ${части[0]}<input class="fld" data-save="${id}">${части[1]}</div>`;
+      return `<div class="mv-row"><span class="num">${i+1}.</span> ${части[0]}<input class="fld" data-save="${id}">${части[1]} ${кнопкаПеревода(МВ_ОТВЕТЫ[глагол].пункты[i][2])}</div>`;
     }).join('')}
+    <button id="кОтветыMV${gi}" class="кн-ответы" style="font-size:12.5px;padding:7px 12px">Ответы</button>
+    <div id="otvetyMV${gi}" hidden style="margin-top:8px"></div>
   </div>`).join('');
+Object.keys(MODALVERBEN).forEach((глагол, gi) => {
+  const о = МВ_ОТВЕТЫ[глагол];
+  кнопкаОтветов('кОтветыMV' + gi, 'otvetyMV' + gi, о.пункты.map((п, i) =>
+    ['', '<span class="hw-verb">' + п[0] + '</span> — ' + п[1] + ' ' + playBtn(о.прист + (i+1)), null, п[2], п[3] + (i === 0 ? '<br><i>Формы:</i> ' + о.формы : '')]));
+});
 
 (function(){
   const KEY = 'dasha2_hw_';
-  document.querySelectorAll('#mvGrid [data-save]').forEach(el=>{
+  document.querySelectorAll('#hw [data-save]').forEach(el=>{
     const k = KEY + el.dataset.save;
     const saved = localStorage.getItem(k);
     if(saved !== null) el.value = saved;

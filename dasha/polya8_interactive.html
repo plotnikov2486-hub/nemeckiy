@@ -23,6 +23,32 @@
 </style>
 
 <style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  .hwbox .grammar-box { background:var(--surface-2); border-radius:10px; padding:10px 14px; }
+</style>
+<style>
   :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
     --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
     --warn:#b3402a; --warn-bg:#fbeae6; --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
@@ -181,9 +207,6 @@
   .saveinfo { font-size:12px; color:var(--ink-faint); margin-top:10px; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -359,7 +382,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   <div class="eyebrow">Занятия с Дашей · Полина · занятие 8</div>
   <h1>Профессии, национальности и множественное число</h1>
   <p class="lede">Продолжили тему женского рода с прошлого занятия: разобрали профессии и национальности, узнали, когда артикль вообще не нужен, и в конце Даша открыла новую большую тему — <b>множественное число</b>. У каждого слова озвучка и [транскрипция].</p>
-  <div class="hint">🔊 = нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <div class="hint">🔊 = нажми и слушай — звук встроен в страницу, интернет не нужен</div>
 
   <div class="toc">
     <b>Что в занятии</b>
@@ -604,7 +627,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 
   <section class="block" id="s15">
     <h2><span class="num">15</span> 📚 Домашка от Даши</h2>
-    <p class="desc">Прислана в Telegram 29.08.2026. Четыре задания — поля можно заполнять прямо здесь, написанное сохраняется в браузере.</p>
+    <p class="desc">Прислана в Telegram 29.08.2026. Четыре задания — поля можно заполнять прямо здесь, написанное сохраняется в браузере. Сначала пиши своё, потом сверяйся: <b>«мой пример»</b>, <b>«мой ответ»</b> и <b>ответы с пояснением, почему именно так</b>. Ответы на вопросы к видео — по его субтитрам.</p>
 
     <div class="hwbox">
       <span class="hwnum">Задание 1</span>
@@ -630,6 +653,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       </div>
       <p class="desc" style="margin:10px 0 6px">Сами профессии с озвучкой — в разделе 14 выше.</p>
       <textarea class="fld" id="f_berufe" rows="8" placeholder="der Apotheker (die Apotheker) — die Apothekerin (die Apothekerinnen). Verb: dosieren"></textarea>
+      <button id="кОтветыBerufe" class="кн-ответы">Показать ответы и пояснения</button>
+      <div id="otvetyBerufe" hidden style="margin-top:10px"></div>
     </div>
 
     <div class="hwbox">
@@ -1225,7 +1250,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"w1": "../zvuk/polya8/w1.mp3", "w2": "../zvuk/polya8/w2.mp3", "w3": "../zvuk/polya8/w3.mp3", "w4": "../zvuk/polya8/w4.mp3", "w5": "../zvuk/polya8/w5.mp3", "w6": "../zvuk/polya8/w6.mp3", "w7": "../zvuk/polya8/w7.mp3", "f1": "../zvuk/polya8/f1.mp3", "f2": "../zvuk/polya8/f2.mp3", "f3": "../zvuk/polya8/f3.mp3", "f4": "../zvuk/polya8/f4.mp3", "f5": "../zvuk/polya8/f5.mp3", "f6": "../zvuk/polya8/f6.mp3", "f7": "../zvuk/polya8/f7.mp3", "pl_in1": "../zvuk/polya8/pl_in1.mp3", "pl_in2": "../zvuk/polya8/pl_in2.mp3", "pl_in3": "../zvuk/polya8/pl_in3.mp3", "t1": "../zvuk/polya8/t1.mp3", "t2": "../zvuk/polya8/t2.mp3", "t3": "../zvuk/polya8/t3.mp3", "t4": "../zvuk/polya8/t4.mp3", "t5": "../zvuk/polya8/t5.mp3", "t6": "../zvuk/polya8/t6.mp3", "t7": "../zvuk/polya8/t7.mp3", "t8": "../zvuk/polya8/t8.mp3", "b1": "../zvuk/polya8/b1.mp3", "b2": "../zvuk/polya8/b2.mp3", "b3": "../zvuk/polya8/b3.mp3", "b4": "../zvuk/polya8/b4.mp3", "b5": "../zvuk/polya8/b5.mp3", "b6": "../zvuk/polya8/b6.mp3", "b7": "../zvuk/polya8/b7.mp3", "b8": "../zvuk/polya8/b8.mp3", "b9": "../zvuk/polya8/b9.mp3", "b10": "../zvuk/polya8/b10.mp3", "b11": "../zvuk/polya8/b11.mp3", "b12": "../zvuk/polya8/b12.mp3", "b13": "../zvuk/polya8/b13.mp3", "b14": "../zvuk/polya8/b14.mp3", "b15": "../zvuk/polya8/b15.mp3", "b16": "../zvuk/polya8/b16.mp3", "x1": "../zvuk/polya8/x1.mp3", "x2": "../zvuk/polya8/x2.mp3", "x3": "../zvuk/polya8/x3.mp3", "d1": "../zvuk/polya8/d1.mp3", "d2": "../zvuk/polya8/d2.mp3", "d3": "../zvuk/polya8/d3.mp3", "d4": "../zvuk/polya8/d4.mp3", "d5": "../zvuk/polya8/d5.mp3", "d6": "../zvuk/polya8/d6.mp3", "d7": "../zvuk/polya8/d7.mp3", "d8": "../zvuk/polya8/d8.mp3", "d9": "../zvuk/polya8/d9.mp3", "d10": "../zvuk/polya8/d10.mp3", "d11": "../zvuk/polya8/d11.mp3", "d12": "../zvuk/polya8/d12.mp3", "d13": "../zvuk/polya8/d13.mp3", "d14": "../zvuk/polya8/d14.mp3", "d15": "../zvuk/polya8/d15.mp3", "d16": "../zvuk/polya8/d16.mp3", "d17": "../zvuk/polya8/d17.mp3", "d18": "../zvuk/polya8/d18.mp3", "r1": "../zvuk/polya8/r1.mp3", "r2": "../zvuk/polya8/r2.mp3", "r3": "../zvuk/polya8/r3.mp3", "r4": "../zvuk/polya8/r4.mp3", "s1": "../zvuk/polya8/s1.mp3", "s2": "../zvuk/polya8/s2.mp3", "s3": "../zvuk/polya8/s3.mp3", "s4": "../zvuk/polya8/s4.mp3", "e1": "../zvuk/polya8/e1.mp3", "e2": "../zvuk/polya8/e2.mp3", "e3": "../zvuk/polya8/e3.mp3", "e4": "../zvuk/polya8/e4.mp3", "e5": "../zvuk/polya8/e5.mp3", "e6": "../zvuk/polya8/e6.mp3", "e7": "../zvuk/polya8/e7.mp3", "e8": "../zvuk/polya8/e8.mp3", "e9": "../zvuk/polya8/e9.mp3", "e10": "../zvuk/polya8/e10.mp3", "e11": "../zvuk/polya8/e11.mp3", "n1": "../zvuk/polya8/n1.mp3", "n2": "../zvuk/polya8/n2.mp3", "n3": "../zvuk/polya8/n3.mp3", "n4": "../zvuk/polya8/n4.mp3", "g1": "../zvuk/polya8/g1.mp3", "g2": "../zvuk/polya8/g2.mp3", "g3": "../zvuk/polya8/g3.mp3", "g4": "../zvuk/polya8/g4.mp3", "g5": "../zvuk/polya8/g5.mp3", "g6": "../zvuk/polya8/g6.mp3", "g7": "../zvuk/polya8/g7.mp3", "g8": "../zvuk/polya8/g8.mp3", "g9": "../zvuk/polya8/g9.mp3", "g10": "../zvuk/polya8/g10.mp3", "m1": "../zvuk/polya8/m1.mp3", "m2": "../zvuk/polya8/m2.mp3", "m3": "../zvuk/polya8/m3.mp3", "m4": "../zvuk/polya8/m4.mp3", "m5": "../zvuk/polya8/m5.mp3", "m6": "../zvuk/polya8/m6.mp3", "m7": "../zvuk/polya8/m7.mp3", "m8": "../zvuk/polya8/m8.mp3", "m9": "../zvuk/polya8/m9.mp3", "m10": "../zvuk/polya8/m10.mp3", "k1": "../zvuk/polya8/k1.mp3", "k2": "../zvuk/polya8/k2.mp3", "k3": "../zvuk/polya8/k3.mp3", "k4": "../zvuk/polya8/k4.mp3", "k5": "../zvuk/polya8/k5.mp3", "k6": "../zvuk/polya8/k6.mp3", "k7": "../zvuk/polya8/k7.mp3", "k8": "../zvuk/polya8/k8.mp3", "k9": "../zvuk/polya8/k9.mp3", "k10": "../zvuk/polya8/k10.mp3", "k11": "../zvuk/polya8/k11.mp3", "k12": "../zvuk/polya8/k12.mp3", "k13": "../zvuk/polya8/k13.mp3", "k14": "../zvuk/polya8/k14.mp3", "k15": "../zvuk/polya8/k15.mp3", "k16": "../zvuk/polya8/k16.mp3", "k17": "../zvuk/polya8/k17.mp3", "k18": "../zvuk/polya8/k18.mp3", "k19": "../zvuk/polya8/k19.mp3", "k20": "../zvuk/polya8/k20.mp3", "k21": "../zvuk/polya8/k21.mp3", "k22": "../zvuk/polya8/k22.mp3", "k23": "../zvuk/polya8/k23.mp3", "k24": "../zvuk/polya8/k24.mp3", "kr1": "../zvuk/polya8/kr1.mp3", "kr2": "../zvuk/polya8/kr2.mp3", "h1": "../zvuk/polya8/h1.mp3", "h2": "../zvuk/polya8/h2.mp3", "h3": "../zvuk/polya8/h3.mp3", "v1": "../zvuk/polya8/v1.mp3", "v2": "../zvuk/polya8/v2.mp3", "v3": "../zvuk/polya8/v3.mp3", "v4": "../zvuk/polya8/v4.mp3", "v5": "../zvuk/polya8/v5.mp3", "v6": "../zvuk/polya8/v6.mp3", "v7": "../zvuk/polya8/v7.mp3", "v8": "../zvuk/polya8/v8.mp3", "z1": "../zvuk/polya8/z1.mp3", "z2": "../zvuk/polya8/z2.mp3", "z3": "../zvuk/polya8/z3.mp3", "z4": "../zvuk/polya8/z4.mp3"};
+const AUDIO = {"w1": "../zvuk/polya8/w1.mp3", "w2": "../zvuk/polya8/w2.mp3", "w3": "../zvuk/polya8/w3.mp3", "w4": "../zvuk/polya8/w4.mp3", "w5": "../zvuk/polya8/w5.mp3", "w6": "../zvuk/polya8/w6.mp3", "w7": "../zvuk/polya8/w7.mp3", "f1": "../zvuk/polya8/f1.mp3", "f2": "../zvuk/polya8/f2.mp3", "f3": "../zvuk/polya8/f3.mp3", "f4": "../zvuk/polya8/f4.mp3", "f5": "../zvuk/polya8/f5.mp3", "f6": "../zvuk/polya8/f6.mp3", "f7": "../zvuk/polya8/f7.mp3", "pl_in1": "../zvuk/polya8/pl_in1.mp3", "pl_in2": "../zvuk/polya8/pl_in2.mp3", "pl_in3": "../zvuk/polya8/pl_in3.mp3", "t1": "../zvuk/polya8/t1.mp3", "t2": "../zvuk/polya8/t2.mp3", "t3": "../zvuk/polya8/t3.mp3", "t4": "../zvuk/polya8/t4.mp3", "t5": "../zvuk/polya8/t5.mp3", "t6": "../zvuk/polya8/t6.mp3", "t7": "../zvuk/polya8/t7.mp3", "t8": "../zvuk/polya8/t8.mp3", "b1": "../zvuk/polya8/b1.mp3", "b2": "../zvuk/polya8/b2.mp3", "b3": "../zvuk/polya8/b3.mp3", "b4": "../zvuk/polya8/b4.mp3", "b5": "../zvuk/polya8/b5.mp3", "b6": "../zvuk/polya8/b6.mp3", "b7": "../zvuk/polya8/b7.mp3", "b8": "../zvuk/polya8/b8.mp3", "b9": "../zvuk/polya8/b9.mp3", "b10": "../zvuk/polya8/b10.mp3", "b11": "../zvuk/polya8/b11.mp3", "b12": "../zvuk/polya8/b12.mp3", "b13": "../zvuk/polya8/b13.mp3", "b14": "../zvuk/polya8/b14.mp3", "b15": "../zvuk/polya8/b15.mp3", "b16": "../zvuk/polya8/b16.mp3", "x1": "../zvuk/polya8/x1.mp3", "x2": "../zvuk/polya8/x2.mp3", "x3": "../zvuk/polya8/x3.mp3", "d1": "../zvuk/polya8/d1.mp3", "d2": "../zvuk/polya8/d2.mp3", "d3": "../zvuk/polya8/d3.mp3", "d4": "../zvuk/polya8/d4.mp3", "d5": "../zvuk/polya8/d5.mp3", "d6": "../zvuk/polya8/d6.mp3", "d7": "../zvuk/polya8/d7.mp3", "d8": "../zvuk/polya8/d8.mp3", "d9": "../zvuk/polya8/d9.mp3", "d10": "../zvuk/polya8/d10.mp3", "d11": "../zvuk/polya8/d11.mp3", "d12": "../zvuk/polya8/d12.mp3", "d13": "../zvuk/polya8/d13.mp3", "d14": "../zvuk/polya8/d14.mp3", "d15": "../zvuk/polya8/d15.mp3", "d16": "../zvuk/polya8/d16.mp3", "d17": "../zvuk/polya8/d17.mp3", "d18": "../zvuk/polya8/d18.mp3", "r1": "../zvuk/polya8/r1.mp3", "r2": "../zvuk/polya8/r2.mp3", "r3": "../zvuk/polya8/r3.mp3", "r4": "../zvuk/polya8/r4.mp3", "s1": "../zvuk/polya8/s1.mp3", "s2": "../zvuk/polya8/s2.mp3", "s3": "../zvuk/polya8/s3.mp3", "s4": "../zvuk/polya8/s4.mp3", "e1": "../zvuk/polya8/e1.mp3", "e2": "../zvuk/polya8/e2.mp3", "e3": "../zvuk/polya8/e3.mp3", "e4": "../zvuk/polya8/e4.mp3", "e5": "../zvuk/polya8/e5.mp3", "e6": "../zvuk/polya8/e6.mp3", "e7": "../zvuk/polya8/e7.mp3", "e8": "../zvuk/polya8/e8.mp3", "e9": "../zvuk/polya8/e9.mp3", "e10": "../zvuk/polya8/e10.mp3", "e11": "../zvuk/polya8/e11.mp3", "n1": "../zvuk/polya8/n1.mp3", "n2": "../zvuk/polya8/n2.mp3", "n3": "../zvuk/polya8/n3.mp3", "n4": "../zvuk/polya8/n4.mp3", "g1": "../zvuk/polya8/g1.mp3", "g2": "../zvuk/polya8/g2.mp3", "g3": "../zvuk/polya8/g3.mp3", "g4": "../zvuk/polya8/g4.mp3", "g5": "../zvuk/polya8/g5.mp3", "g6": "../zvuk/polya8/g6.mp3", "g7": "../zvuk/polya8/g7.mp3", "g8": "../zvuk/polya8/g8.mp3", "g9": "../zvuk/polya8/g9.mp3", "g10": "../zvuk/polya8/g10.mp3", "m1": "../zvuk/polya8/m1.mp3", "m2": "../zvuk/polya8/m2.mp3", "m3": "../zvuk/polya8/m3.mp3", "m4": "../zvuk/polya8/m4.mp3", "m5": "../zvuk/polya8/m5.mp3", "m6": "../zvuk/polya8/m6.mp3", "m7": "../zvuk/polya8/m7.mp3", "m8": "../zvuk/polya8/m8.mp3", "m9": "../zvuk/polya8/m9.mp3", "m10": "../zvuk/polya8/m10.mp3", "k1": "../zvuk/polya8/k1.mp3", "k2": "../zvuk/polya8/k2.mp3", "k3": "../zvuk/polya8/k3.mp3", "k4": "../zvuk/polya8/k4.mp3", "k5": "../zvuk/polya8/k5.mp3", "k6": "../zvuk/polya8/k6.mp3", "k7": "../zvuk/polya8/k7.mp3", "k8": "../zvuk/polya8/k8.mp3", "k9": "../zvuk/polya8/k9.mp3", "k10": "../zvuk/polya8/k10.mp3", "k11": "../zvuk/polya8/k11.mp3", "k12": "../zvuk/polya8/k12.mp3", "k13": "../zvuk/polya8/k13.mp3", "k14": "../zvuk/polya8/k14.mp3", "k15": "../zvuk/polya8/k15.mp3", "k16": "../zvuk/polya8/k16.mp3", "k17": "../zvuk/polya8/k17.mp3", "k18": "../zvuk/polya8/k18.mp3", "k19": "../zvuk/polya8/k19.mp3", "k20": "../zvuk/polya8/k20.mp3", "k21": "../zvuk/polya8/k21.mp3", "k22": "../zvuk/polya8/k22.mp3", "k23": "../zvuk/polya8/k23.mp3", "k24": "../zvuk/polya8/k24.mp3", "kr1": "../zvuk/polya8/kr1.mp3", "kr2": "../zvuk/polya8/kr2.mp3", "h1": "../zvuk/polya8/h1.mp3", "h2": "../zvuk/polya8/h2.mp3", "h3": "../zvuk/polya8/h3.mp3", "v1": "../zvuk/polya8/v1.mp3", "v2": "../zvuk/polya8/v2.mp3", "v3": "../zvuk/polya8/v3.mp3", "v4": "../zvuk/polya8/v4.mp3", "v5": "../zvuk/polya8/v5.mp3", "v6": "../zvuk/polya8/v6.mp3", "v7": "../zvuk/polya8/v7.mp3", "v8": "../zvuk/polya8/v8.mp3", "z1": "../zvuk/polya8/z1.mp3", "z2": "../zvuk/polya8/z2.mp3", "z3": "../zvuk/polya8/z3.mp3", "z4": "../zvuk/polya8/z4.mp3", "na1": "../zvuk/polya8/na1.mp3", "na2": "../zvuk/polya8/na2.mp3", "na3": "../zvuk/polya8/na3.mp3", "na4": "../zvuk/polya8/na4.mp3", "na5": "../zvuk/polya8/na5.mp3", "na6": "../zvuk/polya8/na6.mp3", "na7": "../zvuk/polya8/na7.mp3", "na8": "../zvuk/polya8/na8.mp3", "na9": "../zvuk/polya8/na9.mp3", "na10": "../zvuk/polya8/na10.mp3", "bw1": "../zvuk/polya8/bw1.mp3", "bw2": "../zvuk/polya8/bw2.mp3", "bw3": "../zvuk/polya8/bw3.mp3", "bw4": "../zvuk/polya8/bw4.mp3", "bw5": "../zvuk/polya8/bw5.mp3", "bw6": "../zvuk/polya8/bw6.mp3", "bw7": "../zvuk/polya8/bw7.mp3", "bw8": "../zvuk/polya8/bw8.mp3", "bw9": "../zvuk/polya8/bw9.mp3", "bw10": "../zvuk/polya8/bw10.mp3", "bw11": "../zvuk/polya8/bw11.mp3", "bw12": "../zvuk/polya8/bw12.mp3", "bw13": "../zvuk/polya8/bw13.mp3", "bw14": "../zvuk/polya8/bw14.mp3", "bw15": "../zvuk/polya8/bw15.mp3", "bw16": "../zvuk/polya8/bw16.mp3", "bw17": "../zvuk/polya8/bw17.mp3", "bw18": "../zvuk/polya8/bw18.mp3", "bw19": "../zvuk/polya8/bw19.mp3", "bw20": "../zvuk/polya8/bw20.mp3", "bw21": "../zvuk/polya8/bw21.mp3", "bw22": "../zvuk/polya8/bw22.mp3", "bw23": "../zvuk/polya8/bw23.mp3", "bw24": "../zvuk/polya8/bw24.mp3", "ps1": "../zvuk/polya8/ps1.mp3", "ps2": "../zvuk/polya8/ps2.mp3", "ps3": "../zvuk/polya8/ps3.mp3", "ps4": "../zvuk/polya8/ps4.mp3", "ps5": "../zvuk/polya8/ps5.mp3", "ps6": "../zvuk/polya8/ps6.mp3", "ps7": "../zvuk/polya8/ps7.mp3", "ps8": "../zvuk/polya8/ps8.mp3", "ps9": "../zvuk/polya8/ps9.mp3", "va1": "../zvuk/polya8/va1.mp3", "va2": "../zvuk/polya8/va2.mp3", "va3": "../zvuk/polya8/va3.mp3", "va4": "../zvuk/polya8/va4.mp3", "va5": "../zvuk/polya8/va5.mp3", "va6": "../zvuk/polya8/va6.mp3", "va7": "../zvuk/polya8/va7.mp3", "va8": "../zvuk/polya8/va8.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1451,35 +1476,149 @@ words('karten',[
   ["k24","der Verkäufer → die <b>Verkäufer</b>","дэа фэркойфа → ди фэркойфа","продавец → продавцы"],
 ], 'pk');
 
-// поля домашки
-document.getElementById('hwNazii').innerHTML = Array.from({length:10},(_,i)=>`
-  <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
-    <input class="fld" data-save="f_naz${i}" placeholder="страна — по-русски — der … — die …in"></span></div>`).join('');
+// поля домашки (11.09: «мой пример» и ответы с «почему»)
 
-const ПРОФ = ['Hausfrau','Fotograf','Architekt','Köchin','Journalist',
-              'Lehrerin','Krankenschwester','Ärztin','Sängerin'];
-document.getElementById('hwSaetze').innerHTML = ПРОФ.map((пр,i)=>`
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+function переключить(b){ var t = b.nextElementSibling; t.hidden = !t.hidden; b.classList.toggle('on'); }
+function мойПример(подпись, de, clip, ru, почему){
+  return '<button type="button" class="hw-tr-btn" style="margin:6px 0 0" onclick="переключить(this)">' + подпись + '</button>' +
+    '<span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">' + de + '</span> ' + playBtn(clip) +
+    '<span class="hw-why" style="display:block">' + ru + (почему ? '<br>' + почему : '') + '</span></span>';
+}
+function кнопкаОтветов(кнопкаId, блокId, данные){
+  const к = document.getElementById(кнопкаId), б = document.getElementById(блокId);
+  к.dataset.showText = 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть ответы';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){ showAnswers(this, б, данные); };
+}
+
+// Задание 1: десять национальностей (ключи f_naz0–9 — прежние)
+const НАЦИИ = [
+  ['Österreich — Австрия — der Österreicher — die Österreicherin','na1','австриец, австрийка','Житель на <i>-er</i>, жительница на <i>-erin</i> — самый частый образец (как Amerikaner с занятия).'],
+  ['die Schweiz — Швейцария — der Schweizer — die Schweizerin','na2','швейцарец, швейцарка','⚠️ Страна с артиклем: <i>die</i> Schweiz → in <i>der</i> Schweiz (в Швейцарии).'],
+  ['Japan — Япония — der Japaner — die Japanerin','na3','японец, японка','-er / -erin.'],
+  ['Griechenland — Греция — der Grieche — die Griechin','na4','грек, гречанка','Мужской на <i>-e</i> → в женском e выпадает: Griech<b>e</b> → Griech<b>in</b>. Как Russe → Russin, Türke → Türkin.'],
+  ['Portugal — Португалия — der Portugiese — die Portugiesin','na5','португалец, португалка','Тот же тип, что Franzose → Französin: -e выпадает, добавляется -in.'],
+  ['Schweden — Швеция — der Schwede — die Schwedin','na6','швед, шведка','-e → -in.'],
+  ['die Niederlande — Нидерланды — der Niederländer — die Niederländerin','na7','нидерландец, нидерландка','⚠️ Страна во множественном числе: in <i>den</i> Niederlanden. В разговоре часто говорят Holland, der Holländer.'],
+  ['die Ukraine — Украина — der Ukrainer — die Ukrainerin','na8','украинец, украинка','Страна с артиклем: in <i>der</i> Ukraine. Житель — -er / -erin.'],
+  ['Indien — Индия — der Inder — die Inderin','na9','индиец, индианка','-ien отпадает, добавляется -er: Ind<b>ien</b> → Ind<b>er</b>.'],
+  ['Brasilien — Бразилия — der Brasilianer — die Brasilianerin','na10','бразилец, бразильянка','-ien → -ianer: Brasil<b>ien</b> → Brasil<b>ianer</b>. Так же Kolumbien → Kolumbianer.'],
+];
+document.getElementById('hwNazii').innerHTML = НАЦИИ.map(([de,clip,ru,почему],i)=>`
+  <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
+    <input class="fld" data-save="f_naz${i}" placeholder="страна — по-русски — der … — die …in"><br>
+    ${мойПример('мой пример', de, clip, ru, почему)}</span></div>`).join('');
+
+// Задание 2: 24 профессии — ответы к текстовому полю f_berufe
+const НЕ_МЕНЯЕТСЯ = 'На <i>-er</i> → множественное такое же, меняется только артикль: die.';
+const НА_ЕН = 'На <i>-t / -ist / -ot</i> → множественное <i>-en</i>.';
+const БЕРУФЕ = [
+  ['der Apotheker, die Apotheker','die Apothekerin, die Apothekerinnen','dosieren (дозировать) — образец Даши','аптекарь', НЕ_МЕНЯЕТСЯ + ' Женский род: + <i>-in</i>, во множественном <i>-innen</i> — двойное n. Это правило для всех 24.'],
+  ['der Architekt, die Architekten','die Architektin, die Architektinnen','planen (планировать)','архитектор', НА_ЕН],
+  ['der Arzt, die Ärzte','die Ärztin, die Ärztinnen','behandeln (лечить)','врач', 'Умляут + -e: Arzt → Ärzte. И в женском тоже умляут: Ärztin.'],
+  ['der Bäcker, die Bäcker','die Bäckerin, die Bäckerinnen','backen (печь)','пекарь', НЕ_МЕНЯЕТСЯ],
+  ['der Chemiker, die Chemiker','die Chemikerin, die Chemikerinnen','forschen (исследовать)','химик', НЕ_МЕНЯЕТСЯ],
+  ['der Detektiv, die Detektive','die Detektivin, die Detektivinnen','ermitteln (расследовать)','детектив', 'Множественное на -e.'],
+  ['der Elektriker, die Elektriker','die Elektrikerin, die Elektrikerinnen','reparieren (чинить)','электрик', НЕ_МЕНЯЕТСЯ],
+  ['der Fahrlehrer, die Fahrlehrer','die Fahrlehrerin, die Fahrlehrerinnen','unterrichten (обучать)','автоинструктор', НЕ_МЕНЯЕТСЯ + ' fahren + der Lehrer.'],
+  ['der Flugbegleiter, die Flugbegleiter','die Flugbegleiterin, die Flugbegleiterinnen','servieren (подавать)','бортпроводник', НЕ_МЕНЯЕТСЯ + ' der Flug (полёт) + begleiten (сопровождать).'],
+  ['der Frisör, die Frisöre','die Frisörin, die Frisörinnen','Haare schneiden (стричь)','парикмахер', 'Множественное на -e. Чаще пишут <i>Friseur / Friseurin</i> — это то же слово.'],
+  ['der Handwerker, die Handwerker','die Handwerkerin, die Handwerkerinnen','bauen (строить)','мастер', НЕ_МЕНЯЕТСЯ],
+  ['der Informatiker, die Informatiker','die Informatikerin, die Informatikerinnen','programmieren (программировать)','информатик', НЕ_МЕНЯЕТСЯ],
+  ['der Pilot, die Piloten','die Pilotin, die Pilotinnen','fliegen (летать)','пилот', НА_ЕН],
+  ['der Politiker, die Politiker','die Politikerin, die Politikerinnen','regieren (управлять)','политик', НЕ_МЕНЯЕТСЯ],
+  ['der Polizist, die Polizisten','die Polizistin, die Polizistinnen','kontrollieren (проверять)','полицейский', НА_ЕН],
+  ['der Professor, die Professoren','die Professorin, die Professorinnen','lehren (преподавать)','профессор', 'На -or → -oren, и ударение переезжает: Proféssor → Professóren.'],
+  ['der Programmierer, die Programmierer','die Programmiererin, die Programmiererinnen','programmieren (программировать)','программист', НЕ_МЕНЯЕТСЯ],
+  ['der Psychiater, die Psychiater','die Psychiaterin, die Psychiaterinnen','behandeln (лечить)','психиатр', НЕ_МЕНЯЕТСЯ + ' 🩺 Psychiater — врач; Psychologe — не врач. На карточке опечатка «Psvchiater».'],
+  ['der Reporter, die Reporter','die Reporterin, die Reporterinnen','berichten (сообщать)','репортёр', НЕ_МЕНЯЕТСЯ],
+  ['der Richter, die Richter','die Richterin, die Richterinnen','urteilen (судить)','судья', НЕ_МЕНЯЕТСЯ],
+  ['der Schauspieler, die Schauspieler','die Schauspielerin, die Schauspielerinnen','spielen (играть)','актёр', НЕ_МЕНЯЕТСЯ],
+  ['der Schreiner, die Schreiner','die Schreinerin, die Schreinerinnen','Möbel bauen (делать мебель)','столяр', НЕ_МЕНЯЕТСЯ],
+  ['der Sekretär, die Sekretäre','die Sekretärin, die Sekretärinnen','telefonieren (звонить)','секретарь', 'Множественное на -e: Sekretäre.'],
+  ['der Verkäufer, die Verkäufer','die Verkäuferin, die Verkäuferinnen','verkaufen (продавать)','продавец', НЕ_МЕНЯЕТСЯ],
+];
+кнопкаОтветов('кОтветыBerufe', 'otvetyBerufe', БЕРУФЕ.map(([м,ж,гл,ru,почему],i) =>
+  ['', '<b>' + м + '</b> ' + playBtn('k' + (i+1)) + ' — <b>' + ж + '</b> ' + playBtn('bw' + (i+1)) + ' · Verb: <i>' + гл + '</i>', null, ru, почему]));
+
+// Задание 3: предложения с профессиями (ключи f_satz0–8 — прежние)
+const ПРОФ = [
+  ['Hausfrau','Die Hausfrau kocht zu Hause und räumt auf.','ps1','Домохозяйка готовит дома и убирает.','<i>aufräumen</i> — глагол с отделяемой приставкой: räumt … <b>auf</b>, приставка в конец.'],
+  ['Fotograf','Der Fotograf fotografiert eine Hochzeit.','ps2','Фотограф снимает свадьбу.','Глаголы на -ieren правильные: er fotografiert.'],
+  ['Architekt','Der Architekt macht Projekte von Häusern.','ps3','Архитектор делает проекты домов.','von + Dativ; во множественном Dativ добавляет -n: die Häuser → von Häuser<b>n</b>.'],
+  ['Köchin','Die Köchin kocht jeden Tag im Restaurant.','ps4','Повариха каждый день готовит в ресторане.','Без модального глагол сразу на втором месте: kocht. С модальным — как у Даши: kann … kochen.'],
+  ['Journalist','Der Journalist macht Interviews und schreibt Artikel.','ps5','Журналист берёт интервью и пишет статьи.','Два глагола через und — оба в той же форме: macht … und schreibt.'],
+  ['Lehrerin','Die Lehrerin unterrichtet Mathe in der Schule.','ps6','Учительница преподаёт математику в школе.','unterrichten: основа на -t → er unterricht<b>e</b>t.'],
+  ['Krankenschwester','Die Krankenschwester hilft dem Arzt.','ps7','Медсестра помогает врачу.','helfen: e → i (hilft) + Dativ: <i>dem</i> Arzt. 🩺 Сейчас официально чаще говорят die Pflegefachkraft, но Krankenschwester понимают все.'],
+  ['Ärztin','Die Ärztin behandelt Patienten und operiert.','ps8','Врач лечит пациентов и оперирует.','🩺 behandeln — лечить, operieren — оперировать. der Patient → die Patienten.'],
+  ['Sängerin','Die Sängerin singt heute im Theater.','ps9','Певица сегодня поёт в театре.','singen: er singt. heute — перед местом.'],
+];
+document.getElementById('hwSaetze').innerHTML = ПРОФ.map(([пр,de,clip,ru,почему],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
     <div style="font-size:12.5px; color:var(--ink-faint); margin-bottom:4px">${пр}</div>
-    <input class="fld" data-save="f_satz${i}" placeholder="предложение с «${пр}»"></span></div>`).join('');
+    <input class="fld" data-save="f_satz${i}" placeholder="предложение с «${пр}»"><br>
+    ${мойПример('мой пример', de, clip, ru, почему)}</span></div>`).join('');
 
+// Задание 4: видео — вопросы и мои ответы по субтитрам (ключи f_vid0–7 — прежние)
+const НЕТ_В_ВИДЕО = 'Я проверил субтитры видео целиком: об этом там не говорят. Если ответа нет в тексте — так и отвечают.';
 const ВОПРОСЫ = [
-  ["v1","Was ist der Beruf des Vaters?","Кем работает папа?"],
-  ["v2","Wo arbeitet der Vater?","Где папа работает?"],
-  ["v3","Was macht der Vater bei der Arbeit?","Что папа делает на работе?"],
-  ["v4","Wann beginnt sein Arbeitstag?","Когда начинается его рабочий день?"],
-  ["v5","Wie fährt der Vater zur Arbeit?","Как папа добирается на работу?"],
-  ["v6","Wie viele Stunden arbeitet er am Tag?","Сколько часов в день он работает?"],
-  ["v7","Was macht der Vater nach der Arbeit?","Что папа делает после работы?"],
-  ["v8","Gefällt dem Vater sein Beruf?","Нравится ли папе его профессия?"],
+  ["v1","Was ist der Beruf des Vaters?","Кем работает папа?","Er ist Mechaniker.","va1","Он механик.","Профессия после sein — без артикля: Er ist Mechaniker."],
+  ["v2","Wo arbeitet der Vater?","Где папа работает?","Er arbeitet in einer Autowerkstatt.","va2","Он работает в автомастерской.","Где? → Dativ: in <i>einer</i> Werkstatt (die Werkstatt)."],
+  ["v3","Was macht der Vater bei der Arbeit?","Что папа делает на работе?","Er repariert Autos, wechselt Reifen und kontrolliert die Bremsen.","va3","Он ремонтирует машины, меняет шины и проверяет тормоза.","Три глагола — все в форме er: repariert, wechselt, kontrolliert."],
+  ["v4","Wann beginnt sein Arbeitstag?","Когда начинается его рабочий день?","Sein Arbeitstag beginnt um sieben Uhr morgens.","va4","Его рабочий день начинается в 7 утра.","Во сколько? → <i>um</i> + время: um sieben Uhr."],
+  ["v5","Wie fährt der Vater zur Arbeit?","Как папа добирается на работу?","Das wird im Video nicht gesagt.","va5","В видео этого не говорят.", НЕТ_В_ВИДЕО],
+  ["v6","Wie viele Stunden arbeitet er am Tag?","Сколько часов в день он работает?","Er arbeitet neun Stunden, von sieben bis sechzehn Uhr.","va6","Он работает девять часов — с 7 до 16.","В видео прямо не сказано «девять часов» — считаем сами: von 7 bis 16 Uhr. von … bis — «с … до»."],
+  ["v7","Was macht der Vater nach der Arbeit?","Что папа делает после работы?","Das wird im Video auch nicht gesagt.","va7","Этого в видео тоже нет.", НЕТ_В_ВИДЕО + ' Зато сказано, что в выходные бывают дежурства (Notdienste) и тогда он работает по субботам.'],
+  ["v8","Gefällt dem Vater sein Beruf?","Нравится ли папе его профессия?","Ja, er mag seinen Beruf, weil er gern mit den Händen arbeitet.","va8","Да, ему нравится профессия — он любит работать руками.","После <i>weil</i> глагол уходит в самый конец: weil er gern mit den Händen <b>arbeitet</b>."],
 ];
-document.getElementById('hwVideo').innerHTML = ВОПРОСЫ.map(([id,de,ru],i)=>`
+document.getElementById('hwVideo').innerHTML = ВОПРОСЫ.map(([id,de,ru,отв,clip,отвRu,почему],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
     <div style="display:flex; align-items:center; gap:8px; margin-bottom:4px">
       <span style="font-family:Georgia,serif; font-size:14.5px">${de}</span>${playBtn(id)}
     </div>
     <div style="font-size:12.5px; color:var(--ink-faint); margin-bottom:4px">${ru}</div>
-    <input class="fld" data-save="f_vid${i}" placeholder="ответ по-немецки"></span></div>`).join('');
+    <input class="fld" data-save="f_vid${i}" placeholder="ответ по-немецки"><br>
+    ${мойПример('мой ответ', отв, clip, отвRu, почему)}</span></div>`).join('');
 
 (function(){
   const KEY = 'polya8_hw_';
