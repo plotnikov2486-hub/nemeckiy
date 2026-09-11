@@ -4,62 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Урок 7 — Цвета</title>
-
-<style>
-  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
-    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
-    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
-  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
-    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
-    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
-    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
-    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
-  * { box-sizing:border-box; } body { margin:0; }
-  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:760px; margin:0 auto; padding:28px 18px 64px; line-height:1.5; }
-  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
-  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
-  .lp h1 { font-size:clamp(24px,5vw,32px); font-weight:600; color:var(--ink); }
-  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:62ch; }
-  .lp .hint { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
-  section.block { margin-top:34px; }
-  .block h2 { font-size:19px; font-weight:600; color:var(--ink); display:flex; align-items:baseline; gap:10px; }
-  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
-  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:62ch; }
-  button.play { flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
-  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
-  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
-  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
-  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
-  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
-  /* цвета */
-  .color-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; }
-  .color-card { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 11px; box-shadow:var(--shadow); }
-  .swatch { flex-shrink:0; width:34px; height:34px; border-radius:8px; border:1px solid rgba(0,0,0,0.15); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.15); }
-  .color-card .txt { flex:1; min-width:0; }
-  .color-card .de { font-family:Georgia,serif; font-weight:700; font-size:16px; }
-  .color-card .ru { font-size:12.5px; color:var(--ink-muted); }
-  .color-card button.play { width:30px; height:30px; font-size:13px; }
-  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
-  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
-  .card-list { display:flex; flex-direction:column; gap:8px; }
-  .phrase-card { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 16px; box-shadow:var(--shadow); }
-  .phrase-card .txt { flex:1; min-width:0; }
-  .phrase-card .de { font-family:Georgia,serif; font-size:16px; font-weight:600; color:var(--ink); }
-  .phrase-card .de b { color:var(--play); } .phrase-card .ru { font-size:13px; color:var(--ink-muted); margin-top:2px; }
-  .dialogue { display:flex; flex-direction:column; gap:10px; }
-  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
-  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
-  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
-  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
-  .bubble { max-width:80%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
-  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
-  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; } .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:2px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
-  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
-  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
-  footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
-</style>
-
 <style id="backbar-css">
   .backbar{
     position:sticky; top:0; z-index:9999;
@@ -91,10 +35,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -262,52 +202,169 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </head>
 <body>
 <div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Урок 7 — Цвета</span></div>
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:760px; margin:0 auto; padding:28px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(24px,5vw,32px); font-weight:600; color:var(--ink); }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:62ch; }
+  .lp .hint { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  section.block { margin-top:34px; }
+  .block h2 { font-size:19px; font-weight:600; color:var(--ink); display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:62ch; }
+  button.play { flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  /* цвета */
+  .color-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:8px; }
+  .color-card { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 11px; box-shadow:var(--shadow); }
+  .swatch { flex-shrink:0; width:34px; height:34px; border-radius:8px; border:1px solid rgba(0,0,0,0.15); box-shadow:inset 0 0 0 1px rgba(255,255,255,0.15); }
+  .color-card .txt { flex:1; min-width:0; }
+  .color-card .de { font-family:Georgia,serif; font-weight:700; font-size:16px; }
+  .color-card .ru { font-size:12.5px; color:var(--ink-muted); }
+  .color-card button.play { width:30px; height:30px; font-size:13px; }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .phrase-card { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 16px; box-shadow:var(--shadow); }
+  .phrase-card .txt { flex:1; min-width:0; }
+  .phrase-card .de { font-family:Georgia,serif; font-size:16px; font-weight:600; color:var(--ink); }
+  .phrase-card .de b { color:var(--play); } .phrase-card .ru { font-size:13px; color:var(--ink-muted); margin-top:2px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:80%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; } .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:2px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
+  footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+</style>
 
+<style>
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr, .color-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
+</style>
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
-  <h1>Урок 7. Цвета (die Farben)</h1>
-  <p class="lede">Рядом с каждым словом — живой образец цвета: видишь и слышишь сразу. Плюс «какого цвета?» и применение для врача (кожа, сыпь, таблетки). Жми 🔊.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <h1>Урок 7. Цвета</h1>
+  <p class="lede">Рядом с каждым словом — живой образец цвета: видишь и слышишь сразу. Плюс «какого цвета?», цвет перед словом, и главное для врача — цвет кожи, сыпи, ноги и таблеток. А ещё выражения, где цвет значит совсем другое. Жми 🔊.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
     <h2><span class="num">1</span> Основные цвета</h2>
+    <div class="grammar-box">Одиннадцать цветов, которых хватит почти на всё. <b>lila</b> (фиолетовый) и <b>rosa</b> (розовый) никогда не меняются — даже перед словом.</div>
     <div class="color-grid" id="colors"></div>
   </section>
 
   <section class="block">
     <h2><span class="num">2</span> Оттенки: hell- (светлый) и dunkel- (тёмный)</h2>
-    <div class="grammar-box">
-      Приставь <b class="hl">hell-</b> = светлый, <b class="hl">dunkel-</b> = тёмный прямо к цвету, одним словом: <i>hellblau</i> (светло-синий), <i>dunkelgrün</i> (тёмно-зелёный).
-    </div>
+    <div class="grammar-box">Приставь <b>hell-</b> или <b>dunkel-</b> прямо к цвету, <b class="hl">одним словом</b>: <i>hellblau</i> — светло-синий, <i>dunkelgrün</i> — тёмно-зелёный.</div>
     <div class="color-grid" id="shades"></div>
   </section>
 
   <section class="block">
     <h2><span class="num">3</span> «Какого цвета?» — Welche Farbe?</h2>
     <div class="grammar-box">
-      Вопрос: <b class="hl">Welche Farbe ist das?</b> (какого это цвета?) или <b>Welche Farbe hat …?</b> (какого цвета …?). Ответ: <i>Das ist rot</i> · <i>Der Apfel ist grün</i>. Цвет-слово не меняется, если стоит после ist.
+      Вопрос: <b>Welche Farbe ist das?</b> — какого это цвета? или <b>Welche Farbe hat …?</b> — какого цвета …? Ответ: <i>Das ist rot · Der Apfel ist grün</i>. После <i>ist</i> цвет <b>не меняется</b>.<br><br>
+      Цвет как название — с большой буквы: <i>Meine Lieblingsfarbe ist <b>Blau</b></i>.
     </div>
-    <div class="card-list" id="phrases"></div>
+    <div class="card-list" id="qs"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">4</span> Цвета в работе врача</h2>
-    <p class="desc">Описание кожи, слизистых, выделений — цвет важен для диагноза.</p>
+    <h2><span class="num">4</span> Цвет перед словом</h2>
+    <div class="grammar-box">
+      После <i>ist</i> — без окончания: <i>Die Tablette ist weiß</i>. А <b class="hl">перед существительным</b> цвет получает окончание: <i>die weiß<b>e</b> Tablette, ein rot<b>es</b> Auto</i>. Окончания прилагательных — большая тема, она будет позже; пока просто узнавай на слух.
+    </div>
+    <div class="card-list" id="ad"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">5</span> Цвета в работе врача</h2>
+    <div class="grammar-box">Цвет кожи, слизистых, выделений — часть диагноза. Бледность — не цвет, а отдельное слово: <b>blass</b>.</div>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Для флеболога.</b> <i>Das Bein ist rot und warm</i> — красная горячая нога: первое, что говорят при тромбофлебите. <i>ein blauer Fleck</i> — синяк (в документах — <i>das Hämatom</i>). А <i>blass und kalt</i> — бледная холодная стопа — повод проверить артерии.
+    </div>
   </section>
 
   <section class="block">
-    <h2><span class="num">5</span> Диалог: цвет симптома и лекарства</h2>
+    <h2><span class="num">6</span> Таблетки по цвету</h2>
+    <div class="grammar-box doc">
+      🩺 Пожилые пациенты часто знают свои лекарства не по названию, а по виду: «маленькая белая утром». Вопрос <i>Welche Farbe haben die Tabletten?</i> экономит полприёма.
+    </div>
+    <div class="card-list" id="pills"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">7</span> Выражения с цветами</h2>
+    <div class="grammar-box">
+      Здесь цвет значит совсем не то, что по-русски. <b class="hl">blau sein</b> — не «грустить», а <b>быть пьяным</b>. <i>schwarz fahren</i> — ехать зайцем.
+    </div>
+    <div class="card-list" id="idioms"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">8</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Die Tablette ist weiße.</span><span class="good">Die Tablette ist weiß.</span><span class="why">после ist цвет без окончания</span></div>
+      <div class="err-row"><span class="bad">Welcher Farbe?</span><span class="good">Welche Farbe?</span><span class="why">die Farbe — женский род</span></div>
+      <div class="err-row"><span class="bad">hell blau</span><span class="good">hellblau</span><span class="why">оттенок — одним словом</span></div>
+      <div class="err-row"><span class="bad">Ich bin blau. — «мне грустно»</span><span class="good">Ich bin traurig.</span><span class="why">blau sein — быть пьяным!</span></div>
+      <div class="err-row"><span class="bad">Die Haut ist weiß. — о бледности</span><span class="good">Die Haut ist blass.</span><span class="why">бледность — blass</span></div>
+      <div class="err-row"><span class="bad">lilla</span><span class="good">lila</span><span class="why">одна l, и не меняется</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">9</span> Диалоги</h2>
+    <div class="desc">Первый — цвет таблеток и сыпи. Второй — у флеболога: красная горячая нога и синяк. Третий — в магазине: выбрать свитер по цвету.</div>
+    <h3 class="dlg-title">Цвет симптома и лекарства</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">У флеболога</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">В магазине</h3>
+    <div class="dialogue" id="dialog3"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">6</span> Домашка</h2>
+    <h2><span class="num">10</span> Домашка</h2>
     <div class="hw">
       <ol>
-        <li>Назови вслух все цвета, глядя на образцы (потом — не глядя).</li>
-        <li>Опиши 3 предмета вокруг: <i>Das … ist … (цвет)</i>.</li>
-        <li>Скажи по-немецки: «кожа бледная», «губы синие», «таблетки белые».</li>
+        <li>Назови все 11 цветов и найди дома предмет каждого цвета: <i>Der Tisch ist braun.</i></li>
+        <li>Скажи три оттенка с <i>hell-</i> и три с <i>dunkel-</i>.</li>
+        <li>Опиши пациенту 4 признака: бледная кожа, красная горячая нога, синяк, обложенный язык.</li>
+        <li>Опиши свои (или Полины) таблетки по цвету и форме.</li>
+        <li>Запомни два выражения — <i>blau sein</i> и <i>schwarz fahren</i> — и не путай их.</li>
       </ol>
     </div>
   </section>
@@ -866,11 +923,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Markus (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"c_rot": "../zvuk/urok7/c_rot.mp3", "c_blau": "../zvuk/urok7/c_blau.mp3", "c_gruen": "../zvuk/urok7/c_gruen.mp3", "c_gelb": "../zvuk/urok7/c_gelb.mp3", "c_orange": "../zvuk/urok7/c_orange.mp3", "c_lila": "../zvuk/urok7/c_lila.mp3", "c_rosa": "../zvuk/urok7/c_rosa.mp3", "c_braun": "../zvuk/urok7/c_braun.mp3", "c_schwarz": "../zvuk/urok7/c_schwarz.mp3", "c_weiss": "../zvuk/urok7/c_weiss.mp3", "c_grau": "../zvuk/urok7/c_grau.mp3", "hellblau": "../zvuk/urok7/hellblau.mp3", "dunkelgruen": "../zvuk/urok7/dunkelgruen.mp3", "q1": "../zvuk/urok7/q1.mp3", "q2": "../zvuk/urok7/q2.mp3", "q3": "../zvuk/urok7/q3.mp3", "m1": "../zvuk/urok7/m1.mp3", "m2": "../zvuk/urok7/m2.mp3", "m3": "../zvuk/urok7/m3.mp3", "m4": "../zvuk/urok7/m4.mp3", "d1": "../zvuk/urok7/d1.mp3", "d2": "../zvuk/urok7/d2.mp3", "d3": "../zvuk/urok7/d3.mp3", "d4": "../zvuk/urok7/d4.mp3", "d5": "../zvuk/urok7/d5.mp3", "d6": "../zvuk/urok7/d6.mp3"};
+const AUDIO = {"c_rot": "../zvuk/urok7/c_rot.mp3", "c_blau": "../zvuk/urok7/c_blau.mp3", "c_gruen": "../zvuk/urok7/c_gruen.mp3", "c_gelb": "../zvuk/urok7/c_gelb.mp3", "c_orange": "../zvuk/urok7/c_orange.mp3", "c_lila": "../zvuk/urok7/c_lila.mp3", "c_rosa": "../zvuk/urok7/c_rosa.mp3", "c_braun": "../zvuk/urok7/c_braun.mp3", "c_schwarz": "../zvuk/urok7/c_schwarz.mp3", "c_weiss": "../zvuk/urok7/c_weiss.mp3", "c_grau": "../zvuk/urok7/c_grau.mp3", "hellblau": "../zvuk/urok7/hellblau.mp3", "dunkelgruen": "../zvuk/urok7/dunkelgruen.mp3", "q1": "../zvuk/urok7/q1.mp3", "q2": "../zvuk/urok7/q2.mp3", "q3": "../zvuk/urok7/q3.mp3", "m1": "../zvuk/urok7/m1.mp3", "m2": "../zvuk/urok7/m2.mp3", "m3": "../zvuk/urok7/m3.mp3", "m4": "../zvuk/urok7/m4.mp3", "d1": "../zvuk/urok7/d1.mp3", "d3": "../zvuk/urok7/d3.mp3", "d5": "../zvuk/urok7/d5.mp3", "dm2": "../zvuk/urok7/dm2.mp3", "dm4": "../zvuk/urok7/dm4.mp3", "dm6": "../zvuk/urok7/dm6.mp3", "sh1": "../zvuk/urok7/sh1.mp3", "sh2": "../zvuk/urok7/sh2.mp3", "sh3": "../zvuk/urok7/sh3.mp3", "q4": "../zvuk/urok7/q4.mp3", "q5": "../zvuk/urok7/q5.mp3", "q6": "../zvuk/urok7/q6.mp3", "ad1": "../zvuk/urok7/ad1.mp3", "ad2": "../zvuk/urok7/ad2.mp3", "ad3": "../zvuk/urok7/ad3.mp3", "mx1": "../zvuk/urok7/mx1.mp3", "mx2": "../zvuk/urok7/mx2.mp3", "mx3": "../zvuk/urok7/mx3.mp3", "mx4": "../zvuk/urok7/mx4.mp3", "mx5": "../zvuk/urok7/mx5.mp3", "fm1": "../zvuk/urok7/fm1.mp3", "fm2": "../zvuk/urok7/fm2.mp3", "fm3": "../zvuk/urok7/fm3.mp3", "id1": "../zvuk/urok7/id1.mp3", "id2": "../zvuk/urok7/id2.mp3", "id3": "../zvuk/urok7/id3.mp3", "id4": "../zvuk/urok7/id4.mp3", "bn1": "../zvuk/urok7/bn1.mp3", "bn2": "../zvuk/urok7/bn2.mp3", "bn3": "../zvuk/urok7/bn3.mp3", "bn4": "../zvuk/urok7/bn4.mp3", "bn5": "../zvuk/urok7/bn5.mp3", "bn6": "../zvuk/urok7/bn6.mp3", "bn7": "../zvuk/urok7/bn7.mp3", "bn8": "../zvuk/urok7/bn8.mp3", "kf1": "../zvuk/urok7/kf1.mp3", "kf2": "../zvuk/urok7/kf2.mp3", "kf3": "../zvuk/urok7/kf3.mp3", "kf4": "../zvuk/urok7/kf4.mp3", "kf5": "../zvuk/urok7/kf5.mp3", "kf6": "../zvuk/urok7/kf6.mp3", "kf7": "../zvuk/urok7/kf7.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -891,54 +948,99 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-const colors = [
-  ["c_rot","rot","красный","#d32f2f"],
-  ["c_blau","blau","синий","#1976d2"],
-  ["c_gruen","grün","зелёный","#388e3c"],
-  ["c_gelb","gelb","жёлтый","#f9c700"],
-  ["c_orange","orange","оранжевый","#f57c00"],
-  ["c_lila","lila","фиолетовый","#7b1fa2"],
-  ["c_rosa","rosa","розовый","#ec407a"],
-  ["c_braun","braun","коричневый","#795548"],
-  ["c_schwarz","schwarz","чёрный","#222222"],
-  ["c_weiss","weiß","белый","#ffffff"],
-  ["c_grau","grau","серый","#9e9e9e"],
-];
-const shades = [
-  ["hellblau","hellblau","светло-синий","#8ec7f2"],
-  ["dunkelgruen","dunkelgrün","тёмно-зелёный","#1b4d2e"],
-];
-function colorCards(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,ru,hex])=>`
-  <div class="color-card"><span class="swatch" style="background:${hex}"></span><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
-colorCards('colors',colors); colorCards('shades',shades);
+// цвета: [id, немецкое, транскрипция, перевод, цвет образца]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,hex])=>`
+  <div class="color-card"><span class="swatch" style="background:${hex}"></span><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-const phrases = [
-  ["q1","Welche Farbe ist das?","Какого это цвета?"],
-  ["q2","Das ist rot.","Это красное."],
-  ["q3","Der Apfel ist grün.","Яблоко зелёное."],
-];
-const med = [
-  ["m1","Die Haut ist blass.","Кожа бледная."],
-  ["m2","Die Lippen sind blau.","Губы синие. (цианоз)"],
-  ["m3","ein blauer Fleck","синяк"],
-  ["m4","Der Urin ist gelb.","Моча жёлтая."],
-];
-function fill(id, arr){ document.getElementById(id).innerHTML = arr.map(([cid,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(cid)}</div>`).join(''); }
-fill('phrases',phrases); fill('med',med);
-
-const dialog = [
-  ["d1","left","врач","Welche Farbe haben die Tabletten?","Какого цвета таблетки?"],
-  ["d2","right","пац.","Sie sind weiß und rund.","Они белые и круглые."],
-  ["d3","left","врач","Und der Ausschlag? Welche Farbe hat er?","А сыпь? Какого она цвета?"],
-  ["d4","right","пац.","Er ist rot.","Красная."],
-  ["d5","left","врач","Ist die Haut blass?","Кожа бледная?"],
-  ["d6","right","пац.","Nein, sie ist normal.","Нет, нормальная."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+words('colors',[
+  ["c_rot","rot","рот","красный","#d32f2f"],
+  ["c_blau","blau","блау","синий, голубой","#1976d2"],
+  ["c_gruen","grün","грюн","зелёный","#388e3c"],
+  ["c_gelb","gelb","гельп","жёлтый","#f9c700"],
+  ["c_orange","orange","оронжэ","оранжевый","#f57c00"],
+  ["c_lila","lila","лила","фиолетовый","#7b1fa2"],
+  ["c_rosa","rosa","роза","розовый","#ec407a"],
+  ["c_braun","braun","браун","коричневый","#795548"],
+  ["c_schwarz","schwarz","шварц","чёрный","#222222"],
+  ["c_weiss","weiß","вайс","белый","#ffffff"],
+  ["c_grau","grau","грау","серый","#9e9e9e"],
+]);
+words('shades',[
+  ["hellblau","hellblau","хэльблау","светло-синий","#8ec7f2"],
+  ["dunkelgruen","dunkelgrün","дункэльгрюн","тёмно-зелёный","#1b4d2e"],
+  ["sh1","dunkelblau","дункэльблау","тёмно-синий","#0d2d6b"],
+  ["sh2","hellgrün","хэльгрюн","светло-зелёный","#9ccc65"],
+  ["sh3","dunkelrot","дункэльрот","тёмно-красный","#8b1a1a"],
+]);
+phrases('qs',[
+  ["q1","Welche Farbe ist das?","вэльхе фарбэ ист дас","Какого это цвета?"],
+  ["q2","Das ist rot.","дас ист рот","Это красное."],
+  ["q3","Der Apfel ist grün.","дэа апфэль ист грюн","Яблоко зелёное."],
+  ["q4","Welche Farbe hat Ihr Auto?","вэльхе фарбэ хат иа ауто","Какого цвета Ваша машина?"],
+  ["q5","Mein Auto ist schwarz.","майн ауто ист шварц","Моя машина чёрная."],
+  ["q6","Meine Lieblingsfarbe ist Blau.","майнэ либлингсфарбэ ист блау","Мой любимый цвет — синий."],
+]);
+phrases('ad',[
+  ["ad1","die weiße Tablette","ди вайсэ таблэттэ","белая таблетка"],
+  ["ad2","ein rotes Auto","айн ротэс ауто","красная машина"],
+  ["ad3","eine gelbe Tablette","айнэ гельбэ таблэттэ","жёлтая таблетка"],
+]);
+phrases('med',[
+  ["m1","Die Haut ist blass.","ди хаут ист блас","Кожа бледная."],
+  ["mx1","Die Haut ist gelb.","ди хаут ист гельп","Кожа жёлтая (желтуха)."],
+  ["m2","Die Lippen sind blau.","ди липпэн зинт блау","Губы синие (цианоз)."],
+  ["mx2","Das Bein ist rot und warm.","дас байн ист рот унт варм","Нога красная и горячая."],
+  ["mx3","Die Vene ist blau.","ди вэнэ ист блау","Вена синяя."],
+  ["m3","ein blauer Fleck","айн блауэр флек","синяк"],
+  ["mx4","Der Fuß ist blass und kalt.","дэа фус ист блас унт кальт","Стопа бледная и холодная."],
+  ["mx5","Die Zunge ist weiß.","ди цунгэ ист вайс","Язык обложен (белый)."],
+  ["m4","Der Urin ist gelb.","дэа урин ист гельп","Моча жёлтая."],
+]);
+phrases('pills',[
+  ["fm1","Die Tablette ist rund und weiß.","ди таблэттэ ист рунт унт вайс","Таблетка круглая и белая."],
+  ["fm2","Die Kapsel ist rot.","ди капсэль ист рот","Капсула красная."],
+  ["fm3","Nehmen Sie die blaue Tablette am Morgen.","нээмэн зи ди блауэ таблэттэ ам морген","Синюю таблетку принимайте утром."],
+]);
+phrases('idioms',[
+  ["id1","Ich sehe schwarz.","ихь зээ шварц","Я настроен пессимистично. — «вижу чёрное»"],
+  ["id2","Er ist blau.","эа ист блау","Он пьян! — не «ему грустно»"],
+  ["id3","Er ist noch grün hinter den Ohren.","эа ист нох грюн хинтэа дэн орэн","Он ещё молокосос. — «зелёный за ушами»"],
+  ["id4","Er fährt schwarz.","эа фэрт шварц","Он едет зайцем."],
+]);
+dlg('dialog',[
+  ["d1","left","Вр","Welche Farbe haben die Tabletten?","вэльхе фарбэ хабэн ди таблэттэн","Какого цвета таблетки?"],
+  ["dm2","right","П","Sie sind weiß und rund.","зи зинт вайс унт рунт","Они белые и круглые."],
+  ["d3","left","Вр","Und der Ausschlag? Welche Farbe hat er?","унт дэа аусшлак? вэльхе фарбэ хат эа","А сыпь? Какого она цвета?"],
+  ["dm4","right","П","Er ist rot.","эа ист рот","Красная."],
+  ["d5","left","Вр","Ist die Haut blass?","ист ди хаут блас","Кожа бледная?"],
+  ["dm6","right","П","Nein, sie ist normal.","найн, зи ист нормаль","Нет, нормальная."],
+]);
+dlg('dialog2',[
+  ["bn1","left","Вр","Guten Tag! Welches Bein tut weh?","гутэн так! вэльхес байн тут вэ","Здравствуйте! Какая нога болит?"],
+  ["bn2","right","П","Das linke Bein.","дас линкэ байн","Левая."],
+  ["bn3","left","Вр","Ist das Bein rot?","ист дас байн рот","Нога красная?"],
+  ["bn4","right","П","Ja, es ist rot und warm.","я, эс ист рот унт варм","Да, красная и горячая."],
+  ["bn5","left","Вр","Seit wann?","зайт ван","С какого времени?"],
+  ["bn6","right","П","Seit zwei Tagen. Und hier ist ein blauer Fleck.","зайт цвай тагэн. унт хиа ист айн блауэр флек","Два дня. И вот тут синяк."],
+  ["bn7","left","Вр","Ich untersuche jetzt Ihre Venen.","ихь унтэрзухэ етцт ирэ вэнэн","Сейчас я осмотрю Ваши вены."],
+  ["bn8","right","П","Danke, Herr Doktor.","данкэ, хэа доктор","Спасибо, доктор."],
+]);
+dlg('dialog3',[
+  ["kf1","right","Гр","Guten Tag! Ich suche einen Pullover.","гутэн так! ихь зухэ айнэн пуловэа","Здравствуйте! Я ищу свитер."],
+  ["kf2","left","Пр","Welche Farbe möchten Sie?","вэльхе фарбэ мёхьтэн зи","Какого цвета хотите?"],
+  ["kf3","right","Гр","Blau oder grau, bitte.","блау одэа грау, битэ","Синий или серый, пожалуйста."],
+  ["kf4","left","Пр","Hier ist ein Pullover in Dunkelblau.","хиа ист айн пуловэа ин дункэльблау","Вот тёмно-синий свитер."],
+  ["kf5","right","Гр","Haben Sie ihn auch in Grau?","хабэн зи ин аух ин грау","А серый такой есть?"],
+  ["kf6","left","Пр","Ja, hier, bitte.","я, хиа, битэ","Да, вот, пожалуйста."],
+  ["kf7","right","Гр","Super, ich nehme ihn.","зупэа, ихь нээмэ ин","Отлично, беру."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
