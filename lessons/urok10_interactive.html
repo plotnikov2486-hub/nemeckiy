@@ -64,6 +64,18 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
   footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr, .mini-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+</style>
 
 <style id="backbar-css">
   .backbar{
@@ -96,10 +108,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -271,28 +279,40 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 10. Дни недели и время (Uhrzeit)</h1>
-  <p class="lede">Чтобы записать пациента на приём, нужны две вещи: день недели и время. Разберём и главную ловушку немецких часов — halb («половина») считается не так, как у нас. Жми 🔊.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Чтобы записать пациента на приём, нужны две вещи: день и время. Дни недели, части суток, официальное и разговорное время — с главной ловушкой немецких часов: halb («половина») считается не так, как у нас. И всё, что говорят при записи, переносе и отмене приёма. Жми 🔊.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
     <h2><span class="num">1</span> Дни недели (die Woche)</h2>
     <div class="grammar-box">Все дни — <b class="hl">мужского рода (der)</b>. «В такой-то день» = <b class="hl">am</b> + день: <i>am Montag</i> (в понедельник). Вопрос: <b>Wann?</b> (когда?)</div>
     <div class="grid2" id="days"></div>
+    <div class="grid2" id="amday" style="margin-top:8px"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">2</span> Сегодня / завтра / вчера</h2>
+    <h2><span class="num">2</span> Сегодня, завтра, вчера — и вокруг</h2>
+    <div class="grammar-box">
+      <b>übermorgen</b> — послезавтра, <b>vorgestern</b> — позавчера. «По понедельникам» — одно слово с -s на конце: <b>montags</b>. «В выходные» — <i>am Wochenende</i>.
+    </div>
     <div class="grid2" id="rel"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">3</span> «Который час?» и полные часы</h2>
-    <div class="grammar-box">Спросить время: <b class="hl">Wie spät ist es?</b> или <b>Wie viel Uhr ist es?</b> Ответ: <b>Es ist … Uhr</b> (сейчас … часов). Слово <b>Uhr</b> = «часов», не забывай его.</div>
+    <h2><span class="num">3</span> Части суток</h2>
+    <div class="grammar-box">
+      Все мужского рода, кроме <b>die Nacht</b>. <b class="hl">Ловушка:</b> <i>morgen</i> — завтра, а <i>der Morgen</i> — утро. Поэтому «завтра утром» — не «morgen Morgen», а <b>morgen früh</b>.
+    </div>
+    <div class="grid2" id="tz"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">4</span> «Который час?» и полные часы</h2>
+    <div class="grammar-box">Спросить время: <b class="hl">Wie spät ist es?</b> или <b>Wie viel Uhr ist es?</b> Ответ: <b>Es ist … Uhr</b> (сейчас … часов). Слово <b>Uhr</b> = «часов», не забывай его — и оно не бывает во множественном.</div>
     <div class="card-list" id="hours"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">4</span> Официальное время (24 часа) — для расписаний</h2>
+    <h2><span class="num">5</span> Официальное время (24 часа) — для расписаний</h2>
     <div class="grammar-box">
       В расписаниях, у врача, на вокзале — <b>всегда 24 часа</b>, и читается просто: <b class="hl">часы + Uhr + минуты</b>. 14:30 = <i>vierzehn Uhr dreißig</i>. Ошибиться невозможно — это твой рабочий формат.
     </div>
@@ -300,7 +320,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block">
-    <h2><span class="num">5</span> ⚠️ Разговорное время — ЛОВУШКА halb</h2>
+    <h2><span class="num">6</span> ⚠️ Разговорное время — ЛОВУШКА halb</h2>
     <div class="warn-box">
       <span class="big">halb zehn = 9:30, а НЕ 10:30!</span><br>
       Немцы считают половину <b>до</b> следующего часа: <b>halb zehn</b> = «половина к десяти» = 9:30. Не «половина десятого», как у нас! Всегда думай на час вперёд.
@@ -312,29 +332,57 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block">
-    <h2><span class="num">6</span> «Во сколько?» — um + время</h2>
-    <div class="grammar-box">Момент времени = предлог <b class="hl">um</b>: <i>um acht Uhr</i> (в 8), <i>um halb drei</i> (в 14:30). Вопрос: <b>Um wie viel Uhr?</b> (во сколько?)</div>
+    <h2><span class="num">7</span> «Во сколько?» — um, gegen, von … bis, ab</h2>
+    <div class="grammar-box">
+      Точное время — <b class="hl">um</b>: <i>um acht Uhr</i>. Примерно — <b>gegen</b>: <i>gegen acht</i> (около восьми). Промежуток — <b>von … bis</b>: <i>von neun bis zwölf</i>. «Начиная с» — <b>ab</b>: <i>ab neun Uhr</i>. Вопрос: <b>Um wie viel Uhr?</b>
+    </div>
     <div class="grid2" id="um"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">7</span> Запись на приём — рабочие фразы</h2>
+    <h2><span class="num">8</span> Запись на приём — рабочие фразы</h2>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Перенести и отменить.</b> <i>verschieben</i> — перенести, <i>absagen</i> — отменить. Перед анализом крови пациента просят прийти <b>nüchtern</b> — натощак.
+    </div>
+    <div class="card-list" id="med2"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">8</span> Диалог: пациент записывается на приём</h2>
+    <h2><span class="num">9</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">halb zehn = 10:30</span><span class="good">halb zehn = 9:30</span><span class="why">половина — к следующему часу</span></div>
+      <div class="err-row"><span class="bad">in Montag</span><span class="good">am Montag</span><span class="why">день — через am</span></div>
+      <div class="err-row"><span class="bad">am acht Uhr</span><span class="good">um acht Uhr</span><span class="why">время — через um</span></div>
+      <div class="err-row"><span class="bad">morgen Morgen — «завтра утром»</span><span class="good">morgen früh</span><span class="why">morgen — завтра, der Morgen — утро</span></div>
+      <div class="err-row"><span class="bad">Es ist neun Uhren.</span><span class="good">Es ist neun Uhr.</span><span class="why">Uhr — без множественного</span></div>
+      <div class="err-row"><span class="bad">in dem Wochenende</span><span class="good">am Wochenende</span><span class="why">выходные — тоже через am</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">10</span> Диалоги</h2>
+    <div class="desc">Первый — пациент записывается на приём. Второй — перенос записи по телефону (и анализ натощак). Третий — коллеги говорят о сменах.</div>
+    <h3 class="dlg-title">Запись на приём</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Перенести запись</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Смены и дежурства — на «ты»</h3>
+    <div class="dialogue" id="dialog3"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Смены.</b> <i>der Dienst</i> — смена, <i>der Nachtdienst</i> — ночное дежурство, <i>frei haben</i> — быть выходным. Графики в немецких клиниках всегда в 24-часовом формате.
+    </div>
   </section>
 
   <section class="block">
-    <h2><span class="num">9</span> Домашка</h2>
+    <h2><span class="num">11</span> Домашка</h2>
     <div class="hw">
       <ol>
-        <li>Назови вслух 7 дней недели с артиклем der.</li>
-        <li>Скажи 5 раз официальное время: 8:00, 9:30, 13:15, 14:45, 18:00.</li>
-        <li>Переведи разговорно: halb zehn, Viertel nach acht, Viertel vor sechs (не попадись на ловушку halb!).</li>
-        <li>Запиши пациента: <i>Der Termin ist am … um … Uhr.</i> — 3 варианта.</li>
+        <li>Назови вслух 7 дней недели и 6 частей суток — с артиклем.</li>
+        <li>Скажи официальное время: 8:00, 9:30, 13:15, 14:45, 18:00.</li>
+        <li>Переведи разговорно: halb zehn, halb acht, Viertel nach acht, Viertel vor sechs — не попадись на ловушку halb!</li>
+        <li>Запиши пациента: <i>Der Termin ist am … um … Uhr.</i> — 3 варианта, и один раз попроси прийти натощак.</li>
+        <li>Разыграй с Полиной диалог 2: ты переносишь запись по телефону.</li>
       </ol>
     </div>
   </section>
@@ -893,11 +941,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Markus (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"mo": "../zvuk/urok10/mo.mp3", "di": "../zvuk/urok10/di.mp3", "mi": "../zvuk/urok10/mi.mp3", "do": "../zvuk/urok10/do.mp3", "fr": "../zvuk/urok10/fr.mp3", "sa": "../zvuk/urok10/sa.mp3", "so": "../zvuk/urok10/so.mp3", "am_mo": "../zvuk/urok10/am_mo.mp3", "am_di": "../zvuk/urok10/am_di.mp3", "am_fr": "../zvuk/urok10/am_fr.mp3", "woche": "../zvuk/urok10/woche.mp3", "heute": "../zvuk/urok10/heute.mp3", "morgen": "../zvuk/urok10/morgen.mp3", "gestern": "../zvuk/urok10/gestern.mp3", "q1": "../zvuk/urok10/q1.mp3", "q2": "../zvuk/urok10/q2.mp3", "h1": "../zvuk/urok10/h1.mp3", "h9": "../zvuk/urok10/h9.mp3", "h12": "../zvuk/urok10/h12.mp3", "o14": "../zvuk/urok10/o14.mp3", "o1430": "../zvuk/urok10/o1430.mp3", "o815": "../zvuk/urok10/o815.mp3", "o1845": "../zvuk/urok10/o1845.mp3", "halb": "../zvuk/urok10/halb.mp3", "vn": "../zvuk/urok10/vn.mp3", "vv": "../zvuk/urok10/vv.mp3", "fn": "../zvuk/urok10/fn.mp3", "fv": "../zvuk/urok10/fv.mp3", "um8": "../zvuk/urok10/um8.mp3", "um_halb3": "../zvuk/urok10/um_halb3.mp3", "um9": "../zvuk/urok10/um9.mp3", "m1": "../zvuk/urok10/m1.mp3", "m2": "../zvuk/urok10/m2.mp3", "m3": "../zvuk/urok10/m3.mp3", "m4": "../zvuk/urok10/m4.mp3", "m5": "../zvuk/urok10/m5.mp3", "m6": "../zvuk/urok10/m6.mp3", "d1": "../zvuk/urok10/d1.mp3", "d2": "../zvuk/urok10/d2.mp3", "d3": "../zvuk/urok10/d3.mp3", "d4": "../zvuk/urok10/d4.mp3", "d5": "../zvuk/urok10/d5.mp3", "d6": "../zvuk/urok10/d6.mp3"};
+const AUDIO = {"mo": "../zvuk/urok10/mo.mp3", "di": "../zvuk/urok10/di.mp3", "mi": "../zvuk/urok10/mi.mp3", "do": "../zvuk/urok10/do.mp3", "fr": "../zvuk/urok10/fr.mp3", "sa": "../zvuk/urok10/sa.mp3", "so": "../zvuk/urok10/so.mp3", "am_mo": "../zvuk/urok10/am_mo.mp3", "am_di": "../zvuk/urok10/am_di.mp3", "am_fr": "../zvuk/urok10/am_fr.mp3", "woche": "../zvuk/urok10/woche.mp3", "heute": "../zvuk/urok10/heute.mp3", "morgen": "../zvuk/urok10/morgen.mp3", "gestern": "../zvuk/urok10/gestern.mp3", "q1": "../zvuk/urok10/q1.mp3", "q2": "../zvuk/urok10/q2.mp3", "h1": "../zvuk/urok10/h1.mp3", "h9": "../zvuk/urok10/h9.mp3", "h12": "../zvuk/urok10/h12.mp3", "o14": "../zvuk/urok10/o14.mp3", "o1430": "../zvuk/urok10/o1430.mp3", "o815": "../zvuk/urok10/o815.mp3", "o1845": "../zvuk/urok10/o1845.mp3", "halb": "../zvuk/urok10/halb.mp3", "vn": "../zvuk/urok10/vn.mp3", "vv": "../zvuk/urok10/vv.mp3", "fn": "../zvuk/urok10/fn.mp3", "fv": "../zvuk/urok10/fv.mp3", "um8": "../zvuk/urok10/um8.mp3", "um_halb3": "../zvuk/urok10/um_halb3.mp3", "um9": "../zvuk/urok10/um9.mp3", "m1": "../zvuk/urok10/m1.mp3", "m2": "../zvuk/urok10/m2.mp3", "m3": "../zvuk/urok10/m3.mp3", "m4": "../zvuk/urok10/m4.mp3", "m5": "../zvuk/urok10/m5.mp3", "m6": "../zvuk/urok10/m6.mp3", "d1": "../zvuk/urok10/d1.mp3", "d2": "../zvuk/urok10/d2.mp3", "d3": "../zvuk/urok10/d3.mp3", "d4": "../zvuk/urok10/d4.mp3", "d5": "../zvuk/urok10/d5.mp3", "d6": "../zvuk/urok10/d6.mp3", "rw1": "../zvuk/urok10/rw1.mp3", "rw2": "../zvuk/urok10/rw2.mp3", "rw3": "../zvuk/urok10/rw3.mp3", "rw4": "../zvuk/urok10/rw4.mp3", "rw5": "../zvuk/urok10/rw5.mp3", "tz1": "../zvuk/urok10/tz1.mp3", "tz2": "../zvuk/urok10/tz2.mp3", "tz3": "../zvuk/urok10/tz3.mp3", "tz4": "../zvuk/urok10/tz4.mp3", "tz5": "../zvuk/urok10/tz5.mp3", "tz6": "../zvuk/urok10/tz6.mp3", "tz7": "../zvuk/urok10/tz7.mp3", "tz8": "../zvuk/urok10/tz8.mp3", "cq1": "../zvuk/urok10/cq1.mp3", "cq2": "../zvuk/urok10/cq2.mp3", "tp1": "../zvuk/urok10/tp1.mp3", "tp2": "../zvuk/urok10/tp2.mp3", "tp3": "../zvuk/urok10/tp3.mp3", "ts1": "../zvuk/urok10/ts1.mp3", "ts2": "../zvuk/urok10/ts2.mp3", "ts3": "../zvuk/urok10/ts3.mp3", "ts4": "../zvuk/urok10/ts4.mp3", "ts5": "../zvuk/urok10/ts5.mp3", "ts6": "../zvuk/urok10/ts6.mp3", "vs1": "../zvuk/urok10/vs1.mp3", "vs2": "../zvuk/urok10/vs2.mp3", "vs3": "../zvuk/urok10/vs3.mp3", "vs4": "../zvuk/urok10/vs4.mp3", "vs5": "../zvuk/urok10/vs5.mp3", "vs6": "../zvuk/urok10/vs6.mp3", "vs7": "../zvuk/urok10/vs7.mp3", "vs8": "../zvuk/urok10/vs8.mp3", "dz1": "../zvuk/urok10/dz1.mp3", "dz2": "../zvuk/urok10/dz2.mp3", "dz3": "../zvuk/urok10/dz3.mp3", "dz4": "../zvuk/urok10/dz4.mp3", "dz5": "../zvuk/urok10/dz5.mp3", "dz6": "../zvuk/urok10/dz6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -918,68 +966,112 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-function miniCards(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,clock,de,ru])=>`
-  <div class="mini-card">${clock?`<span class="clock">${clock}</span>`:''}<div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// слова и время: [id, немецкое, транскрипция, перевод, циферблат (или пусто)]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,clock])=>`
+  <div class="mini-card">${clock?`<span class="clock">${clock}</span>`:''}<div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-miniCards('days',[
-  ["mo","","der Montag","понедельник"],["di","","der Dienstag","вторник"],
-  ["mi","","der Mittwoch","среда"],["do","","der Donnerstag","четверг"],
-  ["fr","","der Freitag","пятница"],["sa","","der Samstag","суббота"],["so","","der Sonntag","воскресенье"],
+words('days',[
+  ["mo","der Montag","дэа монтак","понедельник",""],["di","der Dienstag","дэа динстак","вторник",""],
+  ["mi","der Mittwoch","дэа митвох","среда",""],["do","der Donnerstag","дэа доннэрстак","четверг",""],
+  ["fr","der Freitag","дэа фрайтак","пятница",""],["sa","der Samstag","дэа замстак","суббота",""],
+  ["so","der Sonntag","дэа зонтак","воскресенье",""],
 ]);
-miniCards('rel',[
-  ["woche","","die Woche","неделя"],["heute","","heute","сегодня"],
-  ["morgen","","morgen","завтра"],["gestern","","gestern","вчера"],
+words('amday',[
+  ["am_mo","am Montag","ам монтак","в понедельник",""],["am_di","am Dienstag","ам динстак","во вторник",""],
+  ["am_fr","am Freitag","ам фрайтак","в пятницу",""],
 ]);
-miniCards('official',[
-  ["o14","14:00","vierzehn Uhr","14 часов"],
-  ["o1430","14:30","vierzehn Uhr dreißig","14:30"],
-  ["o815","8:15","acht Uhr fünfzehn","8:15"],
-  ["o1845","18:45","achtzehn Uhr fünfundvierzig","18:45"],
+words('rel',[
+  ["woche","die Woche","ди вохэ","неделя",""],["heute","heute","хойтэ","сегодня",""],
+  ["morgen","morgen","морген","завтра",""],["gestern","gestern","гэстэрн","вчера",""],
+  ["rw1","übermorgen","юбэрморген","послезавтра",""],["rw2","vorgestern","форгэстэрн","позавчера",""],
+  ["rw3","das Wochenende","дас вохэнэндэ","выходные",""],["rw4","jeden Tag","едэн так","каждый день",""],
+  ["rw5","montags","монтакс","по понедельникам",""],
 ]);
-miniCards('um',[
-  ["um8","в 8:00","um acht Uhr","в восемь часов"],
-  ["um9","в 9:00","um neun Uhr","в девять часов"],
-  ["um_halb3","в 14:30","um halb drei","в половине третьего"],
+words('tz',[
+  ["tz1","der Morgen","дэа морген","утро",""],["tz2","der Vormittag","дэа формитак","до обеда",""],
+  ["tz3","der Mittag","дэа миттак","полдень",""],["tz4","der Nachmittag","дэа нахмитак","после обеда",""],
+  ["tz5","der Abend","дэа абэнт","вечер",""],["tz6","die Nacht","ди нахт","ночь",""],
+  ["tz7","morgen früh","морген фрю","завтра утром",""],["tz8","heute Abend","хойтэ абэнт","сегодня вечером",""],
 ]);
-
-const hours = [
-  ["q1","Wie spät ist es?","Который час?"],
-  ["q2","Wie viel Uhr ist es?","Сколько времени?"],
-  ["h1","Es ist ein Uhr.","Сейчас час. (1:00)"],
-  ["h9","Es ist neun Uhr.","Сейчас девять. (9:00)"],
-  ["h12","Es ist zwölf Uhr.","Сейчас двенадцать. (12:00)"],
-];
-const colloq = [
-  ["halb","halb zehn","9:30 (!) — «половина к десяти»"],
-  ["vn","Viertel nach neun","9:15 — четверть после девяти"],
-  ["vv","Viertel vor zehn","9:45 — четверть до десяти"],
-  ["fn","fünf nach neun","9:05 — пять после девяти"],
-  ["fv","fünf vor zehn","9:55 — пять до десяти"],
-];
-const med = [
-  ["m1","Wann haben Sie Zeit?","Когда у Вас есть время?"],
-  ["m2","Der Termin ist am Montag um neun Uhr.","Приём в понедельник в 9 часов."],
-  ["m3","Kommen Sie um halb drei.","Приходите в 14:30."],
-  ["m4","Haben Sie morgen um zehn Uhr Zeit?","У Вас завтра в 10 есть время?"],
-  ["m5","Die Praxis ist von acht bis achtzehn Uhr geöffnet.","Кабинет открыт с 8 до 18 часов."],
-  ["m6","Nehmen Sie die Tablette morgens und abends.","Принимайте таблетку утром и вечером."],
-];
-function fill(id, arr){ document.getElementById(id).innerHTML = arr.map(([cid,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(cid)}</div>`).join(''); }
-fill('hours',hours); fill('colloq',colloq); fill('med',med);
-
-const dialog = [
-  ["d1","right","пац.","Guten Tag, ich brauche einen Termin.","Здравствуйте, мне нужен приём."],
-  ["d2","left","врач","Gern. Haben Sie am Dienstag Zeit?","Охотно. У Вас есть время во вторник?"],
-  ["d3","right","пац.","Am Dienstag arbeite ich. Geht es am Mittwoch?","Во вторник я работаю. Можно в среду?"],
-  ["d4","left","врач","Ja. Um neun Uhr oder um halb elf?","Да. В 9 часов или в 10:30?"],
-  ["d5","right","пац.","Um halb elf, bitte.","В 10:30, пожалуйста."],
-  ["d6","left","врач","Gut. Mittwoch, halb elf. Bis dann!","Хорошо. Среда, 10:30. До встречи!"],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+phrases('hours',[
+  ["q1","Wie spät ist es?","ви шпэт ист эс","Который час?"],
+  ["q2","Wie viel Uhr ist es?","ви филь уа ист эс","Сколько времени?"],
+  ["h1","Es ist ein Uhr.","эс ист айн уа","Сейчас час. (1:00)"],
+  ["h9","Es ist neun Uhr.","эс ист нойн уа","Сейчас девять. (9:00)"],
+  ["h12","Es ist zwölf Uhr.","эс ист цвёльф уа","Сейчас двенадцать. (12:00)"],
+]);
+words('official',[
+  ["o14","vierzehn Uhr","фирцэн уа","14 часов","14:00"],
+  ["o1430","vierzehn Uhr dreißig","фирцэн уа драйсихь","14:30","14:30"],
+  ["o815","acht Uhr fünfzehn","ахт уа фюнфцэн","8:15","8:15"],
+  ["o1845","achtzehn Uhr fünfundvierzig","ахтцэн уа фюнфунтфирцихь","18:45","18:45"],
+]);
+phrases('colloq',[
+  ["halb","halb zehn","хальп цэн","9:30 (!) — «половина к десяти»"],
+  ["cq1","Es ist halb acht.","эс ист хальп ахт","Сейчас 7:30 (!)"],
+  ["vn","Viertel nach neun","фиртэль нах нойн","9:15 — четверть после девяти"],
+  ["vv","Viertel vor zehn","фиртэль фоа цэн","9:45 — четверть до десяти"],
+  ["cq2","Es ist Viertel vor zwölf.","эс ист фиртэль фоа цвёльф","Сейчас 11:45."],
+  ["fn","fünf nach neun","фюнф нах нойн","9:05 — пять после девяти"],
+  ["fv","fünf vor zehn","фюнф фоа цэн","9:55 — пять до десяти"],
+]);
+words('um',[
+  ["um8","um acht Uhr","ум ахт уа","в восемь часов","в 8:00"],
+  ["um9","um neun Uhr","ум нойн уа","в девять часов","в 9:00"],
+  ["um_halb3","um halb drei","ум хальп драй","в половине третьего","в 14:30"],
+  ["tp1","gegen acht Uhr","гэгэн ахт уа","около восьми","~8:00"],
+  ["tp2","von neun bis zwölf Uhr","фон нойн бис цвёльф уа","с девяти до двенадцати","9–12"],
+  ["tp3","ab neun Uhr","ап нойн уа","начиная с девяти","с 9:00"],
+]);
+phrases('med',[
+  ["m1","Wann haben Sie Zeit?","ван хабэн зи цайт","Когда у Вас есть время?"],
+  ["m2","Der Termin ist am Montag um neun Uhr.","дэа тэрмин ист ам монтак ум нойн уа","Приём в понедельник в 9 часов."],
+  ["m3","Kommen Sie um halb drei.","коммэн зи ум хальп драй","Приходите в 14:30."],
+  ["m4","Haben Sie morgen um zehn Uhr Zeit?","хабэн зи морген ум цэн уа цайт","У Вас завтра в 10 есть время?"],
+  ["ts1","Passt Ihnen Donnerstag um vierzehn Uhr?","пасст инэн доннэрстак ум фирцэн уа","Вам подходит четверг в 14:00?"],
+  ["ts2","Leider nicht. Geht es auch später?","ляйдэа нихьт. гэт эс аух шпэтэа","К сожалению, нет. А попозже можно?"],
+  ["m5","Die Praxis ist von acht bis achtzehn Uhr geöffnet.","ди праксис ист фон ахт бис ахтцэн уа гэёфнэт","Кабинет открыт с 8 до 18 часов."],
+  ["m6","Nehmen Sie die Tablette morgens und abends.","нээмэн зи ди таблэттэ моргенс унт абэнтс","Принимайте таблетку утром и вечером."],
+]);
+phrases('med2',[
+  ["ts4","Kann ich den Termin verschieben?","кан ихь дэн тэрмин фэршибэн","Можно перенести запись?"],
+  ["ts3","Ich muss den Termin absagen.","ихь мусс дэн тэрмин апзагэн","Мне нужно отменить запись."],
+  ["ts5","Bitte kommen Sie zehn Minuten früher.","битэ коммэн зи цэн минутэн фрюэа","Пожалуйста, приходите на десять минут раньше."],
+  ["ts6","Kommen Sie bitte nüchtern.","коммэн зи битэ нюхьтэрн","Приходите, пожалуйста, натощак."],
+]);
+dlg('dialog',[
+  ["d1","right","П","Guten Tag, ich brauche einen Termin.","гутэн так, ихь браухэ айнэн тэрмин","Здравствуйте, мне нужна запись на приём."],
+  ["d2","left","Рег","Gern. Haben Sie am Dienstag Zeit?","гэрн. хабэн зи ам динстак цайт","Конечно. У Вас есть время во вторник?"],
+  ["d3","right","П","Am Dienstag arbeite ich. Geht es am Mittwoch?","ам динстак арбайтэ ихь. гэт эс ам митвох","Во вторник я работаю. Можно в среду?"],
+  ["d4","left","Рег","Ja. Um neun Uhr oder um halb elf?","я. ум нойн уа одэа ум хальп эльф","Да. В 9:00 или в 10:30?"],
+  ["d5","right","П","Um halb elf, bitte.","ум хальп эльф, битэ","В 10:30, пожалуйста."],
+  ["d6","left","Рег","Gut. Mittwoch, halb elf. Bis dann!","гут. митвох, хальп эльф. бис дан","Хорошо. Среда, 10:30. До встречи!"],
+]);
+dlg('dialog2',[
+  ["vs1","left","Рег","Praxis Doktor Schmidt, guten Morgen!","праксис доктор шмит, гутэн морген","Кабинет доктора Шмидта, доброе утро!"],
+  ["vs2","right","Гр","Guten Morgen! Ich habe am Freitag um neun Uhr einen Termin.","гутэн морген! ихь хабэ ам фрайтак ум нойн уа айнэн тэрмин","Доброе утро! У меня запись в пятницу на девять."],
+  ["vs3","right","Гр","Kann ich ihn verschieben?","кан ихь ин фэршибэн","Можно её перенести?"],
+  ["vs4","left","Рег","Natürlich. Passt Ihnen Montag um halb zehn?","натюрлихь. пасст инэн монтак ум хальп цэн","Конечно. Вам подходит понедельник в 9:30?"],
+  ["vs5","right","Гр","Halb zehn, also neun Uhr dreißig? Ja, das passt.","хальп цэн, альзо нойн уа драйсихь? я, дас пасст","Halb zehn — то есть 9:30? Да, подходит."],
+  ["vs6","left","Рег","Gut. Kommen Sie bitte nüchtern, wir machen eine Blutabnahme.","гут. коммэн зи битэ нюхьтэрн, виа махэн айнэ блутапнаме","Хорошо. Приходите натощак — будем брать кровь."],
+  ["vs7","right","Гр","Alles klar. Vielen Dank!","аллес клар. филен данк","Всё понятно. Большое спасибо!"],
+  ["vs8","left","Рег","Gern. Auf Wiederhören!","гэрн. ауф видэрхёрэн","Пожалуйста. До свидания!"],
+]);
+dlg('dialog3',[
+  ["dz1","left","Ю","Wann hast du Dienst?","ван хаст ду динст","Когда у тебя смена?"],
+  ["dz2","right","Гр","Am Samstag, von acht bis zwanzig Uhr.","ам замстак, фон ахт бис цванцихь уа","В субботу, с восьми до двадцати."],
+  ["dz3","left","Ю","Und am Sonntag?","унт ам зонтак","А в воскресенье?"],
+  ["dz4","right","Гр","Da habe ich frei. Und du?","да хабэ ихь фрай. унт ду","Выходной. А ты?"],
+  ["dz5","left","Ю","Ich habe Nachtdienst, von zwanzig bis acht Uhr.","ихь хабэ нахтдинст, фон цванцихь бис ахт уа","У меня ночное дежурство, с 20 до 8."],
+  ["dz6","right","Гр","Oh je! Dann bis Montag früh!","о е! дан бис монтак фрю","Ох! Тогда до утра понедельника!"],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
