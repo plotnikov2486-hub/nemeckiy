@@ -105,7 +105,31 @@
   .vid-card a:hover { text-decoration:underline; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
-
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  #hw .grammar-box { background:var(--surface-2); border-radius:10px; padding:10px 14px; }
+</style>
 <style id="backbar-css">
   .backbar{
     position:sticky; top:0; z-index:9999;
@@ -137,10 +161,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -318,7 +338,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <span class="chip-meta">⏱️ <b>80 минут</b>, Zoom</span>
     <span class="chip-meta">➡️ Следующий: <b>вс 16.08, 20:00</b></span>
   </div>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <div class="hint">🔊 &nbsp;= нажми и слушай — звук встроен в страницу, интернет не нужен</div>
 
   <div class="toc">
     <b>Что прошли на уроке</b>
@@ -506,30 +526,14 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     </div>
 
     <p class="desc" style="margin-top:20px"><b>Упражнение 1.</b> Вставь притяжательные местоимения (следи за родом и числом!):</p>
-    <div class="ex-box">
-      1. <span class="blank"></span> Hund ist klein. <span class="hint-ru">(ich)</span><br>
-      2. <span class="blank"></span> Auto ist schnell. <span class="hint-ru">(du)</span><br>
-      3. <span class="blank"></span> Vater ist nett. <span class="hint-ru">(er)</span><br>
-      4. <span class="blank"></span> Mutter ist jung. <span class="hint-ru">(sie — ед.ч.)</span><br>
-      5. <span class="blank"></span> Haus ist groß. <span class="hint-ru">(es)</span><br>
-      6. <span class="blank"></span> Katze ist süß. <span class="hint-ru">(wir)</span><br>
-      7. <span class="blank"></span> Bücher sind neu. <span class="hint-ru">(ihr)</span><br>
-      8. <span class="blank"></span> Kinder sind laut. <span class="hint-ru">(sie — мн.ч.)</span>
-    </div>
+    <div id="hwPP"></div>
+    <button id="кОтветыPP" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetyPP" hidden style="margin-top:10px"></div>
 
     <p class="desc" style="margin-top:20px"><b>Упражнение 2.</b> Вставь цвета, выпиши незнакомые слова:</p>
-    <div class="ex-box">
-      Die Sonne ist <span class="blank"></span>. &nbsp; <span class="hint-ru">солнце</span><br>
-      Der Himmel ist <span class="blank"></span>. &nbsp; <span class="hint-ru">небо</span><br>
-      Die Blätter sind <span class="blank"></span>. &nbsp; <span class="hint-ru">листья</span><br>
-      Die Schokolade ist <span class="blank"></span>. &nbsp; <span class="hint-ru">шоколад</span><br>
-      Die Maus ist <span class="blank"></span>. &nbsp; <span class="hint-ru">мышь</span><br>
-      Der Apfel ist <span class="blank"></span>. &nbsp; <span class="hint-ru">яблоко</span><br>
-      Die Rose ist <span class="blank"></span>. &nbsp; <span class="hint-ru">роза</span><br>
-      Der Schnee ist <span class="blank"></span>. &nbsp; <span class="hint-ru">снег</span><br>
-      Der Pullover ist <span class="blank"></span>. &nbsp; <span class="hint-ru">свитер</span><br>
-      Die Orange ist <span class="blank"></span>. &nbsp; <span class="hint-ru">апельсин</span>
-    </div>
+    <div id="hwFB"></div>
+    <button id="кОтветыFB" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetyFB" hidden style="margin-top:10px"></div>
 
     <p class="desc" style="margin-top:20px"><b>Материалы из домашки:</b></p>
     <div class="vid-list" id="videos"></div>
@@ -1093,7 +1097,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"n_sechs": "../zvuk/dasha1/n_sechs.mp3", "n_sechzehn": "../zvuk/dasha1/n_sechzehn.mp3", "n_sechzig": "../zvuk/dasha1/n_sechzig.mp3", "n_sieben": "../zvuk/dasha1/n_sieben.mp3", "n_siebzehn": "../zvuk/dasha1/n_siebzehn.mp3", "n_siebzig": "../zvuk/dasha1/n_siebzig.mp3", "n_dreissig": "../zvuk/dasha1/n_dreissig.mp3", "n_vier": "../zvuk/dasha1/n_vier.mp3", "n_vierzig": "../zvuk/dasha1/n_vierzig.mp3", "n21": "../zvuk/dasha1/n21.mp3", "n35": "../zvuk/dasha1/n35.mp3", "n98": "../zvuk/dasha1/n98.mp3", "n723": "../zvuk/dasha1/n723.mp3", "n2318": "../zvuk/dasha1/n2318.mp3", "n452": "../zvuk/dasha1/n452.mp3", "o1": "../zvuk/dasha1/o1.mp3", "o3": "../zvuk/dasha1/o3.mp3", "o7": "../zvuk/dasha1/o7.mp3", "o8": "../zvuk/dasha1/o8.mp3", "o24": "../zvuk/dasha1/o24.mp3", "o73": "../zvuk/dasha1/o73.mp3", "p_ich": "../zvuk/dasha1/p_ich.mp3", "p_du": "../zvuk/dasha1/p_du.mp3", "p_er": "../zvuk/dasha1/p_er.mp3", "p_sie": "../zvuk/dasha1/p_sie.mp3", "p_es": "../zvuk/dasha1/p_es.mp3", "p_wir": "../zvuk/dasha1/p_wir.mp3", "p_ihr": "../zvuk/dasha1/p_ihr.mp3", "p_Sie": "../zvuk/dasha1/p_Sie.mp3", "q_mein": "../zvuk/dasha1/q_mein.mp3", "q_dein": "../zvuk/dasha1/q_dein.mp3", "q_sein": "../zvuk/dasha1/q_sein.mp3", "q_ihr": "../zvuk/dasha1/q_ihr.mp3", "q_unser": "../zvuk/dasha1/q_unser.mp3", "q_euer": "../zvuk/dasha1/q_euer.mp3", "r1": "../zvuk/dasha1/r1.mp3", "r2": "../zvuk/dasha1/r2.mp3", "r3": "../zvuk/dasha1/r3.mp3", "r4": "../zvuk/dasha1/r4.mp3", "a_der": "../zvuk/dasha1/a_der.mp3", "a_die": "../zvuk/dasha1/a_die.mp3", "a_das": "../zvuk/dasha1/a_das.mp3", "c_rot": "../zvuk/dasha1/c_rot.mp3", "c_orange": "../zvuk/dasha1/c_orange.mp3", "c_gelb": "../zvuk/dasha1/c_gelb.mp3", "c_gruen": "../zvuk/dasha1/c_gruen.mp3", "c_blau": "../zvuk/dasha1/c_blau.mp3", "c_lila": "../zvuk/dasha1/c_lila.mp3", "c_schwarz": "../zvuk/dasha1/c_schwarz.mp3", "c_weiss": "../zvuk/dasha1/c_weiss.mp3", "c_grau": "../zvuk/dasha1/c_grau.mp3", "c_rosa": "../zvuk/dasha1/c_rosa.mp3", "c_braun": "../zvuk/dasha1/c_braun.mp3", "c_farbe": "../zvuk/dasha1/c_farbe.mp3", "c_farben": "../zvuk/dasha1/c_farben.mp3", "t_morgen": "../zvuk/dasha1/t_morgen.mp3", "t_tag": "../zvuk/dasha1/t_tag.mp3", "t_vormittag": "../zvuk/dasha1/t_vormittag.mp3", "t_mittag": "../zvuk/dasha1/t_mittag.mp3", "t_nachmittag": "../zvuk/dasha1/t_nachmittag.mp3", "t_abend": "../zvuk/dasha1/t_abend.mp3", "t_nacht": "../zvuk/dasha1/t_nacht.mp3", "t_mitternacht": "../zvuk/dasha1/t_mitternacht.mp3", "t_aufgang": "../zvuk/dasha1/t_aufgang.mp3", "t_untergang": "../zvuk/dasha1/t_untergang.mp3", "t_morgendaem": "../zvuk/dasha1/t_morgendaem.mp3", "t_abenddaem": "../zvuk/dasha1/t_abenddaem.mp3", "t_feierabend": "../zvuk/dasha1/t_feierabend.mp3", "s_fruehling": "../zvuk/dasha1/s_fruehling.mp3", "s_sommer": "../zvuk/dasha1/s_sommer.mp3", "s_herbst": "../zvuk/dasha1/s_herbst.mp3", "s_winter": "../zvuk/dasha1/s_winter.mp3", "m1": "../zvuk/dasha1/m1.mp3", "m2": "../zvuk/dasha1/m2.mp3", "m3": "../zvuk/dasha1/m3.mp3", "m4": "../zvuk/dasha1/m4.mp3", "m5": "../zvuk/dasha1/m5.mp3", "m6": "../zvuk/dasha1/m6.mp3", "m7": "../zvuk/dasha1/m7.mp3", "m8": "../zvuk/dasha1/m8.mp3", "m9": "../zvuk/dasha1/m9.mp3", "m10": "../zvuk/dasha1/m10.mp3", "m11": "../zvuk/dasha1/m11.mp3", "m12": "../zvuk/dasha1/m12.mp3", "im1": "../zvuk/dasha1/im1.mp3", "im2": "../zvuk/dasha1/im2.mp3", "d_mo": "../zvuk/dasha1/d_mo.mp3", "d_di": "../zvuk/dasha1/d_di.mp3", "d_mi": "../zvuk/dasha1/d_mi.mp3", "d_do": "../zvuk/dasha1/d_do.mp3", "d_fr": "../zvuk/dasha1/d_fr.mp3", "d_sa": "../zvuk/dasha1/d_sa.mp3", "d_so": "../zvuk/dasha1/d_so.mp3", "d_woche": "../zvuk/dasha1/d_woche.mp3", "am1": "../zvuk/dasha1/am1.mp3", "am2": "../zvuk/dasha1/am2.mp3", "f_immer": "../zvuk/dasha1/f_immer.mp3", "f_fastimmer": "../zvuk/dasha1/f_fastimmer.mp3", "f_meistens": "../zvuk/dasha1/f_meistens.mp3", "f_normal": "../zvuk/dasha1/f_normal.mp3", "f_oft": "../zvuk/dasha1/f_oft.mp3", "f_haeufig": "../zvuk/dasha1/f_haeufig.mp3", "f_manchmal": "../zvuk/dasha1/f_manchmal.mp3", "f_gelegentlich": "../zvuk/dasha1/f_gelegentlich.mp3", "f_selten": "../zvuk/dasha1/f_selten.mp3", "f_fastnie": "../zvuk/dasha1/f_fastnie.mp3", "f_nie": "../zvuk/dasha1/f_nie.mp3", "f_niemals": "../zvuk/dasha1/f_niemals.mp3", "f_abundzu": "../zvuk/dasha1/f_abundzu.mp3", "f_hinundwieder": "../zvuk/dasha1/f_hinundwieder.mp3", "f_einmal": "../zvuk/dasha1/f_einmal.mp3", "f_zweimal": "../zvuk/dasha1/f_zweimal.mp3", "ei1": "../zvuk/dasha1/ei1.mp3", "ei2": "../zvuk/dasha1/ei2.mp3", "ie1": "../zvuk/dasha1/ie1.mp3", "ie2": "../zvuk/dasha1/ie2.mp3", "g1": "../zvuk/dasha1/g1.mp3", "g2": "../zvuk/dasha1/g2.mp3", "g3": "../zvuk/dasha1/g3.mp3", "g4": "../zvuk/dasha1/g4.mp3", "g5": "../zvuk/dasha1/g5.mp3", "g6": "../zvuk/dasha1/g6.mp3", "g7": "../zvuk/dasha1/g7.mp3", "g8": "../zvuk/dasha1/g8.mp3", "dl1": "../zvuk/dasha1/dl1.mp3", "dl2": "../zvuk/dasha1/dl2.mp3", "dl3": "../zvuk/dasha1/dl3.mp3", "dl4": "../zvuk/dasha1/dl4.mp3"};
+const AUDIO = {"n_sechs": "../zvuk/dasha1/n_sechs.mp3", "n_sechzehn": "../zvuk/dasha1/n_sechzehn.mp3", "n_sechzig": "../zvuk/dasha1/n_sechzig.mp3", "n_sieben": "../zvuk/dasha1/n_sieben.mp3", "n_siebzehn": "../zvuk/dasha1/n_siebzehn.mp3", "n_siebzig": "../zvuk/dasha1/n_siebzig.mp3", "n_dreissig": "../zvuk/dasha1/n_dreissig.mp3", "n_vier": "../zvuk/dasha1/n_vier.mp3", "n_vierzig": "../zvuk/dasha1/n_vierzig.mp3", "n21": "../zvuk/dasha1/n21.mp3", "n35": "../zvuk/dasha1/n35.mp3", "n98": "../zvuk/dasha1/n98.mp3", "n723": "../zvuk/dasha1/n723.mp3", "n2318": "../zvuk/dasha1/n2318.mp3", "n452": "../zvuk/dasha1/n452.mp3", "o1": "../zvuk/dasha1/o1.mp3", "o3": "../zvuk/dasha1/o3.mp3", "o7": "../zvuk/dasha1/o7.mp3", "o8": "../zvuk/dasha1/o8.mp3", "o24": "../zvuk/dasha1/o24.mp3", "o73": "../zvuk/dasha1/o73.mp3", "p_ich": "../zvuk/dasha1/p_ich.mp3", "p_du": "../zvuk/dasha1/p_du.mp3", "p_er": "../zvuk/dasha1/p_er.mp3", "p_sie": "../zvuk/dasha1/p_sie.mp3", "p_es": "../zvuk/dasha1/p_es.mp3", "p_wir": "../zvuk/dasha1/p_wir.mp3", "p_ihr": "../zvuk/dasha1/p_ihr.mp3", "p_Sie": "../zvuk/dasha1/p_Sie.mp3", "q_mein": "../zvuk/dasha1/q_mein.mp3", "q_dein": "../zvuk/dasha1/q_dein.mp3", "q_sein": "../zvuk/dasha1/q_sein.mp3", "q_ihr": "../zvuk/dasha1/q_ihr.mp3", "q_unser": "../zvuk/dasha1/q_unser.mp3", "q_euer": "../zvuk/dasha1/q_euer.mp3", "r1": "../zvuk/dasha1/r1.mp3", "r2": "../zvuk/dasha1/r2.mp3", "r3": "../zvuk/dasha1/r3.mp3", "r4": "../zvuk/dasha1/r4.mp3", "a_der": "../zvuk/dasha1/a_der.mp3", "a_die": "../zvuk/dasha1/a_die.mp3", "a_das": "../zvuk/dasha1/a_das.mp3", "c_rot": "../zvuk/dasha1/c_rot.mp3", "c_orange": "../zvuk/dasha1/c_orange.mp3", "c_gelb": "../zvuk/dasha1/c_gelb.mp3", "c_gruen": "../zvuk/dasha1/c_gruen.mp3", "c_blau": "../zvuk/dasha1/c_blau.mp3", "c_lila": "../zvuk/dasha1/c_lila.mp3", "c_schwarz": "../zvuk/dasha1/c_schwarz.mp3", "c_weiss": "../zvuk/dasha1/c_weiss.mp3", "c_grau": "../zvuk/dasha1/c_grau.mp3", "c_rosa": "../zvuk/dasha1/c_rosa.mp3", "c_braun": "../zvuk/dasha1/c_braun.mp3", "c_farbe": "../zvuk/dasha1/c_farbe.mp3", "c_farben": "../zvuk/dasha1/c_farben.mp3", "t_morgen": "../zvuk/dasha1/t_morgen.mp3", "t_tag": "../zvuk/dasha1/t_tag.mp3", "t_vormittag": "../zvuk/dasha1/t_vormittag.mp3", "t_mittag": "../zvuk/dasha1/t_mittag.mp3", "t_nachmittag": "../zvuk/dasha1/t_nachmittag.mp3", "t_abend": "../zvuk/dasha1/t_abend.mp3", "t_nacht": "../zvuk/dasha1/t_nacht.mp3", "t_mitternacht": "../zvuk/dasha1/t_mitternacht.mp3", "t_aufgang": "../zvuk/dasha1/t_aufgang.mp3", "t_untergang": "../zvuk/dasha1/t_untergang.mp3", "t_morgendaem": "../zvuk/dasha1/t_morgendaem.mp3", "t_abenddaem": "../zvuk/dasha1/t_abenddaem.mp3", "t_feierabend": "../zvuk/dasha1/t_feierabend.mp3", "s_fruehling": "../zvuk/dasha1/s_fruehling.mp3", "s_sommer": "../zvuk/dasha1/s_sommer.mp3", "s_herbst": "../zvuk/dasha1/s_herbst.mp3", "s_winter": "../zvuk/dasha1/s_winter.mp3", "m1": "../zvuk/dasha1/m1.mp3", "m2": "../zvuk/dasha1/m2.mp3", "m3": "../zvuk/dasha1/m3.mp3", "m4": "../zvuk/dasha1/m4.mp3", "m5": "../zvuk/dasha1/m5.mp3", "m6": "../zvuk/dasha1/m6.mp3", "m7": "../zvuk/dasha1/m7.mp3", "m8": "../zvuk/dasha1/m8.mp3", "m9": "../zvuk/dasha1/m9.mp3", "m10": "../zvuk/dasha1/m10.mp3", "m11": "../zvuk/dasha1/m11.mp3", "m12": "../zvuk/dasha1/m12.mp3", "im1": "../zvuk/dasha1/im1.mp3", "im2": "../zvuk/dasha1/im2.mp3", "d_mo": "../zvuk/dasha1/d_mo.mp3", "d_di": "../zvuk/dasha1/d_di.mp3", "d_mi": "../zvuk/dasha1/d_mi.mp3", "d_do": "../zvuk/dasha1/d_do.mp3", "d_fr": "../zvuk/dasha1/d_fr.mp3", "d_sa": "../zvuk/dasha1/d_sa.mp3", "d_so": "../zvuk/dasha1/d_so.mp3", "d_woche": "../zvuk/dasha1/d_woche.mp3", "am1": "../zvuk/dasha1/am1.mp3", "am2": "../zvuk/dasha1/am2.mp3", "f_immer": "../zvuk/dasha1/f_immer.mp3", "f_fastimmer": "../zvuk/dasha1/f_fastimmer.mp3", "f_meistens": "../zvuk/dasha1/f_meistens.mp3", "f_normal": "../zvuk/dasha1/f_normal.mp3", "f_oft": "../zvuk/dasha1/f_oft.mp3", "f_haeufig": "../zvuk/dasha1/f_haeufig.mp3", "f_manchmal": "../zvuk/dasha1/f_manchmal.mp3", "f_gelegentlich": "../zvuk/dasha1/f_gelegentlich.mp3", "f_selten": "../zvuk/dasha1/f_selten.mp3", "f_fastnie": "../zvuk/dasha1/f_fastnie.mp3", "f_nie": "../zvuk/dasha1/f_nie.mp3", "f_niemals": "../zvuk/dasha1/f_niemals.mp3", "f_abundzu": "../zvuk/dasha1/f_abundzu.mp3", "f_hinundwieder": "../zvuk/dasha1/f_hinundwieder.mp3", "f_einmal": "../zvuk/dasha1/f_einmal.mp3", "f_zweimal": "../zvuk/dasha1/f_zweimal.mp3", "ei1": "../zvuk/dasha1/ei1.mp3", "ei2": "../zvuk/dasha1/ei2.mp3", "ie1": "../zvuk/dasha1/ie1.mp3", "ie2": "../zvuk/dasha1/ie2.mp3", "g1": "../zvuk/dasha1/g1.mp3", "g2": "../zvuk/dasha1/g2.mp3", "g3": "../zvuk/dasha1/g3.mp3", "g4": "../zvuk/dasha1/g4.mp3", "g5": "../zvuk/dasha1/g5.mp3", "g6": "../zvuk/dasha1/g6.mp3", "g7": "../zvuk/dasha1/g7.mp3", "g8": "../zvuk/dasha1/g8.mp3", "dl1": "../zvuk/dasha1/dl1.mp3", "dl2": "../zvuk/dasha1/dl2.mp3", "dl3": "../zvuk/dasha1/dl3.mp3", "dl4": "../zvuk/dasha1/dl4.mp3", "pp1": "../zvuk/dasha1/pp1.mp3", "pp2": "../zvuk/dasha1/pp2.mp3", "pp3": "../zvuk/dasha1/pp3.mp3", "pp4": "../zvuk/dasha1/pp4.mp3", "pp5": "../zvuk/dasha1/pp5.mp3", "pp6": "../zvuk/dasha1/pp6.mp3", "pp7": "../zvuk/dasha1/pp7.mp3", "pp8": "../zvuk/dasha1/pp8.mp3", "fb1": "../zvuk/dasha1/fb1.mp3", "fb2": "../zvuk/dasha1/fb2.mp3", "fb3": "../zvuk/dasha1/fb3.mp3", "fb4": "../zvuk/dasha1/fb4.mp3", "fb5": "../zvuk/dasha1/fb5.mp3", "fb6": "../zvuk/dasha1/fb6.mp3", "fb7": "../zvuk/dasha1/fb7.mp3", "fb8": "../zvuk/dasha1/fb8.mp3", "fb9": "../zvuk/dasha1/fb9.mp3", "fb10": "../zvuk/dasha1/fb10.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1244,6 +1248,68 @@ const videos = [
 ];
 document.getElementById('videos').innerHTML = videos.map(([ico,tt,dd,url])=>`
   <div class="vid-card"><div class="vid-ico">${ico}</div><div class="txt"><div class="tt">${tt}</div><div class="dd">${dd}</div><a href="${url}" target="_blank" rel="noopener">Открыть ↗</a></div></div>`).join('');
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+// ── 11.09: домашка с самопроверкой — поля, перевод, ответы с «почему» ──
+function кнопкаОтветов(кнопкаId, блокId, данные){
+  const к = document.getElementById(кнопкаId), б = document.getElementById(блокId);
+  к.dataset.showText = 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть ответы';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){ showAnswers(this, б, данные); };
+}
+const PP = [["___ Hund ist klein. <span class='hint-ru'>(ich)</span>", "Mein", "Mein Hund ist klein.", "Моя собака маленькая.", "ich → mein. der Hund — Мужской или средний род → без окончания."], ["___ Auto ist schnell. <span class='hint-ru'>(du)</span>", "Dein", "Dein Auto ist schnell.", "Твоя машина быстрая.", "du → dein. das Auto — Мужской или средний род → без окончания."], ["___ Vater ist nett. <span class='hint-ru'>(er)</span>", "Sein", "Sein Vater ist nett.", "Его отец милый.", "er → sein. der Vater — Мужской или средний род → без окончания."], ["___ Mutter ist jung. <span class='hint-ru'>(sie — ед.ч.)</span>", "Ihre", "Ihre Mutter ist jung.", "Её мама молодая.", "sie (она) → ihr. die Mutter — Женский род или множественное → окончание <i>-e</i>."], ["___ Haus ist groß. <span class='hint-ru'>(es)</span>", "Sein", "Sein Haus ist groß.", "Его дом большой.", "es → sein — так же, как у er. das Haus — Мужской или средний род → без окончания."], ["___ Katze ist süß. <span class='hint-ru'>(wir)</span>", "Unsere", "Unsere Katze ist süß.", "Наша кошка милая.", "wir → unser. die Katze — Женский род или множественное → окончание <i>-e</i>."], ["___ Bücher sind neu. <span class='hint-ru'>(ihr)</span>", "Eure", "Eure Bücher sind neu.", "Ваши книги новые.", "ihr → euer, но с окончанием e выпадает: <i>eure</i>. Bücher — множественное."], ["___ Kinder sind laut. <span class='hint-ru'>(sie — мн.ч.)</span>", "Ihre", "Ihre Kinder sind laut.", "Их дети шумные.", "sie (они) → ihr. Kinder — множественное → ihr<b>e</b>."]];
+const FB = [["Die Sonne ist ___. <span class='hint-ru'>солнце</span>", "gelb", "Die Sonne ist gelb.", "Солнце жёлтое.", "Цвет после <i>sein</i> — без окончаний."], ["Der Himmel ist ___. <span class='hint-ru'>небо</span>", "blau", "Der Himmel ist blau.", "Небо голубое.", "Цвет после <i>sein</i> — без окончаний. blau — и синий, и голубой."], ["Die Blätter sind ___. <span class='hint-ru'>листья</span>", "grün", "Die Blätter sind grün.", "Листья зелёные.", "die Blätter — множественное (das Blatt) → <i>sind</i>. Цвет после <i>sein</i> — без окончаний."], ["Die Schokolade ist ___. <span class='hint-ru'>шоколад</span>", "braun", "Die Schokolade ist braun.", "Шоколад коричневый.", "Цвет после <i>sein</i> — без окончаний."], ["Die Maus ist ___. <span class='hint-ru'>мышь</span>", "grau", "Die Maus ist grau.", "Мышь серая.", "Цвет после <i>sein</i> — без окончаний."], ["Der Apfel ist ___. <span class='hint-ru'>яблоко</span>", "rot", "Der Apfel ist rot.", "Яблоко красное.", "Можно и grün — яблоки бывают разные. Цвет после <i>sein</i> — без окончаний."], ["Die Rose ist ___. <span class='hint-ru'>роза</span>", "rot", "Die Rose ist rot.", "Роза красная.", "Любой цвет розы засчитывается: rot, weiß, rosa."], ["Der Schnee ist ___. <span class='hint-ru'>снег</span>", "weiß", "Der Schnee ist weiß.", "Снег белый.", "weiß — с ß."], ["Der Pullover ist ___. <span class='hint-ru'>свитер</span>", "blau", "Der Pullover ist blau.", "Свитер синий.", "Свободный ответ — цвет твоего свитера. Главное: без окончания."], ["Die Orange ist ___. <span class='hint-ru'>апельсин</span>", "orange", "Die Orange ist orange.", "Апельсин оранжевый.", "Цвет и фрукт звучат одинаково: die Orange (апельсин) ist orange."]];
+blanksBlock('hwPP', PP.map(п => [п[0], п[1], null, п[3], п[4]]), 'pp_');
+blanksBlock('hwFB', FB.map(п => [п[0], п[1], null, п[3], п[4]]), 'fb_');
+кнопкаОтветов('кОтветыPP', 'otvetyPP', PP.map((п,i) => ['', '<span style="color:var(--accent)">' + п[1] + '</span> — ' + п[2] + ' ' + playBtn('pp' + (i+1)), null, п[3], п[4]]));
+кнопкаОтветов('кОтветыFB', 'otvetyFB', FB.map((п,i) => ['', '<span style="color:var(--accent)">' + п[1] + '</span> — ' + п[2] + ' ' + playBtn('fb' + (i+1)), null, п[3], п[4]]));
+(function(){
+  const KEY = 'dasha1_hw_';
+  document.querySelectorAll('#hw [data-save]').forEach(el=>{
+    const k = KEY + el.dataset.save;
+    const saved = localStorage.getItem(k);
+    if(saved !== null) el.value = saved;
+    el.addEventListener('input', ()=> localStorage.setItem(k, el.value));
+  });
+})();
 
 // ДОМАШКА с галочками
 const HW = [
@@ -1278,7 +1344,6 @@ function toggleHW(id){
 }
 renderHW();
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
