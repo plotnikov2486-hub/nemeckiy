@@ -70,6 +70,18 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
   footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr, .body-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+</style>
 
 <style id="backbar-css">
   .backbar{
@@ -102,10 +114,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -277,8 +285,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 9. Части тела (der Körper)</h1>
-  <p class="lede">Главный словарь врача: чтобы понять пациента, надо знать, где у него что. Учим части тела с артиклями (der/die/das) и главную фразу приёма — «где болит?». Жми 🔊.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Главный словарь врача: чтобы понять пациента, надо знать, где у него что. Части тела с артиклями, лево и право, главная фраза приёма — «где болит?» — и отдельно всё, что нужно флебологу: пах, подколенная ямка, икра, лодыжка, варикоз. Жми 🔊.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
     <h2><span class="num">1</span> Артикль = цвет</h2>
@@ -309,6 +317,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 
   <section class="block">
     <h2><span class="num">5</span> Руки и ноги (Arme und Beine)</h2>
+    <div class="grammar-box">
+      По-немецки <b>der Arm</b> — вся рука от плеча, а кисть — <b>die Hand</b>. <b>das Bein</b> — вся нога, стопа — <b>der Fuß</b>. Бедро и голень — два разных слова: <i>der Oberschenkel</i> (верх) и <i>der Unterschenkel</i> (низ).
+    </div>
     <div class="body-grid" id="limbs"></div>
   </section>
 
@@ -316,10 +327,21 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <h2><span class="num">6</span> Для флеболога: кожа, кровь, вены</h2>
     <p class="desc">Твоя специальность — вот ключевые слова, которые ты будешь произносить каждый день.</p>
     <div class="body-grid" id="phlebo"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Карта флеболога:</b> <i>die Leiste</i> — пах (там впадает большая подкожная вена), <i>die Kniekehle</i> — подколенная ямка (малая), <i>die Wade</i> — икра, <i>der Knöchel</i> — лодыжка, где первыми появляются отёки. Варикоз — <i>die Krampfadern</i>, почти всегда во множественном; звёздочки — <i>die Besenreiser</i> («веник»).
+    </div>
   </section>
 
   <section class="block">
-    <h2><span class="num">7</span> Множественное число — есть логика</h2>
+    <h2><span class="num">7</span> Лево и право, верх и низ</h2>
+    <div class="grammar-box">
+      <b>links</b> — слева, <b>rechts</b> — справа, <b>oben</b> — вверху, <b>unten</b> — внизу, <b>vorne / hinten</b> — спереди / сзади. Перед словом «левый / правый» получают окончание: <i>das link<b>e</b> Bein, am recht<b>en</b> Knöchel</i> — пока просто узнавай на слух.
+    </div>
+    <div class="card-list" id="side"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">8</span> Множественное число — есть логика</h2>
     <div class="grammar-box">
       У пар органов множественное нужно постоянно (обе ноги, обе руки). Частые окончания: <b class="hl">-e</b> (der Arm → die Arme), <b class="hl">-e + умляут</b> (die Hand → die Hände, der Fuß → die Füße), <b class="hl">-en</b> (das Auge → die Augen). Учи форму вместе со словом.
     </div>
@@ -327,33 +349,52 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block">
-    <h2><span class="num">8</span> Главная фраза приёма: «где болит?»</h2>
+    <h2><span class="num">9</span> Главная фраза приёма: «где болит?»</h2>
     <div class="grammar-box">
       Два способа сказать про боль:<br>
-      1. Глагол <b class="hl">wehtun</b> (болеть): <i>Der Kopf <b>tut weh</b></i> — голова болит. Вопрос: <i>Wo tut es weh?</i><br>
+      1. Глагол <b class="hl">wehtun</b> (болеть): <i>Der Kopf <b>tut weh</b></i> — голова болит. Вопрос: <i>Wo tut es weh?</i> Если болит несколько — <i>Die Beine <b>tun</b> weh</i>.<br>
       2. <b class="hl">…schmerzen</b> — приклей часть тела спереди: Kopf<b>schmerzen</b> (головная боль), Rücken<b>schmerzen</b> (боль в спине), Bauch<b>schmerzen</b> (в животе).
     </div>
     <div class="card-list" id="pain"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">9</span> Жалобы на ноги (для тебя — часто)</h2>
+    <h2><span class="num">10</span> Жалобы на ноги (для тебя — часто)</h2>
     <div class="card-list" id="legs"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">10</span> Диалог: пациент с болью в спине и ногах</h2>
-    <div class="dialogue" id="dialog"></div>
+    <h2><span class="num">11</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Mein Kopf ist krank.</span><span class="good">Mein Kopf tut weh.</span><span class="why">«болит» — wehtun</span></div>
+      <div class="err-row"><span class="bad">Ich habe Schmerz im Kopf.</span><span class="good">Ich habe Kopfschmerzen.</span><span class="why">часть тела + Schmerzen — одним словом</span></div>
+      <div class="err-row"><span class="bad">Die Beine tut weh.</span><span class="good">Die Beine tun weh.</span><span class="why">ноги — множественное: tun</span></div>
+      <div class="err-row"><span class="bad">das Hand</span><span class="good">die Hand</span><span class="why">род учат вместе со словом</span></div>
+      <div class="err-row"><span class="bad">die Füßen</span><span class="good">die Füße</span><span class="why">Fuß → Füße: умляут и -e</span></div>
+      <div class="err-row"><span class="bad">Ich habe Krampfader.</span><span class="good">Ich habe Krampfadern.</span><span class="why">варикоз — почти всегда во множественном</span></div>
+    </div>
   </section>
 
   <section class="block">
-    <h2><span class="num">11</span> Домашка</h2>
+    <h2><span class="num">12</span> Диалоги</h2>
+    <div class="desc">Первый — боль в спине и ноге. Второй — консультация флеболога: варикоз, отёки, УЗИ. Третий — мама с ребёнком, у которого болит ухо.</div>
+    <h3 class="dlg-title">Боль в спине и ногах</h3>
+    <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Варикоз — консультация</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">У ребёнка болит ухо</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">13</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Назови вслух 10 частей тела <b>с артиклем</b> (der/die/das) — глядя на себя.</li>
-        <li>Скажи 5 фраз: «У меня болит …» двумя способами (… tut weh / …schmerzen).</li>
-        <li>Спроси пациента: <i>Wo tut es weh?</i> — и ответь за него про 3 разные части тела.</li>
-        <li>Назови множественное: Arm, Bein, Hand, Fuß, Auge.</li>
+        <li>Скажи 5 фраз «у меня болит …» двумя способами (<i>… tut weh</i> / <i>…schmerzen</i>).</li>
+        <li>Покажи на ноге и назови: <i>Leiste, Oberschenkel, Kniekehle, Wade, Knöchel, Ferse</i>.</li>
+        <li>Назови множественное: Arm, Bein, Hand, Fuß, Auge, Zahn.</li>
+        <li>Разыграй с Полиной диалог 2: ты флеболог, она пациентка с варикозом.</li>
       </ol>
     </div>
   </section>
@@ -912,11 +953,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Markus (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"kopf": "../zvuk/urok9/kopf.mp3", "gesicht": "../zvuk/urok9/gesicht.mp3", "auge": "../zvuk/urok9/auge.mp3", "augen": "../zvuk/urok9/augen.mp3", "nase": "../zvuk/urok9/nase.mp3", "mund": "../zvuk/urok9/mund.mp3", "ohr": "../zvuk/urok9/ohr.mp3", "zahn": "../zvuk/urok9/zahn.mp3", "zaehne": "../zvuk/urok9/zaehne.mp3", "hals": "../zvuk/urok9/hals.mp3", "haar": "../zvuk/urok9/haar.mp3", "brust": "../zvuk/urok9/brust.mp3", "bauch": "../zvuk/urok9/bauch.mp3", "ruecken": "../zvuk/urok9/ruecken.mp3", "schulter": "../zvuk/urok9/schulter.mp3", "herz": "../zvuk/urok9/herz.mp3", "lunge": "../zvuk/urok9/lunge.mp3", "magen": "../zvuk/urok9/magen.mp3", "leber": "../zvuk/urok9/leber.mp3", "niere": "../zvuk/urok9/niere.mp3", "darm": "../zvuk/urok9/darm.mp3", "arm": "../zvuk/urok9/arm.mp3", "hand": "../zvuk/urok9/hand.mp3", "finger": "../zvuk/urok9/finger.mp3", "bein": "../zvuk/urok9/bein.mp3", "knie": "../zvuk/urok9/knie.mp3", "fuss": "../zvuk/urok9/fuss.mp3", "zehe": "../zvuk/urok9/zehe.mp3", "vene": "../zvuk/urok9/vene.mp3", "venen": "../zvuk/urok9/venen.mp3", "blut": "../zvuk/urok9/blut.mp3", "haut": "../zvuk/urok9/haut.mp3", "pl1": "../zvuk/urok9/pl1.mp3", "pl2": "../zvuk/urok9/pl2.mp3", "pl3": "../zvuk/urok9/pl3.mp3", "pl4": "../zvuk/urok9/pl4.mp3", "pl5": "../zvuk/urok9/pl5.mp3", "w1": "../zvuk/urok9/w1.mp3", "w2": "../zvuk/urok9/w2.mp3", "w3": "../zvuk/urok9/w3.mp3", "w4": "../zvuk/urok9/w4.mp3", "w5": "../zvuk/urok9/w5.mp3", "w6": "../zvuk/urok9/w6.mp3", "s1": "../zvuk/urok9/s1.mp3", "s2": "../zvuk/urok9/s2.mp3", "s3": "../zvuk/urok9/s3.mp3", "s4": "../zvuk/urok9/s4.mp3", "s5": "../zvuk/urok9/s5.mp3", "s6": "../zvuk/urok9/s6.mp3", "f1": "../zvuk/urok9/f1.mp3", "f2": "../zvuk/urok9/f2.mp3", "f3": "../zvuk/urok9/f3.mp3", "d1": "../zvuk/urok9/d1.mp3", "d2": "../zvuk/urok9/d2.mp3", "d3": "../zvuk/urok9/d3.mp3", "d4": "../zvuk/urok9/d4.mp3", "d5": "../zvuk/urok9/d5.mp3", "d6": "../zvuk/urok9/d6.mp3", "d7": "../zvuk/urok9/d7.mp3"};
+const AUDIO = {"kopf": "../zvuk/urok9/kopf.mp3", "gesicht": "../zvuk/urok9/gesicht.mp3", "auge": "../zvuk/urok9/auge.mp3", "augen": "../zvuk/urok9/augen.mp3", "nase": "../zvuk/urok9/nase.mp3", "mund": "../zvuk/urok9/mund.mp3", "ohr": "../zvuk/urok9/ohr.mp3", "zahn": "../zvuk/urok9/zahn.mp3", "zaehne": "../zvuk/urok9/zaehne.mp3", "hals": "../zvuk/urok9/hals.mp3", "haar": "../zvuk/urok9/haar.mp3", "brust": "../zvuk/urok9/brust.mp3", "bauch": "../zvuk/urok9/bauch.mp3", "ruecken": "../zvuk/urok9/ruecken.mp3", "schulter": "../zvuk/urok9/schulter.mp3", "herz": "../zvuk/urok9/herz.mp3", "lunge": "../zvuk/urok9/lunge.mp3", "magen": "../zvuk/urok9/magen.mp3", "leber": "../zvuk/urok9/leber.mp3", "niere": "../zvuk/urok9/niere.mp3", "darm": "../zvuk/urok9/darm.mp3", "arm": "../zvuk/urok9/arm.mp3", "hand": "../zvuk/urok9/hand.mp3", "finger": "../zvuk/urok9/finger.mp3", "bein": "../zvuk/urok9/bein.mp3", "knie": "../zvuk/urok9/knie.mp3", "fuss": "../zvuk/urok9/fuss.mp3", "zehe": "../zvuk/urok9/zehe.mp3", "vene": "../zvuk/urok9/vene.mp3", "venen": "../zvuk/urok9/venen.mp3", "blut": "../zvuk/urok9/blut.mp3", "haut": "../zvuk/urok9/haut.mp3", "pl1": "../zvuk/urok9/pl1.mp3", "pl2": "../zvuk/urok9/pl2.mp3", "pl3": "../zvuk/urok9/pl3.mp3", "pl4": "../zvuk/urok9/pl4.mp3", "pl5": "../zvuk/urok9/pl5.mp3", "w1": "../zvuk/urok9/w1.mp3", "w2": "../zvuk/urok9/w2.mp3", "w3": "../zvuk/urok9/w3.mp3", "w4": "../zvuk/urok9/w4.mp3", "w5": "../zvuk/urok9/w5.mp3", "w6": "../zvuk/urok9/w6.mp3", "s1": "../zvuk/urok9/s1.mp3", "s2": "../zvuk/urok9/s2.mp3", "s3": "../zvuk/urok9/s3.mp3", "s4": "../zvuk/urok9/s4.mp3", "s5": "../zvuk/urok9/s5.mp3", "s6": "../zvuk/urok9/s6.mp3", "f1": "../zvuk/urok9/f1.mp3", "f2": "../zvuk/urok9/f2.mp3", "f3": "../zvuk/urok9/f3.mp3", "d1": "../zvuk/urok9/d1.mp3", "d2": "../zvuk/urok9/d2.mp3", "d3": "../zvuk/urok9/d3.mp3", "d4": "../zvuk/urok9/d4.mp3", "d5": "../zvuk/urok9/d5.mp3", "d6": "../zvuk/urok9/d6.mp3", "d7": "../zvuk/urok9/d7.mp3", "stirn": "../zvuk/urok9/stirn.mp3", "wange": "../zvuk/urok9/wange.mp3", "kinn": "../zvuk/urok9/kinn.mp3", "zunge": "../zvuk/urok9/zunge.mp3", "nacken": "../zvuk/urok9/nacken.mp3", "huefte": "../zvuk/urok9/huefte.mp3", "leiste": "../zvuk/urok9/leiste.mp3", "ellenbogen": "../zvuk/urok9/ellenbogen.mp3", "handgelenk": "../zvuk/urok9/handgelenk.mp3", "oberschenkel": "../zvuk/urok9/oberschenkel.mp3", "unterschenkel": "../zvuk/urok9/unterschenkel.mp3", "wade": "../zvuk/urok9/wade.mp3", "kniekehle": "../zvuk/urok9/kniekehle.mp3", "knoechel": "../zvuk/urok9/knoechel.mp3", "ferse": "../zvuk/urok9/ferse.mp3", "krampfadern": "../zvuk/urok9/krampfadern.mp3", "besenreiser": "../zvuk/urok9/besenreiser.mp3", "schwellung": "../zvuk/urok9/schwellung.mp3", "thrombose": "../zvuk/urok9/thrombose.mp3", "lr1": "../zvuk/urok9/lr1.mp3", "lr2": "../zvuk/urok9/lr2.mp3", "lr3": "../zvuk/urok9/lr3.mp3", "lr4": "../zvuk/urok9/lr4.mp3", "lr5": "../zvuk/urok9/lr5.mp3", "lr6": "../zvuk/urok9/lr6.mp3", "w7": "../zvuk/urok9/w7.mp3", "lg1": "../zvuk/urok9/lg1.mp3", "lg2": "../zvuk/urok9/lg2.mp3", "lg3": "../zvuk/urok9/lg3.mp3", "lg4": "../zvuk/urok9/lg4.mp3", "lg5": "../zvuk/urok9/lg5.mp3", "kv1": "../zvuk/urok9/kv1.mp3", "kv2": "../zvuk/urok9/kv2.mp3", "kv3": "../zvuk/urok9/kv3.mp3", "kv4": "../zvuk/urok9/kv4.mp3", "kv5": "../zvuk/urok9/kv5.mp3", "kv6": "../zvuk/urok9/kv6.mp3", "kv7": "../zvuk/urok9/kv7.mp3", "kv8": "../zvuk/urok9/kv8.mp3", "ki1": "../zvuk/urok9/ki1.mp3", "ki2": "../zvuk/urok9/ki2.mp3", "ki3": "../zvuk/urok9/ki3.mp3", "ki4": "../zvuk/urok9/ki4.mp3", "ki5": "../zvuk/urok9/ki5.mp3", "ki6": "../zvuk/urok9/ki6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -937,73 +978,117 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-function bodyCards(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,art,word,ru])=>`
-  <div class="body-card ${art}"><div class="txt"><div class="de"><span class="art-${art}">${art}</span> ${word}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// части тела: [id, слово без артикля, транскрипция, перевод, артикль]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,word,tr,ru,art])=>`
+  <div class="body-card ${art}"><div class="txt"><div class="de"><span class="art-${art}">${art}</span> ${word}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-bodyCards('head',[
-  ["kopf","der","Kopf","голова"],["gesicht","das","Gesicht","лицо"],
-  ["auge","das","Auge","глаз"],["augen","die","Augen","глаза (мн.)"],
-  ["nase","die","Nase","нос"],["mund","der","Mund","рот"],
-  ["ohr","das","Ohr","ухо"],["zahn","der","Zahn","зуб"],
-  ["zaehne","die","Zähne","зубы (мн.)"],["hals","der","Hals","шея / горло"],["haar","die","Haare","волосы"],
+words('head',[
+  ["kopf","Kopf","копф","голова","der"],["gesicht","Gesicht","гэзихьт","лицо","das"],
+  ["stirn","Stirn","штирн","лоб","die"],["auge","Auge","аугэ","глаз","das"],["augen","Augen","аугэн","глаза (мн.)","die"],
+  ["nase","Nase","назэ","нос","die"],["wange","Wange","вангэ","щека","die"],["mund","Mund","мунт","рот","der"],
+  ["zunge","Zunge","цунгэ","язык","die"],["kinn","Kinn","кин","подбородок","das"],
+  ["ohr","Ohr","оа","ухо","das"],["zahn","Zahn","цан","зуб","der"],["zaehne","Zähne","цэнэ","зубы (мн.)","die"],
+  ["hals","Hals","хальс","шея / горло","der"],["haar","Haare","харэ","волосы","die"],
 ]);
-bodyCards('torso',[
-  ["brust","die","Brust","грудь"],["bauch","der","Bauch","живот"],
-  ["ruecken","der","Rücken","спина"],["schulter","die","Schulter","плечо"],
+words('torso',[
+  ["nacken","Nacken","накэн","шея сзади, затылок","der"],["schulter","Schulter","шультэа","плечо","die"],
+  ["brust","Brust","бруст","грудь","die"],["bauch","Bauch","баух","живот","der"],
+  ["ruecken","Rücken","рюкэн","спина","der"],["huefte","Hüfte","хюфтэ","бедро (сбоку), таз","die"],
+  ["leiste","Leiste","ляйстэ","пах","die"],
 ]);
-bodyCards('organs',[
-  ["herz","das","Herz","сердце"],["lunge","die","Lunge","лёгкое"],["magen","der","Magen","желудок"],
-  ["leber","die","Leber","печень"],["niere","die","Niere","почка"],["darm","der","Darm","кишечник"],
+words('organs',[
+  ["herz","Herz","хэрц","сердце","das"],["lunge","Lunge","лунгэ","лёгкое","die"],["magen","Magen","магэн","желудок","der"],
+  ["leber","Leber","лебэа","печень","die"],["niere","Niere","нирэ","почка","die"],["darm","Darm","дарм","кишечник","der"],
 ]);
-bodyCards('limbs',[
-  ["arm","der","Arm","рука (от плеча)"],["hand","die","Hand","кисть"],["finger","der","Finger","палец руки"],
-  ["bein","das","Bein","нога"],["knie","das","Knie","колено"],["fuss","der","Fuß","стопа"],["zehe","die","Zehe","палец ноги"],
+words('limbs',[
+  ["arm","Arm","арм","рука (от плеча)","der"],["ellenbogen","Ellenbogen","эллэнбогэн","локоть","der"],
+  ["handgelenk","Handgelenk","хантгэлэнк","запястье","das"],["hand","Hand","хант","кисть","die"],["finger","Finger","фингэа","палец руки","der"],
+  ["bein","Bein","байн","нога","das"],["oberschenkel","Oberschenkel","обэршэнкэль","бедро","der"],
+  ["knie","Knie","кни","колено","das"],["kniekehle","Kniekehle","кникэлэ","подколенная ямка","die"],
+  ["unterschenkel","Unterschenkel","унтэршэнкэль","голень","der"],["wade","Wade","вадэ","икра","die"],
+  ["knoechel","Knöchel","кнёхель","лодыжка","der"],["fuss","Fuß","фус","стопа","der"],
+  ["ferse","Ferse","фэрзэ","пятка","die"],["zehe","Zehe","цээ","палец ноги","die"],
 ]);
-bodyCards('phlebo',[
-  ["haut","die","Haut","кожа"],["blut","das","Blut","кровь"],
-  ["vene","die","Vene","вена"],["venen","die","Venen","вены (мн.)"],
+words('phlebo',[
+  ["haut","Haut","хаут","кожа","die"],["blut","Blut","блут","кровь","das"],
+  ["vene","Vene","вэнэ","вена","die"],["venen","Venen","вэнэн","вены (мн.)","die"],
+  ["krampfadern","Krampfadern","крампфадэрн","варикозные вены","die"],["besenreiser","Besenreiser","бэзэнрайзэа","сосудистые звёздочки","die"],
+  ["schwellung","Schwellung","швэллунг","отёк","die"],["thrombose","Thrombose","тромбозэ","тромбоз","die"],
 ]);
-
-const plural = [
-  ["pl1","der Arm → die Arme","рука → руки (-e)"],
-  ["pl2","das Bein → die Beine","нога → ноги (-e)"],
-  ["pl3","die Hand → die Hände","кисть → кисти (-e + умляут)"],
-  ["pl4","der Fuß → die Füße","стопа → стопы (-e + умляут)"],
-  ["pl5","das Auge → die Augen","глаз → глаза (-en)"],
-];
-const pain = [
-  ["w1","Wo tut es weh?","Где болит?"],
-  ["w2","Der Kopf tut weh.","Голова болит."],
-  ["w3","Der Rücken tut weh.","Спина болит."],
-  ["w6","Hier tut es weh.","Вот здесь болит."],
-  ["s1","Ich habe Kopfschmerzen.","У меня головная боль."],
-  ["s2","Ich habe Bauchschmerzen.","У меня болит живот."],
-  ["s3","Ich habe Rückenschmerzen.","У меня боль в спине."],
-  ["s5","Ich habe Zahnschmerzen.","У меня болит зуб."],
-  ["s6","Ich habe Schmerzen im Bein.","У меня боль в ноге."],
-];
-const legs = [
-  ["f1","Meine Beine sind schwer.","Мои ноги тяжёлые."],
-  ["f2","Die Venen tun weh.","Вены болят."],
-  ["f3","Das Bein ist geschwollen.","Нога отёкшая."],
-];
-function fill(id, arr){ document.getElementById(id).innerHTML = arr.map(([cid,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(cid)}</div>`).join(''); }
-fill('plural',plural); fill('pain',pain); fill('legs',legs);
-
-const dialog = [
-  ["d1","left","врач","Guten Tag! Was fehlt Ihnen?","Здравствуйте! Что Вас беспокоит?"],
-  ["d2","right","пац.","Mein Rücken tut weh. Ich habe starke Rückenschmerzen.","Спина болит. У меня сильная боль в спине."],
-  ["d3","left","врач","Wo genau tut es weh? Hier?","Где именно болит? Здесь?"],
-  ["d4","right","пац.","Ja, hier unten. Und das linke Bein tut auch weh.","Да, вот здесь внизу. И левая нога тоже болит."],
-  ["d5","left","врач","Seit wann haben Sie die Schmerzen?","С каких пор у Вас эти боли?"],
-  ["d6","right","пац.","Seit drei Tagen. Die Beine sind auch schwer.","Три дня. Ноги ещё и тяжёлые."],
-  ["d7","left","врач","Gut. Ich untersuche jetzt Ihr Bein und Ihre Venen.","Хорошо. Сейчас осмотрю Вашу ногу и вены."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+phrases('side',[
+  ["lr1","das linke Bein","дас линкэ байн","левая нога"],
+  ["lr2","der rechte Arm","дэа рэхьтэ арм","правая рука"],
+  ["lr3","hier oben","хиа обэн","здесь, наверху"],
+  ["lr4","hier unten","хиа унтэн","здесь, внизу"],
+  ["lr5","vorne und hinten","форнэ унт хинтэн","спереди и сзади"],
+  ["lr6","am rechten Knöchel","ам рэхьтэн кнёхель","на правой лодыжке"],
+]);
+phrases('plural',[
+  ["pl1","der Arm → die Arme","дэа арм — ди армэ","рука → руки (-e)"],
+  ["pl2","das Bein → die Beine","дас байн — ди байнэ","нога → ноги (-e)"],
+  ["pl3","die Hand → die Hände","ди хант — ди хэндэ","кисть → кисти (-e + умляут)"],
+  ["pl4","der Fuß → die Füße","дэа фус — ди фюсэ","стопа → стопы (-e + умляут)"],
+  ["pl5","das Auge → die Augen","дас аугэ — ди аугэн","глаз → глаза (-en)"],
+]);
+phrases('pain',[
+  ["w1","Wo tut es weh?","во тут эс вэ","Где болит?"],
+  ["w5","Tut das weh?","тут дас вэ","Так больно?"],
+  ["w2","Der Kopf tut weh.","дэа копф тут вэ","Голова болит."],
+  ["w3","Der Rücken tut weh.","дэа рюкэн тут вэ","Спина болит."],
+  ["w4","Das Bein tut weh.","дас байн тут вэ","Нога болит."],
+  ["w7","Die Beine tun weh.","ди байнэ тун вэ","Ноги болят. — мн. число: tun"],
+  ["w6","Hier tut es weh.","хиа тут эс вэ","Вот здесь болит."],
+  ["s1","Ich habe Kopfschmerzen.","ихь хабэ копфшмэрцэн","У меня головная боль."],
+  ["s2","Ich habe Bauchschmerzen.","ихь хабэ баухшмэрцэн","У меня болит живот."],
+  ["s3","Ich habe Rückenschmerzen.","ихь хабэ рюкэншмэрцэн","У меня боль в спине."],
+  ["s4","Ich habe Halsschmerzen.","ихь хабэ хальсшмэрцэн","У меня болит горло."],
+  ["s5","Ich habe Zahnschmerzen.","ихь хабэ цаншмэрцэн","У меня болит зуб."],
+  ["s6","Ich habe Schmerzen im Bein.","ихь хабэ шмэрцэн им байн","У меня боль в ноге."],
+]);
+phrases('legs',[
+  ["f1","Meine Beine sind schwer.","майнэ байнэ зинт швэа","Мои ноги тяжёлые."],
+  ["f2","Die Venen tun weh.","ди вэнэн тун вэ","Вены болят."],
+  ["f3","Das Bein ist geschwollen.","дас байн ист гэшволлэн","Нога отёкшая."],
+  ["lg1","Abends sind die Knöchel geschwollen.","абэнтс зинт ди кнёхель гэшволлэн","К вечеру лодыжки отекают."],
+  ["lg2","Ich habe Krampfadern.","ихь хабэ крампфадэрн","У меня варикоз."],
+  ["lg3","Die Wade tut nachts weh.","ди вадэ тут нахтс вэ","Икра болит по ночам."],
+  ["lg4","Meine Beine kribbeln.","майнэ байнэ криббэльн","Ноги покалывает."],
+  ["lg5","Die Haut am Knöchel ist dunkel.","ди хаут ам кнёхель ист дункэль","Кожа у лодыжки потемнела."],
+]);
+dlg('dialog',[
+  ["d1","left","Вр","Guten Tag! Was fehlt Ihnen?","гутэн так! вас фэльт инэн","Здравствуйте! Что Вас беспокоит?"],
+  ["d2","right","П","Mein Rücken tut weh. Ich habe starke Rückenschmerzen.","майн рюкэн тут вэ. ихь хабэ штаркэ рюкэншмэрцэн","Спина болит. У меня сильная боль в спине."],
+  ["d3","left","Вр","Wo genau tut es weh? Hier?","во гэнау тут эс вэ? хиа","Где именно болит? Здесь?"],
+  ["d4","right","П","Ja, hier unten. Und das linke Bein tut auch weh.","я, хиа унтэн. унт дас линкэ байн тут аух вэ","Да, вот здесь внизу. И левая нога тоже болит."],
+  ["d5","left","Вр","Seit wann haben Sie die Schmerzen?","зайт ван хабэн зи ди шмэрцэн","С каких пор у Вас эти боли?"],
+  ["d6","right","П","Seit drei Tagen. Die Beine sind auch schwer.","зайт драй тагэн. ди байнэ зинт аух швэа","Три дня. Ноги ещё и тяжёлые."],
+  ["d7","left","Вр","Gut. Ich untersuche jetzt Ihr Bein und Ihre Venen.","гут. ихь унтэрзухэ етцт иа байн унт ирэ вэнэн","Хорошо. Сейчас осмотрю Вашу ногу и вены."],
+]);
+dlg('dialog2',[
+  ["kv1","left","Вр","Zeigen Sie mir bitte Ihre Beine.","цайгэн зи миа битэ ирэ байнэ","Покажите мне, пожалуйста, ноги."],
+  ["kv2","right","П","Hier, am rechten Unterschenkel.","хиа, ам рэхьтэн унтэршэнкэль","Вот, на правой голени."],
+  ["kv3","left","Вр","Sie haben Krampfadern.","зи хабэн крампфадэрн","У Вас варикозные вены."],
+  ["kv4","left","Вр","Sind die Beine abends geschwollen?","зинт ди байнэ абэнтс гэшволлэн","Ноги к вечеру отекают?"],
+  ["kv5","right","П","Ja, besonders am Knöchel.","я, бэзондэрс ам кнёхель","Да, особенно у лодыжки."],
+  ["kv6","left","Вр","Haben Sie Schmerzen in der Wade?","хабэн зи шмэрцэн ин дэа вадэ","Икра болит?"],
+  ["kv7","right","П","Manchmal, in der Nacht.","манхмаль, ин дэа нахт","Иногда, ночью."],
+  ["kv8","left","Вр","Gut. Wir machen jetzt einen Ultraschall.","гут. виа махэн етцт айнэн ультрашаль","Хорошо. Сейчас сделаем УЗИ."],
+]);
+dlg('dialog3',[
+  ["ki1","right","М","Mein Sohn hat Ohrenschmerzen.","майн зон хат орэншмэрцэн","У моего сына болят уши."],
+  ["ki2","left","Вр","Welches Ohr tut weh?","вэльхес оа тут вэ","Какое ухо болит?"],
+  ["ki3","right","М","Das linke Ohr.","дас линкэ оа","Левое."],
+  ["ki4","left","Вр","Hat er Fieber?","хат эа фибэа","Температура есть?"],
+  ["ki5","right","М","Ja, achtunddreißig Komma fünf.","я, ахтунтдрайсихь комма фюнф","Да, 38,5."],
+  ["ki6","left","Вр","Gut. Ich schaue jetzt ins Ohr.","гут. ихь шауэ етцт инс оа","Хорошо. Сейчас посмотрю ухо."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
