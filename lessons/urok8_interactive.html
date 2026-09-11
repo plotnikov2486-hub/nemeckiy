@@ -81,6 +81,18 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
   footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr, .w-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+</style>
 
 <style id="backbar-css">
   .backbar{
@@ -113,10 +125,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -288,8 +296,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 8. Неправильные глаголы и вопросы W-Fragen</h1>
-  <p class="lede">Три самых важных глагола (sein, haben) плюс «глаголы-хамелеоны», которые меняют корень. И все вопросительные слова на W — то, чем врач начинает каждый приём. Жми 🔊.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Два самых важных глагола (sein, haben), «глаголы-хамелеоны», которые меняют корень, и все вопросительные слова на W — то, чем врач начинает каждый приём. В конце — настоящий анамнез у флеболога. Жми 🔊.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
     <h2><span class="num">1</span> Сначала эталон: правильный глагол</h2>
@@ -325,13 +333,21 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       Главное правило урока: у этих глаголов корень меняется <b>ТОЛЬКО в двух формах</b> — <b>du</b> и <b>er/sie/es</b>. Все остальные (ich, wir, ihr, sie) — как у правильного глагола, без сюрпризов.
     </div>
     <div class="grammar-box">
-      Три типа замены: <b class="hl">e → i</b> (sprechen → du sprichst), <b class="hl">e → ie</b> (sehen → du siehst), <b class="hl">a → ä</b> (fahren → du fährst).
+      Три типа замены: <b class="hl">e → i</b> (sprechen → du sprichst), <b class="hl">e → ie</b> (sehen → du siehst), <b class="hl">a → ä</b> (fahren → du fährst). У <i>laufen</i> — <b class="hl">au → äu</b>: du läufst.
     </div>
     <div class="verb-grid" id="verbs"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">5</span> W-Fragen — вопросительные слова</h2>
+    <h2><span class="num">5</span> Хамелеоны на приёме</h2>
+    <div class="grammar-box doc">
+      🩺 Врач говорит о пациенте в третьем лице — а это как раз «ломаная» форма: <i>er nimmt, sie schläft, er läuft</i>. Выучи именно эти формы — они звучат в каждом разговоре о больном.
+    </div>
+    <div class="card-list" id="vh"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">6</span> W-Fragen — вопросительные слова</h2>
     <div class="grammar-box">
       Это <b>не глаголы</b>, а вопросительные слова — почти все начинаются на <b class="hl">W</b>, отсюда название <i>W-Fragen</i>. Порядок железный: <b>W-слово → глагол → кто</b>. <i>Wo</i> <b>wohnen</b> Sie? — глагол всегда вторым (правило из Урока 3 работает и здесь).
     </div>
@@ -339,24 +355,58 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block">
-    <h2><span class="num">6</span> W-Fragen в работе врача</h2>
-    <p class="desc">Восемь вопросов, которыми реально начинается приём. Выучи их блоком — половина Fachsprachprüfung держится на них.</p>
+    <h2><span class="num">7</span> Трудные пары</h2>
+    <div class="grammar-box">
+      <b>wo / woher / wohin</b> — где / откуда / куда. По-русски это три разных слова, и по-немецки тоже: «Wo kommen Sie?» — ошибка, нужно <i>Woher</i>.<br><br>
+      <b>wie viel / wie viele</b> — «сколько» чего-то неисчисляемого (воды, времени) и сколько штук: <i>wie viel Wasser</i>, но <i>wie viele Tabletten</i>.<br><br>
+      <b>welcher / welche / welches</b> — «какой», и оно меняется по роду, как артикль: <i>der Arzt → welcher</i>, <i>die Tablette → welche</i>, <i>das Bein → welches</i>.
+    </div>
+    <div class="card-list" id="pairs"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">8</span> W-Fragen в работе врача</h2>
+    <p class="desc">Вопросы, которыми реально начинается и идёт приём. Выучи их блоком — на них держится анамнез в Fachsprachprüfung.</p>
     <div class="card-list" id="medq"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Анамнез.</b> Жалобы по-немецки — <i>die Beschwerden</i>. Порядок вопросов на экзамене почти всегда один: что беспокоит → с каких пор → как часто и как сильно → когда хуже → какие болезни и лекарства → кто семейный врач.
+    </div>
+    <div class="card-list" id="anam"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">7</span> Диалог: первый приём</h2>
+    <h2><span class="num">9</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Du sprechst.</span><span class="good">Du sprichst.</span><span class="why">e → i у du и er</span></div>
+      <div class="err-row"><span class="bad">Er nehmt.</span><span class="good">Er nimmt.</span><span class="why">nehmen: nimmt — и h пропадает</span></div>
+      <div class="err-row"><span class="bad">Ich sprich.</span><span class="good">Ich spreche.</span><span class="why">у ich корень не меняется</span></div>
+      <div class="err-row"><span class="bad">Wie viel Tabletten?</span><span class="good">Wie viele Tabletten?</span><span class="why">считаем штуки — wie viele</span></div>
+      <div class="err-row"><span class="bad">Wo kommen Sie? — «откуда»</span><span class="good">Woher kommen Sie?</span><span class="why">откуда — woher</span></div>
+      <div class="err-row"><span class="bad">Wo gehen Sie? — «куда»</span><span class="good">Wohin gehen Sie?</span><span class="why">куда — wohin</span></div>
+      <div class="err-row"><span class="bad">Warum Sie sind hier?</span><span class="good">Warum sind Sie hier?</span><span class="why">глагол сразу после W-слова</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">10</span> Диалоги</h2>
+    <div class="desc">Первый — первый приём. Второй — анамнез у флеболога, как на экзамене. Третий — коллеги на «ты»: глаголы-хамелеоны в обычной речи.</div>
+    <h3 class="dlg-title">Первый приём</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Анамнез у флеболога</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Коллеги — на «ты»</h3>
+    <div class="dialogue" id="dialog3"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">8</span> Домашка</h2>
+    <h2><span class="num">11</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Проспрягай вслух наизусть <b>sein</b> и <b>haben</b> — все 6 форм, без подглядывания.</li>
-        <li>Поставь в форму <b>du</b> и <b>er</b>: sprechen, nehmen, fahren, schlafen, sehen.</li>
-        <li>Задай пациенту 5 вопросов подряд, начиная с разных W-слов (wie, wo, wann, was, welche).</li>
-        <li>Переведи: «Он врач», «У неё температура», «Ты плохо спишь», «Какие таблетки Вы принимаете?»</li>
+        <li>Поставь в форму <b>du</b> и <b>er</b> все 12 хамелеонов: sprechen, nehmen, essen, geben, sehen, lesen, fahren, schlafen, helfen, laufen, vergessen, tragen.</li>
+        <li>Задай пациенту 6 вопросов подряд, начиная с разных W-слов, и один — с <i>wie viele</i>.</li>
+        <li>Проведи с Полиной анамнез по диалогу 2: ты врач, она пациентка с «тяжёлыми ногами».</li>
+        <li>Переведи: «Он врач», «У неё температура», «Ты плохо спишь», «Какие таблетки Вы принимаете?», «Откуда Вы?»</li>
       </ol>
     </div>
   </section>
@@ -915,11 +965,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Markus (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"k1": "../zvuk/urok8/k1.mp3", "k2": "../zvuk/urok8/k2.mp3", "k3": "../zvuk/urok8/k3.mp3", "k4": "../zvuk/urok8/k4.mp3", "k5": "../zvuk/urok8/k5.mp3", "k6": "../zvuk/urok8/k6.mp3", "s1": "../zvuk/urok8/s1.mp3", "s2": "../zvuk/urok8/s2.mp3", "s3": "../zvuk/urok8/s3.mp3", "s4": "../zvuk/urok8/s4.mp3", "s5": "../zvuk/urok8/s5.mp3", "s6": "../zvuk/urok8/s6.mp3", "s_med1": "../zvuk/urok8/s_med1.mp3", "s_med2": "../zvuk/urok8/s_med2.mp3", "s_med3": "../zvuk/urok8/s_med3.mp3", "h1": "../zvuk/urok8/h1.mp3", "h2": "../zvuk/urok8/h2.mp3", "h3": "../zvuk/urok8/h3.mp3", "h4": "../zvuk/urok8/h4.mp3", "h5": "../zvuk/urok8/h5.mp3", "h6": "../zvuk/urok8/h6.mp3", "h_med1": "../zvuk/urok8/h_med1.mp3", "h_med2": "../zvuk/urok8/h_med2.mp3", "h_med3": "../zvuk/urok8/h_med3.mp3", "v_sprechen": "../zvuk/urok8/v_sprechen.mp3", "v_nehmen": "../zvuk/urok8/v_nehmen.mp3", "v_essen": "../zvuk/urok8/v_essen.mp3", "v_geben": "../zvuk/urok8/v_geben.mp3", "v_sehen": "../zvuk/urok8/v_sehen.mp3", "v_lesen": "../zvuk/urok8/v_lesen.mp3", "v_fahren": "../zvuk/urok8/v_fahren.mp3", "v_schlafen": "../zvuk/urok8/v_schlafen.mp3", "w_wer": "../zvuk/urok8/w_wer.mp3", "w_was": "../zvuk/urok8/w_was.mp3", "w_wo": "../zvuk/urok8/w_wo.mp3", "w_woher": "../zvuk/urok8/w_woher.mp3", "w_wohin": "../zvuk/urok8/w_wohin.mp3", "w_wie": "../zvuk/urok8/w_wie.mp3", "w_wann": "../zvuk/urok8/w_wann.mp3", "w_warum": "../zvuk/urok8/w_warum.mp3", "w_wielange": "../zvuk/urok8/w_wielange.mp3", "w_wieviel": "../zvuk/urok8/w_wieviel.mp3", "w_welcher": "../zvuk/urok8/w_welcher.mp3", "q1": "../zvuk/urok8/q1.mp3", "q2": "../zvuk/urok8/q2.mp3", "q3": "../zvuk/urok8/q3.mp3", "q4": "../zvuk/urok8/q4.mp3", "q5": "../zvuk/urok8/q5.mp3", "q6": "../zvuk/urok8/q6.mp3", "q7": "../zvuk/urok8/q7.mp3", "q8": "../zvuk/urok8/q8.mp3", "d1": "../zvuk/urok8/d1.mp3", "d2": "../zvuk/urok8/d2.mp3", "d3": "../zvuk/urok8/d3.mp3", "d4": "../zvuk/urok8/d4.mp3", "d5": "../zvuk/urok8/d5.mp3", "d6": "../zvuk/urok8/d6.mp3", "d7": "../zvuk/urok8/d7.mp3", "d8": "../zvuk/urok8/d8.mp3"};
+const AUDIO = {"k1": "../zvuk/urok8/k1.mp3", "k2": "../zvuk/urok8/k2.mp3", "k3": "../zvuk/urok8/k3.mp3", "k4": "../zvuk/urok8/k4.mp3", "k5": "../zvuk/urok8/k5.mp3", "k6": "../zvuk/urok8/k6.mp3", "s1": "../zvuk/urok8/s1.mp3", "s2": "../zvuk/urok8/s2.mp3", "s3": "../zvuk/urok8/s3.mp3", "s4": "../zvuk/urok8/s4.mp3", "s5": "../zvuk/urok8/s5.mp3", "s6": "../zvuk/urok8/s6.mp3", "s_med1": "../zvuk/urok8/s_med1.mp3", "s_med2": "../zvuk/urok8/s_med2.mp3", "s_med3": "../zvuk/urok8/s_med3.mp3", "h1": "../zvuk/urok8/h1.mp3", "h2": "../zvuk/urok8/h2.mp3", "h3": "../zvuk/urok8/h3.mp3", "h4": "../zvuk/urok8/h4.mp3", "h5": "../zvuk/urok8/h5.mp3", "h6": "../zvuk/urok8/h6.mp3", "h_med1": "../zvuk/urok8/h_med1.mp3", "h_med2": "../zvuk/urok8/h_med2.mp3", "h_med3": "../zvuk/urok8/h_med3.mp3", "v_sprechen": "../zvuk/urok8/v_sprechen.mp3", "v_nehmen": "../zvuk/urok8/v_nehmen.mp3", "v_essen": "../zvuk/urok8/v_essen.mp3", "v_geben": "../zvuk/urok8/v_geben.mp3", "v_sehen": "../zvuk/urok8/v_sehen.mp3", "v_lesen": "../zvuk/urok8/v_lesen.mp3", "v_fahren": "../zvuk/urok8/v_fahren.mp3", "v_schlafen": "../zvuk/urok8/v_schlafen.mp3", "w_wer": "../zvuk/urok8/w_wer.mp3", "w_was": "../zvuk/urok8/w_was.mp3", "w_wo": "../zvuk/urok8/w_wo.mp3", "w_woher": "../zvuk/urok8/w_woher.mp3", "w_wohin": "../zvuk/urok8/w_wohin.mp3", "w_wie": "../zvuk/urok8/w_wie.mp3", "w_wann": "../zvuk/urok8/w_wann.mp3", "w_warum": "../zvuk/urok8/w_warum.mp3", "w_wielange": "../zvuk/urok8/w_wielange.mp3", "w_wieviel": "../zvuk/urok8/w_wieviel.mp3", "w_welcher": "../zvuk/urok8/w_welcher.mp3", "q1": "../zvuk/urok8/q1.mp3", "q2": "../zvuk/urok8/q2.mp3", "q3": "../zvuk/urok8/q3.mp3", "q4": "../zvuk/urok8/q4.mp3", "q5": "../zvuk/urok8/q5.mp3", "q6": "../zvuk/urok8/q6.mp3", "q7": "../zvuk/urok8/q7.mp3", "q8": "../zvuk/urok8/q8.mp3", "d1": "../zvuk/urok8/d1.mp3", "d2": "../zvuk/urok8/d2.mp3", "d3": "../zvuk/urok8/d3.mp3", "d4": "../zvuk/urok8/d4.mp3", "d5": "../zvuk/urok8/d5.mp3", "d6": "../zvuk/urok8/d6.mp3", "d7": "../zvuk/urok8/d7.mp3", "d8": "../zvuk/urok8/d8.mp3", "v_helfen": "../zvuk/urok8/v_helfen.mp3", "v_laufen": "../zvuk/urok8/v_laufen.mp3", "v_vergessen": "../zvuk/urok8/v_vergessen.mp3", "v_tragen": "../zvuk/urok8/v_tragen.mp3", "vh1": "../zvuk/urok8/vh1.mp3", "vh2": "../zvuk/urok8/vh2.mp3", "vh3": "../zvuk/urok8/vh3.mp3", "vh4": "../zvuk/urok8/vh4.mp3", "vh5": "../zvuk/urok8/vh5.mp3", "vh6": "../zvuk/urok8/vh6.mp3", "aq1": "../zvuk/urok8/aq1.mp3", "aq2": "../zvuk/urok8/aq2.mp3", "aq3": "../zvuk/urok8/aq3.mp3", "aq4": "../zvuk/urok8/aq4.mp3", "aq5": "../zvuk/urok8/aq5.mp3", "aq6": "../zvuk/urok8/aq6.mp3", "wv1": "../zvuk/urok8/wv1.mp3", "wv2": "../zvuk/urok8/wv2.mp3", "wl1": "../zvuk/urok8/wl1.mp3", "wl2": "../zvuk/urok8/wl2.mp3", "wl3": "../zvuk/urok8/wl3.mp3", "fa1": "../zvuk/urok8/fa1.mp3", "fa2": "../zvuk/urok8/fa2.mp3", "fa3": "../zvuk/urok8/fa3.mp3", "fa4": "../zvuk/urok8/fa4.mp3", "fa5": "../zvuk/urok8/fa5.mp3", "fa6": "../zvuk/urok8/fa6.mp3", "fa7": "../zvuk/urok8/fa7.mp3", "fa8": "../zvuk/urok8/fa8.mp3", "fa9": "../zvuk/urok8/fa9.mp3", "fa10": "../zvuk/urok8/fa10.mp3", "kw1": "../zvuk/urok8/kw1.mp3", "kw2": "../zvuk/urok8/kw2.mp3", "kw3": "../zvuk/urok8/kw3.mp3", "kw4": "../zvuk/urok8/kw4.mp3", "kw5": "../zvuk/urok8/kw5.mp3", "kw6": "../zvuk/urok8/kw6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -942,6 +992,15 @@ function playBtn(id){ return `<button class="play" aria-label="Слушать" o
 
 function conj(elId, rows){ document.getElementById(elId).innerHTML = rows.map(([id,pron,form],i)=>`
   <div class="conj-row ${i%2?'odd':''}"><div class="pron">${pron}</div><div class="form">${form}</div>${playBtn(id)}</div>`).join(''); }
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// вопросительные слова: [id, немецкое, транскрипция, перевод]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="w-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
 conj('kommen',[
   ["k1","ich (я)","ich komm<em>e</em>"],
@@ -967,74 +1026,109 @@ conj('haben',[
   ["h5","ihr (вы, свои)","ihr habt"],
   ["h6","sie/Sie (они/Вы)","sie haben"],
 ]);
-
-const seinMed = [
-  ["s_med1","Ich bin Arzt.","Я врач."],
-  ["s_med2","Sind Sie Patient?","Вы пациент?"],
-  ["s_med3","Er ist krank.","Он болен."],
-];
-const habenMed = [
-  ["h_med1","Ich habe Schmerzen.","У меня боли."],
-  ["h_med2","Haben Sie Fieber?","У Вас температура?"],
-  ["h_med3","Sie hat Husten.","У неё кашель."],
-];
-const medq = [
-  ["q1","Wie heißen Sie?","Как Вас зовут?"],
-  ["q2","Wie alt sind Sie?","Сколько Вам лет?"],
-  ["q3","Wo haben Sie Schmerzen?","Где у Вас болит?"],
-  ["q4","Was tut weh?","Что болит?"],
-  ["q5","Wie lange haben Sie die Schmerzen?","Как давно у Вас эти боли?"],
-  ["q6","Wann kommen Sie wieder?","Когда Вы придёте снова?"],
-  ["q7","Welche Tabletten nehmen Sie?","Какие таблетки Вы принимаете?"],
-  ["q8","Warum sind Sie heute hier?","Почему Вы сегодня здесь?"],
-];
-function fill(id, arr){ document.getElementById(id).innerHTML = arr.map(([cid,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(cid)}</div>`).join(''); }
-fill('seinMed',seinMed); fill('habenMed',habenMed); fill('medq',medq);
-
+phrases('seinMed',[
+  ["s_med1","Ich bin Arzt.","ихь бин арцт","Я врач."],
+  ["s_med2","Sind Sie Patient?","зинт зи пациэнт","Вы пациент?"],
+  ["s_med3","Er ist krank.","эа ист кранк","Он болен."],
+]);
+phrases('habenMed',[
+  ["h_med1","Ich habe Schmerzen.","ихь хабэ шмэрцэн","У меня боли."],
+  ["h_med2","Haben Sie Fieber?","хабэн зи фибэа","У Вас температура?"],
+  ["h_med3","Sie hat Husten.","зи хат хустэн","У неё кашель."],
+]);
 const verbs = [
   ["v_sprechen","sprechen","говорить","du <b>sprichst</b> · er <b>spricht</b>","e→i"],
   ["v_nehmen","nehmen","брать, принимать","du <b>nimmst</b> · er <b>nimmt</b>","e→i"],
   ["v_essen","essen","есть, кушать","du <b>isst</b> · er <b>isst</b>","e→i"],
   ["v_geben","geben","давать","du <b>gibst</b> · er <b>gibt</b>","e→i"],
+  ["v_helfen","helfen","помогать","du <b>hilfst</b> · er <b>hilft</b>","e→i"],
+  ["v_vergessen","vergessen","забывать","du <b>vergisst</b> · er <b>vergisst</b>","e→i"],
   ["v_sehen","sehen","видеть","du <b>siehst</b> · er <b>sieht</b>","e→ie"],
   ["v_lesen","lesen","читать","du <b>liest</b> · er <b>liest</b>","e→ie"],
   ["v_fahren","fahren","ехать","du <b>fährst</b> · er <b>fährt</b>","a→ä"],
   ["v_schlafen","schlafen","спать","du <b>schläfst</b> · er <b>schläft</b>","a→ä"],
+  ["v_tragen","tragen","носить","du <b>trägst</b> · er <b>trägt</b>","a→ä"],
+  ["v_laufen","laufen","бегать, ходить","du <b>läufst</b> · er <b>läuft</b>","au→äu"],
 ];
 document.getElementById('verbs').innerHTML = verbs.map(([id,inf,ru,forms,type])=>`
   <div class="verb-card"><div class="txt"><div class="inf">${inf} <span class="ru">— ${ru}</span><span class="chip">${type}</span></div><div class="forms">${forms}</div></div>${playBtn(id)}</div>`).join('');
-
-const wwords = [
-  ["w_wer","wer","кто"],
-  ["w_was","was","что"],
-  ["w_wo","wo","где"],
-  ["w_woher","woher","откуда"],
-  ["w_wohin","wohin","куда"],
-  ["w_wie","wie","как"],
-  ["w_wann","wann","когда"],
-  ["w_warum","warum","почему"],
-  ["w_wielange","wie lange","как долго"],
-  ["w_wieviel","wie viel","сколько"],
-  ["w_welcher","welcher/welche/welches","какой/какая/какое"],
-];
-document.getElementById('wwords').innerHTML = wwords.map(([id,de,ru])=>`
-  <div class="w-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join('');
-
-const dialog = [
-  ["d1","left","врач","Guten Tag! Wie heißen Sie?","Здравствуйте! Как Вас зовут?"],
-  ["d2","right","пац.","Ich heiße Peter Klein.","Меня зовут Петер Кляйн."],
-  ["d3","left","врач","Wie alt sind Sie, Herr Klein?","Сколько Вам лет, господин Кляйн?"],
-  ["d4","right","пац.","Ich bin vierzig Jahre alt.","Мне сорок лет."],
-  ["d5","left","врач","Wo haben Sie Schmerzen?","Где у Вас болит?"],
-  ["d6","right","пац.","Ich habe Schmerzen im Bein. Ich schlafe schlecht.","У меня болит нога. Я плохо сплю."],
-  ["d7","left","врач","Wie lange schon? Und welche Tabletten nehmen Sie?","Как давно? И какие таблетки Вы принимаете?"],
-  ["d8","right","пац.","Zwei Wochen. Ich nehme nichts.","Две недели. Я ничего не принимаю."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+phrases('vh',[
+  ["vh1","Er nimmt keine Tabletten.","эа нимт кайнэ таблэттэн","Он не принимает таблетки."],
+  ["vh2","Sie schläft schlecht.","зи шлэфт шлехьт","Она плохо спит."],
+  ["vh3","Isst du genug?","ист ду гэнук","Ты достаточно ешь?"],
+  ["vh4","Der Patient spricht kein Deutsch.","дэа пациэнт шприхьт кайн дойч","Пациент не говорит по-немецки."],
+  ["vh5","Er läuft schlecht.","эа лойфт шлехьт","Он плохо ходит."],
+  ["vh6","Sie vergisst oft ihre Tabletten.","зи фэргист офт ирэ таблэттэн","Она часто забывает свои таблетки."],
+]);
+words('wwords',[
+  ["w_wer","wer","вэа","кто"],
+  ["w_was","was","вас","что"],
+  ["w_wo","wo","во","где"],
+  ["w_woher","woher","вохэа","откуда"],
+  ["w_wohin","wohin","вохин","куда"],
+  ["w_wie","wie","ви","как"],
+  ["w_wann","wann","ван","когда"],
+  ["w_warum","warum","варум","почему"],
+  ["w_wielange","wie lange","ви лангэ","как долго"],
+  ["w_wieviel","wie viel","ви филь","сколько"],
+  ["w_welcher","welcher/welche/welches","вэльхэа, вэльхе, вэльхес","какой/какая/какое"],
+]);
+phrases('pairs',[
+  ["wv1","Wie viel Wasser trinken Sie?","ви филь вассэа тринкэн зи","Сколько воды Вы пьёте?"],
+  ["wv2","Wie viele Tabletten nehmen Sie?","ви филе таблэттэн нээмэн зи","Сколько таблеток Вы принимаете?"],
+  ["wl1","Welcher Arzt?","вэльхэа арцт","Какой врач? (der)"],
+  ["wl2","Welche Tablette?","вэльхе таблэттэ","Какая таблетка? (die)"],
+  ["wl3","Welches Bein?","вэльхес байн","Какая нога? (das Bein)"],
+]);
+phrases('medq',[
+  ["q1","Wie heißen Sie?","ви хайсэн зи","Как Вас зовут?"],
+  ["q2","Wie alt sind Sie?","ви альт зинт зи","Сколько Вам лет?"],
+  ["q3","Wo haben Sie Schmerzen?","во хабэн зи шмэрцэн","Где у Вас болит?"],
+  ["q4","Was tut weh?","вас тут вэ","Что болит?"],
+  ["q5","Wie lange haben Sie die Schmerzen?","ви лангэ хабэн зи ди шмэрцэн","Как давно у Вас эти боли?"],
+  ["q6","Wann kommen Sie wieder?","ван коммэн зи видэа","Когда Вы придёте снова?"],
+  ["q7","Welche Tabletten nehmen Sie?","вэльхе таблэттэн нээмэн зи","Какие таблетки Вы принимаете?"],
+  ["q8","Warum sind Sie heute hier?","варум зинт зи хойтэ хиа","Почему Вы сегодня здесь?"],
+]);
+phrases('anam',[
+  ["aq1","Seit wann haben Sie die Beschwerden?","зайт ван хабэн зи ди бэшвэрдэн","С какого времени у Вас эти жалобы?"],
+  ["aq2","Wie oft haben Sie Kopfschmerzen?","ви офт хабэн зи копфшмэрцэн","Как часто у Вас болит голова?"],
+  ["aq3","Wie stark sind die Schmerzen?","ви штарк зинт ди шмэрцэн","Насколько сильная боль?"],
+  ["aq4","Wann sind die Schmerzen am schlimmsten?","ван зинт ди шмэрцэн ам шлимстэн","Когда боль сильнее всего?"],
+  ["aq5","Welche Krankheiten haben Sie?","вэльхе кранкхайтэн хабэн зи","Какие у Вас заболевания?"],
+  ["aq6","Wer ist Ihr Hausarzt?","вэа ист иа хаусарцт","Кто Ваш семейный врач?"],
+]);
+dlg('dialog',[
+  ["d1","left","Вр","Guten Tag! Wie heißen Sie?","гутэн так! ви хайсэн зи","Здравствуйте! Как Вас зовут?"],
+  ["d2","right","П","Ich heiße Peter Klein.","ихь хайсэ пэтэа кляйн","Меня зовут Петер Кляйн."],
+  ["d3","left","Вр","Wie alt sind Sie, Herr Klein?","ви альт зинт зи, хэа кляйн","Сколько Вам лет, господин Кляйн?"],
+  ["d4","right","П","Ich bin vierzig Jahre alt.","ихь бин фирцихь ярэ альт","Мне сорок лет."],
+  ["d5","left","Вр","Wo haben Sie Schmerzen?","во хабэн зи шмэрцэн","Где у Вас болит?"],
+  ["d6","right","П","Ich habe Schmerzen im Bein. Ich schlafe schlecht.","ихь хабэ шмэрцэн им байн. ихь шлафэ шлехьт","У меня болит нога. Я плохо сплю."],
+  ["d7","left","Вр","Wie lange schon? Und welche Tabletten nehmen Sie?","ви лангэ шон? унт вэльхе таблэттэн нээмэн зи","Как давно? И какие таблетки Вы принимаете?"],
+  ["d8","right","П","Zwei Wochen. Ich nehme nichts.","цвай вохэн. ихь нээмэ нихьтс","Две недели. Я ничего не принимаю."],
+]);
+dlg('dialog2',[
+  ["fa1","left","Вр","Guten Tag, Frau Berger! Was führt Sie zu mir?","гутэн так, фрау бэргэа! вас фюрт зи цу миа","Здравствуйте, фрау Бергер! Что Вас привело ко мне?"],
+  ["fa2","right","Б","Ich habe Schmerzen in den Beinen.","ихь хабэ шмэрцэн ин дэн байнэн","У меня болят ноги."],
+  ["fa3","left","Вр","Seit wann haben Sie die Beschwerden?","зайт ван хабэн зи ди бэшвэрдэн","С какого времени эти жалобы?"],
+  ["fa4","right","Б","Seit drei Monaten.","зайт драй монатэн","Уже три месяца."],
+  ["fa5","left","Вр","Wann sind die Schmerzen am schlimmsten?","ван зинт ди шмэрцэн ам шлимстэн","Когда боль сильнее всего?"],
+  ["fa6","right","Б","Am Abend. Die Beine sind dann schwer.","ам абэнт. ди байнэ зинт дан швэа","Вечером. Ноги тогда тяжёлые."],
+  ["fa7","left","Вр","Welche Medikamente nehmen Sie?","вэльхе мэдикамэнтэ нээмэн зи","Какие лекарства Вы принимаете?"],
+  ["fa8","right","Б","Ich nehme nur Aspirin.","ихь нээмэ нуа аспирин","Только аспирин."],
+  ["fa9","left","Вр","Wie viele Tabletten am Tag?","ви филе таблэттэн ам так","Сколько таблеток в день?"],
+  ["fa10","right","Б","Eine am Morgen.","айнэ ам морген","Одну утром."],
+]);
+dlg('dialog3',[
+  ["kw1","left","Ю","Du siehst müde aus, Grigori.","ду зист мюдэ аус, григори","Ты выглядишь усталым, Григорий."],
+  ["kw2","right","Гр","Ja, ich schlafe schlecht.","я, ихь шлафэ шлехьт","Да, я плохо сплю."],
+  ["kw3","left","Ю","Und isst du genug?","унт ист ду гэнук","А ешь ты достаточно?"],
+  ["kw4","right","Гр","Nein, ich esse wenig. Ich arbeite zu viel.","найн, ихь эссэ вэних. ихь арбайтэ цу филь","Нет, мало ем. Слишком много работаю."],
+  ["kw5","left","Ю","Fährst du am Wochenende weg?","фэрст ду ам вохэнэндэ вэк","Ты уезжаешь на выходные?"],
+  ["kw6","right","Гр","Ja, ich fahre ans Meer. Dort schlafe ich gut.","я, ихь фарэ анс мэа. дорт шлафэ ихь гут","Да, еду на море. Там я хорошо сплю."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
