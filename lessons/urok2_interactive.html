@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Урок 2 — Wie geht's, числа, артикли</title>
-
 <style id="backbar-css">
   .backbar{
     position:sticky; top:0; z-index:9999;
@@ -36,10 +35,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -207,7 +202,6 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </head>
 <body>
 <div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Урок 2 — Wie geht's, числа, артикли</span></div>
-
 <style>
   :root {
     --bg: #eff1ec;
@@ -485,47 +479,167 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   .grammar-box b { color: var(--ink); }
 </style>
 
+<style>
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr, .art-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .num-tile .tr { font-size:11px; color:var(--ink-faint); }
+  .conj { display:flex; flex-direction:column; gap:6px; }
+  .conj-row { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:8px 10px 8px 13px; box-shadow:var(--shadow); }
+  .conj-row .pron { flex:0 0 150px; font-size:13px; color:var(--ink-muted); }
+  .conj-row .form { flex:1; min-width:0; font-family:Georgia,serif; font-size:16px; font-weight:700; color:var(--ink); }
+  .conj-row .form em { font-style:normal; color:var(--play); }
+  .conj-row button.play { width:32px; height:32px; font-size:13px; }
+  .conj-row.odd { background:var(--surface-2); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .bubble .txt .tr { font-size:11px; color:var(--ink-faint); margin-top:1px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
+</style>
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
-  <h1>Урок 2. Wie geht's? Числа 0–20. Артикли der/die/das</h1>
-  <p class="lede">Продолжение после «Приветствия и знакомства». Нажимай на жёлтый кружок 🔊 рядом с любой фразой — услышишь её голосом Anna (или Markus в диалоге).</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <h1>Урок 2. Wie geht's? Числа 0–20. Род: der, die, das</h1>
+  <p class="lede">Продолжение первого урока. Как ответить «как дела» так, как говорят немцы; числа до двадцати с их ловушками; возраст и номер телефона — то, что спрашивают в любой регистратуре. И главное новое: у каждого немецкого существительного свой род, и его можно угадывать по приметам. Жми 🔊 — слушай.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
-    <h2><span class="num">1</span> Wie geht's? — Как дела?</h2>
-    <p class="desc">Малый разговор — с этого начинается почти любой диалог по-немецки.</p>
+    <h2><span class="num">1</span> «Wie geht's?» — и как ответить</h2>
+    <div class="grammar-box">
+      Вежливо — <b>Wie geht es Ihnen?</b>, по-свойски — <b>Wie geht's?</b> (это сокращение от <i>Wie geht es?</i>). Дословно — «как идёт?».<br><br>
+      Ответ «у меня хорошо» по-немецки звучит как «<b class="hl">мне</b> идёт хорошо»: <b>Mir geht es gut</b>. Можно и в другом порядке: <i>Es geht mir gut</i>. А просто <b>Es geht</b> — «идёт кое-как» — значит «так себе».
+    </div>
     <div class="card-list" id="wg"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Для врача.</b> На повторном приёме спрашивают, стало ли лучше: <i>Geht es Ihnen heute besser?</i> А с нового пациента начинают с <i>Was fehlt Ihnen?</i> — дословно «чего Вам не хватает», по смыслу «что Вас беспокоит».
+    </div>
+    <div class="card-list" id="wgdoc"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">2</span> Zahlen 0–20 — Числа</h2>
-    <p class="desc">Пригодятся для возраста, номера телефона, дат приёма — сразу нужны врачу.</p>
+    <h2><span class="num">2</span> Кому хорошо: mir, dir, Ihnen</h2>
+    <div class="grammar-box">
+      В «как дела» стоит не <i>ich</i>, а <b>кому</b>: <i>mir</i> — мне, <i>dir</i> — тебе, <i>Ihnen</i> — Вам. Это дательный падеж (Dativ) — подробно он будет позже, а пока хватит пяти слов из таблицы.<br><br>
+      <b class="hl">Ловушка:</b> <i>Ich bin gut</i> — это не «у меня всё хорошо», а «я хороший» или «я в этом силён».
+    </div>
+    <div class="conj" id="mir"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">3</span> Zahlen 0–20 — числа</h2>
+    <div class="grammar-box">
+      <b>0–12</b> — отдельные слова, их учат наизусть. <b>13–19</b> собираются, как по-русски «три-надцать»: сначала единицы, потом <i>zehn</i> (десять): <i>drei + zehn = dreizehn</i>. <b>20</b> — <i>zwanzig</i>.<br><br>
+      Пригодятся сразу: возраст, номер телефона, кабинет, время приёма.
+    </div>
     <div class="num-grid" id="nums"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">3</span> Wie alt sind Sie? — Сколько Вам лет?</h2>
-    <p class="desc">Числа сразу в деле — вопрос о возрасте, который ты будешь задавать пациентам.</p>
-    <div class="card-list" id="age"></div>
-  </section>
-
-  <section class="block">
-    <h2><span class="num">4</span> der / die / das — три рода существительных</h2>
+    <h2><span class="num">4</span> Ловушки чисел</h2>
     <div class="grammar-box">
-      В немецком у каждого существительного свой род — <b>der</b> (муж.), <b>die</b> (жен.), <b>das</b> (сред.). Род нужно запоминать <b>вместе со словом</b>, не отдельно. Взял слова из твоей же профессии.
+      В двух числах буквы выпадают: <b>sechzehn</b> (16) — без <i>s</i>, <b>siebzehn</b> (17) — без <i>-en</i>. Пишут и говорят именно так.<br><br>
+      «Один» бывает двух видов: <b>eins</b> — когда после числа ничего нет (<i>Zimmer eins</i> — кабинет один), и <b>ein / eine</b> — перед словом (<i>ein Kind</i> — один ребёнок).<br><br>
+      <b class="hl">По телефону</b> вместо <i>zwei</i> часто говорят <b>zwo</b>: <i>zwei</i> и <i>drei</i> в трубке звучат похоже.
     </div>
-    <div class="legend">
-      <span class="sw"><span class="dot" style="background:#1d4d7a"></span> der — мужской</span>
-      <span class="sw"><span class="dot" style="background:#86234f"></span> die — женский</span>
-      <span class="sw"><span class="dot" style="background:#45348a"></span> das — средний</span>
-    </div>
-    <div class="art-list" id="arts"></div>
+    <div class="card-list" id="traps"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">5</span> Диалог: на ресепшене</h2>
-    <p class="desc">Обе реплики целиком — слушай подряд или по фразе. Anna — администратор, Markus — пациент.</p>
+    <h2><span class="num">5</span> Wie alt sind Sie? — сколько Вам лет</h2>
+    <div class="grammar-box">
+      Возраст по-немецки — через <b>sein</b>: не «мне пятьдесят», а «<b class="hl">я есть</b> пятьдесят лет старый» — <i>Ich bin fünfzig Jahre alt</i>. В разговоре <i>Jahre alt</i> часто опускают: <i>Ich bin zwanzig.</i>
+    </div>
+    <div class="card-list" id="age"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>В регистратуре</b> чаще спрашивают не возраст, а дату рождения — по ней находят карту пациента. Даты подробно — в следующих уроках, а вопрос узнавать на слух надо уже сейчас.
+    </div>
+    <div class="card-list" id="agedoc"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">6</span> Номер телефона</h2>
+    <div class="grammar-box">
+      Номер диктуют <b>по одной цифре</b> или парами (парами — это числа больше двадцати, они будут в уроке 5). Мобильный — <b>das Handy</b> [хэнди], номера начинаются с <i>015…, 016…, 017…</i>.<br><br>
+      Не расслышал — не стесняйся переспросить: <i>Noch einmal, bitte</i> или <i>Langsamer, bitte</i>. Немцы сами диктуют номер медленно и повторяют.
+    </div>
+    <div class="card-list" id="tel"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">7</span> der / die / das — три рода</h2>
+    <div class="grammar-box">
+      У каждого немецкого существительного свой род: <b>der</b> — мужской, <b>die</b> — женский, <b>das</b> — средний. Род <b class="hl">учат вместе со словом</b>: не «Arzt», а «der Arzt». Во множественном числе у всех одно — <b>die</b>: <i>die Ärzte, die Tabletten</i>.
+    </div>
+    <div class="legend"><span class="sw"><i class="dot g-der"></i>der — мужской</span><span class="sw"><i class="dot g-die"></i>die — женский</span><span class="sw"><i class="dot g-das"></i>das — средний</span></div>
+    <div class="art-list" id="arts"></div>
+    <div class="grammar-box" style="margin-top:14px">
+      <b>Род не совпадает с русским.</b> Девочка — средний род, нога — средний, рука — мужской, нос — женский. Надеяться на русское чутьё нельзя.
+    </div>
+    <div class="art-list" id="arts2"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">8</span> Как угадать род: приметы</h2>
+    <div class="grammar-box">
+      <b>die</b> — всегда, если слово кончается на <b>-ung, -heit, -keit, -ion</b>, и почти всегда на <b>-ie</b>. Таких слов в медицине десятки.<br>
+      <b>das</b> — всегда на <b>-chen</b> и <b>-lein</b> (уменьшительное), и почти всегда на <b>-ment</b>.<br>
+      <b>der</b> — мужчины, дни недели, месяцы, времена года.<br><br>
+      <b class="hl">Длинные слова-составные</b> получают род по последнему кусочку: <i>das Haus → das Krankenhaus</i>, <i>der Druck → der Blutdruck</i>.
+    </div>
+    <div class="art-list" id="rules"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">9</span> ein / eine — «какой-то», неопределённый</h2>
+    <div class="grammar-box">
+      Называем предмет впервые — <b>ein</b> (для der и das) или <b>eine</b> (для die). Уже известно, о чём речь, — <b>der / die / das</b>. Во множественном числе <i>ein</i> нет: <i>Das sind Tabletten.</i>
+    </div>
+    <div class="card-list" id="ein"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">10</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ich bin gut. — на «как дела»</span><span class="good">Mir geht es gut.</span><span class="why">«Ich bin gut» — «я хороший»</span></div>
+      <div class="err-row"><span class="bad">Mir ist fünfzig.</span><span class="good">Ich bin fünfzig Jahre alt.</span><span class="why">возраст — через sein: «я есть»</span></div>
+      <div class="err-row"><span class="bad">sechszehn</span><span class="good">sechzehn</span><span class="why">в 16 буква s выпадает</span></div>
+      <div class="err-row"><span class="bad">siebenzehn</span><span class="good">siebzehn</span><span class="why">в 17 выпадает -en</span></div>
+      <div class="err-row"><span class="bad">Ich habe eins Kind.</span><span class="good">Ich habe ein Kind.</span><span class="why">перед словом — ein, eins — только без слова</span></div>
+      <div class="err-row"><span class="bad">die Mädchen — одна девочка</span><span class="good">das Mädchen</span><span class="why">-chen — всегда средний род</span></div>
+      <div class="err-row"><span class="bad">Arzt — в словарике без артикля</span><span class="good">der Arzt</span><span class="why">род учат вместе со словом</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">11</span> Диалоги</h2>
+    <div class="desc">Первый — в регистратуре. Второй — запись на приём по телефону: номер диктуют по цифрам, с «zwo». Третий — врач на приёме: самочувствие, возраст, дети, телефон.</div>
+    <h3 class="dlg-title">В регистратуре</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Запись по телефону</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">На приёме</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">12</span> Домашка</h2>
+    <div class="hw">
+      <ol>
+        <li>Досчитай вслух от 0 до 20 и обратно. Особо проговори 16 и 17.</li>
+        <li>Продиктуй свой номер телефона по-немецки — по одной цифре, с «zwo».</li>
+        <li>Скажи возраст: свой, Полины и двух знакомых — <i>Ich bin …</i>, <i>Sie ist …</i>, <i>Er ist …</i></li>
+        <li>Выпиши 10 слов своей профессии с артиклем и проверь их по приметам из раздела 8.</li>
+        <li>Ответь на <i>Wie geht es Ihnen?</i> тремя способами — каждый раз с <i>mir</i>.</li>
+        <li>Разыграй с Полиной диалог 2: один раз ты звонишь, один раз — регистратура.</li>
+      </ol>
+    </div>
   </section>
 <!--QUIZ-START-->
 <!--UPR-START-->
@@ -1082,11 +1196,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Markus (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"wg1": "../zvuk/urok2/wg1.mp3", "wg2": "../zvuk/urok2/wg2.mp3", "wg3": "../zvuk/urok2/wg3.mp3", "wg4": "../zvuk/urok2/wg4.mp3", "wg5": "../zvuk/urok2/wg5.mp3", "wg6": "../zvuk/urok2/wg6.mp3", "num0": "../zvuk/urok2/num0.mp3", "num1": "../zvuk/urok2/num1.mp3", "num2": "../zvuk/urok2/num2.mp3", "num3": "../zvuk/urok2/num3.mp3", "num4": "../zvuk/urok2/num4.mp3", "num5": "../zvuk/urok2/num5.mp3", "num6": "../zvuk/urok2/num6.mp3", "num7": "../zvuk/urok2/num7.mp3", "num8": "../zvuk/urok2/num8.mp3", "num9": "../zvuk/urok2/num9.mp3", "num10": "../zvuk/urok2/num10.mp3", "num11": "../zvuk/urok2/num11.mp3", "num12": "../zvuk/urok2/num12.mp3", "num13": "../zvuk/urok2/num13.mp3", "num14": "../zvuk/urok2/num14.mp3", "num15": "../zvuk/urok2/num15.mp3", "num16": "../zvuk/urok2/num16.mp3", "num17": "../zvuk/urok2/num17.mp3", "num18": "../zvuk/urok2/num18.mp3", "num19": "../zvuk/urok2/num19.mp3", "num20": "../zvuk/urok2/num20.mp3", "age1": "../zvuk/urok2/age1.mp3", "age2": "../zvuk/urok2/age2.mp3", "art1": "../zvuk/urok2/art1.mp3", "art2": "../zvuk/urok2/art2.mp3", "art3": "../zvuk/urok2/art3.mp3", "art4": "../zvuk/urok2/art4.mp3", "art5": "../zvuk/urok2/art5.mp3", "art6": "../zvuk/urok2/art6.mp3", "art7": "../zvuk/urok2/art7.mp3", "art8": "../zvuk/urok2/art8.mp3", "d1": "../zvuk/urok2/d1.mp3", "d2": "../zvuk/urok2/d2.mp3", "d3": "../zvuk/urok2/d3.mp3", "d4": "../zvuk/urok2/d4.mp3", "d5": "../zvuk/urok2/d5.mp3", "d6": "../zvuk/urok2/d6.mp3", "d7": "../zvuk/urok2/d7.mp3"};
+const AUDIO = {"wg1": "../zvuk/urok2/wg1.mp3", "wg2": "../zvuk/urok2/wg2.mp3", "wg3": "../zvuk/urok2/wg3.mp3", "wg4": "../zvuk/urok2/wg4.mp3", "wg5": "../zvuk/urok2/wg5.mp3", "wg6": "../zvuk/urok2/wg6.mp3", "num0": "../zvuk/urok2/num0.mp3", "num1": "../zvuk/urok2/num1.mp3", "num2": "../zvuk/urok2/num2.mp3", "num3": "../zvuk/urok2/num3.mp3", "num4": "../zvuk/urok2/num4.mp3", "num5": "../zvuk/urok2/num5.mp3", "num6": "../zvuk/urok2/num6.mp3", "num7": "../zvuk/urok2/num7.mp3", "num8": "../zvuk/urok2/num8.mp3", "num9": "../zvuk/urok2/num9.mp3", "num10": "../zvuk/urok2/num10.mp3", "num11": "../zvuk/urok2/num11.mp3", "num12": "../zvuk/urok2/num12.mp3", "num13": "../zvuk/urok2/num13.mp3", "num14": "../zvuk/urok2/num14.mp3", "num15": "../zvuk/urok2/num15.mp3", "num16": "../zvuk/urok2/num16.mp3", "num17": "../zvuk/urok2/num17.mp3", "num18": "../zvuk/urok2/num18.mp3", "num19": "../zvuk/urok2/num19.mp3", "num20": "../zvuk/urok2/num20.mp3", "age1": "../zvuk/urok2/age1.mp3", "age2": "../zvuk/urok2/age2.mp3", "art1": "../zvuk/urok2/art1.mp3", "art2": "../zvuk/urok2/art2.mp3", "art3": "../zvuk/urok2/art3.mp3", "art4": "../zvuk/urok2/art4.mp3", "art5": "../zvuk/urok2/art5.mp3", "art6": "../zvuk/urok2/art6.mp3", "art7": "../zvuk/urok2/art7.mp3", "art8": "../zvuk/urok2/art8.mp3", "d1": "../zvuk/urok2/d1.mp3", "d3": "../zvuk/urok2/d3.mp3", "d5": "../zvuk/urok2/d5.mp3", "d7": "../zvuk/urok2/d7.mp3", "dm2": "../zvuk/urok2/dm2.mp3", "dm4": "../zvuk/urok2/dm4.mp3", "dm6": "../zvuk/urok2/dm6.mp3", "wx1": "../zvuk/urok2/wx1.mp3", "wx2": "../zvuk/urok2/wx2.mp3", "wx3": "../zvuk/urok2/wx3.mp3", "wx4": "../zvuk/urok2/wx4.mp3", "wx5": "../zvuk/urok2/wx5.mp3", "wx6": "../zvuk/urok2/wx6.mp3", "wx7": "../zvuk/urok2/wx7.mp3", "mr1": "../zvuk/urok2/mr1.mp3", "mr2": "../zvuk/urok2/mr2.mp3", "mr3": "../zvuk/urok2/mr3.mp3", "mr4": "../zvuk/urok2/mr4.mp3", "mr5": "../zvuk/urok2/mr5.mp3", "nt1": "../zvuk/urok2/nt1.mp3", "nt2": "../zvuk/urok2/nt2.mp3", "nt3": "../zvuk/urok2/nt3.mp3", "nt4": "../zvuk/urok2/nt4.mp3", "nt5": "../zvuk/urok2/nt5.mp3", "nt6": "../zvuk/urok2/nt6.mp3", "al1": "../zvuk/urok2/al1.mp3", "al2": "../zvuk/urok2/al2.mp3", "al3": "../zvuk/urok2/al3.mp3", "al4": "../zvuk/urok2/al4.mp3", "al5": "../zvuk/urok2/al5.mp3", "al6": "../zvuk/urok2/al6.mp3", "al7": "../zvuk/urok2/al7.mp3", "tl1": "../zvuk/urok2/tl1.mp3", "tl2": "../zvuk/urok2/tl2.mp3", "tl3": "../zvuk/urok2/tl3.mp3", "tl4": "../zvuk/urok2/tl4.mp3", "tl5": "../zvuk/urok2/tl5.mp3", "tl6": "../zvuk/urok2/tl6.mp3", "ar1": "../zvuk/urok2/ar1.mp3", "ar2": "../zvuk/urok2/ar2.mp3", "ar3": "../zvuk/urok2/ar3.mp3", "ar4": "../zvuk/urok2/ar4.mp3", "ru1": "../zvuk/urok2/ru1.mp3", "ru2": "../zvuk/urok2/ru2.mp3", "ru3": "../zvuk/urok2/ru3.mp3", "ru4": "../zvuk/urok2/ru4.mp3", "ru5": "../zvuk/urok2/ru5.mp3", "ru6": "../zvuk/urok2/ru6.mp3", "ru7": "../zvuk/urok2/ru7.mp3", "ru8": "../zvuk/urok2/ru8.mp3", "ru9": "../zvuk/urok2/ru9.mp3", "ru10": "../zvuk/urok2/ru10.mp3", "ru11": "../zvuk/urok2/ru11.mp3", "ea1": "../zvuk/urok2/ea1.mp3", "ea2": "../zvuk/urok2/ea2.mp3", "ea3": "../zvuk/urok2/ea3.mp3", "ea4": "../zvuk/urok2/ea4.mp3", "ea5": "../zvuk/urok2/ea5.mp3", "tp1": "../zvuk/urok2/tp1.mp3", "tp2": "../zvuk/urok2/tp2.mp3", "tp3": "../zvuk/urok2/tp3.mp3", "tp4": "../zvuk/urok2/tp4.mp3", "tp5": "../zvuk/urok2/tp5.mp3", "tp6": "../zvuk/urok2/tp6.mp3", "tp7": "../zvuk/urok2/tp7.mp3", "tp8": "../zvuk/urok2/tp8.mp3", "an1": "../zvuk/urok2/an1.mp3", "an2": "../zvuk/urok2/an2.mp3", "an3": "../zvuk/urok2/an3.mp3", "an4": "../zvuk/urok2/an4.mp3", "an5": "../zvuk/urok2/an5.mp3", "an6": "../zvuk/urok2/an6.mp3", "an7": "../zvuk/urok2/an7.mp3", "an8": "../zvuk/urok2/an8.mp3", "an9": "../zvuk/urok2/an9.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1103,97 +1217,153 @@ window.addEventListener('load', function () {
   }, 2500);
 });
 
-function playClip(id, btn) {
-  const b64 = AUDIO[id];
-  if (!b64) return;
-  const audio = new Audio(b64);
-  if (btn) {
-    btn.classList.add('playing');
-    audio.addEventListener('ended', () => btn.classList.remove('playing'));
-  }
-  audio.play().catch(() => { if (btn) btn.classList.remove('playing'); });
-}
+function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
+  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
+function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-function playBtn(id) {
-  return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`;
-}
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// слова с родом: [id, немецкое без артикля, транскрипция, перевод, артикль]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,art])=>`
+  <div class="art-card"><div class="gender g-${art}">${art}</div><div class="txt"><div class="de">${art} ${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// плитки чисел: [id, цифра, слово, транскрипция]
+function tiles(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,digit,word,tr])=>`
+  <div class="num-tile"><div class="top"><span class="digit">${digit}</span>${playBtn(id)}</div><span class="word">${word}</span><span class="tr">${tr}</span></div>`).join(''); }
+function conj(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,pron,form],i)=>`
+  <div class="conj-row ${i%2?'odd':''}"><div class="pron">${pron}</div><div class="form">${form}</div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-// --- Wie geht's ---
-const wg = [
-  ["wg1", "Wie geht es Ihnen?", "Как у Вас дела? (вежливо)"],
-  ["wg2", "Wie geht's?", "Как дела? (неформально)"],
-  ["wg3", "Danke, gut. Und Ihnen?", "Спасибо, хорошо. А у Вас?"],
-  ["wg4", "Danke, es geht.", "Спасибо, так себе / нормально"],
-  ["wg5", "Nicht so gut.", "Не очень хорошо"],
-  ["wg6", "Sehr gut, danke!", "Очень хорошо, спасибо!"],
-];
-document.getElementById('wg').innerHTML = wg.map(([id, de, ru]) => `
-  <div class="phrase-card">
-    <div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>
-    ${playBtn(id)}
-  </div>`).join('');
-
-// --- Numbers ---
-const nums = [
-  ["num0","0","null"],["num1","1","eins"],["num2","2","zwei"],["num3","3","drei"],
-  ["num4","4","vier"],["num5","5","fünf"],["num6","6","sechs"],["num7","7","sieben"],
-  ["num8","8","acht"],["num9","9","neun"],["num10","10","zehn"],["num11","11","elf"],
-  ["num12","12","zwölf"],["num13","13","dreizehn"],["num14","14","vierzehn"],
-  ["num15","15","fünfzehn"],["num16","16","sechzehn"],["num17","17","siebzehn"],
-  ["num18","18","achtzehn"],["num19","19","neunzehn"],["num20","20","zwanzig"],
-];
-document.getElementById('nums').innerHTML = nums.map(([id, digit, word]) => `
-  <div class="num-tile">
-    <div class="top"><span class="digit">${digit}</span>${playBtn(id)}</div>
-    <span class="word">${word}</span>
-  </div>`).join('');
-
-// --- Age ---
-const age = [
-  ["age1", "Wie alt sind Sie?", "Сколько Вам лет?"],
-  ["age2", "Ich bin fünfzig Jahre alt.", "Мне пятьдесят лет."],
-];
-document.getElementById('age').innerHTML = age.map(([id, de, ru]) => `
-  <div class="phrase-card">
-    <div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>
-    ${playBtn(id)}
-  </div>`).join('');
-
-// --- Artikel ---
-const arts = [
-  ["art1","der","g-der","der Arzt","врач"],
-  ["art2","die","g-die","die Ärztin","врач (женщина)"],
-  ["art3","der","g-der","der Patient","пациент"],
-  ["art4","die","g-die","die Patientin","пациентка"],
-  ["art5","die","g-die","die Praxis","врачебный кабинет"],
-  ["art6","das","g-das","das Rezept","рецепт"],
-  ["art7","die","g-die","die Tablette","таблетка"],
-  ["art8","der","g-der","der Termin","запись на приём"],
-];
-document.getElementById('arts').innerHTML = arts.map(([id, art, cls, de, ru]) => `
-  <div class="art-card">
-    <div class="gender ${cls}">${art}</div>
-    <div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>
-    ${playBtn(id)}
-  </div>`).join('');
-
-// --- Dialogue ---
-const dialog = [
-  ["d1","left","A","Guten Tag! Wie geht es Ihnen?","Здравствуйте! Как у Вас дела?"],
-  ["d2","right","M","Danke, es geht. Und Ihnen?","Спасибо, нормально. А у Вас?"],
-  ["d3","left","A","Sehr gut, danke! Wie ist Ihre Telefonnummer?","Очень хорошо! Какой у Вас номер телефона?"],
-  ["d4","right","M","Meine Telefonnummer ist null neun eins, zwei drei vier, fünf sechs sieben.","Мой номер: 091 234 567."],
-  ["d5","left","A","Vielen Dank! Und wie alt sind Sie?","Спасибо! А сколько Вам лет?"],
-  ["d6","right","M","Ich bin fünfzig Jahre alt.","Мне пятьдесят лет."],
-  ["d7","left","A","Danke schön!","Большое спасибо!"],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id, side, initial, de, ru]) => `
-  <div class="bubble-row ${side}">
-    <div class="avatar">${initial}</div>
-    <div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>
-  </div>`).join('');
+phrases('wg',[
+  ["wg1","Wie geht es Ihnen?","ви гэт эс инэн","Как у Вас дела? — вежливо"],
+  ["wg2","Wie geht's?","ви гэтс","Как дела? — по-свойски"],
+  ["wx5","Na, wie geht's?","на, ви гэтс","Ну, как дела? — по-дружески"],
+  ["wx4","Alles gut?","аллес гут","Всё хорошо?"],
+  ["wg6","Sehr gut, danke!","зэр гут, данкэ","Очень хорошо, спасибо!"],
+  ["wg3","Danke, gut. Und Ihnen?","данкэ, гут. унт инэн","Спасибо, хорошо. А у Вас?"],
+  ["wx1","Mir geht es gut.","миа гэт эс гут","У меня всё хорошо."],
+  ["wg4","Danke, es geht.","данкэ, эс гэт","Спасибо, так себе."],
+  ["wg5","Nicht so gut.","нихьт зо гут","Не очень."],
+  ["wx3","Mir geht es nicht gut.","миа гэт эс нихьт гут","Мне нехорошо."],
+  ["wx2","Es geht mir schon besser.","эс гэт миа шон бэсэа","Мне уже лучше."],
+]);
+phrases('wgdoc',[
+  ["wx6","Geht es Ihnen heute besser?","гэт эс инэн хойтэ бэсэа","Вам сегодня лучше?"],
+  ["wx7","Was fehlt Ihnen?","вас фэльт инэн","Что Вас беспокоит?"],
+]);
+conj('mir',[
+  ["mr1","ich → mir (мне)","<em>Mir</em> geht es gut."],
+  ["mr2","du → dir (тебе)","Wie geht es <em>dir</em>?"],
+  ["mr3","Sie → Ihnen (Вам)","Wie geht es <em>Ihnen</em>?"],
+  ["mr4","er → ihm (ему)","<em>Ihm</em> geht es besser."],
+  ["mr5","sie → ihr (ей)","<em>Ihr</em> geht es schlecht."],
+]);
+tiles('nums',[
+  ["num0","0","null","нуль"],["num1","1","eins","айнс"],["num2","2","zwei","цвай"],["num3","3","drei","драй"],
+  ["num4","4","vier","фиа"],["num5","5","fünf","фюнф"],["num6","6","sechs","зэкс"],["num7","7","sieben","зибэн"],
+  ["num8","8","acht","ахт"],["num9","9","neun","нойн"],["num10","10","zehn","цэн"],["num11","11","elf","эльф"],
+  ["num12","12","zwölf","цвёльф"],["num13","13","dreizehn","драйцэн"],["num14","14","vierzehn","фирцэн"],
+  ["num15","15","fünfzehn","фюнфцэн"],["num16","16","sechzehn","зэхьцэн"],["num17","17","siebzehn","зипцэн"],
+  ["num18","18","achtzehn","ахтцэн"],["num19","19","neunzehn","нойнцэн"],["num20","20","zwanzig","цванцихь"],
+]);
+phrases('traps',[
+  ["nt1","sechs, sechzehn","зэкс, зэхьцэн","6, 16 — в sechzehn пропадает s"],
+  ["nt2","sieben, siebzehn","зибэн, зипцэн","7, 17 — в siebzehn пропадает -en"],
+  ["nt3","zwei, zwölf, zwanzig","цвай, цвёльф, цванцихь","2, 12, 20 — три разных слова"],
+  ["nt4","Ich habe ein Kind.","ихь хабэ айн кинт","У меня один ребёнок. — перед словом ein"],
+  ["nt5","Zimmer eins","циммэа айнс","кабинет номер один — без слова после: eins"],
+  ["nt6","zwo","цво","«два» по телефону — чтобы не спутать с drei"],
+]);
+phrases('age',[
+  ["age1","Wie alt sind Sie?","ви альт зинт зи","Сколько Вам лет?"],
+  ["al1","Wie alt bist du?","ви альт бист ду","Сколько тебе лет?"],
+  ["age2","Ich bin fünfzig Jahre alt.","ихь бин фюнфцихь ярэ альт","Мне пятьдесят лет."],
+  ["al2","Ich bin zwanzig.","ихь бин цванцихь","Мне двадцать."],
+  ["al3","Mein Sohn ist acht Jahre alt.","майн зон ист ахт ярэ альт","Моему сыну восемь лет."],
+  ["al4","Wie alt ist Ihre Tochter?","ви альт ист ирэ тохтэа","Сколько лет Вашей дочери?"],
+  ["al5","Sie ist sechzehn.","зи ист зэхьцэн","Ей шестнадцать."],
+]);
+phrases('agedoc',[
+  ["al6","Wann sind Sie geboren?","ван зинт зи гэборэн","Когда Вы родились?"],
+  ["al7","Ihr Geburtsdatum, bitte.","иа гэбуртсдатум, битэ","Вашу дату рождения, пожалуйста."],
+]);
+phrases('tel',[
+  ["tl1","Wie ist Ihre Telefonnummer?","ви ист ирэ тэлэфоннуммэа","Какой у Вас номер телефона?"],
+  ["tl2","Wie ist Ihre Handynummer?","ви ист ирэ хэндинуммэа","Какой у Вас мобильный?"],
+  ["tl3","Meine Nummer ist null eins sieben sechs, drei vier fünf, acht neun.","майнэ нуммэа ист нуль айнс зибэн зэкс, драй фиа фюнф, ахт нойн","Мой номер: 0176 345 89."],
+  ["tl4","Noch einmal, bitte.","нох айнмаль, битэ","Ещё раз, пожалуйста."],
+  ["tl5","Langsamer, bitte!","лангзамэа, битэ","Помедленнее, пожалуйста!"],
+  ["tl6","Können Sie das bitte wiederholen?","кённэн зи дас битэ видэрхолен","Можете, пожалуйста, повторить?"],
+]);
+words('arts',[
+  ["art1","Arzt","арцт","врач","der"],
+  ["art2","Ärztin","эрцтин","врач (женщина)","die"],
+  ["art3","Patient","пациэнт","пациент","der"],
+  ["art4","Patientin","пациэнтин","пациентка","die"],
+  ["art5","Praxis","праксис","врачебная практика, кабинет","die"],
+  ["art6","Rezept","рэцэпт","рецепт","das"],
+  ["art7","Tablette","таблэттэ","таблетка","die"],
+  ["art8","Termin","тэрмин","запись на приём","der"],
+]);
+words('arts2',[
+  ["ar1","Mädchen","мэтхен","девочка — средний род!","das"],
+  ["ar2","Bein","байн","нога — средний род","das"],
+  ["ar3","Arm","арм","рука — мужской род","der"],
+  ["ar4","Nase","назэ","нос — женский род","die"],
+]);
+words('rules',[
+  ["ru1","Untersuchung","унтэрзухунг","обследование — на -ung всегда die","die"],
+  ["ru2","Gesundheit","гэзунтхайт","здоровье — на -heit всегда die","die"],
+  ["ru3","Krankheit","кранкхайт","болезнь — тоже -heit","die"],
+  ["ru4","Operation","опэрацион","операция — на -ion всегда die","die"],
+  ["ru5","Therapie","тэрапи","лечение, терапия — на -ie","die"],
+  ["ru6","Brötchen","брётхен","булочка — на -chen всегда das","das"],
+  ["ru7","Medikament","мэдикамэнт","лекарство — на -ment","das"],
+  ["ru8","Pfleger","пфлегэа","медбрат — мужчина","der"],
+  ["ru9","Montag","монтак","понедельник — дни недели","der"],
+  ["ru10","Krankenhaus","кранкэнхаус","больница — род по последнему слову: das Haus","das"],
+  ["ru11","Blutdruck","блутдрук","давление — das Blut + der Druck","der"],
+]);
+phrases('ein',[
+  ["ea1","Das ist ein Termin.","дас ист айн тэрмин","Это запись на приём."],
+  ["ea2","Das ist eine Tablette.","дас ист айнэ таблэттэ","Это таблетка."],
+  ["ea3","Das ist ein Rezept.","дас ист айн рэцэпт","Это рецепт."],
+  ["ea4","Ich brauche ein Rezept.","ихь браухэ айн рэцэпт","Мне нужен рецепт."],
+  ["ea5","Der Termin ist morgen.","дэа тэрмин ист морген","Запись — завтра. (уже известная — der)"],
+]);
+dlg('dialog',[
+  ["d1","left","Рег","Guten Tag! Wie geht es Ihnen?","гутэн так! ви гэт эс инэн","Здравствуйте! Как у Вас дела?"],
+  ["dm2","right","П","Danke, es geht. Und Ihnen?","данкэ, эс гэт. унт инэн","Спасибо, так себе. А у Вас?"],
+  ["d3","left","Рег","Sehr gut, danke! Wie ist Ihre Telefonnummer?","зэр гут, данкэ! ви ист ирэ тэлэфоннуммэа","Очень хорошо, спасибо! Какой у Вас номер телефона?"],
+  ["dm4","right","П","Meine Telefonnummer ist null neun eins, zwei drei vier, fünf sechs sieben.","майнэ тэлэфоннуммэа ист нуль нойн айнс, цвай драй фиа, фюнф зэкс зибэн","Мой номер: 091 234 567."],
+  ["d5","left","Рег","Vielen Dank! Und wie alt sind Sie?","филен данк! унт ви альт зинт зи","Большое спасибо! А сколько Вам лет?"],
+  ["dm6","right","П","Ich bin fünfzig Jahre alt.","ихь бин фюнфцихь ярэ альт","Мне пятьдесят лет."],
+  ["d7","left","Рег","Danke schön!","данкэ шён","Большое спасибо!"],
+]);
+dlg('dialog2',[
+  ["tp1","left","Рег","Praxis Doktor Weber, guten Tag!","праксис доктор вэбэа, гутэн так","Кабинет доктора Вебера, добрый день!"],
+  ["tp2","right","Гр","Guten Tag! Hier ist Plotnikow. Ich brauche einen Termin.","гутэн так! хиа ист плотников. ихь браухэ айнэн тэрмин","Здравствуйте! Это Плотников. Мне нужна запись на приём."],
+  ["tp3","left","Рег","Gern. Wie ist Ihre Telefonnummer?","гэрн. ви ист ирэ тэлэфоннуммэа","Конечно. Какой у Вас номер телефона?"],
+  ["tp4","right","Гр","Null eins sieben sechs, zwo drei vier, fünf acht neun.","нуль айнс зибэн зэкс, цво драй фиа, фюнф ахт нойн","0176 234 589."],
+  ["tp5","left","Рег","Wie bitte? Langsamer, bitte.","ви битэ? лангзамэа, битэ","Простите? Помедленнее, пожалуйста."],
+  ["tp6","right","Гр","Null, eins, sieben, sechs. Zwo, drei, vier. Fünf, acht, neun.","нуль, айнс, зибэн, зэкс. цво, драй, фиа. фюнф, ахт, нойн","0-1-7-6. 2-3-4. 5-8-9."],
+  ["tp7","left","Рег","Danke. Kommen Sie am Montag um zehn Uhr.","данкэ. коммэн зи ам монтак ум цэн уа","Спасибо. Приходите в понедельник в десять."],
+  ["tp8","right","Гр","Vielen Dank! Auf Wiederhören!","филен данк! ауф видэрхёрэн","Большое спасибо! До свидания! — по телефону"],
+]);
+dlg('dialog3',[
+  ["an1","left","Вр","Guten Tag, Frau Schulz! Wie geht es Ihnen?","гутэн так, фрау шульц! ви гэт эс инэн","Здравствуйте, фрау Шульц! Как Вы себя чувствуете?"],
+  ["an2","right","Ш","Mir geht es nicht so gut.","миа гэт эс нихьт зо гут","Мне не очень хорошо."],
+  ["an3","left","Вр","Das tut mir leid. Wie alt sind Sie?","дас тут миа лайт. ви альт зинт зи","Мне жаль. Сколько Вам лет?"],
+  ["an4","right","Ш","Ich bin achtundfünfzig Jahre alt.","ихь бин ахтунтфюнфцихь ярэ альт","Мне пятьдесят восемь."],
+  ["an5","left","Вр","Haben Sie Kinder?","хабэн зи киндэа","У Вас есть дети?"],
+  ["an6","right","Ш","Ja, zwei. Mein Sohn ist zwanzig, meine Tochter ist sechzehn.","я, цвай. майн зон ист цванцихь, майнэ тохтэа ист зэхьцэн","Да, двое. Сыну двадцать, дочери шестнадцать."],
+  ["an7","left","Вр","Und wie ist Ihre Telefonnummer?","унт ви ист ирэ тэлэфоннуммэа","А какой у Вас номер телефона?"],
+  ["an8","right","Ш","Null eins fünf zwo, drei acht, sieben neun.","нуль айнс фюнф цво, драй ахт, зибэн нойн","0152 38 79."],
+  ["an9","left","Вр","Danke schön. Gute Besserung!","данкэ шён. гутэ бэсэрунг","Спасибо. Выздоравливайте!"],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
