@@ -4,97 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Урок 3 — Глаголы в настоящем времени</title>
-
-<style>
-  :root {
-    --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff;
-    --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
-    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff;
-    --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
-    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px;
-  }
-  :root[data-theme="dark"] {
-    --bg:#14181a; --surface:#1c2224; --surface-2:#202729;
-    --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
-    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407;
-    --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
-    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root:not([data-theme="light"]) {
-      --bg:#14181a; --surface:#1c2224; --surface-2:#202729;
-      --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
-      --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407;
-      --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
-      --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35);
-    }
-  }
-  * { box-sizing:border-box; }
-  body { margin:0; }
-  .lp {
-    background:var(--bg); color:var(--ink);
-    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
-    max-width:760px; margin:0 auto; padding:28px 18px 64px; line-height:1.5;
-  }
-  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
-  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
-  .lp h1 { font-size:clamp(24px,5vw,32px); font-weight:600; color:var(--ink); }
-  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:62ch; }
-  .lp .hint { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
-  section.block { margin-top:34px; }
-  .block h2 { font-size:19px; font-weight:600; color:var(--ink); display:flex; align-items:baseline; gap:10px; }
-  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
-  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:60ch; }
-  .card-list { display:flex; flex-direction:column; gap:8px; }
-  .phrase-card { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 16px; box-shadow:var(--shadow); }
-  .phrase-card .txt { flex:1; min-width:0; }
-  .phrase-card .de { font-family:Georgia,"Iowan Old Style",serif; font-size:16.5px; font-weight:600; color:var(--ink); }
-  .phrase-card .ru { font-size:13.5px; color:var(--ink-muted); margin-top:2px; }
-  button.play { flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
-  button.play:hover { filter:brightness(1.08); }
-  button.play:active { transform:scale(0.92); }
-  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
-  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
-  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
-  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
-  /* спряжение */
-  .conj-wrap { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
-  .conj-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow); }
-  .conj-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
-  .conj-head .inf { font-family:Georgia,serif; font-weight:700; font-size:18px; color:var(--accent); }
-  .conj-rows { display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-size:15px; }
-  .conj-rows .pron { color:var(--ink-muted); }
-  .conj-rows .form { font-family:Georgia,serif; font-weight:600; }
-  .conj-rows .form b { color:var(--play); }
-  .num-tile button.play,.conj-head button.play { width:32px; height:32px; font-size:13px; }
-  /* глаголы grid */
-  .verb-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:8px; }
-  .verb-card { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 14px; box-shadow:var(--shadow); }
-  .verb-card .txt { flex:1; }
-  .verb-card .de { font-family:Georgia,serif; font-weight:600; font-size:15.5px; }
-  .verb-card .ru { font-size:12.5px; color:var(--ink-muted); }
-  .verb-card button.play { width:32px; height:32px; font-size:13px; }
-  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
-  .grammar-box b { color:var(--ink); }
-  .grammar-box .pos2 { color:var(--play); font-weight:700; }
-  /* dialogue */
-  .dialogue { display:flex; flex-direction:column; gap:10px; }
-  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
-  .bubble-row.left { justify-content:flex-start; }
-  .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
-  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:12.5px; color:var(--accent-ink); background:var(--accent); }
-  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
-  .bubble { max-width:80%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
-  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; }
-  .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
-  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
-  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:2px; }
-  .bubble button.play { width:32px; height:32px; font-size:13px; }
-  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
-  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
-  footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
-</style>
-
 <style id="backbar-css">
   .backbar{
     position:sticky; top:0; z-index:9999;
@@ -127,9 +36,6 @@
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
 
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -296,55 +202,236 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </head>
 <body>
 <div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Урок 3 — Глаголы в настоящем времени</span></div>
+<style>
+  :root {
+    --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff;
+    --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff;
+    --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px;
+  }
+  :root[data-theme="dark"] {
+    --bg:#14181a; --surface:#1c2224; --surface-2:#202729;
+    --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407;
+    --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg:#14181a; --surface:#1c2224; --surface-2:#202729;
+      --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+      --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407;
+      --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+      --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35);
+    }
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; }
+  .lp {
+    background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    max-width:760px; margin:0 auto; padding:28px 18px 64px; line-height:1.5;
+  }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(24px,5vw,32px); font-weight:600; color:var(--ink); }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:62ch; }
+  .lp .hint { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  section.block { margin-top:34px; }
+  .block h2 { font-size:19px; font-weight:600; color:var(--ink); display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:60ch; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .phrase-card { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 16px; box-shadow:var(--shadow); }
+  .phrase-card .txt { flex:1; min-width:0; }
+  .phrase-card .de { font-family:Georgia,"Iowan Old Style",serif; font-size:16.5px; font-weight:600; color:var(--ink); }
+  .phrase-card .ru { font-size:13.5px; color:var(--ink-muted); margin-top:2px; }
+  button.play { flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); }
+  button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  /* спряжение */
+  .conj-wrap { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:12px; }
+  .conj-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px 16px; box-shadow:var(--shadow); }
+  .conj-head { display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:10px; }
+  .conj-head .inf { font-family:Georgia,serif; font-weight:700; font-size:18px; color:var(--accent); }
+  .conj-rows { display:grid; grid-template-columns:auto 1fr; gap:3px 12px; font-size:15px; }
+  .conj-rows .pron { color:var(--ink-muted); }
+  .conj-rows .form { font-family:Georgia,serif; font-weight:600; }
+  .conj-rows .form b { color:var(--play); }
+  .num-tile button.play,.conj-head button.play { width:32px; height:32px; font-size:13px; }
+  /* глаголы grid */
+  .verb-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(215px,1fr)); gap:8px; }
+  .verb-card { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 14px; box-shadow:var(--shadow); }
+  .verb-card .txt { flex:1; }
+  .verb-card .de { font-family:Georgia,serif; font-weight:600; font-size:15.5px; }
+  .verb-card .ru { font-size:12.5px; color:var(--ink-muted); }
+  .verb-card button.play { width:32px; height:32px; font-size:13px; }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); }
+  .grammar-box .pos2 { color:var(--play); font-weight:700; }
+  /* dialogue */
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; }
+  .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:12.5px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:80%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; }
+  .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:2px; }
+  .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
+  footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+</style>
 
+<style>
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
+</style>
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
-  <h1>Урок 3. Глаголы в настоящем времени. Как строить предложения</h1>
-  <p class="lede">В Уроке 1 ты выучил sein («я есть»), в Уроке 2 — артикли. Теперь — обычные глаголы (жить, работать, говорить) и порядок слов. С этого начинается настоящая речь. Жми 🔊 — слушай.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <h1>Урок 3. Глаголы в настоящем времени (Präsens)</h1>
+  <p class="lede">Сердце немецкого предложения — глагол. В этом уроке — как он меняется по лицам (шесть окончаний на сотни глаголов), где он стоит (всегда на втором месте) и как из утверждения сделать вопрос. Плюс глаголы, которые врач говорит каждый день. Жми 🔊 — слушай.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
-    <h2><span class="num">1</span> Präsens — как спрягать глагол</h2>
-    <p class="desc">У немецкого глагола меняется окончание по лицу. Отбрасываешь -en от инфинитива (основа) и добавляешь: <b>-e / -st / -t / -en / -t / -en</b>. Почти все глаголы так.</p>
+    <h2><span class="num">1</span> Präsens — шесть окончаний</h2>
+    <div class="grammar-box">
+      В словаре глагол стоит с <b>-en</b> на конце: <i>mach-en, wohn-en</i>. Отрезаем <i>-en</i> — остаётся основа. К ней добавляем окончание по лицу:<br>
+      <b>ich -e · du -st · er/sie/es -t · wir -en · ihr -t · sie/Sie -en</b>.<br><br>
+      Шесть окончаний — одни и те же для сотен глаголов. <b class="hl">wir</b> и <b class="hl">sie/Sie</b> всегда звучат как словарная форма: <i>wir machen, Sie machen</i>.
+    </div>
     <div class="conj-wrap" id="conj"></div>
   </section>
 
   <section class="block">
     <h2><span class="num">2</span> Полезные глаголы</h2>
-    <p class="desc">Основной набор для первых фраз. Все спрягаются по правилу из раздела 1.</p>
-    <div class="verb-grid" id="verbs"></div>
+    <div class="grammar-box">
+      Девять из десяти — правильные: спрягаются ровно по таблице выше. <b>sprechen</b> — нет: <i>du sprichst, er spricht</i>. Такие глаголы с меняющейся гласной будут в уроке 8.
+    </div>
+    <div class="card-list" id="verbs"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">3</span> Порядок слов: глагол всегда на 2-м месте</h2>
+    <h2><span class="num">3</span> Глаголы для врача</h2>
     <div class="grammar-box">
-      Железное правило немецкого: в обычном предложении <b>спрягаемый глагол стоит на <span class="pos2">2-й позиции</span></b> — даже если предложение начинается не с подлежащего. Сравни: <i>Ich wohne in Moskau</i> и <i>In Moskau wohne ich</i> — глагол <b>wohne</b> в обоих на 2-м месте.
+      Все глаголы на <b>-ieren</b> правильные, и ударение у них на <b>-ie-</b>: <i>operíeren, kontrollíeren</i>. В медицине таких десятки: <i>diagnostizieren, informieren, telefonieren</i>.
+    </div>
+    <div class="card-list" id="vm"></div>
+    <div class="card-list" id="vs" style="margin-top:10px"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Bitte warten Sie hier</b> — пациент слышит это в каждой клинике. Глагол впереди, <i>Sie</i> за ним — так звучит вежливая просьба.
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">4</span> Ловушки окончаний</h2>
+    <div class="grammar-box">
+      <b>Основа на -t или -d</b> (<i>arbeit-, find-, antwort-, wart-</i>): перед <i>-st</i> и <i>-t</i> вставляем <b>-e-</b>, иначе не выговорить: <i>du arbeit<b class="hl">e</b>st, er arbeit<b class="hl">e</b>t</i>.<br>
+      <b>Основа на -s, -ß, -z</b> (<i>heiß-, tanz-</i>): у <i>du</i> только <b>-t</b>: <i>du heißt, du tanzt</i> — не «heißst».<br>
+      <b>Глаголы на -eln</b> (<i>behandeln</i>): у <i>ich</i> <i>e</i> выпадает: <i>ich behandle</i>.
+    </div>
+    <div class="card-list" id="lv"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">5</span> Порядок слов: глагол на 2-м месте</h2>
+    <div class="grammar-box">
+      Главное правило немецкого предложения: <b>изменяемый глагол стоит на втором месте</b>. Не второе слово — второе место: <i>Meine Schwester</i> — это одно место, хоть и два слова.
     </div>
     <div class="card-list" id="sentences"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">4</span> Вопросы</h2>
+    <h2><span class="num">6</span> Что угодно впереди — глагол всё равно второй</h2>
     <div class="grammar-box">
-      <b>Вопрос со словом</b> (Wo? Was? Woher?) — глагол на 2-м месте: <i>Wo <b>wohnen</b> Sie?</i><br>
-      <b>Вопрос да/нет</b> — глагол выходит на <span class="pos2">1-е место</span>: <i><b>Wohnen</b> Sie in Berlin?</i> → Ja / Nein.
+      Первым можно поставить время или место — тогда подлежащее уходит <b class="hl">за</b> глагол: <i>Heute arbeite ich.</i> По-русски «сегодня я работаю», по-немецки «сегодня работаю я». Это самая частая ошибка русскоговорящих.
+    </div>
+    <div class="card-list" id="iv"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">7</span> Вопросы</h2>
+    <div class="grammar-box">
+      С вопросительным словом (<i>wo, was, wie, woher</i>) глагол идёт сразу за ним, на втором месте: <i>Wo wohnen Sie?</i><br>
+      Вопрос «да или нет» — глагол на <b>первом</b> месте: <i>Wohnen Sie in Berlin?</i>
     </div>
     <div class="card-list" id="questions"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Rauchen Sie?</b> — вопрос из любого анамнеза. Ответ почти всегда через <i>nicht</i>: <i>Nein, ich rauche nicht.</i>
+    </div>
+    <div class="card-list" id="qdoc"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">5</span> Диалог: два врача знакомятся</h2>
-    <p class="desc">Всё вместе. Anna — врач из Берлина, Markus — ты (врач из России, учишь немецкий).</p>
+    <h2><span class="num">8</span> Ответы: Ja, Nein, Doch</h2>
+    <div class="grammar-box">
+      <b>Ja</b> — да, <b>Nein</b> — нет. Отрицание глагола — <b>nicht</b> после него: <i>Ich wohne nicht in Berlin.</i><br><br>
+      Особое слово <b class="hl">Doch</b> — «нет-нет, как раз да». Им возражают на вопрос с отрицанием: <i>Wohnen Sie nicht in Berlin? — Doch!</i>
+    </div>
+    <div class="card-list" id="ja"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">9</span> sie и Sie</h2>
+    <div class="grammar-box">
+      <b>sie</b> (они) и <b>Sie</b> (Вы) — одна и та же форма глагола: <i>sie wohnen, Sie wohnen</i>. На слух не отличить — только по смыслу. А <b>sie</b> в значении «она» спрягается как <i>er</i>: <i>sie wohnt</i>.
+    </div>
+    <div class="card-list" id="sie"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">10</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ich wohnen in Moskau.</span><span class="good">Ich wohne in Moskau.</span><span class="why">у ich окончание -e</span></div>
+      <div class="err-row"><span class="bad">Er arbeitt.</span><span class="good">Er arbeitet.</span><span class="why">основа на -t — вставная -e-</span></div>
+      <div class="err-row"><span class="bad">Du heißst.</span><span class="good">Du heißt.</span><span class="why">после ß у du только -t</span></div>
+      <div class="err-row"><span class="bad">Heute ich arbeite.</span><span class="good">Heute arbeite ich.</span><span class="why">глагол — на втором месте</span></div>
+      <div class="err-row"><span class="bad">Wo Sie wohnen?</span><span class="good">Wo wohnen Sie?</span><span class="why">в вопросе глагол сразу после W-слова</span></div>
+      <div class="err-row"><span class="bad">Ich nicht rauche.</span><span class="good">Ich rauche nicht.</span><span class="why">nicht — после глагола</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">11</span> Диалоги</h2>
+    <div class="desc">Первый — два врача знакомятся на Вы. Второй — с коллегой в ординаторской на ты. Третий — врач расспрашивает пациентку. Следите, где стоит глагол.</div>
+    <h3 class="dlg-title">Два врача знакомятся</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">В ординаторской — на «ты»</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Врач и пациентка</h3>
+    <div class="dialogue" id="dialog3"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">6</span> Домашка</h2>
+    <h2><span class="num">12</span> Домашка</h2>
     <div class="hw">
       <ol>
-        <li>Проспрягай вслух <b>lernen</b> и <b>arbeiten</b> по образцу из раздела 1.</li>
-        <li>Составь 3 предложения о себе с новыми глаголами (напр. <i>Ich arbeite als Arzt</i>).</li>
-        <li>Переделай их в вопросы да/нет (глагол — на первое место).</li>
+        <li>Проспрягай вслух <i>lernen, wohnen, arbeiten</i> — все шесть форм. Особо — <i>du arbeitest, er arbeitet</i>.</li>
+        <li>Составь 5 предложений о себе, где первым стоит время или место: <i>Heute …, Morgen …, In Moskau …</i></li>
+        <li>Придумай 4 вопроса пациенту с W-словом и 4 вопроса «да/нет».</li>
+        <li>Ответь на <i>Wohnen Sie nicht in Berlin?</i> двумя способами: <i>Doch, …</i> и <i>Nein, …</i></li>
+        <li>Разыграй с Полиной диалог 3: ты врач, она пациентка, потом наоборот.</li>
       </ol>
     </div>
   </section>
@@ -903,11 +990,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Markus (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"conj_machen": "../zvuk/urok3/conj_machen.mp3", "conj_wohnen": "../zvuk/urok3/conj_wohnen.mp3", "v_kommen": "../zvuk/urok3/v_kommen.mp3", "v_wohnen": "../zvuk/urok3/v_wohnen.mp3", "v_heissen": "../zvuk/urok3/v_heissen.mp3", "v_arbeiten": "../zvuk/urok3/v_arbeiten.mp3", "v_lernen": "../zvuk/urok3/v_lernen.mp3", "v_machen": "../zvuk/urok3/v_machen.mp3", "v_spielen": "../zvuk/urok3/v_spielen.mp3", "v_brauchen": "../zvuk/urok3/v_brauchen.mp3", "v_verstehen": "../zvuk/urok3/v_verstehen.mp3", "v_sprechen": "../zvuk/urok3/v_sprechen.mp3", "s1": "../zvuk/urok3/s1.mp3", "s2": "../zvuk/urok3/s2.mp3", "s3": "../zvuk/urok3/s3.mp3", "s4": "../zvuk/urok3/s4.mp3", "s5": "../zvuk/urok3/s5.mp3", "q1": "../zvuk/urok3/q1.mp3", "q2": "../zvuk/urok3/q2.mp3", "q3": "../zvuk/urok3/q3.mp3", "q4": "../zvuk/urok3/q4.mp3", "d1": "../zvuk/urok3/d1.mp3", "d2": "../zvuk/urok3/d2.mp3", "d3": "../zvuk/urok3/d3.mp3", "d4": "../zvuk/urok3/d4.mp3", "d5": "../zvuk/urok3/d5.mp3", "d6": "../zvuk/urok3/d6.mp3", "d7": "../zvuk/urok3/d7.mp3"};
+const AUDIO = {"conj_machen": "../zvuk/urok3/conj_machen.mp3", "conj_wohnen": "../zvuk/urok3/conj_wohnen.mp3", "v_kommen": "../zvuk/urok3/v_kommen.mp3", "v_wohnen": "../zvuk/urok3/v_wohnen.mp3", "v_heissen": "../zvuk/urok3/v_heissen.mp3", "v_arbeiten": "../zvuk/urok3/v_arbeiten.mp3", "v_lernen": "../zvuk/urok3/v_lernen.mp3", "v_machen": "../zvuk/urok3/v_machen.mp3", "v_spielen": "../zvuk/urok3/v_spielen.mp3", "v_brauchen": "../zvuk/urok3/v_brauchen.mp3", "v_verstehen": "../zvuk/urok3/v_verstehen.mp3", "v_sprechen": "../zvuk/urok3/v_sprechen.mp3", "s1": "../zvuk/urok3/s1.mp3", "s2": "../zvuk/urok3/s2.mp3", "s3": "../zvuk/urok3/s3.mp3", "s4": "../zvuk/urok3/s4.mp3", "s5": "../zvuk/urok3/s5.mp3", "q1": "../zvuk/urok3/q1.mp3", "q2": "../zvuk/urok3/q2.mp3", "q3": "../zvuk/urok3/q3.mp3", "q4": "../zvuk/urok3/q4.mp3", "d1": "../zvuk/urok3/d1.mp3", "d3": "../zvuk/urok3/d3.mp3", "d5": "../zvuk/urok3/d5.mp3", "d7": "../zvuk/urok3/d7.mp3", "dm2": "../zvuk/urok3/dm2.mp3", "dm4": "../zvuk/urok3/dm4.mp3", "dm6": "../zvuk/urok3/dm6.mp3", "cj_lernen": "../zvuk/urok3/cj_lernen.mp3", "cj_arbeiten": "../zvuk/urok3/cj_arbeiten.mp3", "vm1": "../zvuk/urok3/vm1.mp3", "vm2": "../zvuk/urok3/vm2.mp3", "vm3": "../zvuk/urok3/vm3.mp3", "vm4": "../zvuk/urok3/vm4.mp3", "vm5": "../zvuk/urok3/vm5.mp3", "vm6": "../zvuk/urok3/vm6.mp3", "vm7": "../zvuk/urok3/vm7.mp3", "vm8": "../zvuk/urok3/vm8.mp3", "vs1": "../zvuk/urok3/vs1.mp3", "vs2": "../zvuk/urok3/vs2.mp3", "vs3": "../zvuk/urok3/vs3.mp3", "vs4": "../zvuk/urok3/vs4.mp3", "vs5": "../zvuk/urok3/vs5.mp3", "lv1": "../zvuk/urok3/lv1.mp3", "lv2": "../zvuk/urok3/lv2.mp3", "lv3": "../zvuk/urok3/lv3.mp3", "lv4": "../zvuk/urok3/lv4.mp3", "lv5": "../zvuk/urok3/lv5.mp3", "iv1": "../zvuk/urok3/iv1.mp3", "iv2": "../zvuk/urok3/iv2.mp3", "iv3": "../zvuk/urok3/iv3.mp3", "iv4": "../zvuk/urok3/iv4.mp3", "wf1": "../zvuk/urok3/wf1.mp3", "wf2": "../zvuk/urok3/wf2.mp3", "wf3": "../zvuk/urok3/wf3.mp3", "wf4": "../zvuk/urok3/wf4.mp3", "wf5": "../zvuk/urok3/wf5.mp3", "ja1": "../zvuk/urok3/ja1.mp3", "ja2": "../zvuk/urok3/ja2.mp3", "ja3": "../zvuk/urok3/ja3.mp3", "ja4": "../zvuk/urok3/ja4.mp3", "ja5": "../zvuk/urok3/ja5.mp3", "sz1": "../zvuk/urok3/sz1.mp3", "sz2": "../zvuk/urok3/sz2.mp3", "kl1": "../zvuk/urok3/kl1.mp3", "kl2": "../zvuk/urok3/kl2.mp3", "kl3": "../zvuk/urok3/kl3.mp3", "kl4": "../zvuk/urok3/kl4.mp3", "kl5": "../zvuk/urok3/kl5.mp3", "kl6": "../zvuk/urok3/kl6.mp3", "kl7": "../zvuk/urok3/kl7.mp3", "kl8": "../zvuk/urok3/kl8.mp3", "pa1": "../zvuk/urok3/pa1.mp3", "pa2": "../zvuk/urok3/pa2.mp3", "pa3": "../zvuk/urok3/pa3.mp3", "pa4": "../zvuk/urok3/pa4.mp3", "pa5": "../zvuk/urok3/pa5.mp3", "pa6": "../zvuk/urok3/pa6.mp3", "pa7": "../zvuk/urok3/pa7.mp3", "pa8": "../zvuk/urok3/pa8.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -924,76 +1011,132 @@ window.addEventListener('load', function () {
   }, 2500);
 });
 
-function playClip(id, btn){
-  const b64 = AUDIO[id]; if(!b64) return;
-  const a = new Audio(b64);
-  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); }
-  a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); });
-}
+function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
+  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-// спряжение
-const conj = [
-  ["conj_machen","machen","делать",[["ich","mach","e"],["du","mach","st"],["er/sie/es","mach","t"],["wir","mach","en"],["ihr","mach","t"],["sie/Sie","mach","en"]]],
-  ["conj_wohnen","wohnen","жить",[["ich","wohn","e"],["du","wohn","st"],["er/sie/es","wohn","t"],["wir","wohn","en"],["ihr","wohn","t"],["sie/Sie","wohn","en"]]],
-];
-document.getElementById('conj').innerHTML = conj.map(([id,inf,ru,rows])=>`
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// таблица спряжения: [id, инфинитив, перевод, [[лицо, основа, окончание]…]]
+function conjcards(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,inf,ru,rows])=>`
   <div class="conj-card">
     <div class="conj-head"><span class="inf">${inf} <span style="color:var(--ink-faint);font-weight:400;font-size:13px">— ${ru}</span></span>${playBtn(id)}</div>
     <div class="conj-rows">${rows.map(([p,stem,end])=>`<span class="pron">${p}</span><span class="form">${stem}<b>${end}</b></span>`).join('')}</div>
-  </div>`).join('');
+  </div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-// глаголы
-const verbs = [
-  ["v_kommen","kommen","приходить / быть родом"],
-  ["v_wohnen","wohnen","жить"],
-  ["v_heissen","heißen","зваться"],
-  ["v_arbeiten","arbeiten","работать"],
-  ["v_lernen","lernen","учить"],
-  ["v_machen","machen","делать"],
-  ["v_spielen","spielen","играть"],
-  ["v_brauchen","brauchen","нуждаться"],
-  ["v_verstehen","verstehen","понимать"],
-  ["v_sprechen","sprechen","говорить"],
-];
-document.getElementById('verbs').innerHTML = verbs.map(([id,de,ru])=>`
-  <div class="verb-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join('');
-
-// предложения
-const sentences = [
-  ["s1","Ich wohne in Moskau.","Я живу в Москве."],
-  ["s2","In Moskau wohne ich.","В Москве живу я. (глагол всё равно 2-й!)"],
-  ["s3","Ich arbeite als Arzt.","Я работаю врачом."],
-  ["s4","Ich lerne Deutsch.","Я учу немецкий."],
-  ["s5","Ich spreche Russisch und ein bisschen Deutsch.","Я говорю по-русски и немного по-немецки."],
-];
-document.getElementById('sentences').innerHTML = sentences.map(([id,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join('');
-
-// вопросы
-const questions = [
-  ["q1","Wo wohnen Sie?","Где Вы живёте?"],
-  ["q2","Wohnen Sie in Berlin?","Вы живёте в Берлине? (да/нет)"],
-  ["q3","Sprechen Sie Deutsch?","Вы говорите по-немецки?"],
-  ["q4","Was machen Sie beruflich?","Кем Вы работаете?"],
-];
-document.getElementById('questions').innerHTML = questions.map(([id,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join('');
-
-// диалог
-const dialog = [
-  ["d1","left","A","Guten Tag! Sind Sie auch Arzt?","Здравствуйте! Вы тоже врач?"],
-  ["d2","right","M","Ja, ich bin Arzt. Und Sie?","Да, я врач. А Вы?"],
-  ["d3","left","A","Ich bin Ärztin. Ich arbeite in Berlin. Woher kommen Sie?","Я врач. Работаю в Берлине. Откуда Вы?"],
-  ["d4","right","M","Ich komme aus Russland. Ich lerne Deutsch.","Я из России. Учу немецкий."],
-  ["d5","left","A","Sprechen Sie schon gut Deutsch?","Вы уже хорошо говорите по-немецки?"],
-  ["d6","right","M","Ein bisschen. Ich lerne jeden Tag.","Немного. Учу каждый день."],
-  ["d7","left","A","Toll! Weiter so!","Здорово! Так держать!"],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+conjcards('conj',[
+  ["conj_machen","machen","делать",[["ich","mach","e"],["du","mach","st"],["er/sie/es","mach","t"],["wir","mach","en"],["ihr","mach","t"],["sie/Sie","mach","en"]]],
+  ["conj_wohnen","wohnen","жить",[["ich","wohn","e"],["du","wohn","st"],["er/sie/es","wohn","t"],["wir","wohn","en"],["ihr","wohn","t"],["sie/Sie","wohn","en"]]],
+  ["cj_lernen","lernen","учить",[["ich","lern","e"],["du","lern","st"],["er/sie/es","lern","t"],["wir","lern","en"],["ihr","lern","t"],["sie/Sie","lern","en"]]],
+  ["cj_arbeiten","arbeiten","работать — с вставной -e-",[["ich","arbeit","e"],["du","arbeit","est"],["er/sie/es","arbeit","et"],["wir","arbeit","en"],["ihr","arbeit","et"],["sie/Sie","arbeit","en"]]],
+]);
+phrases('verbs',[
+  ["v_kommen","kommen","коммэн","приходить; быть родом (aus …)"],
+  ["v_wohnen","wohnen","вонэн","жить (где-то)"],
+  ["v_heissen","heißen","хайсэн","зваться"],
+  ["v_arbeiten","arbeiten","арбайтэн","работать"],
+  ["v_lernen","lernen","лернэн","учить, учиться"],
+  ["v_machen","machen","махэн","делать"],
+  ["v_spielen","spielen","шпилен","играть"],
+  ["v_brauchen","brauchen","браухэн","нуждаться; нужно"],
+  ["v_verstehen","verstehen","фэрштээн","понимать"],
+  ["v_sprechen","sprechen","шпрэхен","говорить — du sprichst!"],
+]);
+phrases('vm',[
+  ["vm1","untersuchen","унтэрзухэн","обследовать"],
+  ["vm2","behandeln","бэхандэльн","лечить — ich behandle"],
+  ["vm3","operieren","опэрирэн","оперировать"],
+  ["vm4","fragen","фрагэн","спрашивать"],
+  ["vm5","antworten","антвортэн","отвечать — du antwortest"],
+  ["vm6","warten","вартэн","ждать — du wartest"],
+  ["vm7","kontrollieren","контроллирэн","проверять, контролировать"],
+  ["vm8","rauchen","раухэн","курить"],
+]);
+phrases('vs',[
+  ["vs1","Ich untersuche Frau Weber.","ихь унтэрзухэ фрау вэбэа","Я обследую фрау Вебер."],
+  ["vs2","Der Chirurg operiert heute.","дэа хирург опэрирт хойтэ","Хирург сегодня оперирует."],
+  ["vs3","Die Ärztin behandelt Kinder.","ди эрцтин бэхандэльт киндэа","Врач лечит детей."],
+  ["vs4","Ich frage, Sie antworten.","ихь фрагэ, зи антвортэн","Я спрашиваю, Вы отвечаете."],
+  ["vs5","Bitte warten Sie hier.","битэ вартэн зи хиа","Пожалуйста, подождите здесь."],
+]);
+phrases('lv',[
+  ["lv1","du arbeitest, er arbeitet","ду арбайтэст, эа арбайтэт","ты работаешь, он работает — вставная -e-"],
+  ["lv2","du findest, er findet","ду финдэст, эа финдэт","ты находишь, он находит — основа на -d"],
+  ["lv3","du heißt","ду хайст","тебя зовут — у du только -t"],
+  ["lv4","du tanzt","ду танцт","ты танцуешь — основа на -z"],
+  ["lv5","ich behandle","ихь бэхандлэ","я лечу — у ich e выпадает"],
+]);
+phrases('sentences',[
+  ["s1","Ich wohne in Moskau.","ихь вонэ ин москау","Я живу в Москве."],
+  ["s2","In Moskau wohne ich.","ин москау вонэ ихь","В Москве живу я. — глагол всё равно второй"],
+  ["s3","Ich arbeite als Arzt.","ихь арбайтэ альс арцт","Я работаю врачом."],
+  ["s4","Ich lerne Deutsch.","ихь лернэ дойч","Я учу немецкий."],
+  ["s5","Ich spreche Russisch und ein bisschen Deutsch.","ихь шпрэхе русиш унт айн бисхен дойч","Я говорю по-русски и немного по-немецки."],
+]);
+phrases('iv',[
+  ["iv1","Heute arbeite ich in der Klinik.","хойтэ арбайтэ ихь ин дэа клиник","Сегодня я работаю в клинике."],
+  ["iv2","Morgen lerne ich Deutsch.","морген лернэ ихь дойч","Завтра я учу немецкий."],
+  ["iv3","Jetzt kommt der Arzt.","етцт коммт дэа арцт","Сейчас придёт врач."],
+  ["iv4","In Berlin wohnt meine Schwester.","ин бэрлин вонт майнэ швэстэа","В Берлине живёт моя сестра."],
+]);
+phrases('questions',[
+  ["q1","Wo wohnen Sie?","во вонэн зи","Где Вы живёте?"],
+  ["q4","Was machen Sie beruflich?","вас махэн зи бэруфлихь","Кем Вы работаете?"],
+  ["wf1","Was brauchen Sie?","вас браухэн зи","Что Вам нужно?"],
+  ["wf2","Wie heißt du?","ви хайст ду","Как тебя зовут?"],
+  ["q2","Wohnen Sie in Berlin?","вонэн зи ин бэрлин","Вы живёте в Берлине?"],
+  ["q3","Sprechen Sie Deutsch?","шпрэхен зи дойч","Вы говорите по-немецки?"],
+  ["wf3","Arbeiten Sie hier?","арбайтэн зи хиа","Вы здесь работаете?"],
+  ["wf4","Verstehen Sie mich?","фэрштээн зи михь","Вы меня понимаете?"],
+]);
+phrases('qdoc',[
+  ["wf5","Rauchen Sie?","раухэн зи","Вы курите?"],
+]);
+phrases('ja',[
+  ["ja1","Ja, ich wohne in Berlin.","я, ихь вонэ ин бэрлин","Да, я живу в Берлине."],
+  ["ja2","Nein, ich wohne nicht in Berlin.","найн, ихь вонэ нихьт ин бэрлин","Нет, я живу не в Берлине."],
+  ["ja3","Nein, ich wohne in Hamburg.","найн, ихь вонэ ин хамбург","Нет, я живу в Гамбурге."],
+  ["ja4","Wohnen Sie nicht in Berlin?","вонэн зи нихьт ин бэрлин","Вы разве живёте не в Берлине?"],
+  ["ja5","Doch, ich wohne in Berlin.","дох, ихь вонэ ин бэрлин","Нет-нет, как раз в Берлине."],
+]);
+phrases('sie',[
+  ["sz1","Wohnen Sie hier?","вонэн зи хиа","Вы здесь живёте? — или «они здесь живут?»: по смыслу"],
+  ["sz2","Sie wohnt in Wien.","зи вонт ин вин","Она живёт в Вене. — окончание -t выдаёт «она»"],
+]);
+dlg('dialog',[
+  ["d1","left","А","Guten Tag! Sind Sie auch Arzt?","гутэн так! зинт зи аух арцт","Здравствуйте! Вы тоже врач?"],
+  ["dm2","right","Гр","Ja, ich bin Arzt. Und Sie?","я, ихь бин арцт. унт зи","Да, я врач. А Вы?"],
+  ["d3","left","А","Ich bin Ärztin. Ich arbeite in Berlin. Woher kommen Sie?","ихь бин эрцтин. ихь арбайтэ ин бэрлин. вохэа коммэн зи","Я врач. Работаю в Берлине. Откуда Вы?"],
+  ["dm4","right","Гр","Ich komme aus Russland. Ich lerne Deutsch.","ихь коммэ аус русланд. ихь лернэ дойч","Я из России. Учу немецкий."],
+  ["d5","left","А","Sprechen Sie schon gut Deutsch?","шпрэхен зи шон гут дойч","Вы уже хорошо говорите по-немецки?"],
+  ["dm6","right","Гр","Ein bisschen. Ich lerne jeden Tag.","айн бисхен. ихь лернэ едэн так","Немного. Учу каждый день."],
+  ["d7","left","А","Toll! Weiter so!","толь! вайтэа зо","Здорово! Так держать!"],
+]);
+dlg('dialog2',[
+  ["kl1","left","Ю","Hallo Grigori! Wo wohnst du jetzt?","халло григори! во вонст ду етцт","Привет, Григорий! Где ты сейчас живёшь?"],
+  ["kl2","right","Гр","Ich wohne in Neukölln. Und du?","ихь вонэ ин нойкёльн. унт ду","Я живу в Нойкёльне. А ты?"],
+  ["kl3","left","Ю","Ich wohne in Pankow. Was machst du heute Abend?","ихь вонэ ин панко. вас махст ду хойтэ абэнт","Я — в Панкове. Что делаешь сегодня вечером?"],
+  ["kl4","right","Гр","Heute Abend lerne ich Deutsch.","хойтэ абэнт лернэ ихь дойч","Сегодня вечером учу немецкий."],
+  ["kl5","left","Ю","Du lernst jeden Tag, oder?","ду лернст едэн так, одэа","Ты учишь каждый день, да?"],
+  ["kl6","right","Гр","Ja. Ich brauche Deutsch für die Arbeit.","я. ихь браухэ дойч фюа ди арбайт","Да. Мне нужен немецкий для работы."],
+  ["kl7","left","Ю","Du sprichst schon gut!","ду шприхст шон гут","Ты уже хорошо говоришь!"],
+  ["kl8","right","Гр","Danke! Ich verstehe schon viel.","данкэ! ихь фэрштээ шон филь","Спасибо! Я уже много понимаю."],
+]);
+dlg('dialog3',[
+  ["pa1","left","Вр","Guten Tag! Wie heißen Sie?","гутэн так! ви хайсэн зи","Здравствуйте! Как Вас зовут?"],
+  ["pa2","right","П","Ich heiße Lisa Braun.","ихь хайсэ лиза браун","Меня зовут Лиза Браун."],
+  ["pa3","left","Вр","Was machen Sie beruflich, Frau Braun?","вас махэн зи бэруфлихь, фрау браун","Кем Вы работаете, фрау Браун?"],
+  ["pa4","right","П","Ich arbeite als Lehrerin.","ихь арбайтэ альс лерэрин","Я работаю учительницей."],
+  ["pa5","left","Вр","Rauchen Sie?","раухэн зи","Вы курите?"],
+  ["pa6","right","П","Nein, ich rauche nicht.","найн, ихь раухэ нихьт","Нет, не курю."],
+  ["pa7","left","Вр","Brauchen Sie ein Rezept?","браухэн зи айн рэцэпт","Вам нужен рецепт?"],
+  ["pa8","right","П","Ja, bitte. Ich brauche Tabletten.","я, битэ. ихь браухэ таблэттэн","Да, пожалуйста. Мне нужны таблетки."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
