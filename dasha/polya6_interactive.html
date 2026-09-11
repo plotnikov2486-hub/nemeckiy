@@ -164,7 +164,6 @@
   .saveinfo { font-size:12px; color:var(--ink-faint); margin-top:10px; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
-
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
     padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
@@ -181,9 +180,32 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  .hwbox .grammar-box { background:var(--surface); border-radius:10px; padding:10px 14px; }
+</style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -355,7 +377,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   <div class="eyebrow">Занятия Полины с Дашей · конспект 6</div>
   <h1>Занятие 6. Вопросы, позиция глагола и описание картинки</h1>
   <p class="lede">22 августа 2026, 52 минуты. Разобрали домашку с вопросительными словами, докопались до правила «глагол на второй <b>позиции</b>», выяснили, куда ставить <i>nicht</i> и почему в одном месте нельзя <i>kein</i>, прочитали два текста из учебника и научились описывать картинку. У каждой фразы озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <div class="hint">🔊 &nbsp;= нажми и слушай — звук встроен в страницу, интернет не нужен</div>
 
   <div class="toc">
     <b>Что в занятии</b>
@@ -486,12 +508,12 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 
   <section class="block" id="s11">
     <h2><span class="num">11</span> 📚 Домашка от Даши</h2>
-    <p class="desc">Прислана в Telegram 22.08.2026. Всё можно заполнять прямо здесь — написанное сохраняется в этом браузере, ничего не потеряется, если закрыть страницу.</p>
+    <p class="desc">Прислана в Telegram 22.08.2026. Всё можно заполнять прямо здесь — написанное сохраняется в этом браузере, ничего не потеряется, если закрыть страницу. Сначала делай сама, потом сверяйся: <b>ответы с пояснением, почему именно так</b>, «мой вариант перевода» и «мой пример» к вопросам.</p>
 
     <div class="hwbox">
       <span class="hwnum">Задание 1</span>
       <h3>Прочитать текст, перевести, выписать незнакомые слова</h3>
-      <p class="desc" style="margin:0 0 6px">Каждый абзац озвучен — слушай и читай глазами одновременно.</p>
+      <p class="desc" style="margin:0 0 6px">Каждый абзац озвучен — слушай и читай глазами одновременно. Перевод абзаца — за кнопкой <b>«перевод»</b>: сначала попробуй перевести сама.</p>
       <div class="card-list" id="hwText"></div>
       <div class="hint-box">
         💡 <b>Слова, на которых обычно спотыкаются</b> — послушай их отдельно, они все есть в тексте:
@@ -506,6 +528,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <span class="hwnum">Задание 2</span>
       <h3>Hast du den Text verstanden? — ответить на вопросы</h3>
       <div id="hwQuiz"></div>
+      <button id="кОтветыQuiz" class="кн-ответы">Показать ответы и пояснения</button>
+      <div id="otvetyQuiz" hidden style="margin-top:10px"></div>
       <a class="origlink" href="polya6_hw_fragen.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
     </div>
 
@@ -522,6 +546,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
         Не забудь: <b>после haben — Akkusativ</b> (это как раз с занятия), и глагол на <b>второй позиции</b>.
       </div>
       <textarea class="fld" id="f_uebersetzung" rows="10" placeholder="Meine Familie&#10;&#10;Ich habe eine große Familie..."></textarea>
+      <button id="кВариантПеревода" class="кн-ответы">Мой вариант перевода</button>
+      <div id="variantPerevoda" hidden style="margin-top:10px"></div>
       <a class="origlink" href="polya6_hw_ru.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
     </div>
 
@@ -543,6 +569,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
         Не забудь <b>проспрягать</b> под лицо — модальный глагол стоит на второй позиции, а смысловой уходит в конец в инфинитиве.
       </div>
       <div id="hwModal"></div>
+      <button id="кОтветыModal" class="кн-ответы">Показать ответы и пояснения</button>
+      <div id="otvetyModal" hidden style="margin-top:10px"></div>
       <a class="origlink" href="polya6_hw_modal.jpg" target="_blank" rel="noopener">🖼️ Оригинал листа от Даши</a>
     </div>
 
@@ -1121,7 +1149,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"h1": "../zvuk/polya6/h1.mp3", "h2": "../zvuk/polya6/h2.mp3", "h3": "../zvuk/polya6/h3.mp3", "h4": "../zvuk/polya6/h4.mp3", "h5": "../zvuk/polya6/h5.mp3", "h6": "../zvuk/polya6/h6.mp3", "lw1": "../zvuk/polya6/lw1.mp3", "lw2": "../zvuk/polya6/lw2.mp3", "w1": "../zvuk/polya6/w1.mp3", "w2": "../zvuk/polya6/w2.mp3", "p1": "../zvuk/polya6/p1.mp3", "p2": "../zvuk/polya6/p2.mp3", "p3": "../zvuk/polya6/p3.mp3", "p4": "../zvuk/polya6/p4.mp3", "p5": "../zvuk/polya6/p5.mp3", "s1": "../zvuk/polya6/s1.mp3", "s2": "../zvuk/polya6/s2.mp3", "s3": "../zvuk/polya6/s3.mp3", "s4": "../zvuk/polya6/s4.mp3", "s5": "../zvuk/polya6/s5.mp3", "a1": "../zvuk/polya6/a1.mp3", "n1": "../zvuk/polya6/n1.mp3", "n2": "../zvuk/polya6/n2.mp3", "n3": "../zvuk/polya6/n3.mp3", "n4": "../zvuk/polya6/n4.mp3", "t1": "../zvuk/polya6/t1.mp3", "t2": "../zvuk/polya6/t2.mp3", "t3": "../zvuk/polya6/t3.mp3", "t4": "../zvuk/polya6/t4.mp3", "t5": "../zvuk/polya6/t5.mp3", "t6": "../zvuk/polya6/t6.mp3", "t7": "../zvuk/polya6/t7.mp3", "nm1": "../zvuk/polya6/nm1.mp3", "nm2": "../zvuk/polya6/nm2.mp3", "nm3": "../zvuk/polya6/nm3.mp3", "nm4": "../zvuk/polya6/nm4.mp3", "nm5": "../zvuk/polya6/nm5.mp3", "nm6": "../zvuk/polya6/nm6.mp3", "nm7": "../zvuk/polya6/nm7.mp3", "nm8": "../zvuk/polya6/nm8.mp3", "v_stern": "../zvuk/polya6/v_stern.mp3", "v_geschw": "../zvuk/polya6/v_geschw.mp3", "v_heimat": "../zvuk/polya6/v_heimat.mp3", "v_zurzeit": "../zvuk/polya6/v_zurzeit.mp3", "v_famstand": "../zvuk/polya6/v_famstand.mp3", "v_ledig": "../zvuk/polya6/v_ledig.mp3", "v_verh": "../zvuk/polya6/v_verh.mp3", "v_gesch": "../zvuk/polya6/v_gesch.mp3", "v_arblos": "../zvuk/polya6/v_arblos.mp3", "v_selbst": "../zvuk/polya6/v_selbst.mp3", "v_mutter": "../zvuk/polya6/v_mutter.mp3", "v_fremd": "../zvuk/polya6/v_fremd.mp3", "v_kranken": "../zvuk/polya6/v_kranken.mp3", "v_verk": "../zvuk/polya6/v_verk.mp3", "v_leider": "../zvuk/polya6/v_leider.mp3", "v_zurueck": "../zvuk/polya6/v_zurueck.mp3", "v_morgen": "../zvuk/polya6/v_morgen.mp3", "b1": "../zvuk/polya6/b1.mp3", "b2": "../zvuk/polya6/b2.mp3", "b3": "../zvuk/polya6/b3.mp3", "b4": "../zvuk/polya6/b4.mp3", "b5": "../zvuk/polya6/b5.mp3", "b6": "../zvuk/polya6/b6.mp3", "b7": "../zvuk/polya6/b7.mp3", "b8": "../zvuk/polya6/b8.mp3", "b9": "../zvuk/polya6/b9.mp3", "hw1": "../zvuk/polya6/hw1.mp3", "hw2": "../zvuk/polya6/hw2.mp3", "hw3": "../zvuk/polya6/hw3.mp3", "hw4": "../zvuk/polya6/hw4.mp3", "hw5": "../zvuk/polya6/hw5.mp3", "k_verw": "../zvuk/polya6/k_verw.mp3", "k_umg": "../zvuk/polya6/k_umg.mp3", "k_feier": "../zvuk/polya6/k_feier.mp3", "k_ins": "../zvuk/polya6/k_ins.mp3", "k_einz": "../zvuk/polya6/k_einz.mp3", "k_liebste": "../zvuk/polya6/k_liebste.mp3", "k_unter": "../zvuk/polya6/k_unter.mp3", "k_kuemm": "../zvuk/polya6/k_kuemm.mp3", "k_nichte": "../zvuk/polya6/k_nichte.mp3", "k_neffe": "../zvuk/polya6/k_neffe.mp3", "k_mittl": "../zvuk/polya6/k_mittl.mp3", "k_leben": "../zvuk/polya6/k_leben.mp3", "k_ehe": "../zvuk/polya6/k_ehe.mp3", "k_enkel": "../zvuk/polya6/k_enkel.mp3", "k_gest": "../zvuk/polya6/k_gest.mp3"};
+const AUDIO = {"h1": "../zvuk/polya6/h1.mp3", "h2": "../zvuk/polya6/h2.mp3", "h3": "../zvuk/polya6/h3.mp3", "h4": "../zvuk/polya6/h4.mp3", "h5": "../zvuk/polya6/h5.mp3", "h6": "../zvuk/polya6/h6.mp3", "lw1": "../zvuk/polya6/lw1.mp3", "lw2": "../zvuk/polya6/lw2.mp3", "w1": "../zvuk/polya6/w1.mp3", "w2": "../zvuk/polya6/w2.mp3", "p1": "../zvuk/polya6/p1.mp3", "p2": "../zvuk/polya6/p2.mp3", "p3": "../zvuk/polya6/p3.mp3", "p4": "../zvuk/polya6/p4.mp3", "p5": "../zvuk/polya6/p5.mp3", "s1": "../zvuk/polya6/s1.mp3", "s2": "../zvuk/polya6/s2.mp3", "s3": "../zvuk/polya6/s3.mp3", "s4": "../zvuk/polya6/s4.mp3", "s5": "../zvuk/polya6/s5.mp3", "a1": "../zvuk/polya6/a1.mp3", "n1": "../zvuk/polya6/n1.mp3", "n2": "../zvuk/polya6/n2.mp3", "n3": "../zvuk/polya6/n3.mp3", "n4": "../zvuk/polya6/n4.mp3", "t1": "../zvuk/polya6/t1.mp3", "t2": "../zvuk/polya6/t2.mp3", "t3": "../zvuk/polya6/t3.mp3", "t4": "../zvuk/polya6/t4.mp3", "t5": "../zvuk/polya6/t5.mp3", "t6": "../zvuk/polya6/t6.mp3", "t7": "../zvuk/polya6/t7.mp3", "nm1": "../zvuk/polya6/nm1.mp3", "nm2": "../zvuk/polya6/nm2.mp3", "nm3": "../zvuk/polya6/nm3.mp3", "nm4": "../zvuk/polya6/nm4.mp3", "nm5": "../zvuk/polya6/nm5.mp3", "nm6": "../zvuk/polya6/nm6.mp3", "nm7": "../zvuk/polya6/nm7.mp3", "nm8": "../zvuk/polya6/nm8.mp3", "v_stern": "../zvuk/polya6/v_stern.mp3", "v_geschw": "../zvuk/polya6/v_geschw.mp3", "v_heimat": "../zvuk/polya6/v_heimat.mp3", "v_zurzeit": "../zvuk/polya6/v_zurzeit.mp3", "v_famstand": "../zvuk/polya6/v_famstand.mp3", "v_ledig": "../zvuk/polya6/v_ledig.mp3", "v_verh": "../zvuk/polya6/v_verh.mp3", "v_gesch": "../zvuk/polya6/v_gesch.mp3", "v_arblos": "../zvuk/polya6/v_arblos.mp3", "v_selbst": "../zvuk/polya6/v_selbst.mp3", "v_mutter": "../zvuk/polya6/v_mutter.mp3", "v_fremd": "../zvuk/polya6/v_fremd.mp3", "v_kranken": "../zvuk/polya6/v_kranken.mp3", "v_verk": "../zvuk/polya6/v_verk.mp3", "v_leider": "../zvuk/polya6/v_leider.mp3", "v_zurueck": "../zvuk/polya6/v_zurueck.mp3", "v_morgen": "../zvuk/polya6/v_morgen.mp3", "b1": "../zvuk/polya6/b1.mp3", "b2": "../zvuk/polya6/b2.mp3", "b3": "../zvuk/polya6/b3.mp3", "b4": "../zvuk/polya6/b4.mp3", "b5": "../zvuk/polya6/b5.mp3", "b6": "../zvuk/polya6/b6.mp3", "b7": "../zvuk/polya6/b7.mp3", "b8": "../zvuk/polya6/b8.mp3", "b9": "../zvuk/polya6/b9.mp3", "hw1": "../zvuk/polya6/hw1.mp3", "hw2": "../zvuk/polya6/hw2.mp3", "hw3": "../zvuk/polya6/hw3.mp3", "hw4": "../zvuk/polya6/hw4.mp3", "hw5": "../zvuk/polya6/hw5.mp3", "k_verw": "../zvuk/polya6/k_verw.mp3", "k_umg": "../zvuk/polya6/k_umg.mp3", "k_feier": "../zvuk/polya6/k_feier.mp3", "k_ins": "../zvuk/polya6/k_ins.mp3", "k_einz": "../zvuk/polya6/k_einz.mp3", "k_liebste": "../zvuk/polya6/k_liebste.mp3", "k_unter": "../zvuk/polya6/k_unter.mp3", "k_kuemm": "../zvuk/polya6/k_kuemm.mp3", "k_nichte": "../zvuk/polya6/k_nichte.mp3", "k_neffe": "../zvuk/polya6/k_neffe.mp3", "k_mittl": "../zvuk/polya6/k_mittl.mp3", "k_leben": "../zvuk/polya6/k_leben.mp3", "k_ehe": "../zvuk/polya6/k_ehe.mp3", "k_enkel": "../zvuk/polya6/k_enkel.mp3", "k_gest": "../zvuk/polya6/k_gest.mp3", "tx1": "../zvuk/polya6/tx1.mp3", "tx2": "../zvuk/polya6/tx2.mp3", "tx3": "../zvuk/polya6/tx3.mp3", "tx4": "../zvuk/polya6/tx4.mp3", "tx5": "../zvuk/polya6/tx5.mp3", "tx6": "../zvuk/polya6/tx6.mp3", "tx7": "../zvuk/polya6/tx7.mp3", "tx8": "../zvuk/polya6/tx8.mp3", "tx9": "../zvuk/polya6/tx9.mp3", "tx10": "../zvuk/polya6/tx10.mp3", "tx11": "../zvuk/polya6/tx11.mp3", "tx12": "../zvuk/polya6/tx12.mp3", "qz1": "../zvuk/polya6/qz1.mp3", "qz2": "../zvuk/polya6/qz2.mp3", "qz3": "../zvuk/polya6/qz3.mp3", "qz4": "../zvuk/polya6/qz4.mp3", "qz5": "../zvuk/polya6/qz5.mp3", "fr1": "../zvuk/polya6/fr1.mp3", "fr2": "../zvuk/polya6/fr2.mp3", "fr3": "../zvuk/polya6/fr3.mp3", "fr4": "../zvuk/polya6/fr4.mp3", "fr5": "../zvuk/polya6/fr5.mp3", "fr6": "../zvuk/polya6/fr6.mp3", "fr7": "../zvuk/polya6/fr7.mp3", "mo1": "../zvuk/polya6/mo1.mp3", "mo2": "../zvuk/polya6/mo2.mp3", "mo3": "../zvuk/polya6/mo3.mp3", "mo4": "../zvuk/polya6/mo4.mp3", "mo5": "../zvuk/polya6/mo5.mp3", "mo6": "../zvuk/polya6/mo6.mp3", "mo7": "../zvuk/polya6/mo7.mp3", "mo8": "../zvuk/polya6/mo8.mp3", "mo9": "../zvuk/polya6/mo9.mp3", "mo10": "../zvuk/polya6/mo10.mp3", "mo11": "../zvuk/polya6/mo11.mp3", "mo12": "../zvuk/polya6/mo12.mp3", "mo13": "../zvuk/polya6/mo13.mp3", "mo14": "../zvuk/polya6/mo14.mp3", "mo15": "../zvuk/polya6/mo15.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1247,10 +1275,48 @@ phrases('beispiel',[
   ["b5","<b>Im Hintergrund</b> hängt ein Foto.","им хинтэргрунт хэнгт айн фото","На заднем плане висит фотография."],
   ["b6","Die Frau und der Mann <b>sehen</b> das Foto <b>an</b>.","ди фрау унт дэа ман зээн дас фото ан","Женщина и мужчина смотрят на фотографию."],
 ]);
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
 
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
 // ===== ДОМАШКА =====
 function paras(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,ru])=>`
-  <div class="para"><div class="ptxt"><div class="pde">${de}</div><div class="pru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+  <div class="para"><div class="ptxt"><div class="pde">${de}</div>${кнопкаПеревода(ru)}</div>${playBtn(id)}</div>`).join(''); }
 
 paras('hwText',[
   ["hw1","Ich habe sehr viele <b>Verwandte</b>, die ich auch fast alle kenne. Meine Familie ist groß, weil meine Eltern beide viele Geschwister haben. Meine Mutter hat vier Schwestern. Sie ist die jüngste. Die Kinder meiner Tanten sind meine Cousinen und Cousins. Sie leben nicht alle in meiner <b>Umgebung</b>, manche wohnen sehr weit entfernt. Aber zu <b>Familienfeiern</b> kommen meistens alle angereist.",
@@ -1283,6 +1349,15 @@ words('hwWords',[
   ["k_gest","<b>gestorben</b>","гэшторбэн","умерший (от sterben)"],
 ]);
 
+// 11.09: вопросы с переводом и ответами, мои примеры, ответы к модальным
+function переключить(b){ var t = b.nextElementSibling; t.hidden = !t.hidden; b.classList.toggle('on'); }
+function кнопкаОтветов(кнопкаId, блокId, данные, текст){
+  const к = document.getElementById(кнопкаId), б = document.getElementById(блокId);
+  к.dataset.showText = текст || 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){ showAnswers(this, б, данные); };
+}
 const QUIZ = [
   ["Wieviele Geschwister hat die Mutter?",
    ["sie hat vier Brüder","sie hat vier Geschwister","sie hat Schwestern","sie hat zwei Brüder und zwei Schwestern"]],
@@ -1295,14 +1370,23 @@ const QUIZ = [
   ["Wer kümmert sich sehr um die Familie?",
    ["Die Eltern der Erzählerin","Die Großeltern","Die Cousinen und Cousins","Die Onkel und Tanten der Erzählerin"]],
 ];
+const QZ = [["Сколько братьев и сестёр у мамы?", 1, "Sie hat vier Geschwister.", "В тексте: «Meine Mutter hat vier Schwestern». Четыре сестры — это четыре Geschwister (Geschwister — братья и сёстры вместе). ⚠️ Честно: c) «sie hat Schwestern» тоже правда, но не отвечает на «сколько». a и d — неверно: братьев у мамы нет."], ["Кто уже умер?", 3, "Der Großvater und der älteste Bruder des Vaters.", "Абзац про отца: «Mein ältester Onkel ist aber schon gestorben» — это старший брат отца. И «mein Großvater ist vor zwei Jahren gestorben». Бабушка жива — ей 90, поэтому a и c неверны."], ["Кто любимая кузина рассказчицы?", 0, "Die Tochter der ältesten Schwester ihrer Mutter.", "«die Tochter meiner ältesten Tante, der Schwester meiner Mutter». b — у мамы нет братьев. c — младшая сестра мамы… это сама мама («Sie ist die jüngste»)!"], ["Есть ли у рассказчицы братья и сёстры?", 1, "Ja, einen Bruder und eine Schwester.", "«Ich habe eine Schwester und einen Bruder. Ich bin die mittlere» — она средняя."], ["Кто очень заботится о семье?", 3, "Die Onkel und Tanten der Erzählerin.", "«Meine Onkel und Tanten kümmern sich sehr um die anderen in der Familie.» sich kümmern um — заботиться о."]];
 document.getElementById('hwQuiz').innerHTML = QUIZ.map(([q,opts],i)=>`
   <div style="margin-bottom:14px">
-    <div style="font-weight:600; font-size:14px; margin-bottom:6px">${i+1}) ${q}</div>
+    <div style="font-weight:600; font-size:14px; margin-bottom:6px">${i+1}) ${q} ${кнопкаПеревода(QZ[i][0])}</div>
     ${opts.map((o,j)=>`<label class="opt"><input type="checkbox" data-quiz="q${i}_${j}"><span>${'abcd'[j]}) ${o}</span></label>`).join('')}
   </div>`).join('');
+кнопкаОтветов('кОтветыQuiz', 'otvetyQuiz', QZ.map(([ru,пр,de,почему],i) =>
+  ['', 'abcd'[пр] + ') ' + de + ' ' + playBtn('qz' + (i+1)), null, ru, почему]));
 
-document.getElementById('hwSieben').innerHTML = Array.from({length:7},(_,i)=>`
-  <div class="hwrow"><span class="n">${i+1}.</span><span class="q"><input class="fld" data-save="f_frage${i}" placeholder="вопрос по-немецки"></span></div>`).join('');
+const TX = [["Ich habe eine große Familie aus sechs Personen: ich, meine Mutter, mein Vater, meine ältere Schwester, meine Oma und mein Opa.", "У меня большая семья из шести человек: я, мама, папа, старшая сестра, бабушка и дедушка.", "«Семья из шести человек» — eine Familie <i>aus</i> sechs Personen. Старшая из двух сестёр — die <i>ältere</i> Schwester."], ["Wir wohnen alle zusammen mit dem Hund Bim und der Katze Murka in einem großen Haus im Dorf.", "Мы живём все вместе с собакой Бимом и кошкой Муркой в большом доме в деревне.", "mit + Dativ: mit <i>dem</i> Hund, mit <i>der</i> Katze. Где? → in <i>einem</i> großen Haus, <i>im</i> Dorf."], ["Mein Vater steht als Erster auf, weil er früh zur Arbeit muss.", "Мой папа встаёт раньше всех, потому что ему рано на работу.", "aufstehen: steht … <b>auf</b>. «Раньше всех» — als Erster. После <i>weil</i> глагол уходит в конец: weil er früh zur Arbeit <b>muss</b>."], ["Er arbeitet als Arzt.", "Он работает доктором.", "Работать кем — <i>arbeiten als</i> + профессия без артикля. 🩺"], ["Normalerweise macht uns die Oma das Frühstück.", "Обычно бабушка готовит нам завтрак.", "Normalerweise стоит первым → глагол вторым, а подлежащее (die Oma) после него."], ["Ich liebe Haferbrei und meine Schwester Anja liebt Pfannkuchen.", "Я обожаю овсяную кашу, а моя сестра Аня — блины.", "«Обожаю» — lieben. Во второй половине глагол повторяем: meine Schwester liebt."], ["Nach dem Frühstück machen wir uns fertig und gehen in die Schule.", "После завтрака мы собираемся и идём в школу.", "nach + Dativ: nach <i>dem</i> Frühstück. Собираться — sich fertig machen: wir machen <i>uns</i> fertig."], ["Meine Schwester geht in die fünfte Klasse und ich in die zweite.", "Моя сестра учится в пятом классе, а я — во втором.", "Учиться в каком классе — <i>in die … Klasse gehen</i>. Во второй половине глагол можно не повторять."], ["Wir lernen gern und spielen gern mit Freunden.", "Мы любим учиться и играть с друзьями.", "«Любить что-то делать» — глагол + <i>gern</i>."], ["Am liebsten mag ich Geografie.", "Больше всего я люблю географию.", "«Больше всего» — am liebsten. Оно первым → mag вторым, ich после."], ["Wenn wir von der Schule nach Hause kommen, sehen wir fern, dann essen wir zu Abend und machen die Hausaufgaben.", "Когда мы приходим домой из школы, мы смотрим телевизор, а потом ужинаем и делаем уроки.", "После <i>wenn</i> глагол в конце (kommen), а сразу за запятой — главный глагол: <b>sehen</b> wir fern. Ужинать — zu Abend essen, делать уроки — Hausaufgaben machen."], ["Manchmal helfen wir der Oma und der Mama im Garten, wo sie Gemüse und Obst anbauen.", "Иногда мы помогаем бабушке и маме в огороде, где они выращивают овощи и фрукты.", "helfen + Dativ: <i>der</i> Oma, <i>der</i> Mama. После <i>wo</i> глагол в конец: anbauen. Огород в немецком — просто der Garten."]];
+кнопкаОтветов('кВариантПеревода', 'variantPerevoda', TX.map(([de,ru,почему],i) =>
+  ['', de + ' ' + playBtn('tx' + (i+1)), null, ru, почему]), 'Мой вариант перевода — по предложениям');
+
+const FR = [["Wie viele Schwestern hat die Mutter?", "Sie hat vier Schwestern.", "Сколько сестёр у мамы? — Четыре.", "Wie viele + множественное число, глагол сразу вторым: <i>hat</i>."], ["Wer ist schon gestorben?", "Der älteste Onkel und der Großvater.", "Кто уже умер? — Старший дядя и дедушка.", "Wer? — кто. Глагол сразу за вопросительным словом."], ["Wo wohnen die Cousins und Cousinen?", "Nicht alle in der Umgebung, manche wohnen sehr weit entfernt.", "Где живут кузены и кузины? — Не все рядом, некоторые очень далеко.", "Wo? — где. Глагол вторым: wohnen."], ["Wie alt ist die Großmutter?", "Sie ist schon neunzig Jahre alt.", "Сколько лет бабушке? — Уже 90.", "Возраст — через sein: Wie alt <i>ist</i> …?"], ["Welche Cousine mag die Erzählerin am liebsten?", "Die Tochter ihrer ältesten Tante.", "Какую кузину рассказчица любит больше всех? — Дочь своей старшей тёти.", "Welche — «какая» (die Cousine → welche)."], ["Was machen die Onkel und Tanten?", "Sie kümmern sich um die Familie.", "Что делают дяди и тёти? — Заботятся о семье.", "Was? — что. sich kümmern um — заботиться о."], ["Wie verstehen sich die Kinder?", "Sie verstehen sich sehr gut.", "Как ладят между собой дети? — Очень хорошо.", "Wie? — как. sich verstehen — ладить друг с другом."]];
+document.getElementById('hwSieben').innerHTML = FR.map(([q,a,ru,почему],i)=>`
+  <div class="hwrow"><span class="n">${i+1}.</span><span class="q"><input class="fld" data-save="f_frage${i}" placeholder="вопрос по-немецки"><br>
+  <button type="button" class="hw-tr-btn" style="margin:6px 0 0" onclick="переключить(this)">мой пример</button><span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">${q} — ${a}</span> ${playBtn('fr' + (i+1))}<span class="hw-why" style="display:block">${ru}<br>${почему}</span></span></span></div>`).join('');
 
 const MODAL = [
   ["Am Wochenende","ich ins Kino gehen."],
@@ -1321,9 +1405,12 @@ const MODAL = [
   ["Du","gut Klavier spielen."],
   ["","Sie einen Kaffee trinken?"],
 ];
+const MO = [["möchte", "Am Wochenende möchte ich ins Kino gehen.", "В выходные я хочу сходить в кино.", "Желание → <i>möchte</i> (или will). Am Wochenende стоит первым → модальный вторым, ich после."], ["kann", "Ich kann am Montag leider nicht mitkommen, denn ich habe keine Zeit.", "В понедельник я, к сожалению, не могу пойти с вами — у меня нет времени.", "Не могу → kann. mitkommen в конце целиком."], ["muss", "Sie muss heute bis 17 Uhr arbeiten.", "Ей сегодня нужно работать до 17 часов.", "Обязанность → müssen. Если Sie — «она», то <i>muss</i>; если «Вы» или «они» — <i>müssen</i>. Оба ответа верны."], ["will", "Er will Deutsch lernen, denn er mag Sprachen.", "Он хочет учить немецкий — он любит языки.", "Хочет → <i>will</i> (или möchte). er will — без -t."], ["muss", "Mein Auto ist kaputt, deshalb muss ich mit dem Bus fahren.", "Моя машина сломалась, поэтому мне приходится ездить на автобусе.", "Приходится → muss. После <i>deshalb</i> обратный порядок: deshalb <b>muss ich</b>."], ["Können", "Können Sie mir bitte helfen?", "Не могли бы Вы мне помочь?", "Вежливая просьба → <i>Können Sie…?</i>"], ["möchtest", "Was möchtest du am Samstagabend machen?", "Что ты хочешь делать в субботу вечером?", "du möchtest (или du willst)."], ["kann", "Im Park kann man spazieren gehen.", "В парке можно гулять.", "Возможность → kann; man спрягается как er."], ["möchte", "Ich möchte ein Glas Wasser, bitte.", "Мне, пожалуйста, стакан воды.", "Вежливо заказать → möchte. Второй глагол не нужен."], ["wollen", "Wir wollen im Sommer nach Deutschland reisen.", "Летом мы хотим поехать в Германию.", "План → wollen (или möchten)."], ["kann", "Ich kann nicht gut schwimmen.", "Я плохо плаваю.", "Умение → kann."], ["muss", "Ich habe keine Zeit, denn ich muss meine Hausaufgaben machen.", "У меня нет времени — мне нужно делать домашку.", "<i>denn</i> порядок не меняет: denn ich muss."], ["muss", "Es ist spät. Ich muss jetzt leider nach Hause gehen.", "Уже поздно. Мне, к сожалению, пора домой.", "Надо → muss."], ["kannst", "Du kannst gut Klavier spielen.", "Ты хорошо играешь на пианино.", "Умение → kannst."], ["Möchten", "Möchten Sie einen Kaffee trinken?", "Хотите кофе?", "Вежливо предложить → <i>Möchten Sie…?</i>"]];
 document.getElementById('hwModal').innerHTML = MODAL.map(([a,b],i)=>`
   <div class="mv"><span class="num">${String(i+1).padStart(2,'0')}.</span>
-    <span>${a}</span><input class="fld" data-save="f_modal${i}" placeholder="…"><span>${b}</span></div>`).join('');
+    <span>${a}</span><input class="fld" data-save="f_modal${i}" placeholder="…"><span>${b}</span> ${кнопкаПеревода(MO[i][2])}</div>`).join('');
+кнопкаОтветов('кОтветыModal', 'otvetyModal', MO.map(([ф,de,ru,почему],i) =>
+  ['', '<span style="color:var(--accent)">' + ф + '</span> — ' + de + ' ' + playBtn('mo' + (i+1)), null, ru, почему]));
 
 // ===== сохранение всего, что напечатано =====
 (function(){

@@ -123,7 +123,31 @@
   .mat-link:hover { border-color:var(--pk); }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
-
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  #hw .grammar-box { background:var(--surface-2); border-radius:10px; padding:10px 14px; }
+</style>
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
     padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
@@ -140,9 +164,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -319,7 +340,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <span class="chip-meta">⏱️ <b>51 минута</b>, Zoom</span>
     <span class="chip-meta">➡️ Следующий: <b>пятница, 8:00</b></span>
   </div>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <div class="hint">🔊 &nbsp;= нажми и слушай — звук встроен в страницу, интернет не нужен</div>
 
   <div class="toc">
     <b>Что прошли на уроке</b>
@@ -451,64 +472,24 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <div class="hw-box"><div id="hwList"></div></div>
 
     <p class="desc" style="margin-top:22px"><b>Задание 1.</b> Вставь <b>sein</b> или <b>haben</b> в правильной форме:</p>
-    <div class="ex-box">
-      <span class="n">1.</span> Ich <span class="blank"></span> Kopfschmerzen.<br>
-      <span class="n">2.</span> Du <span class="blank"></span> ein neues Auto.<br>
-      <span class="n">3.</span> Er <span class="blank"></span> groß.<br>
-      <span class="n">4.</span> Wir <span class="blank"></span> in Hannover.<br>
-      <span class="n">5.</span> Wo <span class="blank"></span> die Eltern?<br>
-      <span class="n">6.</span> Ihr <span class="blank"></span> Hunger.<br>
-      <span class="n">7.</span> Das Auto <span class="blank"></span> kaputt.<br>
-      <span class="n">8.</span> <span class="blank"></span> Sie Zeit?<br>
-      <span class="n">9.</span> <span class="blank"></span> Sie krank?<br>
-      <span class="n">10.</span> Hans <span class="blank"></span> zu Hause.<br>
-      <span class="n">11.</span> Das <span class="blank"></span> gut.<br>
-      <span class="n">12.</span> Wir <span class="blank"></span> eine schöne Wohnung.<br>
-      <span class="n">13.</span> Du <span class="blank"></span> schön.<br>
-      <span class="n">14.</span> Wo <span class="blank"></span> Kassel?<br>
-      <span class="n">15.</span> Ich <span class="blank"></span> keine Ahnung.
-    </div>
+    <div id="hwSH"></div>
+    <button id="кОтветыSH" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetySH" hidden style="margin-top:10px"></div>
     <div class="src-note">Источник: Arbeitsblätter Grundstufe DaF, Blatt 21 · автор Holger Schwenke · © SCHUBERT-Verlag Leipzig (schubert-verlag.de). Материал разрешён издателем к использованию в учебных целях при указании источника.</div>
     <div class="grammar-box" style="margin-top:10px">
       <b>Подсказка:</b> <b class="hl">haben</b> — когда чем-то <i>обладаешь</i> (Kopfschmerzen, Auto, Hunger, Zeit, Wohnung, keine Ahnung). <b class="hl">sein</b> — когда описываешь <i>какой</i> или <i>где</i> (groß, schön, kaputt, krank, in Hannover, zu Hause). Формы — в разделах 1 и 2 выше.
     </div>
 
     <p class="desc" style="margin-top:22px"><b>Задание 2.</b> Вставь притяжательное местоимение (в скобках — от кого). Помни про <b>-e</b> для женского рода и множественного числа:</p>
-    <div class="ex-box">
-      <span class="n">1.</span> <span class="blank"></span> Freunde sind langweilig. <span class="hint-ru">(ich) — meine</span><br>
-      <span class="n">2.</span> <span class="blank"></span> Kleidung ist zu kurz. <span class="hint-ru">(du)</span><br>
-      <span class="n">3.</span> <span class="blank"></span> Kuchen ist kalt. <span class="hint-ru">(Sie)</span><br>
-      <span class="n">4.</span> <span class="blank"></span> Zeitungen sind neu. <span class="hint-ru">(ihr)</span><br>
-      <span class="n">5.</span> <span class="blank"></span> Schwester ist 34 Jahre alt. <span class="hint-ru">(er)</span><br>
-      <span class="n">6.</span> <span class="blank"></span> Bruder ist nicht reich. <span class="hint-ru">(sie — она)</span><br>
-      <span class="n">7.</span> <span class="blank"></span> Lehrerin hat heute Geburtstag. <span class="hint-ru">(wir)</span><br>
-      <span class="n">8.</span> <span class="blank"></span> Häuser sind wunderschön. <span class="hint-ru">(sie — они)</span><br>
-      <span class="n">9.</span> <span class="blank"></span> Enkel geht im Herbst in die erste Klasse. <span class="hint-ru">(wir)</span><br>
-      <span class="n">10.</span> Wann kommt <span class="blank"></span> Neffe nach Wien? <span class="hint-ru">(sie — они)</span><br>
-      <span class="n">11.</span> <span class="blank"></span> Eltern erlauben das nie. <span class="hint-ru">(ich)</span><br>
-      <span class="n">12.</span> <span class="blank"></span> Wecker klingelt um 6 Uhr. <span class="hint-ru">(du)</span><br>
-      <span class="n">13.</span> <span class="blank"></span> Kinder sind schon erwachsen. <span class="hint-ru">(er)</span><br>
-      <span class="n">14.</span> <span class="blank"></span> Nichte kommt aus Amerika. <span class="hint-ru">(sie — она)</span><br>
-      <span class="n">15.</span> <span class="blank"></span> Freund schwimmt gern im Sommer. <span class="hint-ru">(ich)</span><br>
-      <span class="n">16.</span> <span class="blank"></span> Vater hat Geburtstag im Frühling. <span class="hint-ru">(du)</span>
-    </div>
+    <div id="hwPO"></div>
+    <button id="кОтветыPO" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetyPO" hidden style="margin-top:10px"></div>
     <div class="grammar-box" style="margin-top:10px">
       <b>Смотри на существительное:</b> женский род (Kleidung, Schwester, Lehrerin, Nichte) и множественное число (Freunde, Zeitungen, Häuser, Eltern, Kinder) → добавляем <b class="hl">-e</b>. Мужской и средний (Kuchen, Bruder, Enkel, Neffe, Wecker, Freund, Vater) → без окончания.
     </div>
 
-    <p class="desc" style="margin-top:22px"><b>Задание 3 (Übung 8).</b> Ответь на вопросы. Плюс = ответ «да», минус = ответ «нет». Ответы придумываешь сама:</p>
-    <div class="ex-box">
-      <span class="n">a)</span> Studiert Maria Mathematik? &nbsp;<b>+</b> Ja, <span class="blank2"></span><br>
-      <span class="n">b)</span> Kommt Carlos aus London? &nbsp;<b>−</b> Nein, <span class="blank2"></span><br>
-      <span class="n">c)</span> Reist du nach England? &nbsp;<b>+</b> <span class="blank2"></span><br>
-      <span class="n">d)</span> Lernst du nicht Deutsch? &nbsp;<b>+</b> <span class="blank2"></span><br>
-      <span class="n">e)</span> Kommst du nicht aus Tokio? &nbsp;<b>−</b> <span class="blank2"></span><br>
-      <span class="n">f)</span> Gehst du nach Hause? &nbsp;<b>−</b> <span class="blank2"></span><br>
-      <span class="n">g)</span> Trinkst du Tee? &nbsp;<b>+</b> <span class="blank2"></span><br>
-      <span class="n">h)</span> Arbeitest du nicht in München? &nbsp;<b>−</b> <span class="blank2"></span><br>
-      <span class="n">i)</span> Gehst du ins Kino? &nbsp;<b>−</b> <span class="blank2"></span><br>
-      <span class="n">j)</span> Studieren Robert und Eva Jura? &nbsp;<b>+</b> <span class="blank2"></span>
-    </div>
+    <p class="desc" style="margin-top:22px"><b>Задание 3 (Übung 8).</b> Ответь на вопросы. Плюс = ответ «да», минус = ответ «нет». Ответы придумываешь сама: У каждого — «мой вариант» для сверки.</p>
+    <div id="hwUE"></div>
     <div class="warn-box" style="margin-top:10px">
       <span class="big">⚠️ Ловушка в пунктах d), e), h)</span>
       Там вопрос <b>с отрицанием</b> («Разве ты не учишь немецкий?»). Если хочешь возразить и сказать «нет, учу» — по-немецки это <b class="hl">Doch!</b>, а не <i>Ja</i>. Именно поэтому у этих пунктов стоит плюс или минус — смотри на знак.
@@ -1084,7 +1065,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"ha1": "../zvuk/polya5/ha1.mp3", "ha2": "../zvuk/polya5/ha2.mp3", "ha3": "../zvuk/polya5/ha3.mp3", "ha4": "../zvuk/polya5/ha4.mp3", "ha5": "../zvuk/polya5/ha5.mp3", "ha6": "../zvuk/polya5/ha6.mp3", "se1": "../zvuk/polya5/se1.mp3", "se2": "../zvuk/polya5/se2.mp3", "se3": "../zvuk/polya5/se3.mp3", "se4": "../zvuk/polya5/se4.mp3", "se5": "../zvuk/polya5/se5.mp3", "se6": "../zvuk/polya5/se6.mp3", "we1": "../zvuk/polya5/we1.mp3", "we2": "../zvuk/polya5/we2.mp3", "we3": "../zvuk/polya5/we3.mp3", "we4": "../zvuk/polya5/we4.mp3", "we5": "../zvuk/polya5/we5.mp3", "we6": "../zvuk/polya5/we6.mp3", "tu_all": "../zvuk/polya5/tu_all.mp3", "wi_all": "../zvuk/polya5/wi_all.mp3", "tu_inf": "../zvuk/polya5/tu_inf.mp3", "wi_inf": "../zvuk/polya5/wi_inf.mp3", "p_spielen": "../zvuk/polya5/p_spielen.mp3", "p_machen": "../zvuk/polya5/p_machen.mp3", "p_lernen": "../zvuk/polya5/p_lernen.mp3", "p_trainieren": "../zvuk/polya5/p_trainieren.mp3", "p_sp_conj": "../zvuk/polya5/p_sp_conj.mp3", "sp1": "../zvuk/polya5/sp1.mp3", "sp2": "../zvuk/polya5/sp2.mp3", "sp3": "../zvuk/polya5/sp3.mp3", "sp4": "../zvuk/polya5/sp4.mp3", "sp5": "../zvuk/polya5/sp5.mp3", "f1": "../zvuk/polya5/f1.mp3", "f2": "../zvuk/polya5/f2.mp3", "f3": "../zvuk/polya5/f3.mp3", "f4": "../zvuk/polya5/f4.mp3", "f5": "../zvuk/polya5/f5.mp3", "f6": "../zvuk/polya5/f6.mp3", "f7": "../zvuk/polya5/f7.mp3", "f_stand": "../zvuk/polya5/f_stand.mp3", "v_vater": "../zvuk/polya5/v_vater.mp3", "v_mutter": "../zvuk/polya5/v_mutter.mp3", "v_eltern": "../zvuk/polya5/v_eltern.mp3", "v_sohn": "../zvuk/polya5/v_sohn.mp3", "v_tochter": "../zvuk/polya5/v_tochter.mp3", "v_bruder": "../zvuk/polya5/v_bruder.mp3", "v_schwester": "../zvuk/polya5/v_schwester.mp3", "v_geschwister": "../zvuk/polya5/v_geschwister.mp3", "v_opa": "../zvuk/polya5/v_opa.mp3", "v_oma": "../zvuk/polya5/v_oma.mp3", "v_grosseltern": "../zvuk/polya5/v_grosseltern.mp3", "v_enkel": "../zvuk/polya5/v_enkel.mp3", "v_enkelin": "../zvuk/polya5/v_enkelin.mp3", "v_neffe": "../zvuk/polya5/v_neffe.mp3", "v_nichte": "../zvuk/polya5/v_nichte.mp3", "v_tante": "../zvuk/polya5/v_tante.mp3", "v_onkel": "../zvuk/polya5/v_onkel.mp3", "v_maedchen": "../zvuk/polya5/v_maedchen.mp3", "w_wer": "../zvuk/polya5/w_wer.mp3", "w_wen": "../zvuk/polya5/w_wen.mp3", "w_was": "../zvuk/polya5/w_was.mp3", "w_wie": "../zvuk/polya5/w_wie.mp3", "w_wo": "../zvuk/polya5/w_wo.mp3", "w_woher": "../zvuk/polya5/w_woher.mp3", "w_wohin": "../zvuk/polya5/w_wohin.mp3", "w_wann": "../zvuk/polya5/w_wann.mp3", "w_welche": "../zvuk/polya5/w_welche.mp3", "w_wieviel": "../zvuk/polya5/w_wieviel.mp3", "w_wieviele": "../zvuk/polya5/w_wieviele.mp3", "w_wiealt": "../zvuk/polya5/w_wiealt.mp3", "q1": "../zvuk/polya5/q1.mp3", "q2": "../zvuk/polya5/q2.mp3", "q3": "../zvuk/polya5/q3.mp3", "q4": "../zvuk/polya5/q4.mp3", "q5": "../zvuk/polya5/q5.mp3", "q6": "../zvuk/polya5/q6.mp3", "q7": "../zvuk/polya5/q7.mp3", "q8": "../zvuk/polya5/q8.mp3", "q9": "../zvuk/polya5/q9.mp3", "q10": "../zvuk/polya5/q10.mp3", "q11": "../zvuk/polya5/q11.mp3", "q12": "../zvuk/polya5/q12.mp3", "d_wie": "../zvuk/polya5/d_wie.mp3", "d_welche": "../zvuk/polya5/d_welche.mp3", "d_wieviel": "../zvuk/polya5/d_wieviel.mp3", "d_wieviele": "../zvuk/polya5/d_wieviele.mp3", "d_wer": "../zvuk/polya5/d_wer.mp3", "d_wen": "../zvuk/polya5/d_wen.mp3", "d_nach": "../zvuk/polya5/d_nach.mp3", "d_in": "../zvuk/polya5/d_in.mp3", "a_nett": "../zvuk/polya5/a_nett.mp3", "a_lustig": "../zvuk/polya5/a_lustig.mp3", "a_intelligent": "../zvuk/polya5/a_intelligent.mp3", "a_hilfsbereit": "../zvuk/polya5/a_hilfsbereit.mp3", "a_gesund": "../zvuk/polya5/a_gesund.mp3", "a_krank": "../zvuk/polya5/a_krank.mp3", "a_ex": "../zvuk/polya5/a_ex.mp3", "u_satz": "../zvuk/polya5/u_satz.mp3", "u_bild": "../zvuk/polya5/u_bild.mp3", "u_frage": "../zvuk/polya5/u_frage.mp3", "u_antwort": "../zvuk/polya5/u_antwort.mp3", "u_fragen": "../zvuk/polya5/u_fragen.mp3", "u_antworten": "../zvuk/polya5/u_antworten.mp3", "u_schenken": "../zvuk/polya5/u_schenken.mp3", "u_besuchen": "../zvuk/polya5/u_besuchen.mp3", "u_fliegen": "../zvuk/polya5/u_fliegen.mp3", "u_ziemlich": "../zvuk/polya5/u_ziemlich.mp3", "u_ammeisten": "../zvuk/polya5/u_ammeisten.mp3", "u_keine": "../zvuk/polya5/u_keine.mp3", "dl1": "../zvuk/polya5/dl1.mp3", "dl2": "../zvuk/polya5/dl2.mp3", "dl3": "../zvuk/polya5/dl3.mp3", "dl4": "../zvuk/polya5/dl4.mp3", "dl5": "../zvuk/polya5/dl5.mp3", "dl6": "../zvuk/polya5/dl6.mp3", "dl7": "../zvuk/polya5/dl7.mp3", "dl8": "../zvuk/polya5/dl8.mp3", "dl9": "../zvuk/polya5/dl9.mp3", "dl10": "../zvuk/polya5/dl10.mp3"};
+const AUDIO = {"ha1": "../zvuk/polya5/ha1.mp3", "ha2": "../zvuk/polya5/ha2.mp3", "ha3": "../zvuk/polya5/ha3.mp3", "ha4": "../zvuk/polya5/ha4.mp3", "ha5": "../zvuk/polya5/ha5.mp3", "ha6": "../zvuk/polya5/ha6.mp3", "se1": "../zvuk/polya5/se1.mp3", "se2": "../zvuk/polya5/se2.mp3", "se3": "../zvuk/polya5/se3.mp3", "se4": "../zvuk/polya5/se4.mp3", "se5": "../zvuk/polya5/se5.mp3", "se6": "../zvuk/polya5/se6.mp3", "we1": "../zvuk/polya5/we1.mp3", "we2": "../zvuk/polya5/we2.mp3", "we3": "../zvuk/polya5/we3.mp3", "we4": "../zvuk/polya5/we4.mp3", "we5": "../zvuk/polya5/we5.mp3", "we6": "../zvuk/polya5/we6.mp3", "tu_all": "../zvuk/polya5/tu_all.mp3", "wi_all": "../zvuk/polya5/wi_all.mp3", "tu_inf": "../zvuk/polya5/tu_inf.mp3", "wi_inf": "../zvuk/polya5/wi_inf.mp3", "p_spielen": "../zvuk/polya5/p_spielen.mp3", "p_machen": "../zvuk/polya5/p_machen.mp3", "p_lernen": "../zvuk/polya5/p_lernen.mp3", "p_trainieren": "../zvuk/polya5/p_trainieren.mp3", "p_sp_conj": "../zvuk/polya5/p_sp_conj.mp3", "sp1": "../zvuk/polya5/sp1.mp3", "sp2": "../zvuk/polya5/sp2.mp3", "sp3": "../zvuk/polya5/sp3.mp3", "sp4": "../zvuk/polya5/sp4.mp3", "sp5": "../zvuk/polya5/sp5.mp3", "f1": "../zvuk/polya5/f1.mp3", "f2": "../zvuk/polya5/f2.mp3", "f3": "../zvuk/polya5/f3.mp3", "f4": "../zvuk/polya5/f4.mp3", "f5": "../zvuk/polya5/f5.mp3", "f6": "../zvuk/polya5/f6.mp3", "f7": "../zvuk/polya5/f7.mp3", "f_stand": "../zvuk/polya5/f_stand.mp3", "v_vater": "../zvuk/polya5/v_vater.mp3", "v_mutter": "../zvuk/polya5/v_mutter.mp3", "v_eltern": "../zvuk/polya5/v_eltern.mp3", "v_sohn": "../zvuk/polya5/v_sohn.mp3", "v_tochter": "../zvuk/polya5/v_tochter.mp3", "v_bruder": "../zvuk/polya5/v_bruder.mp3", "v_schwester": "../zvuk/polya5/v_schwester.mp3", "v_geschwister": "../zvuk/polya5/v_geschwister.mp3", "v_opa": "../zvuk/polya5/v_opa.mp3", "v_oma": "../zvuk/polya5/v_oma.mp3", "v_grosseltern": "../zvuk/polya5/v_grosseltern.mp3", "v_enkel": "../zvuk/polya5/v_enkel.mp3", "v_enkelin": "../zvuk/polya5/v_enkelin.mp3", "v_neffe": "../zvuk/polya5/v_neffe.mp3", "v_nichte": "../zvuk/polya5/v_nichte.mp3", "v_tante": "../zvuk/polya5/v_tante.mp3", "v_onkel": "../zvuk/polya5/v_onkel.mp3", "v_maedchen": "../zvuk/polya5/v_maedchen.mp3", "w_wer": "../zvuk/polya5/w_wer.mp3", "w_wen": "../zvuk/polya5/w_wen.mp3", "w_was": "../zvuk/polya5/w_was.mp3", "w_wie": "../zvuk/polya5/w_wie.mp3", "w_wo": "../zvuk/polya5/w_wo.mp3", "w_woher": "../zvuk/polya5/w_woher.mp3", "w_wohin": "../zvuk/polya5/w_wohin.mp3", "w_wann": "../zvuk/polya5/w_wann.mp3", "w_welche": "../zvuk/polya5/w_welche.mp3", "w_wieviel": "../zvuk/polya5/w_wieviel.mp3", "w_wieviele": "../zvuk/polya5/w_wieviele.mp3", "w_wiealt": "../zvuk/polya5/w_wiealt.mp3", "q1": "../zvuk/polya5/q1.mp3", "q2": "../zvuk/polya5/q2.mp3", "q3": "../zvuk/polya5/q3.mp3", "q4": "../zvuk/polya5/q4.mp3", "q5": "../zvuk/polya5/q5.mp3", "q6": "../zvuk/polya5/q6.mp3", "q7": "../zvuk/polya5/q7.mp3", "q8": "../zvuk/polya5/q8.mp3", "q9": "../zvuk/polya5/q9.mp3", "q10": "../zvuk/polya5/q10.mp3", "q11": "../zvuk/polya5/q11.mp3", "q12": "../zvuk/polya5/q12.mp3", "d_wie": "../zvuk/polya5/d_wie.mp3", "d_welche": "../zvuk/polya5/d_welche.mp3", "d_wieviel": "../zvuk/polya5/d_wieviel.mp3", "d_wieviele": "../zvuk/polya5/d_wieviele.mp3", "d_wer": "../zvuk/polya5/d_wer.mp3", "d_wen": "../zvuk/polya5/d_wen.mp3", "d_nach": "../zvuk/polya5/d_nach.mp3", "d_in": "../zvuk/polya5/d_in.mp3", "a_nett": "../zvuk/polya5/a_nett.mp3", "a_lustig": "../zvuk/polya5/a_lustig.mp3", "a_intelligent": "../zvuk/polya5/a_intelligent.mp3", "a_hilfsbereit": "../zvuk/polya5/a_hilfsbereit.mp3", "a_gesund": "../zvuk/polya5/a_gesund.mp3", "a_krank": "../zvuk/polya5/a_krank.mp3", "a_ex": "../zvuk/polya5/a_ex.mp3", "u_satz": "../zvuk/polya5/u_satz.mp3", "u_bild": "../zvuk/polya5/u_bild.mp3", "u_frage": "../zvuk/polya5/u_frage.mp3", "u_antwort": "../zvuk/polya5/u_antwort.mp3", "u_fragen": "../zvuk/polya5/u_fragen.mp3", "u_antworten": "../zvuk/polya5/u_antworten.mp3", "u_schenken": "../zvuk/polya5/u_schenken.mp3", "u_besuchen": "../zvuk/polya5/u_besuchen.mp3", "u_fliegen": "../zvuk/polya5/u_fliegen.mp3", "u_ziemlich": "../zvuk/polya5/u_ziemlich.mp3", "u_ammeisten": "../zvuk/polya5/u_ammeisten.mp3", "u_keine": "../zvuk/polya5/u_keine.mp3", "dl1": "../zvuk/polya5/dl1.mp3", "dl2": "../zvuk/polya5/dl2.mp3", "dl3": "../zvuk/polya5/dl3.mp3", "dl4": "../zvuk/polya5/dl4.mp3", "dl5": "../zvuk/polya5/dl5.mp3", "dl6": "../zvuk/polya5/dl6.mp3", "dl7": "../zvuk/polya5/dl7.mp3", "dl8": "../zvuk/polya5/dl8.mp3", "dl9": "../zvuk/polya5/dl9.mp3", "dl10": "../zvuk/polya5/dl10.mp3", "sh1": "../zvuk/polya5/sh1.mp3", "sh2": "../zvuk/polya5/sh2.mp3", "sh3": "../zvuk/polya5/sh3.mp3", "sh4": "../zvuk/polya5/sh4.mp3", "sh5": "../zvuk/polya5/sh5.mp3", "sh6": "../zvuk/polya5/sh6.mp3", "sh7": "../zvuk/polya5/sh7.mp3", "sh8": "../zvuk/polya5/sh8.mp3", "sh9": "../zvuk/polya5/sh9.mp3", "sh10": "../zvuk/polya5/sh10.mp3", "sh11": "../zvuk/polya5/sh11.mp3", "sh12": "../zvuk/polya5/sh12.mp3", "sh13": "../zvuk/polya5/sh13.mp3", "sh14": "../zvuk/polya5/sh14.mp3", "sh15": "../zvuk/polya5/sh15.mp3", "po1": "../zvuk/polya5/po1.mp3", "po2": "../zvuk/polya5/po2.mp3", "po3": "../zvuk/polya5/po3.mp3", "po4": "../zvuk/polya5/po4.mp3", "po5": "../zvuk/polya5/po5.mp3", "po6": "../zvuk/polya5/po6.mp3", "po7": "../zvuk/polya5/po7.mp3", "po8": "../zvuk/polya5/po8.mp3", "po9": "../zvuk/polya5/po9.mp3", "po10": "../zvuk/polya5/po10.mp3", "po11": "../zvuk/polya5/po11.mp3", "po12": "../zvuk/polya5/po12.mp3", "po13": "../zvuk/polya5/po13.mp3", "po14": "../zvuk/polya5/po14.mp3", "po15": "../zvuk/polya5/po15.mp3", "po16": "../zvuk/polya5/po16.mp3", "ue1": "../zvuk/polya5/ue1.mp3", "ue2": "../zvuk/polya5/ue2.mp3", "ue3": "../zvuk/polya5/ue3.mp3", "ue4": "../zvuk/polya5/ue4.mp3", "ue5": "../zvuk/polya5/ue5.mp3", "ue6": "../zvuk/polya5/ue6.mp3", "ue7": "../zvuk/polya5/ue7.mp3", "ue8": "../zvuk/polya5/ue8.mp3", "ue9": "../zvuk/polya5/ue9.mp3", "ue10": "../zvuk/polya5/ue10.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1284,6 +1265,74 @@ document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru]
   <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
     <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
   </div>${playBtn(id)}</div></div>`).join('');
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+// ── 11.09: домашка с самопроверкой — поля, перевод, ответы с «почему» ──
+function переключить(b){ var t = b.nextElementSibling; t.hidden = !t.hidden; b.classList.toggle('on'); }
+function кнопкаОтветов(кнопкаId, блокId, данные){
+  const к = document.getElementById(кнопкаId), б = document.getElementById(блокId);
+  к.dataset.showText = 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть ответы';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){ showAnswers(this, б, данные); };
+}
+const SH = [["Ich ___ Kopfschmerzen.", "habe", "Ich habe Kopfschmerzen.", "У меня болит голова.", "После <i>haben</i> — то, что «есть у кого-то». Kopfschmerzen haben. ich → habe."], ["Du ___ ein neues Auto.", "hast", "Du hast ein neues Auto.", "У тебя новая машина.", "После <i>haben</i> — то, что «есть у кого-то». du → hast (без b!)."], ["Er ___ groß.", "ist", "Er ist groß.", "Он высокий.", "После <i>sein</i> идёт «какой / где / кто». er → ist."], ["Wir ___ in Hannover.", "sind", "Wir sind in Hannover.", "Мы в Ганновере.", "Где находимся → sein. wir → sind."], ["Wo ___ die Eltern?", "sind", "Wo sind die Eltern?", "Где родители?", "die Eltern — всегда множественное → sind."], ["Ihr ___ Hunger.", "habt", "Ihr habt Hunger.", "Вы голодны.", "⚠️ По-русски «голодны» (быть), а по-немецки Hunger <i>haben</i>. Так же Durst, Angst. ihr → habt."], ["Das Auto ___ kaputt.", "ist", "Das Auto ist kaputt.", "Машина сломана.", "После <i>sein</i> идёт «какой / где / кто». kaputt — какая? → ist."], ["___ Sie Zeit?", "Haben", "Haben Sie Zeit?", "У Вас есть время?", "Zeit haben. Вопрос без вопросительного слова — глагол первым."], ["___ Sie krank?", "Sind", "Sind Sie krank?", "Вы больны?", "krank — прилагательное → sein. Сравни: Kopfschmerzen <i>haben</i>, но krank <i>sein</i>."], ["Hans ___ zu Hause.", "ist", "Hans ist zu Hause.", "Ганс дома.", "Где → sein. Hans = er → ist."], ["Das ___ gut.", "ist", "Das ist gut.", "Это хорошо.", "После <i>sein</i> идёт «какой / где / кто»."], ["Wir ___ eine schöne Wohnung.", "haben", "Wir haben eine schöne Wohnung.", "У нас красивая квартира.", "После <i>haben</i> — то, что «есть у кого-то». wir → haben."], ["Du ___ schön.", "bist", "Du bist schön.", "Ты красивая.", "После <i>sein</i> идёт «какой / где / кто». du → bist."], ["Wo ___ Kassel?", "ist", "Wo ist Kassel?", "Где Кассель?", "Город один (= es) → ist."], ["Ich ___ keine Ahnung.", "habe", "Ich habe keine Ahnung.", "Понятия не имею.", "Устойчивое: keine Ahnung haben. ich → habe."]];
+const PO = [["___ Freunde sind langweilig. <span class='hint-ru'>(ich)</span>", "Meine", "Meine Freunde sind langweilig.", "Мои друзья скучные.", "ich → mein. Freunde — множественное → mein<b>e</b>."], ["___ Kleidung ist zu kurz. <span class='hint-ru'>(du)</span>", "Deine", "Deine Kleidung ist zu kurz.", "Твоя одежда слишком короткая.", "du → dein. die Kleidung — Женский род или множественное → окончание <i>-e</i>."], ["___ Kuchen ist kalt. <span class='hint-ru'>(Sie)</span>", "Ihr", "Ihr Kuchen ist kalt.", "Ваш пирог холодный.", "Sie (Вы) → <i>Ihr</i> с большой буквы. der Kuchen — Мужской или средний род → без окончания."], ["___ Zeitungen sind neu. <span class='hint-ru'>(ihr)</span>", "Eure", "Eure Zeitungen sind neu.", "Ваши газеты новые.", "ihr → euer, но с окончанием e выпадает: <i>eure</i> (не «euere»). Zeitungen — множественное."], ["___ Schwester ist 34 Jahre alt. <span class='hint-ru'>(er)</span>", "Seine", "Seine Schwester ist 34 Jahre alt.", "Его сестре 34 года.", "er → sein. die Schwester — Женский род или множественное → окончание <i>-e</i>."], ["___ Bruder ist nicht reich. <span class='hint-ru'>(sie — она)</span>", "Ihr", "Ihr Bruder ist nicht reich.", "Её брат не богат.", "sie (она) → ihr. der Bruder — Мужской или средний род → без окончания."], ["___ Lehrerin hat heute Geburtstag. <span class='hint-ru'>(wir)</span>", "Unsere", "Unsere Lehrerin hat heute Geburtstag.", "У нашей учительницы сегодня день рождения.", "wir → unser. die Lehrerin — Женский род или множественное → окончание <i>-e</i>."], ["___ Häuser sind wunderschön. <span class='hint-ru'>(sie — они)</span>", "Ihre", "Ihre Häuser sind wunderschön.", "Их дома прекрасны.", "sie (они) → ihr. Häuser — множественное → ihr<b>e</b>."], ["___ Enkel geht im Herbst in die erste Klasse. <span class='hint-ru'>(wir)</span>", "Unser", "Unser Enkel geht im Herbst in die erste Klasse.", "Наш внук осенью идёт в первый класс.", "wir → unser. der Enkel — Мужской или средний род → без окончания."], ["Wann kommt ___ Neffe nach Wien? <span class='hint-ru'>(sie — они)</span>", "ihr", "Wann kommt ihr Neffe nach Wien?", "Когда их племянник приедет в Вену?", "sie (они) → ihr. der Neffe — Мужской или средний род → без окончания."], ["___ Eltern erlauben das nie. <span class='hint-ru'>(ich)</span>", "Meine", "Meine Eltern erlauben das nie.", "Мои родители никогда этого не разрешают.", "Eltern — множественное → meine."], ["___ Wecker klingelt um 6 Uhr. <span class='hint-ru'>(du)</span>", "Dein", "Dein Wecker klingelt um 6 Uhr.", "Твой будильник звонит в 6 часов.", "der Wecker — Мужской или средний род → без окончания."], ["___ Kinder sind schon erwachsen. <span class='hint-ru'>(er)</span>", "Seine", "Seine Kinder sind schon erwachsen.", "Его дети уже взрослые.", "Kinder — множественное → seine."], ["___ Nichte kommt aus Amerika. <span class='hint-ru'>(sie — она)</span>", "Ihre", "Ihre Nichte kommt aus Amerika.", "Её племянница из Америки.", "die Nichte — Женский род или множественное → окончание <i>-e</i>."], ["___ Freund schwimmt gern im Sommer. <span class='hint-ru'>(ich)</span>", "Mein", "Mein Freund schwimmt gern im Sommer.", "Мой друг любит плавать летом.", "der Freund — Мужской или средний род → без окончания."], ["___ Vater hat Geburtstag im Frühling. <span class='hint-ru'>(du)</span>", "Dein", "Dein Vater hat Geburtstag im Frühling.", "У твоего папы день рождения весной.", "der Vater — Мужской или средний род → без окончания."]];
+const UE = [["a) Studiert Maria Mathematik?", "+", "Ja, sie studiert Mathematik.", "Мария изучает математику? — Да, изучает.", "Maria → в ответе <i>sie</i>; глагол в той же форме: studiert."], ["b) Kommt Carlos aus London?", "−", "Nein, er kommt nicht aus London.", "Карлос из Лондона? — Нет, не из Лондона.", "Отрицание глагола — <i>nicht</i> перед «откуда». Можно добавить своё: Er kommt aus Madrid."], ["c) Reist du nach England?", "+", "Ja, ich reise nach England.", "Ты едешь в Англию? — Да.", "Спросили «du» — отвечаешь «ich»: reist → reise."], ["d) Lernst du nicht Deutsch?", "+", "Doch, ich lerne Deutsch.", "Разве ты не учишь немецкий? — Нет, учу!", "⚠️ Вопрос с отрицанием, а ответ «да» → <b>Doch</b>, не Ja."], ["e) Kommst du nicht aus Tokio?", "−", "Nein, ich komme nicht aus Tokio.", "Ты разве не из Токио? — Нет, не из Токио.", "Вопрос с отрицанием, соглашаешься с ним → Nein + nicht."], ["f) Gehst du nach Hause?", "−", "Nein, ich gehe nicht nach Hause.", "Ты идёшь домой? — Нет.", "nicht — перед «куда»: nicht nach Hause."], ["g) Trinkst du Tee?", "+", "Ja, ich trinke Tee.", "Ты пьёшь чай? — Да.", "du trinkst → ich trinke."], ["h) Arbeitest du nicht in München?", "−", "Nein, ich arbeite nicht in München.", "Ты разве не работаешь в Мюнхене? — Нет, не работаю.", "Соглашаешься с отрицанием → Nein. arbeitest → arbeite."], ["i) Gehst du ins Kino?", "−", "Nein, ich gehe nicht ins Kino.", "Ты идёшь в кино? — Нет.", "nicht — перед «куда»: nicht ins Kino."], ["j) Studieren Robert und Eva Jura?", "+", "Ja, sie studieren Jura.", "Роберт и Ева изучают право? — Да.", "Двое → sie (они) → studieren."]];
+blanksBlock('hwSH', SH.map(п => [п[0], п[1], null, п[3], п[4]]), 'sh_');
+blanksBlock('hwPO', PO.map(п => [п[0], п[1], null, п[3], п[4]]), 'po_');
+кнопкаОтветов('кОтветыSH', 'otvetySH', SH.map((п,i) => ['', '<span style="color:var(--accent)">' + п[1] + '</span> — ' + п[2] + ' ' + playBtn('sh' + (i+1)), null, п[3], п[4]]));
+кнопкаОтветов('кОтветыPO', 'otvetyPO', PO.map((п,i) => ['', '<span style="color:var(--accent)">' + п[1] + '</span> — ' + п[2] + ' ' + playBtn('po' + (i+1)), null, п[3], п[4]]));
+document.getElementById('hwUE').innerHTML = UE.map(([q,знак,de,ru,почему],i)=>`
+  <div class="hwrow"><span class="q">${q} &nbsp;<b>${знак}</b><br>
+    <input class="fld" data-save="ue_${i+1}" placeholder="${знак === '+' ? 'Ja / Doch, …' : 'Nein, …'}" style="width:100%;max-width:420px"><br>
+    <button type="button" class="hw-tr-btn" style="margin:6px 0 0" onclick="переключить(this)">мой вариант</button><span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">${de}</span> ${playBtn('ue' + (i+1))}<span class="hw-why" style="display:block">${ru}<br>${почему}</span></span></span></div>`).join('');
+(function(){
+  const KEY = 'polya5_hw_';
+  document.querySelectorAll('#hw [data-save]').forEach(el=>{
+    const k = KEY + el.dataset.save;
+    const saved = localStorage.getItem(k);
+    if(saved !== null) el.value = saved;
+    el.addEventListener('input', ()=> localStorage.setItem(k, el.value));
+  });
+})();
 
 const HW = [
   ["h1","<b>Задание 1:</b> вставить <b>sein</b> или <b>haben</b> (15 предложений, ниже)"],
