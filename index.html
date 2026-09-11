@@ -762,6 +762,11 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 
 // Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
 const POLYA = [
+  {id:'p11', num:'Занятие 11', date:'07.09.2026', title:'Описание картинки, посуда и падежи',
+   topic:'Новая картинка из учебника — кафе: es gibt, im Vordergrund/Hintergrund, auf dem Tisch steht, an der Wand hängt. ⭐ Главное правило: глагол всегда второй — «Auf dem Bild gibt es», а не «es gibt». Текст «Mein Zimmer», наречия abends/montags, посуда и приборы (Geschirr, Besteck, Teller, Topf, Schüssel ≠ Schlüssel). ⭐⭐ Большая тема: четыре падежа и их вопросы, склонение определённого артикля (der → den → dem → des), ins или im. Вся домашка от Даши — с переводом и пояснениями к ответам.',
+   pdf:'', audio:'dasha/polya11_interactive.html', mins:55, hard:'Плотно', cards:127,
+   photos:['dasha/polya11_hw_spisok.png','dasha/polya11_hw_wochenende.jpg','dasha/polya11_hw_meinzimmer.jpg','dasha/polya11_hw_wochentage.jpg','dasha/polya11_hw_perevod.jpg'],
+   photoLabels:['Список заданий','Ein Wochenende auf dem Land','Mein Zimmer','F8: дни недели','Текст на перевод']},
   {id:'p10', num:'Занятие 10', date:'05.09.2026', title:'Артикли целиком, мебель и описание картинки',
    topic:'Девятое занятие не записалось на диктофон — это прямое продолжение: доразобрали правило артиклей (когда der/die/das, когда ein/eine, когда вообще без артикля) на примерах с яблоком, машиной, газетой и котом. ⚠️ Честно предупредили: без контекста нередко подходят оба варианта. Новая большая тема — мебель и комната (Tisch, Schreibtisch, Bett, Regal, Spiegel, Sofa, Teppich, Kommode, Sessel, Schrank и другие). Разобрали описание картинки из учебника (im Hintergrund/Vordergrund, hängen, es gibt), конструкцию über + винительный и коротко повторили числа.',
    pdf:'', audio:'dasha/polya10_interactive.html', mins:30, hard:'Плотно', cards:82,
@@ -903,9 +908,9 @@ const LEVELS = [
     {t:'Род существительных, артикли der/die/das', l:['l2','d1']},
     {t:'Неопределённый артикль ein/eine', l:['l4']},
     {t:'Отрицание kein и nicht', l:['l4']},
-    {t:'Именительный падеж (Nominativ)', l:['l2']},
-    {t:'Винительный падеж (Akkusativ)', l:['l4']},
-    {t:'Дательный падеж (Dativ) — база', l:['l11']},
+    {t:'Именительный падеж (Nominativ)', l:['l2','p11']},
+    {t:'Винительный падеж (Akkusativ)', l:['l4','p11']},
+    {t:'Дательный падеж (Dativ) — база', l:['l11','p11']},
     {t:'Притяжательные местоимения (mein, dein)', l:['d1','d2']},
     {t:'Порядок слов: глагол на 2-м месте', l:['l3']},
     {t:'Вопросы с W-словом (W-Fragen)', l:['l8']},
@@ -916,7 +921,7 @@ const LEVELS = [
     {t:'Порядковые числительные', l:['l5','d1']},
     {t:'Цвета', l:['l7','d1']},
     {t:'Время суток, распорядок дня', l:['d1']},
-    {t:'Дни недели, месяцы, времена года', l:['l6','d1']},
+    {t:'Дни недели, месяцы, времена года', l:['l6','d1','p11']},
     {t:'Который час (Uhrzeit)', l:['l10']},
     {t:'Части тела', l:['l9']},
     {t:'Наречия частотности (immer, oft, nie)', l:['d1']},
@@ -927,7 +932,7 @@ const LEVELS = [
     {t:'Прошедшее время Perfekt', l:['l12']},
     {t:'Семья и родственники', l:['d2']},
     {t:'Еда и напитки', l:['l14']},
-    {t:'Квартира и жильё', l:['l15']},
+    {t:'Квартира и жильё', l:['l15','p11']},
     {t:'Погода', l:['l16']},
   ]},
   {code:'A2', name:'Базовый', weight:0.20, color:'#1f8fb5', topics:[
@@ -947,7 +952,7 @@ const LEVELS = [
     {t:'Будущее время (Futur I)', l:[]},
     {t:'Императив во всех формах', l:['l13']},
     {t:'Infinitiv mit zu', l:[]},
-    {t:'Родительный падеж (Genitiv) — база', l:[]},
+    {t:'Родительный падеж (Genitiv) — база', l:['p11']},
     {t:'Пассив — введение', l:[]},
     {t:'Косвенный вопрос (ob)', l:[]},
     {t:'Глаголы с предлогами', l:[]},
@@ -1101,7 +1106,7 @@ function renderProgress(){
     `<h4>Уровень ${lv.code} — ${lv.name}: ${lv.ok} из ${lv.total} тем</h4>
      <div class="topic-list">` +
     lv.topics.map(tp=>{
-      const src = tp.l.length ? tp.l.map(x=> x.startsWith('d') ? 'Даша '+x.slice(1) : 'Урок '+x.slice(1)).join(', ') : '';
+      const src = tp.l.length ? tp.l.map(x=> x.startsWith('d') ? 'Даша '+x.slice(1) : x.startsWith('p') ? 'Полина '+x.slice(1) : 'Урок '+x.slice(1)).join(', ') : '';
       return `<div class="topic ${tp.covered?'ok':''}">
         <span class="tick">${tp.covered?'✓':'○'}</span>
         <span class="tt">${tp.t}${src?` <span class="src">— ${src}</span>`:''}</span>
