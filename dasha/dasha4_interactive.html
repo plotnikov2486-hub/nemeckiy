@@ -23,6 +23,32 @@
 </style>
 
 <style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  .hw-verb { color:var(--accent); }
+</style>
+<style>
   :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
     --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
     --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
@@ -157,9 +183,6 @@
   .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
   .pair button.play { width:30px; height:30px; font-size:13px; }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -576,7 +599,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 
   <section class="block" id="s14">
     <h2><span class="num">14</span> 📚 Домашка от Даши</h2>
-    <p class="desc">Прислана 31.08 в 21:00. Пять заданий плюс презентация. Поля сохраняются прямо в браузере — можно закрыть страницу и вернуться.</p>
+    <p class="desc">Прислана 31.08 в 21:00. Пять заданий плюс презентация. Поля сохраняются прямо в браузере — можно закрыть страницу и вернуться. У предложений есть кнопка <b>«перевод»</b>, ответы открываются <b>с пояснением, почему именно так</b>, а к 12 глаголам — <b>«мой пример»</b>: сначала напиши своё, потом сверь.</p>
 
     <div class="warn-box">
       <span class="big">Старая домашка тоже висит</span>
@@ -594,14 +617,20 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <h3 style="margin-top:20px">Задание 3. sein oder haben?</h3>
     <p class="desc">Лист Schubert, Blatt 21. Вставить <b>sein</b> или <b>haben</b> в правильной форме.</p>
     <div id="hwSeinHaben"></div>
+    <button id="кОтветыSH" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetySH" hidden style="margin-top:10px"></div>
 
     <h3 style="margin-top:20px">Задание 4. Спряжение sein</h3>
-    <p class="desc">20 предложений — поставить <b>sein</b> в нужную форму.</p>
+    <p class="desc">20 предложений — поставить <b>sein</b> в нужную форму. Опечатки листа (Schuler, fleissig, Madchen) здесь исправлены.</p>
     <div id="hwSein"></div>
+    <button id="кОтветыSein" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetySein" hidden style="margin-top:10px"></div>
 
     <h3 style="margin-top:20px">Задание 5. Übung 3 — окончания глаголов</h3>
     <p class="desc">Образец: <i>kaufen — Lena kauf<b>t</b> Cola. Und du? — Ich kauf<b>e</b> Saft.</i></p>
     <div id="hwUebung3"></div>
+    <button id="кОтветыUe" class="кн-ответы">Показать ответы и пояснения</button>
+    <div id="otvetyUe" hidden style="margin-top:10px"></div>
 
     <h3 style="margin-top:20px">Задание 6. Презентация</h3>
     <div class="grammar-box">
@@ -1176,7 +1205,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"k1": "../zvuk/dasha4/k1.mp3", "k2": "../zvuk/dasha4/k2.mp3", "k3": "../zvuk/dasha4/k3.mp3", "k4": "../zvuk/dasha4/k4.mp3", "k5": "../zvuk/dasha4/k5.mp3", "k6": "../zvuk/dasha4/k6.mp3", "u1": "../zvuk/dasha4/u1.mp3", "u2": "../zvuk/dasha4/u2.mp3", "u3": "../zvuk/dasha4/u3.mp3", "u4": "../zvuk/dasha4/u4.mp3", "u5": "../zvuk/dasha4/u5.mp3", "u6": "../zvuk/dasha4/u6.mp3", "u7": "../zvuk/dasha4/u7.mp3", "u8": "../zvuk/dasha4/u8.mp3", "u9": "../zvuk/dasha4/u9.mp3", "u10": "../zvuk/dasha4/u10.mp3", "u11": "../zvuk/dasha4/u11.mp3", "u12": "../zvuk/dasha4/u12.mp3", "u13": "../zvuk/dasha4/u13.mp3", "u14": "../zvuk/dasha4/u14.mp3", "u15": "../zvuk/dasha4/u15.mp3", "u16": "../zvuk/dasha4/u16.mp3", "u17": "../zvuk/dasha4/u17.mp3", "u18": "../zvuk/dasha4/u18.mp3", "u19": "../zvuk/dasha4/u19.mp3", "u20": "../zvuk/dasha4/u20.mp3", "u21": "../zvuk/dasha4/u21.mp3", "u22": "../zvuk/dasha4/u22.mp3", "u23": "../zvuk/dasha4/u23.mp3", "u24": "../zvuk/dasha4/u24.mp3", "u25": "../zvuk/dasha4/u25.mp3", "v1": "../zvuk/dasha4/v1.mp3", "v2": "../zvuk/dasha4/v2.mp3", "v3": "../zvuk/dasha4/v3.mp3", "v4": "../zvuk/dasha4/v4.mp3", "v5": "../zvuk/dasha4/v5.mp3", "v6": "../zvuk/dasha4/v6.mp3", "v7": "../zvuk/dasha4/v7.mp3", "v8": "../zvuk/dasha4/v8.mp3", "v9": "../zvuk/dasha4/v9.mp3", "x1": "../zvuk/dasha4/x1.mp3", "x2": "../zvuk/dasha4/x2.mp3", "x3": "../zvuk/dasha4/x3.mp3", "x4": "../zvuk/dasha4/x4.mp3", "x5": "../zvuk/dasha4/x5.mp3", "b1": "../zvuk/dasha4/b1.mp3", "b2": "../zvuk/dasha4/b2.mp3", "b3": "../zvuk/dasha4/b3.mp3", "b4": "../zvuk/dasha4/b4.mp3", "n1": "../zvuk/dasha4/n1.mp3", "n2": "../zvuk/dasha4/n2.mp3", "n3": "../zvuk/dasha4/n3.mp3", "n4": "../zvuk/dasha4/n4.mp3", "n5": "../zvuk/dasha4/n5.mp3", "n6": "../zvuk/dasha4/n6.mp3", "n7": "../zvuk/dasha4/n7.mp3", "n8": "../zvuk/dasha4/n8.mp3", "n9": "../zvuk/dasha4/n9.mp3", "n10": "../zvuk/dasha4/n10.mp3", "n11": "../zvuk/dasha4/n11.mp3", "n12": "../zvuk/dasha4/n12.mp3", "n13": "../zvuk/dasha4/n13.mp3", "n14": "../zvuk/dasha4/n14.mp3", "n15": "../zvuk/dasha4/n15.mp3", "n16": "../zvuk/dasha4/n16.mp3", "n17": "../zvuk/dasha4/n17.mp3", "n18": "../zvuk/dasha4/n18.mp3", "n19": "../zvuk/dasha4/n19.mp3", "n20": "../zvuk/dasha4/n20.mp3", "n21": "../zvuk/dasha4/n21.mp3", "n22": "../zvuk/dasha4/n22.mp3", "h1": "../zvuk/dasha4/h1.mp3", "h2": "../zvuk/dasha4/h2.mp3", "h3": "../zvuk/dasha4/h3.mp3", "f1": "../zvuk/dasha4/f1.mp3", "f2": "../zvuk/dasha4/f2.mp3", "f3": "../zvuk/dasha4/f3.mp3", "f4": "../zvuk/dasha4/f4.mp3", "f5": "../zvuk/dasha4/f5.mp3", "m1": "../zvuk/dasha4/m1.mp3", "m2": "../zvuk/dasha4/m2.mp3", "m3": "../zvuk/dasha4/m3.mp3", "p1": "../zvuk/dasha4/p1.mp3", "p2": "../zvuk/dasha4/p2.mp3", "p3": "../zvuk/dasha4/p3.mp3", "p4": "../zvuk/dasha4/p4.mp3", "p5": "../zvuk/dasha4/p5.mp3", "t1": "../zvuk/dasha4/t1.mp3", "t2": "../zvuk/dasha4/t2.mp3", "s1": "../zvuk/dasha4/s1.mp3", "s2": "../zvuk/dasha4/s2.mp3", "s3": "../zvuk/dasha4/s3.mp3", "d1": "../zvuk/dasha4/d1.mp3", "d2": "../zvuk/dasha4/d2.mp3", "d3": "../zvuk/dasha4/d3.mp3"};
+const AUDIO = {"k1": "../zvuk/dasha4/k1.mp3", "k2": "../zvuk/dasha4/k2.mp3", "k3": "../zvuk/dasha4/k3.mp3", "k4": "../zvuk/dasha4/k4.mp3", "k5": "../zvuk/dasha4/k5.mp3", "k6": "../zvuk/dasha4/k6.mp3", "u1": "../zvuk/dasha4/u1.mp3", "u2": "../zvuk/dasha4/u2.mp3", "u3": "../zvuk/dasha4/u3.mp3", "u4": "../zvuk/dasha4/u4.mp3", "u5": "../zvuk/dasha4/u5.mp3", "u6": "../zvuk/dasha4/u6.mp3", "u7": "../zvuk/dasha4/u7.mp3", "u8": "../zvuk/dasha4/u8.mp3", "u9": "../zvuk/dasha4/u9.mp3", "u10": "../zvuk/dasha4/u10.mp3", "u11": "../zvuk/dasha4/u11.mp3", "u12": "../zvuk/dasha4/u12.mp3", "u13": "../zvuk/dasha4/u13.mp3", "u14": "../zvuk/dasha4/u14.mp3", "u15": "../zvuk/dasha4/u15.mp3", "u16": "../zvuk/dasha4/u16.mp3", "u17": "../zvuk/dasha4/u17.mp3", "u18": "../zvuk/dasha4/u18.mp3", "u19": "../zvuk/dasha4/u19.mp3", "u20": "../zvuk/dasha4/u20.mp3", "u21": "../zvuk/dasha4/u21.mp3", "u22": "../zvuk/dasha4/u22.mp3", "u23": "../zvuk/dasha4/u23.mp3", "u24": "../zvuk/dasha4/u24.mp3", "u25": "../zvuk/dasha4/u25.mp3", "v1": "../zvuk/dasha4/v1.mp3", "v2": "../zvuk/dasha4/v2.mp3", "v3": "../zvuk/dasha4/v3.mp3", "v4": "../zvuk/dasha4/v4.mp3", "v5": "../zvuk/dasha4/v5.mp3", "v6": "../zvuk/dasha4/v6.mp3", "v7": "../zvuk/dasha4/v7.mp3", "v8": "../zvuk/dasha4/v8.mp3", "v9": "../zvuk/dasha4/v9.mp3", "x1": "../zvuk/dasha4/x1.mp3", "x2": "../zvuk/dasha4/x2.mp3", "x3": "../zvuk/dasha4/x3.mp3", "x4": "../zvuk/dasha4/x4.mp3", "x5": "../zvuk/dasha4/x5.mp3", "b1": "../zvuk/dasha4/b1.mp3", "b2": "../zvuk/dasha4/b2.mp3", "b3": "../zvuk/dasha4/b3.mp3", "b4": "../zvuk/dasha4/b4.mp3", "n1": "../zvuk/dasha4/n1.mp3", "n2": "../zvuk/dasha4/n2.mp3", "n3": "../zvuk/dasha4/n3.mp3", "n4": "../zvuk/dasha4/n4.mp3", "n5": "../zvuk/dasha4/n5.mp3", "n6": "../zvuk/dasha4/n6.mp3", "n7": "../zvuk/dasha4/n7.mp3", "n8": "../zvuk/dasha4/n8.mp3", "n9": "../zvuk/dasha4/n9.mp3", "n10": "../zvuk/dasha4/n10.mp3", "n11": "../zvuk/dasha4/n11.mp3", "n12": "../zvuk/dasha4/n12.mp3", "n13": "../zvuk/dasha4/n13.mp3", "n14": "../zvuk/dasha4/n14.mp3", "n15": "../zvuk/dasha4/n15.mp3", "n16": "../zvuk/dasha4/n16.mp3", "n17": "../zvuk/dasha4/n17.mp3", "n18": "../zvuk/dasha4/n18.mp3", "n19": "../zvuk/dasha4/n19.mp3", "n20": "../zvuk/dasha4/n20.mp3", "n21": "../zvuk/dasha4/n21.mp3", "n22": "../zvuk/dasha4/n22.mp3", "h1": "../zvuk/dasha4/h1.mp3", "h2": "../zvuk/dasha4/h2.mp3", "h3": "../zvuk/dasha4/h3.mp3", "f1": "../zvuk/dasha4/f1.mp3", "f2": "../zvuk/dasha4/f2.mp3", "f3": "../zvuk/dasha4/f3.mp3", "f4": "../zvuk/dasha4/f4.mp3", "f5": "../zvuk/dasha4/f5.mp3", "m1": "../zvuk/dasha4/m1.mp3", "m2": "../zvuk/dasha4/m2.mp3", "m3": "../zvuk/dasha4/m3.mp3", "p1": "../zvuk/dasha4/p1.mp3", "p2": "../zvuk/dasha4/p2.mp3", "p3": "../zvuk/dasha4/p3.mp3", "p4": "../zvuk/dasha4/p4.mp3", "p5": "../zvuk/dasha4/p5.mp3", "t1": "../zvuk/dasha4/t1.mp3", "t2": "../zvuk/dasha4/t2.mp3", "s1": "../zvuk/dasha4/s1.mp3", "s2": "../zvuk/dasha4/s2.mp3", "s3": "../zvuk/dasha4/s3.mp3", "d1": "../zvuk/dasha4/d1.mp3", "d2": "../zvuk/dasha4/d2.mp3", "d3": "../zvuk/dasha4/d3.mp3", "sh1": "../zvuk/dasha4/sh1.mp3", "sh2": "../zvuk/dasha4/sh2.mp3", "sh3": "../zvuk/dasha4/sh3.mp3", "sh4": "../zvuk/dasha4/sh4.mp3", "sh5": "../zvuk/dasha4/sh5.mp3", "sh6": "../zvuk/dasha4/sh6.mp3", "sh7": "../zvuk/dasha4/sh7.mp3", "sh8": "../zvuk/dasha4/sh8.mp3", "sh9": "../zvuk/dasha4/sh9.mp3", "sh10": "../zvuk/dasha4/sh10.mp3", "sh11": "../zvuk/dasha4/sh11.mp3", "sh12": "../zvuk/dasha4/sh12.mp3", "sh13": "../zvuk/dasha4/sh13.mp3", "sh14": "../zvuk/dasha4/sh14.mp3", "sh15": "../zvuk/dasha4/sh15.mp3", "se1": "../zvuk/dasha4/se1.mp3", "se2": "../zvuk/dasha4/se2.mp3", "se3": "../zvuk/dasha4/se3.mp3", "se4": "../zvuk/dasha4/se4.mp3", "se5": "../zvuk/dasha4/se5.mp3", "se6": "../zvuk/dasha4/se6.mp3", "se7": "../zvuk/dasha4/se7.mp3", "se8": "../zvuk/dasha4/se8.mp3", "se9": "../zvuk/dasha4/se9.mp3", "se10": "../zvuk/dasha4/se10.mp3", "se11": "../zvuk/dasha4/se11.mp3", "se12": "../zvuk/dasha4/se12.mp3", "se13": "../zvuk/dasha4/se13.mp3", "se14": "../zvuk/dasha4/se14.mp3", "se15": "../zvuk/dasha4/se15.mp3", "se16": "../zvuk/dasha4/se16.mp3", "se17": "../zvuk/dasha4/se17.mp3", "se18": "../zvuk/dasha4/se18.mp3", "se19": "../zvuk/dasha4/se19.mp3", "se20": "../zvuk/dasha4/se20.mp3", "ub1": "../zvuk/dasha4/ub1.mp3", "ub2": "../zvuk/dasha4/ub2.mp3", "ub3": "../zvuk/dasha4/ub3.mp3", "ub4": "../zvuk/dasha4/ub4.mp3", "ub5": "../zvuk/dasha4/ub5.mp3", "ub6": "../zvuk/dasha4/ub6.mp3", "vb1": "../zvuk/dasha4/vb1.mp3", "vb2": "../zvuk/dasha4/vb2.mp3", "vb3": "../zvuk/dasha4/vb3.mp3", "vb4": "../zvuk/dasha4/vb4.mp3", "vb5": "../zvuk/dasha4/vb5.mp3", "vb6": "../zvuk/dasha4/vb6.mp3", "vb7": "../zvuk/dasha4/vb7.mp3", "vb8": "../zvuk/dasha4/vb8.mp3", "vb9": "../zvuk/dasha4/vb9.mp3", "vb10": "../zvuk/dasha4/vb10.mp3", "vb11": "../zvuk/dasha4/vb11.mp3", "vb12": "../zvuk/dasha4/vb12.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1338,62 +1367,172 @@ phrases('pristavka',[
   ["t2","Ich <b>sehe</b> gern <b>fern</b>.","ихь зээ гэрн фэрн","Я люблю смотреть телевизор."],
 ]);
 
-// ── домашка: поля с сохранением ──
-const ГЛАГОЛЫ = ['geben','gehen','hören','sehen','suchen','müssen',
-                 'wollen','können','mögen','möchten','sollen','dürfen'];
-document.getElementById('hwVerben').innerHTML = ГЛАГОЛЫ.map((гл,i)=>`
-  <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
-    <div style="font-family:Georgia,serif; font-weight:700; font-size:14.5px; margin-bottom:4px">${гл}</div>
-    <input class="fld" data-save="f_verb${i}" placeholder="предложение с «${гл}»"></span></div>`).join('');
+// ── домашка: поля с сохранением (11.09: перевод + ответы с «почему») ──
 
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+function кнопкаОтветов(кнопкаId, блокId, данные){
+  const к = document.getElementById(кнопкаId), б = document.getElementById(блокId);
+  к.dataset.showText = 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть ответы';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){ showAnswers(this, б, данные); };
+}
+function гл(x){ return '<span class="hw-verb">' + x + '</span>'; }
+function мойПример(de, clip, почему){
+  return '<button type="button" class="hw-tr-btn" style="margin:6px 0 0" onclick="var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle(\'on\');">мой пример</button>' +
+    '<span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">' + de + '</span> ' + playBtn(clip) +
+    '<span class="hw-why" style="display:block">' + почему + '</span></span>';
+}
+
+// Задание 1: 12 глаголов — поле своё, «мой пример» за кнопкой (ключи f_verb0–11 — прежние)
+const ГЛАГОЛЫ = [
+  ['geben','давать','Ich gebe dir das Buch.','vb1','Я даю тебе книгу.',
+   'ich gebe, но du <i>gibst</i>, er <i>gibt</i> — e меняется на i. Кому — <i>dir</i> (Dativ), что — <i>das Buch</i> (Akkusativ). И запомни: <i>es gibt</i> — «есть, имеется».'],
+  ['gehen','идти (пешком)','Ich gehe heute ins Kino.','vb2','Сегодня я иду в кино.',
+   'Куда? → Akkusativ: in das Kino = <i>ins</i> Kino. Порядок: сначала «когда» (heute), потом «куда».'],
+  ['hören','слушать, слышать','Ich höre gern Musik.','vb3','Я люблю слушать музыку.',
+   '<i>gern</i> после глагола = «с удовольствием». Так немцы и говорят «люблю что-то делать».'],
+  ['sehen','видеть, смотреть','Er sieht einen Film.','vb4','Он смотрит фильм.',
+   'e → ie: du <i>siehst</i>, er <i>sieht</i>. der Film → <i>einen</i> Film: что смотрит? — Akkusativ.'],
+  ['suchen','искать','Ich suche meinen Schlüssel.','vb5','Я ищу свой ключ.',
+   'Искать что — Akkusativ, без предлога: der Schlüssel → <i>meinen</i> Schlüssel.'],
+  ['müssen','быть должным, надо','Ich muss heute lange arbeiten.','vb6','Сегодня мне нужно долго работать.',
+   'Модальный глагол — на 2-м месте, второй глагол в самом конце, неизменный: <i>arbeiten</i>. У ich нет окончания: ich <i>muss</i>, как и er muss.'],
+  ['wollen','хотеть','Wir wollen in Deutschland arbeiten.','vb7','Мы хотим работать в Германии.',
+   'wir <i>wollen</i>, но ich <i>will</i> — не «wolle». Второй глагол — в конец.'],
+  ['können','мочь, уметь','Kannst du mir helfen?','vb8','Ты можешь мне помочь?',
+   'Вопрос без вопросительного слова — модальный первым: <i>Kannst</i> du…? du kannst. helfen + Dativ: <i>mir</i>, а не mich.'],
+  ['mögen','любить, нравиться','Ich mag Kaffee.','vb9','Я люблю кофе.',
+   'mögen — обычно с существительным: ich <i>mag</i>, du <i>magst</i>, er <i>mag</i>. «Ich mag schwimmen» так уже не говорят — лучше «Ich schwimme gern».'],
+  ['möchten','хотел бы','Ich möchte einen Tee, bitte.','vb10','Я бы хотел чаю, пожалуйста.',
+   'Вежливое «хотел бы» — в кафе, в магазине. Ловушка: er <i>möchte</i> — без -t, как ich. der Tee → <i>einen</i> Tee.'],
+  ['sollen','должен (по чьему-то совету, указанию)','Sie sollen mehr Wasser trinken.','vb11','Вам нужно пить больше воды.',
+   '🩺 Так врач говорит пациенту. <i>sollen</i> — должен, потому что так сказал кто-то другой (врач, начальник). <i>müssen</i> — надо само по себе.'],
+  ['dürfen','можно, разрешено','Darf ich hier parken?','vb12','Можно мне здесь припарковаться?',
+   'Разрешение: ich <i>darf</i>, du <i>darfst</i>. С nicht — запрет: «Sie dürfen nicht rauchen» — вам нельзя курить.'],
+];
+document.getElementById('hwVerben').innerHTML = ГЛАГОЛЫ.map(([г,ru,de,clip,deRu,почему],i)=>`
+  <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
+    <div style="font-family:Georgia,serif; font-weight:700; font-size:14.5px; margin-bottom:4px">${г} ${кнопкаПеревода(ru)}</div>
+    <input class="fld" data-save="f_verb${i}" placeholder="предложение с «${г}»"><br>
+    ${мойПример(de, clip, deRu + '<br>' + почему)}</span></div>`).join('');
+
+// Задание 3: sein oder haben (ключи f_sh0–14 — прежние)
+const ЗНАЧИТ_SEIN = 'После <i>sein</i> идёт «какой / где / кто»: признак, место, профессия.';
+const ЗНАЧИТ_HABEN = 'После <i>haben</i> — существительное, которое «есть у кого-то».';
 const SEIN_HABEN = [
-  'Ich ................ Kopfschmerzen.',
-  'Du ................ ein neues Auto.',
-  'Er ................ groß.',
-  'Wir ................ in Hannover.',
-  'Wo ................ die Eltern?',
-  'Ihr ................ Hunger.',
-  'Das Auto ................ kaputt.',
-  '................ Sie Zeit?',
-  '................ Sie krank?',
-  'Hans ................ zu Hause.',
-  'Das ................ gut.',
-  'Wir ................ eine schöne Wohnung.',
-  'Du ................ schön.',
-  'Wo ................ Kassel?',
-  'Ich ................ keine Ahnung.',
+  ['Ich ................ Kopfschmerzen.', 'Ich '+гл('habe')+' Kopfschmerzen.', 'sh1', 'У меня болит голова.', ЗНАЧИТ_HABEN + ' Головная боль «есть у меня»: <i>Kopfschmerzen haben</i>. ich → habe.'],
+  ['Du ................ ein neues Auto.', 'Du '+гл('hast')+' ein neues Auto.', 'sh2', 'У тебя новая машина.', ЗНАЧИТ_HABEN + ' du → <i>hast</i> (без b!).'],
+  ['Er ................ groß.', 'Er '+гл('ist')+' groß.', 'sh3', 'Он высокий.', ЗНАЧИТ_SEIN + ' groß — какой? er → ist.'],
+  ['Wir ................ in Hannover.', 'Wir '+гл('sind')+' in Hannover.', 'sh4', 'Мы в Ганновере.', 'Где находимся → sein. wir → sind.'],
+  ['Wo ................ die Eltern?', 'Wo '+гл('sind')+' die Eltern?', 'sh5', 'Где родители?', 'die Eltern — всегда множественное (= sie) → <i>sind</i>.'],
+  ['Ihr ................ Hunger.', 'Ihr '+гл('habt')+' Hunger.', 'sh6', 'Вы голодны.', '⚠️ Ловушка: по-русски «вы голодны» (быть), а по-немецки <i>Hunger haben</i> — «иметь голод». Так же Durst haben, Angst haben. ihr → habt.'],
+  ['Das Auto ................ kaputt.', 'Das Auto '+гл('ist')+' kaputt.', 'sh7', 'Машина сломана.', ЗНАЧИТ_SEIN + ' kaputt — какая? das Auto = es → ist.'],
+  ['................ Sie Zeit?', gl2('Haben')+' Sie Zeit?', 'sh8', 'У Вас есть время?', '<i>Zeit haben</i> — «иметь время». Вопрос без вопросительного слова — глагол на первом месте. Sie → haben.'],
+  ['................ Sie krank?', gl2('Sind')+' Sie krank?', 'sh9', 'Вы больны?', 'krank — прилагательное → sein. Сравни с №1: <i>Kopfschmerzen haben</i>, но <i>krank sein</i>. Sie → sind.'],
+  ['Hans ................ zu Hause.', 'Hans '+гл('ist')+' zu Hause.', 'sh10', 'Ганс дома.', 'Где → sein. Hans = er → ist.'],
+  ['Das ................ gut.', 'Das '+гл('ist')+' gut.', 'sh11', 'Это хорошо.', ЗНАЧИТ_SEIN + ' das → ist.'],
+  ['Wir ................ eine schöne Wohnung.', 'Wir '+гл('haben')+' eine schöne Wohnung.', 'sh12', 'У нас красивая квартира.', ЗНАЧИТ_HABEN + ' wir → haben.'],
+  ['Du ................ schön.', 'Du '+гл('bist')+' schön.', 'sh13', 'Ты красивый (красивая).', ЗНАЧИТ_SEIN + ' du → bist.'],
+  ['Wo ................ Kassel?', 'Wo '+гл('ist')+' Kassel?', 'sh14', 'Где Кассель?', 'Город — один (= es) → ist.'],
+  ['Ich ................ keine Ahnung.', 'Ich '+гл('habe')+' keine Ahnung.', 'sh15', 'Понятия не имею.', 'Устойчивое выражение: <i>keine Ahnung haben</i> — «не иметь понятия». ich → habe.'],
 ];
-document.getElementById('hwSeinHaben').innerHTML = SEIN_HABEN.map((пр,i)=>`
+function gl2(x){ return гл(x); }
+document.getElementById('hwSeinHaben').innerHTML = SEIN_HABEN.map(([пр,,,ru],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
-    <div style="font-family:Georgia,serif; font-size:14.5px; margin-bottom:4px">${пр}</div>
+    <div style="font-family:Georgia,serif; font-size:14.5px; margin-bottom:4px">${пр} ${кнопкаПеревода(ru)}</div>
     <input class="fld" data-save="f_sh${i}" placeholder="sein или haben?"></span></div>`).join('');
+кнопкаОтветов('кОтветыSH', 'otvetySH', SEIN_HABEN.map(([пр,ответ,clip,ru,почему]) => [пр, ответ + ' ' + playBtn(clip), null, ru, почему]));
 
+// Задание 4: спряжение sein (ключи f_sein0–19 — прежние)
+const МН = 'Множественное число (= sie) → <i>sind</i>.';
 const SEIN = [
-  'Ich … ein Junge.', 'Du… lustig.', 'Er… Student.', 'Wir…15 Jahre alt.',
-  'Die Hefte… blau.', 'Sven und Sabina… lustig.', 'Die Hausaufgaben… schwer.',
-  'Die Jungen… gut.', 'Die Schüler… fleißig.', 'Die Mutter… klug.',
-  'Der Junge… zu Hause.', 'Er… im Garten.', 'Ihr… im Zimmer.',
-  'Du und ich… Studenten.', 'Das Mädchen… faul.', '… du zu Hause?',
-  '… Sie Lehrer?', '… Ann krank?', '… diese Katze schwarz?', '… dieser Hund faul?',
+  ['Ich … ein Junge.', 'Ich '+гл('bin')+' ein Junge.', 'se1', 'Я мальчик.', 'ich → <i>bin</i>.'],
+  ['Du… lustig.', 'Du '+гл('bist')+' lustig.', 'se2', 'Ты весёлый.', 'du → <i>bist</i>.'],
+  ['Er… Student.', 'Er '+гл('ist')+' Student.', 'se3', 'Он студент.', 'er → <i>ist</i>. Профессия после sein — без артикля.'],
+  ['Wir…15 Jahre alt.', 'Wir '+гл('sind')+' 15 Jahre alt.', 'se4', 'Нам 15 лет.', 'Возраст по-немецки — через sein: дословно «мы есть 15 лет старые». wir → sind.'],
+  ['Die Hefte… blau.', 'Die Hefte '+гл('sind')+' blau.', 'se5', 'Тетради синие.', 'das Heft → die Hefte. ' + МН],
+  ['Sven und Sabina… lustig.', 'Sven und Sabina '+гл('sind')+' lustig.', 'se6', 'Свен и Сабина весёлые.', 'Двое = они. ' + МН],
+  ['Die Hausaufgaben… schwer.', 'Die Hausaufgaben '+гл('sind')+' schwer.', 'se7', 'Домашние задания трудные.', 'die Hausaufgabe → die Hausaufgaben. ' + МН],
+  ['Die Jungen… gut.', 'Die Jungen '+гл('sind')+' gut.', 'se8', 'Мальчики хорошие.', 'der Junge → die Jungen. ' + МН],
+  ['Die Schüler… fleißig.', 'Die Schüler '+гл('sind')+' fleißig.', 'se9', 'Ученики прилежные.', 'der Schüler → die Schüler: слово не меняется, меняется артикль. ' + МН + ' На листе опечатка «Schuler, fleissig» — правильно <i>Schüler, fleißig</i>.'],
+  ['Die Mutter… klug.', 'Die Mutter '+гл('ist')+' klug.', 'se10', 'Мама умная.', '⚠️ Ловушка: <i>die</i> здесь не множественное, а женский род. Мама одна (= sie, она) → <i>ist</i>.'],
+  ['Der Junge… zu Hause.', 'Der Junge '+гл('ist')+' zu Hause.', 'se11', 'Мальчик дома.', 'Один мальчик (= er) → ist. Сравни с №8: die Jungen sind.'],
+  ['Er… im Garten.', 'Er '+гл('ist')+' im Garten.', 'se12', 'Он в саду.', 'er → ist.'],
+  ['Ihr… im Zimmer.', 'Ihr '+гл('seid')+' im Zimmer.', 'se13', 'Вы в комнате.', 'ihr → <i>seid</i>. Не путать с <i>seit</i> — «с (какого времени)»: звучат одинаково.'],
+  ['Du und ich… Studenten.', 'Du und ich '+гл('sind')+' Studenten.', 'se14', 'Ты и я — студенты.', 'Ты + я = мы (wir) → sind.'],
+  ['Das Mädchen… faul.', 'Das Mädchen '+гл('ist')+' faul.', 'se15', 'Девочка ленивая.', 'das Mädchen — средний род (= es) → ist. Всё на -chen — среднего рода. На листе опечатка «Madchen» — нужен умляут: <i>Mädchen</i>.'],
+  ['… du zu Hause?', гл('Bist')+' du zu Hause?', 'se16', 'Ты дома?', 'Вопрос без вопросительного слова: глагол первым. du → bist.'],
+  ['… Sie Lehrer?', гл('Sind')+' Sie Lehrer?', 'se17', 'Вы учитель?', 'Sie (вежливое «Вы») → sind — всегда, даже если человек один.'],
+  ['… Ann krank?', гл('Ist')+' Ann krank?', 'se18', 'Энн больна?', 'Ann = sie (она, одна) → ist.'],
+  ['… diese Katze schwarz?', гл('Ist')+' diese Katze schwarz?', 'se19', 'Эта кошка чёрная?', 'Кошка одна (die Katze = sie) → ist. Как в №10: die ≠ множественное.'],
+  ['… dieser Hund faul?', гл('Ist')+' dieser Hund faul?', 'se20', 'Эта собака ленивая?', 'der Hund → dieser Hund (= er) → ist.'],
 ];
-document.getElementById('hwSein').innerHTML = SEIN.map((пр,i)=>`
+document.getElementById('hwSein').innerHTML = SEIN.map(([пр,,,ru],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
-    <div style="font-family:Georgia,serif; font-size:14.5px; margin-bottom:4px">${пр}</div>
+    <div style="font-family:Georgia,serif; font-size:14.5px; margin-bottom:4px">${пр} ${кнопкаПеревода(ru)}</div>
     <input class="fld" data-save="f_sein${i}" placeholder="форма sein"></span></div>`).join('');
+кнопкаОтветов('кОтветыSein', 'otvetySein', SEIN.map(([пр,ответ,clip,ru,почему]) => [пр, ответ + ' ' + playBtn(clip), null, ru, почему]));
 
+// Задание 5: Übung 3 — окончания (ключи f_ue0–5 — прежние)
 const UEBUNG3 = [
-  ['kommen','Hatem komm__ aus Kairo. Und du? — Ich komm__ …'],
-  ['trinken','Ich trink__ Kaffee. Und du? — Ich trink__ Wasser.'],
-  ['wohnen','Maria wohn__ in Rom. Und du? — Ich wohn__ in …'],
-  ['fragen','Wir frag__ Frau Lehmann. Und du? — Ich frag__ Theo.'],
-  ['studieren','Paul studier__ in München. Und du? — Ich studier__ auch in München.'],
-  ['gehen','Ich geh__ nach Hause. Und du? — Ich geh__ auch nach Hause.'],
+  ['kommen','Hatem komm__ aus Kairo. Und du? — Ich komm__ …', 'Hatem komm'+гл('t')+' aus Kairo. Und du? — Ich komm'+гл('e')+' aus Russland.', 'ub1',
+   'Хатем из Каира. А ты? — Я из России.', 'Hatem = er → <i>-t</i>; ich → <i>-e</i>. Вторую половину пишешь про себя: <i>aus</i> + страна.'],
+  ['trinken','Ich trink__ Kaffee. Und du? — Ich trink__ Wasser.', 'Ich trink'+гл('e')+' Kaffee. Und du? — Ich trink'+гл('e')+' Wasser.', 'ub2',
+   'Я пью кофе. А ты? — Я пью воду.', 'Подвох: ждёшь два разных окончания, а тут оба раза <i>ich</i> → -e.'],
+  ['wohnen','Maria wohn__ in Rom. Und du? — Ich wohn__ in …', 'Maria wohn'+гл('t')+' in Rom. Und du? — Ich wohn'+гл('e')+' in Moskau.', 'ub3',
+   'Мария живёт в Риме. А ты? — Я живу в Москве.', 'Maria = sie → -t; ich → -e. <i>wohnen in</i> + город (подставь свой).'],
+  ['fragen','Wir frag__ Frau Lehmann. Und du? — Ich frag__ Theo.', 'Wir frag'+гл('en')+' Frau Lehmann. Und du? — Ich frag'+гл('e')+' Theo.', 'ub4',
+   'Мы спрашиваем госпожу Леман. А ты? — Я спрашиваю Тео.', 'wir → <i>-en</i>, как в самом инфинитиве (fragen); ich → -e.'],
+  ['studieren','Paul studier__ in München. Und du? — Ich studier__ auch in München.', 'Paul studier'+гл('t')+' in München. Und du? — Ich studier'+гл('e')+' auch in München.', 'ub5',
+   'Пауль учится в Мюнхене. А ты? — Я тоже учусь в Мюнхене.', 'Глаголы на <i>-ieren</i> — правильные: er studiert, ich studiere. Ударение всегда на -ie-.'],
+  ['gehen','Ich geh__ nach Hause. Und du? — Ich geh__ auch nach Hause.', 'Ich geh'+гл('e')+' nach Hause. Und du? — Ich geh'+гл('e')+' auch nach Hause.', 'ub6',
+   'Я иду домой. А ты? — Я тоже иду домой.', 'Оба раза ich → -e. <i>nach Hause</i> — домой (куда?), <i>zu Hause</i> — дома (где?).'],
 ];
-document.getElementById('hwUebung3').innerHTML = UEBUNG3.map(([гл,пр],i)=>`
+document.getElementById('hwUebung3').innerHTML = UEBUNG3.map(([г,пр,,,ru],i)=>`
   <div class="hwrow"><span class="n">${'abcdef'[i]})</span><span class="q">
-    <div style="font-size:12.5px; color:var(--ink-faint); margin-bottom:2px">${гл}</div>
-    <div style="font-family:Georgia,serif; font-size:14.5px; margin-bottom:4px">${пр}</div>
+    <div style="font-size:12.5px; color:var(--ink-faint); margin-bottom:2px">${г}</div>
+    <div style="font-family:Georgia,serif; font-size:14.5px; margin-bottom:4px">${пр} ${кнопкаПеревода(ru)}</div>
     <input class="fld" data-save="f_ue${i}" placeholder="впишите окончания"></span></div>`).join('');
+кнопкаОтветов('кОтветыUe', 'otvetyUe', UEBUNG3.map(([г,пр,ответ,clip,ru,почему]) => [пр, ответ + ' ' + playBtn(clip), null, ru, почему]));
 
 (function(){
   const KEY = 'dasha4_hw_';
