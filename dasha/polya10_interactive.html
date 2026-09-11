@@ -21,6 +21,34 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  #hwHaus input.fld { width:170px !important; }
+  #hwMoebel input.fld, #hwZimmer input.fld { width:100% !important; max-width:420px; }
+</style>
 <style>
   :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
     --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
@@ -504,13 +532,15 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 
   <section class="block" id="s12">
     <h2><span class="num">12</span> 📚 Домашка от Даши</h2>
-    <p class="desc">Прислана в Telegram. Пять заданий — поля можно заполнять прямо здесь, написанное сохраняется в браузере.</p>
+    <p class="desc">Прислана в Telegram. Пять заданий — поля можно заполнять прямо здесь, написанное сохраняется в браузере. У предложений есть кнопка <b>«перевод»</b>, а ответы открываются <b>с пояснением, почему именно так</b> — можно проверить себя самой, не дожидаясь Даши.</p>
 
     <div class="hwbox">
       <span class="hwnum">Задание 1</span>
       <h3>Вставить артикли (определённый или неопределённый)</h3>
       <p class="desc" style="margin:0 0 8px">Текст про комнату — свою мебель. В каждый пропуск свой артикль.</p>
       <div id="hwArtikel"></div>
+      <button id="кОтветыArtikel" class="кн-ответы">Показать ответы и пояснения</button>
+      <div id="otvetyArtikel" hidden style="margin-top:10px"></div>
     </div>
 
     <div class="hwbox">
@@ -523,7 +553,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <span class="hwnum">Задание 3</span>
       <h3>Текст про Клару: прочитать, перевести, ответить на вопросы</h3>
       <div class="hint-box">
-        💡 Незнакомые слова специально не переводим здесь — задание в том, чтобы разобрать текст самой. Если совсем непонятно, возьми словарь или спроси на занятии.
+        💡 Сначала разбери текст сама, без подсказок. Потом проверь себя: у каждого предложения кнопка «перевод», а ответы на вопросы открываются с цитатой из текста.
       </div>
       <div id="klaraText" style="font-family:Georgia,serif; font-size:14.5px; line-height:1.7; background:var(--surface-2); border-radius:14px; padding:16px 18px; margin:10px 0"></div>
       <div id="klaraQuiz"></div>
@@ -536,15 +566,27 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <h3>Arbeitsblatt: дом, мебель и «в какой комнате»</h3>
       <p class="desc" style="margin:0 0 8px">Три части на одном листе: подписать 13 комнат дома, назвать мебель на четырёх картинках с артиклем, и сказать, в какой комнате обычно находят вещи из списка.</p>
       <div class="link-box">
-        📎 Сам рабочий лист (картинки дома и мебели) — оригиналы открываются кнопками с карточки занятия на главной странице, там же, где кнопка «Интерактив со звуком». Печатать и заполнять от руки, как обычно.
+        📎 Картинки дома и мебели — <a href="polya10_hw_arbeitsblatt.jpg" target="_blank" style="color:var(--accent);font-weight:600">открыть рабочий лист</a>. Номера и комнаты смотри на нём, а ответы пиши здесь.
       </div>
+      <p class="desc" style="margin:12px 0 6px"><b>A. Das Haus.</b> Напиши слово с артиклем для каждого номера на рисунке дома.</p>
+      <div id="hwHaus"></div>
+      <button id="кОтветыHaus" class="кн-ответы">Показать ответы и пояснения</button>
+      <div id="otvetyHaus" hidden style="margin-top:10px"></div>
+      <p class="desc" style="margin:16px 0 6px"><b>B. Die Möbel.</b> Назови мебель и предметы на каждой из четырёх картинок — с артиклем и множественным, как в образце <i>das Bett, -en</i>.</p>
+      <div id="hwMoebel"></div>
+      <button id="кОтветыMoebel" class="кн-ответы">Показать ответы и пояснения</button>
+      <div id="otvetyMoebel" hidden style="margin-top:10px"></div>
+      <p class="desc" style="margin:16px 0 6px"><b>C. Welches Zimmer ist das?</b> В какой комнате обычно это находят? В каждом ответе — новая комната.</p>
+      <div id="hwZimmer"></div>
+      <button id="кОтветыZimmer" class="кн-ответы">Показать ответы и пояснения</button>
+      <div id="otvetyZimmer" hidden style="margin-top:10px"></div>
     </div>
 
     <div class="hwbox">
       <span class="hwnum">Задание 5</span>
       <h3>Перевести на немецкий: рассказ о квартире</h3>
       <div class="hint-box">
-        ⚠️ Даша прислала только русский текст (без немецкого оригинала). Переводы ниже под звуком — это <b>мой вариант</b> для сверки, не эталон от Даши. Сначала переведи сама, потом проверь через 🔊.
+        ⚠️ Даша прислала только русский текст (без немецкого оригинала). Под каждым предложением кнопка <b>«мой вариант»</b> — это мой перевод для сверки, не эталон от Даши. Сначала переведи сама, потом открой и сравни.
       </div>
       <div id="hwPerevod"></div>
     </div>
@@ -1115,7 +1157,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"gs1": "../zvuk/polya10/gs1.mp3", "gs2": "../zvuk/polya10/gs2.mp3", "gs3": "../zvuk/polya10/gs3.mp3", "gs4": "../zvuk/polya10/gs4.mp3", "gs5": "../zvuk/polya10/gs5.mp3", "ar1": "../zvuk/polya10/ar1.mp3", "ar2": "../zvuk/polya10/ar2.mp3", "ar3": "../zvuk/polya10/ar3.mp3", "v1": "../zvuk/polya10/v1.mp3", "p1": "../zvuk/polya10/p1.mp3", "p2": "../zvuk/polya10/p2.mp3", "v2": "../zvuk/polya10/v2.mp3", "p3": "../zvuk/polya10/p3.mp3", "v3": "../zvuk/polya10/v3.mp3", "p4": "../zvuk/polya10/p4.mp3", "v4": "../zvuk/polya10/v4.mp3", "p5": "../zvuk/polya10/p5.mp3", "v5": "../zvuk/polya10/v5.mp3", "p6": "../zvuk/polya10/p6.mp3", "p7": "../zvuk/polya10/p7.mp3", "v6": "../zvuk/polya10/v6.mp3", "p8": "../zvuk/polya10/p8.mp3", "v7": "../zvuk/polya10/v7.mp3", "p9": "../zvuk/polya10/p9.mp3", "v8": "../zvuk/polya10/v8.mp3", "p10": "../zvuk/polya10/p10.mp3", "adj1": "../zvuk/polya10/adj1.mp3", "adj2": "../zvuk/polya10/adj2.mp3", "adj3": "../zvuk/polya10/adj3.mp3", "adj4": "../zvuk/polya10/adj4.mp3", "adj5": "../zvuk/polya10/adj5.mp3", "adj6": "../zvuk/polya10/adj6.mp3", "m1": "../zvuk/polya10/m1.mp3", "m2": "../zvuk/polya10/m2.mp3", "m3": "../zvuk/polya10/m3.mp3", "m4": "../zvuk/polya10/m4.mp3", "m5": "../zvuk/polya10/m5.mp3", "m6": "../zvuk/polya10/m6.mp3", "m7": "../zvuk/polya10/m7.mp3", "m8": "../zvuk/polya10/m8.mp3", "m9": "../zvuk/polya10/m9.mp3", "m10": "../zvuk/polya10/m10.mp3", "m11": "../zvuk/polya10/m11.mp3", "m12": "../zvuk/polya10/m12.mp3", "m13": "../zvuk/polya10/m13.mp3", "m14": "../zvuk/polya10/m14.mp3", "m15": "../zvuk/polya10/m15.mp3", "m16": "../zvuk/polya10/m16.mp3", "m17": "../zvuk/polya10/m17.mp3", "bd1": "../zvuk/polya10/bd1.mp3", "bd2": "../zvuk/polya10/bd2.mp3", "bd3": "../zvuk/polya10/bd3.mp3", "bd4": "../zvuk/polya10/bd4.mp3", "bd5": "../zvuk/polya10/bd5.mp3", "bd6": "../zvuk/polya10/bd6.mp3", "bd7": "../zvuk/polya10/bd7.mp3", "bd8": "../zvuk/polya10/bd8.mp3", "bd9": "../zvuk/polya10/bd9.mp3", "bd10": "../zvuk/polya10/bd10.mp3", "bd11": "../zvuk/polya10/bd11.mp3", "bd12": "../zvuk/polya10/bd12.mp3", "bd13": "../zvuk/polya10/bd13.mp3", "bd14": "../zvuk/polya10/bd14.mp3", "bd15": "../zvuk/polya10/bd15.mp3", "bd16": "../zvuk/polya10/bd16.mp3", "bd17": "../zvuk/polya10/bd17.mp3", "bd18": "../zvuk/polya10/bd18.mp3", "bd19": "../zvuk/polya10/bd19.mp3", "eg1": "../zvuk/polya10/eg1.mp3", "eg2": "../zvuk/polya10/eg2.mp3", "eg3": "../zvuk/polya10/eg3.mp3", "sa1": "../zvuk/polya10/sa1.mp3", "sa2": "../zvuk/polya10/sa2.mp3", "sa3": "../zvuk/polya10/sa3.mp3", "sa4": "../zvuk/polya10/sa4.mp3", "n1": "../zvuk/polya10/n1.mp3", "n2": "../zvuk/polya10/n2.mp3", "n3": "../zvuk/polya10/n3.mp3", "n4": "../zvuk/polya10/n4.mp3", "n5": "../zvuk/polya10/n5.mp3", "kl1": "../zvuk/polya10/kl1.mp3", "kl2": "../zvuk/polya10/kl2.mp3", "kl3": "../zvuk/polya10/kl3.mp3", "kl4": "../zvuk/polya10/kl4.mp3", "kl5": "../zvuk/polya10/kl5.mp3", "tr1": "../zvuk/polya10/tr1.mp3", "tr2": "../zvuk/polya10/tr2.mp3", "tr3": "../zvuk/polya10/tr3.mp3", "tr4": "../zvuk/polya10/tr4.mp3", "tr5": "../zvuk/polya10/tr5.mp3", "tr6": "../zvuk/polya10/tr6.mp3", "z1": "../zvuk/polya10/z1.mp3", "z2": "../zvuk/polya10/z2.mp3", "z3": "../zvuk/polya10/z3.mp3"};
+const AUDIO = {"gs1": "../zvuk/polya10/gs1.mp3", "gs2": "../zvuk/polya10/gs2.mp3", "gs3": "../zvuk/polya10/gs3.mp3", "gs4": "../zvuk/polya10/gs4.mp3", "gs5": "../zvuk/polya10/gs5.mp3", "ar1": "../zvuk/polya10/ar1.mp3", "ar2": "../zvuk/polya10/ar2.mp3", "ar3": "../zvuk/polya10/ar3.mp3", "v1": "../zvuk/polya10/v1.mp3", "p1": "../zvuk/polya10/p1.mp3", "p2": "../zvuk/polya10/p2.mp3", "v2": "../zvuk/polya10/v2.mp3", "p3": "../zvuk/polya10/p3.mp3", "v3": "../zvuk/polya10/v3.mp3", "p4": "../zvuk/polya10/p4.mp3", "v4": "../zvuk/polya10/v4.mp3", "p5": "../zvuk/polya10/p5.mp3", "v5": "../zvuk/polya10/v5.mp3", "p6": "../zvuk/polya10/p6.mp3", "p7": "../zvuk/polya10/p7.mp3", "v6": "../zvuk/polya10/v6.mp3", "p8": "../zvuk/polya10/p8.mp3", "v7": "../zvuk/polya10/v7.mp3", "p9": "../zvuk/polya10/p9.mp3", "v8": "../zvuk/polya10/v8.mp3", "p10": "../zvuk/polya10/p10.mp3", "adj1": "../zvuk/polya10/adj1.mp3", "adj2": "../zvuk/polya10/adj2.mp3", "adj3": "../zvuk/polya10/adj3.mp3", "adj4": "../zvuk/polya10/adj4.mp3", "adj5": "../zvuk/polya10/adj5.mp3", "adj6": "../zvuk/polya10/adj6.mp3", "m1": "../zvuk/polya10/m1.mp3", "m2": "../zvuk/polya10/m2.mp3", "m3": "../zvuk/polya10/m3.mp3", "m4": "../zvuk/polya10/m4.mp3", "m5": "../zvuk/polya10/m5.mp3", "m6": "../zvuk/polya10/m6.mp3", "m7": "../zvuk/polya10/m7.mp3", "m8": "../zvuk/polya10/m8.mp3", "m9": "../zvuk/polya10/m9.mp3", "m10": "../zvuk/polya10/m10.mp3", "m11": "../zvuk/polya10/m11.mp3", "m12": "../zvuk/polya10/m12.mp3", "m13": "../zvuk/polya10/m13.mp3", "m14": "../zvuk/polya10/m14.mp3", "m15": "../zvuk/polya10/m15.mp3", "m16": "../zvuk/polya10/m16.mp3", "m17": "../zvuk/polya10/m17.mp3", "bd1": "../zvuk/polya10/bd1.mp3", "bd2": "../zvuk/polya10/bd2.mp3", "bd3": "../zvuk/polya10/bd3.mp3", "bd4": "../zvuk/polya10/bd4.mp3", "bd5": "../zvuk/polya10/bd5.mp3", "bd6": "../zvuk/polya10/bd6.mp3", "bd7": "../zvuk/polya10/bd7.mp3", "bd8": "../zvuk/polya10/bd8.mp3", "bd9": "../zvuk/polya10/bd9.mp3", "bd10": "../zvuk/polya10/bd10.mp3", "bd11": "../zvuk/polya10/bd11.mp3", "bd12": "../zvuk/polya10/bd12.mp3", "bd13": "../zvuk/polya10/bd13.mp3", "bd14": "../zvuk/polya10/bd14.mp3", "bd15": "../zvuk/polya10/bd15.mp3", "bd16": "../zvuk/polya10/bd16.mp3", "bd17": "../zvuk/polya10/bd17.mp3", "bd18": "../zvuk/polya10/bd18.mp3", "bd19": "../zvuk/polya10/bd19.mp3", "eg1": "../zvuk/polya10/eg1.mp3", "eg2": "../zvuk/polya10/eg2.mp3", "eg3": "../zvuk/polya10/eg3.mp3", "sa1": "../zvuk/polya10/sa1.mp3", "sa2": "../zvuk/polya10/sa2.mp3", "sa3": "../zvuk/polya10/sa3.mp3", "sa4": "../zvuk/polya10/sa4.mp3", "n1": "../zvuk/polya10/n1.mp3", "n2": "../zvuk/polya10/n2.mp3", "n3": "../zvuk/polya10/n3.mp3", "n4": "../zvuk/polya10/n4.mp3", "n5": "../zvuk/polya10/n5.mp3", "kl1": "../zvuk/polya10/kl1.mp3", "kl2": "../zvuk/polya10/kl2.mp3", "kl3": "../zvuk/polya10/kl3.mp3", "kl4": "../zvuk/polya10/kl4.mp3", "kl5": "../zvuk/polya10/kl5.mp3", "tr1": "../zvuk/polya10/tr1.mp3", "tr2": "../zvuk/polya10/tr2.mp3", "tr3": "../zvuk/polya10/tr3.mp3", "tr4": "../zvuk/polya10/tr4.mp3", "tr5": "../zvuk/polya10/tr5.mp3", "tr6": "../zvuk/polya10/tr6.mp3", "z1": "../zvuk/polya10/z1.mp3", "z2": "../zvuk/polya10/z2.mp3", "z3": "../zvuk/polya10/z3.mp3", "as1": "../zvuk/polya10/as1.mp3", "as2": "../zvuk/polya10/as2.mp3", "as3": "../zvuk/polya10/as3.mp3", "as4": "../zvuk/polya10/as4.mp3", "hs1": "../zvuk/polya10/hs1.mp3", "hs2": "../zvuk/polya10/hs2.mp3", "hs3": "../zvuk/polya10/hs3.mp3", "hs4": "../zvuk/polya10/hs4.mp3", "hs5": "../zvuk/polya10/hs5.mp3", "hs6": "../zvuk/polya10/hs6.mp3", "hs7": "../zvuk/polya10/hs7.mp3", "hs8": "../zvuk/polya10/hs8.mp3", "hs9": "../zvuk/polya10/hs9.mp3", "hs10": "../zvuk/polya10/hs10.mp3", "hs11": "../zvuk/polya10/hs11.mp3", "hs12": "../zvuk/polya10/hs12.mp3", "hs13": "../zvuk/polya10/hs13.mp3", "mb1": "../zvuk/polya10/mb1.mp3", "mb2": "../zvuk/polya10/mb2.mp3", "mb3": "../zvuk/polya10/mb3.mp3", "mb4": "../zvuk/polya10/mb4.mp3", "wz1": "../zvuk/polya10/wz1.mp3", "wz2": "../zvuk/polya10/wz2.mp3", "wz3": "../zvuk/polya10/wz3.mp3", "wz4": "../zvuk/polya10/wz4.mp3", "wz5": "../zvuk/polya10/wz5.mp3", "wz6": "../zvuk/polya10/wz6.mp3", "wz7": "../zvuk/polya10/wz7.mp3", "wz8": "../zvuk/polya10/wz8.mp3", "wz9": "../zvuk/polya10/wz9.mp3", "pv1": "../zvuk/polya10/pv1.mp3", "pv2": "../zvuk/polya10/pv2.mp3", "pv3": "../zvuk/polya10/pv3.mp3", "pv4": "../zvuk/polya10/pv4.mp3", "pv5": "../zvuk/polya10/pv5.mp3", "pv6": "../zvuk/polya10/pv6.mp3", "pv7": "../zvuk/polya10/pv7.mp3", "pv8": "../zvuk/polya10/pv8.mp3", "pv9": "../zvuk/polya10/pv9.mp3", "pv10": "../zvuk/polya10/pv10.mp3", "pv11": "../zvuk/polya10/pv11.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1256,94 +1298,244 @@ words('chisla',[
   ["n5","eine Million","айнэ мильон","1 000 000"],
 ], 'pk');
 
-// ── Домашка ──
+// ── Домашка (11.09: переделана под «самопроверку» — перевод и пояснения) ──
 
-// Задание 1: артикли — текст про комнату
-const АРТ_ТЕКСТ = [
-  ["Ich habe ein Zimmer. In meinem Zimmer steht ", "art1", " Bett."],
-  ["", "art2", " Bett ist groß. Neben dem Bett steht "],
-  ["", "art3", " Tisch. "],
-  ["", "art4", " Tisch ist klein."],
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+function кнопкаОтветов(кнопкаId, блокId, данные, после){
+  const к = document.getElementById(кнопкаId), б = document.getElementById(блокId);
+  к.dataset.showText = 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть ответы';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){
+    showAnswers(this, б, данные);
+    if (после && !б.dataset.дописано){ б.dataset.дописано = '1'; б.insertAdjacentHTML('beforeend', после()); }
+  };
+}
+function поле(k){ return '<input class="fld" data-save="' + k + '" style="width:60px;display:inline-block" autocomplete="off" autocapitalize="off" spellcheck="false">'; }
+
+// Задание 1: артикли в тексте про комнату (ключи art1–art13 — прежние)
+const АРТ_АБЗАЦЫ = [
+  { html: 'Ich habe ein Zimmer. In meinem Zimmer steht ' + поле('art1') + ' Bett. ' + поле('art2') + ' Bett ist groß. Neben dem Bett steht ' + поле('art3') + ' Tisch. ' + поле('art4') + ' Tisch ist klein.',
+    ru: 'У меня есть комната. В моей комнате стоит кровать. Кровать большая. Рядом с кроватью стоит стол. Стол маленький.',
+    верно: 'Ich habe ein Zimmer. In meinem Zimmer steht <b>ein</b> Bett. <b>Das</b> Bett ist groß. Neben dem Bett steht <b>ein</b> Tisch. <b>Der</b> Tisch ist klein.', clip: 'as1' },
+  { html: 'An der Wand steht ' + поле('art5') + ' Schrank. ' + поле('art6') + ' Schrank ist weiß. Auf dem Schrank steht ' + поле('art7') + ' Lampe. ' + поле('art8') + ' Lampe ist neu.',
+    ru: 'У стены стоит шкаф. Шкаф белый. На шкафу стоит лампа. Лампа новая.',
+    верно: 'An der Wand steht <b>ein</b> Schrank. <b>Der</b> Schrank ist weiß. Auf dem Schrank steht <b>eine</b> Lampe. <b>Die</b> Lampe ist neu.', clip: 'as2' },
+  { html: 'Im Zimmer ist auch ' + поле('art9') + ' Stuhl. ' + поле('art10') + ' Stuhl ist blau. Neben dem Stuhl steht ' + поле('art11') + ' Sofa. ' + поле('art12') + ' Sofa ist bequem.',
+    ru: 'В комнате есть и стул. Стул синий. Рядом со стулом стоит диван. Диван удобный.',
+    верно: 'Im Zimmer ist auch <b>ein</b> Stuhl. <b>Der</b> Stuhl ist blau. Neben dem Stuhl steht <b>ein</b> Sofa. <b>Das</b> Sofa ist bequem.', clip: 'as3' },
+  { html: 'Ich mag mein Zimmer. ' + поле('art13') + ' Zimmer ist klein, aber schön.',
+    ru: 'Мне нравится моя комната. Комната маленькая, но красивая.',
+    верно: 'Ich mag mein Zimmer. <b>Das</b> Zimmer ist klein, aber schön.', clip: 'as4' },
 ];
-document.getElementById('hwArtikel').innerHTML = `
-  <p style="font-family:Georgia,serif; font-size:14.5px; line-height:2.1">
-  Ich habe ein Zimmer. In meinem Zimmer steht <input class="fld" data-save="art1" style="width:60px;display:inline-block"> Bett.
-  <input class="fld" data-save="art2" style="width:60px;display:inline-block"> Bett ist groß. Neben dem Bett steht
-  <input class="fld" data-save="art3" style="width:60px;display:inline-block"> Tisch.
-  <input class="fld" data-save="art4" style="width:60px;display:inline-block"> Tisch ist klein.</p>
-  <p style="font-family:Georgia,serif; font-size:14.5px; line-height:2.1">
-  An der Wand steht <input class="fld" data-save="art5" style="width:60px;display:inline-block"> Schrank.
-  <input class="fld" data-save="art6" style="width:60px;display:inline-block"> Schrank ist weiß. Auf dem Schrank steht
-  <input class="fld" data-save="art7" style="width:60px;display:inline-block"> Lampe.
-  <input class="fld" data-save="art8" style="width:60px;display:inline-block"> Lampe ist neu.</p>
-  <p style="font-family:Georgia,serif; font-size:14.5px; line-height:2.1">
-  Im Zimmer ist auch <input class="fld" data-save="art9" style="width:60px;display:inline-block"> Stuhl.
-  <input class="fld" data-save="art10" style="width:60px;display:inline-block"> Stuhl ist blau. Neben dem Stuhl steht
-  <input class="fld" data-save="art11" style="width:60px;display:inline-block"> Sofa.
-  <input class="fld" data-save="art12" style="width:60px;display:inline-block"> Sofa ist bequem.</p>
-  <p style="font-family:Georgia,serif; font-size:14.5px; line-height:2.1">
-  Ich mag mein Zimmer. <input class="fld" data-save="art13" style="width:60px;display:inline-block"> Zimmer ist klein, aber schön.</p>
-`;
+document.getElementById('hwArtikel').innerHTML = АРТ_АБЗАЦЫ.map(а =>
+  '<p style="font-family:Georgia,serif; font-size:14.5px; line-height:2.1">' + а.html + ' ' + кнопкаПеревода(а.ru) + '</p>').join('');
+const ПЕРВЫЙ = 'Предмет называют <b>впервые</b> → неопределённый артикль.';
+const ЗНАКОМЫЙ = 'Про этот предмет <b>уже сказали</b> → определённый.';
+const АРТ_ОТВЕТЫ = [
+  ['steht ___ Bett', 'ein', null, null, ПЕРВЫЙ + ' <i>das Bett</i> — средний род, подлежащее (Nominativ) → <b>ein</b>.'],
+  ['___ Bett ist groß', 'Das', null, null, ЗНАКОМЫЙ + ' das Bett → <b>Das</b>, с большой: начало предложения.'],
+  ['steht ___ Tisch', 'ein', null, null, ПЕРВЫЙ + ' <i>der Tisch</i> — мужской, Nominativ → <b>ein</b>.'],
+  ['___ Tisch ist klein', 'Der', null, null, ЗНАКОМЫЙ + ' der Tisch → <b>Der</b>.'],
+  ['steht ___ Schrank', 'ein', null, null, ПЕРВЫЙ + ' <i>der Schrank</i> → <b>ein</b>.'],
+  ['___ Schrank ist weiß', 'Der', null, null, ЗНАКОМЫЙ + ' → <b>Der</b> Schrank.'],
+  ['steht ___ Lampe', 'eine', null, null, ПЕРВЫЙ + ' <i>die Lampe</i> — женский → <b>eine</b>.'],
+  ['___ Lampe ist neu', 'Die', null, null, ЗНАКОМЫЙ + ' → <b>Die</b> Lampe.'],
+  ['ist auch ___ Stuhl', 'ein', null, null, ПЕРВЫЙ + ' <i>der Stuhl</i> → <b>ein</b>.'],
+  ['___ Stuhl ist blau', 'Der', null, null, ЗНАКОМЫЙ + ' → <b>Der</b> Stuhl.'],
+  ['steht ___ Sofa', 'ein', null, null, ПЕРВЫЙ + ' <i>das Sofa</i> — средний → <b>ein</b>.'],
+  ['___ Sofa ist bequem', 'Das', null, null, ЗНАКОМЫЙ + ' → <b>Das</b> Sofa.'],
+  ['___ Zimmer ist klein', 'Das', null, null, 'Комнату уже называли — «mein Zimmer» в предыдущем предложении → определённый: <b>Das</b> Zimmer.'],
+];
+кнопкаОтветов('кОтветыArtikel', 'otvetyArtikel', АРТ_ОТВЕТЫ, () =>
+  '<div class="grammar-box" style="margin-top:10px"><b>Весь текст правильно:</b><br>' +
+  АРТ_АБЗАЦЫ.map(а => '<span style="font-family:Georgia,serif">' + а.верно + '</span> ' + playBtn(а.clip)).join('<br><br>') +
+  '<br><br>Бонус из занятия 11: <i>neben <b>dem</b> Bett</i>, <i>auf <b>dem</b> Schrank</i> — это Dativ: где? — рядом с кроватью, на шкафу.</div>');
 
-// Задание 3: текст про Клару
-document.getElementById('klaraText').innerHTML = `
-  <p>Ich bin Klara und erzähle heute von unserem Haus. Unser Haus ist sehr groß. Es hat 250 Quadratmeter. Es gibt auch einen Garten. Im Garten haben wir viele Blumen und einige Bäume. Im Garten gibt es immer viel Arbeit. Ich helfe meinen Eltern gerne im Garten. ${playBtn('kl1')}</p>
-  <p>Manchmal kommen zu uns Freunde und die Familie. Dann grillen wir im Garten. Das macht viel Spaß. Im Haus gibt es zwei Badezimmer. Ein Badezimmer ist für meine Eltern. Das andere Badezimmer für meine Schwester und mich.</p>
-  <p>Unser Wohnzimmer ist sehr groß und schön. Es gibt ein bequemes Sofa. Neben dem Sofa stehen ein Tisch und eine Lampe. In der Ecke gibt es einen großen Tisch mit Stühlen, an dem wir essen. In der Mitte des Zimmers liegt ein großer Teppich. ${playBtn('kl2')} Der Teppich kommt aus dem Iran. Es gibt auch einen Kamin im Wohnzimmer. Das ist im Winter sehr gemütlich und schön warm.</p>
-  <p>Neben dem Wohnzimmer ist die Küche. Ich mag unsere Küche nicht. Die Möbel sind alt und sehr dunkel. ${playBtn('kl3')} In der Küche ist auch ein Esstisch. Unsere Familie isst aber lieber im Wohnzimmer. ${playBtn('kl4')} In der Küche gibt es eine Spülmaschine, einen Herd und viele Schränke. Es gibt dort keine Waschmaschine. Die Waschmaschine steht im Keller. ${playBtn('kl5')}</p>
-  <p>Im ersten Stock sind zwei Kinderzimmer und das Schlafzimmer. Ich finde mein Zimmer schön. Es ist sehr groß und hat weiße Möbel.</p>
-`;
+// Задание 3: текст про Клару — по предложению, перевод за кнопкой
+const KLARA = [
+  [["Ich bin Klara und erzähle heute von unserem Haus.","Я Клара, и сегодня я расскажу о нашем доме."],
+   ["Unser Haus ist sehr groß.","Наш дом очень большой."],
+   ["Es hat 250 Quadratmeter.","В нём 250 квадратных метров."],
+   ["Es gibt auch einen Garten.","Есть и сад."],
+   ["Im Garten haben wir viele Blumen und einige Bäume.","В саду у нас много цветов и несколько деревьев."],
+   ["Im Garten gibt es immer viel Arbeit.","В саду всегда много работы."],
+   ["Ich helfe meinen Eltern gerne im Garten.","Я с удовольствием помогаю родителям в саду."]],
+  [["Manchmal kommen zu uns Freunde und die Familie.","Иногда к нам приходят друзья и родственники."],
+   ["Dann grillen wir im Garten.","Тогда мы жарим гриль в саду."],
+   ["Das macht viel Spaß.","Это очень весело."],
+   ["Im Haus gibt es zwei Badezimmer.","В доме две ванные."],
+   ["Ein Badezimmer ist für meine Eltern.","Одна ванная — для родителей."],
+   ["Das andere Badezimmer für meine Schwester und mich.","Другая — для сестры и меня."]],
+  [["Unser Wohnzimmer ist sehr groß und schön.","Наша гостиная очень большая и красивая."],
+   ["Es gibt ein bequemes Sofa.","Там есть удобный диван."],
+   ["Neben dem Sofa stehen ein Tisch und eine Lampe.","Рядом с диваном стоят столик и лампа."],
+   ["In der Ecke gibt es einen großen Tisch mit Stühlen, an dem wir essen.","В углу — большой стол со стульями, за которым мы едим."],
+   ["In der Mitte des Zimmers liegt ein großer Teppich.","Посреди комнаты лежит большой ковёр."],
+   ["Der Teppich kommt aus dem Iran.","Ковёр — из Ирана."],
+   ["Es gibt auch einen Kamin im Wohnzimmer.","В гостиной есть и камин."],
+   ["Das ist im Winter sehr gemütlich und schön warm.","Зимой это очень уютно и приятно тепло."]],
+  [["Neben dem Wohnzimmer ist die Küche.","Рядом с гостиной — кухня."],
+   ["Ich mag unsere Küche nicht.","Мне не нравится наша кухня."],
+   ["Die Möbel sind alt und sehr dunkel.","Мебель старая и очень тёмная."],
+   ["In der Küche ist auch ein Esstisch.","На кухне тоже есть обеденный стол."],
+   ["Unsere Familie isst aber lieber im Wohnzimmer.","Но наша семья больше любит есть в гостиной."],
+   ["In der Küche gibt es eine Spülmaschine, einen Herd und viele Schränke.","На кухне есть посудомоечная машина, плита и много шкафов."],
+   ["Es gibt dort keine Waschmaschine.","Стиральной машины там нет."],
+   ["Die Waschmaschine steht im Keller.","Стиральная машина стоит в подвале."]],
+  [["Im ersten Stock sind zwei Kinderzimmer und das Schlafzimmer.","На втором этаже — две детские и спальня. (im ersten Stock — это наш второй этаж!)"],
+   ["Ich finde mein Zimmer schön.","Мне нравится моя комната."],
+   ["Es ist sehr groß und hat weiße Möbel.","Она очень большая, и мебель в ней белая."]],
+];
+document.getElementById('klaraText').innerHTML = KLARA.map(абз =>
+  '<p>' + абз.map(([de,ru]) => de + ' ' + кнопкаПеревода(ru)).join(' ') + '</p>').join('');
 
 const КЛАРА_ВОПРОСЫ = [
-  { q: "1) Klara…", opts: ["…ist nicht gerne im Garten.","…hilft ihren Eltern gerne im Garten.","…isst nicht gerne im Wohnzimmer.","…hat ein eigenes Badezimmer."] },
-  { q: "2) Im Wohnzimmer gibt es…", opts: ["…einen Teppich.","…einen Sessel und ein Sofa.","…eine Küche.","…eine Waschmaschine."] },
-  { q: "3) Die Möbel in der Küche sind…", opts: ["…hell und modern.","…neu.","…kaputt.","…alt und dunkel."] },
-  { q: "4) Die Familie…", opts: ["…isst immer im Garten.","…isst immer in der Küche.","…isst gerne im Wohnzimmer.","…isst im Esszimmer."] },
-  { q: "5) Die Waschmaschine…", opts: ["…steht im Keller.","…steht in der Küche.","…steht im ersten Stock.","…ist kaputt."] },
+  { q: "1) Klara…", ru: "Клара…", opts: ["…ist nicht gerne im Garten.","…hilft ihren Eltern gerne im Garten.","…isst nicht gerne im Wohnzimmer.","…hat ein eigenes Badezimmer."], correct:1, clip:'kl1',
+    почему: "В тексте: «Ich helfe meinen Eltern gerne im Garten» — «я с удовольствием помогаю родителям в саду». Про собственную ванную — наоборот: одна ванная у неё общая с сестрой." },
+  { q: "2) Im Wohnzimmer gibt es…", ru: "В гостиной есть…", opts: ["…einen Teppich.","…einen Sessel und ein Sofa.","…eine Küche.","…eine Waschmaschine."], correct:0, clip:'kl2',
+    почему: "«Es gibt ein bequemes Sofa … In der Mitte des Zimmers liegt ein großer Teppich». Кресла (Sessel) в тексте нет — поэтому b) неверно, хотя диван есть." },
+  { q: "3) Die Möbel in der Küche sind…", ru: "Мебель на кухне…", opts: ["…hell und modern.","…neu.","…kaputt.","…alt und dunkel."], correct:3, clip:'kl3',
+    почему: "«Die Möbel sind alt und sehr dunkel» — «мебель старая и очень тёмная». Поэтому Клара и не любит кухню." },
+  { q: "4) Die Familie…", ru: "Семья…", opts: ["…isst immer im Garten.","…isst immer in der Küche.","…isst gerne im Wohnzimmer.","…isst im Esszimmer."], correct:2, clip:'kl4',
+    почему: "«Unsere Familie isst aber lieber im Wohnzimmer» — «больше любит есть в гостиной». lieber — «охотнее», сравнительная степень от gern." },
+  { q: "5) Die Waschmaschine…", ru: "Стиральная машина…", opts: ["…steht im Keller.","…steht in der Küche.","…steht im ersten Stock.","…ist kaputt."], correct:0, clip:'kl5',
+    почему: "«Es gibt dort keine Waschmaschine. Die Waschmaschine steht im Keller.» — на кухне её нет, она в подвале." },
 ];
 document.getElementById('klaraQuiz').innerHTML = КЛАРА_ВОПРОСЫ.map((в,i)=>`
-  <div class="hwrow"><span class="q"><b>${в.q}</b><br>
+  <div class="hwrow"><span class="q"><b>${в.q}</b> ${кнопкаПеревода(в.ru)}<br>
   ${в.opts.map((о,j)=>`<label style="display:block;margin:4px 0"><input type="radio" name="klq${i}" data-save="klq${i}" value="${j}"> ${о}</label>`).join('')}
   </span></div>`).join('');
+кнопкаОтветов('кПоказатьОтветы', 'klaraOtvety',
+  КЛАРА_ВОПРОСЫ.map(в => [в.q, 'abcd'[в.correct] + ') ' + в.opts[в.correct] + ' ' + playBtn(в.clip), null, в.ru, в.почему]));
 
-const КЛАРА_ОТВЕТЫ = [1,0,3,2,0]; // индексы правильных вариантов (0 = a, 1 = b, ...)
-const КЛАРА_ЦИТАТЫ = [
-  "«Ich helfe meinen Eltern gerne im Garten» — b.",
-  "«Es gibt ein bequemes Sofa … liegt ein großer Teppich» — a.",
-  "«Die Möbel sind alt und sehr dunkel» — d.",
-  "«Unsere Familie isst aber lieber im Wohnzimmer» — c.",
-  "«Die Waschmaschine steht im Keller» — a.",
+// Задание 4: рабочий лист — текстом, с ответами
+const ДОМ = [
+  ['1 → ___', 'das Dach ' + playBtn('hs1'), null, 'крыша', 'Средний род. На рисунке тёмная черепица слева сверху.'],
+  ['2 → ___', 'der Dachboden ' + playBtn('hs2'), null, 'чердак', '<i>das Dach</i> (крыша) + <i>der Boden</i> (пол) — «пол под крышей». Род сложного слова — по последнему слову: <b>der</b>.'],
+  ['3 → ___', 'der Balkon ' + playBtn('hs3'), null, 'балкон', 'Кованая решётка на фасаде. Как по-русски.'],
+  ['4 → ___', 'der Keller ' + playBtn('hs4'), null, 'подвал', 'Каменные своды внизу. Сюда Клара поставила стиральную машину.'],
+  ['5 → ___', 'das Erdgeschoss ' + playBtn('hs5'), null, 'первый этаж (на уровне земли)', '<i>die Erde</i> (земля) + <i>das Geschoss</i> (этаж). Скобка на рисунке охватывает нижний этаж фасада.'],
+  ['6 → ___', 'die Küche ' + playBtn('hs6'), null, 'кухня', 'Плита, холодильник, шкафчики, лампа над столом.'],
+  ['7 → ___', 'das Esszimmer ' + playBtn('hs7'), null, 'столовая', 'Буфет с тарелками — столовая: <i>essen</i> (есть) + <i>das Zimmer</i>. ⚠️ Честно: 7 и 8 — две соседние комнаты за аркой, и по рисунку не до конца ясно, где какая. Если Даша поменяет их местами — она права.'],
+  ['8 → ___', 'das Wohnzimmer ' + playBtn('hs8'), null, 'гостиная', 'Кресло и картина на стене — гостиная (стол со стульями тут тоже есть — отсюда и сомнение из пункта 7).'],
+  ['9 → ___ (образец)', 'на листе: die zweite Etage · по-немецки: der erste Stock ' + playBtn('hs9'), null, 'верхний этаж',
+   '⚠️ Скобка 9 — этаж сразу над Erdgeschoss. На листе он назван «zweite Etage», но <b>в Германии этажи считают без земли: этаж над Erdgeschoss — der erste Stock (die erste Etage)</b>. Наш русский второй этаж — немецкий первый. Как у Клары: «Im ersten Stock sind zwei Kinderzimmer» — детские там же, где у нас спальня 10.'],
+  ['10 → ___', 'das Schlafzimmer ' + playBtn('hs10'), null, 'спальня', 'Кровать, шкаф, туалетный столик. <i>schlafen</i> (спать) + <i>das Zimmer</i>.'],
+  ['11 → ___', 'das Badezimmer ' + playBtn('hs11'), null, 'ванная', 'Ванна, душ, унитаз. Коротко — <i>das Bad</i>.'],
+  ['12 → ___', 'die Treppe ' + playBtn('hs12'), null, 'лестница', 'Лестница вниз, в подвал.'],
+  ['13 → ___', 'die Haustür ' + playBtn('hs13'), null, 'входная дверь', '<i>das Haus</i> + <i>die Tür</i> → род по последнему слову: <b>die</b>.'],
 ];
-document.getElementById('кПоказатьОтветы').onclick = function(){
-  const блок = document.getElementById('klaraOtvety');
-  блок.hidden = !блок.hidden;
-  this.textContent = блок.hidden ? 'Показать правильные ответы' : 'Скрыть ответы';
-  if (!блок.innerHTML) {
-    блок.innerHTML = '<div class="grammar-box">' + КЛАРА_ЦИТАТЫ.map((т,i)=>`${i+1}. ${т}`).join('<br>') + '</div>';
-  }
-};
+blanksBlock('hwHaus', ДОМ, 'ha_');
+кнопкаОтветов('кОтветыHaus', 'otvetyHaus', ДОМ);
 
-// Задание 5: перевод предложений про квартиру
+const МЕБЕЛЬ = [
+  ['Картинка 1 — спальня: ___', 'das Bett, -en · der Kleiderschrank, -¨e · das Regal, -e · die Lampe, -n · der Nachttisch, -e · der Teppich, -e ' + playBtn('mb1'), null, 'кровать, платяной шкаф, полка, лампа, тумбочка, ковёр',
+   'Образец с листа — «das Bett, -en»: артикль и окончание множественного. <b>-¨e</b> значит умляут + -e: der Schrank → die Schr<b>ä</b>nk<b>e</b>.'],
+  ['Картинка 2 — гостиная: ___', 'der Sessel, - · das Sofa, -s · das Kissen, - · die Lampe, -n · der Beistelltisch, -e · der Teppich, -e ' + playBtn('mb2'), null, 'кресло, диван, подушка, лампа, столик, ковёр',
+   '<b>-</b> значит «не меняется»: der Sessel → die Sessel, das Kissen → die Kissen. Слова из английского часто на -s: die Sofa<b>s</b>.'],
+  ['Картинка 3 — кухня: ___', 'der Kühlschrank, -¨e · die Spüle, -n · die Spülmaschine, -n · der Herd, -e · der Backofen, -¨ · der Küchenschrank, -¨e · die Fußmatte, -n ' + playBtn('mb3'), null, 'холодильник, мойка, посудомойка, плита, духовка, кухонный шкаф, коврик',
+   'Сложные слова: <i>kühl</i> (прохладный) + <i>der Schrank</i> = холодильник; <i>spülen</i> (мыть посуду) + <i>die Maschine</i>. Род — по последнему слову.'],
+  ['Картинка 4 — кабинет: ___', 'der Schreibtisch, -e · der Computer, - · die Tastatur, -en · der Bürostuhl, -¨e · die Lampe, -n · das Telefon, -e · der Drucker, - · der Aktenschrank, -¨e ' + playBtn('mb4'), null, 'письменный стол, компьютер, клавиатура, офисный стул, лампа, телефон, принтер, шкаф для документов',
+   'Это пример — на картинках можно назвать и другое. Главное: каждое слово с артиклем и множественным.'],
+];
+blanksBlock('hwMoebel', МЕБЕЛЬ, 'mb_');
+кнопкаОтветов('кОтветыMoebel', 'otvetyMoebel', МЕБЕЛЬ);
+
+const ЗИММЕР = [
+  ['Wo findet man ein Bett? → ___', 'Im Schlafzimmer findet man ein Bett. ' + playBtn('wz1'), null, 'Где находится кровать?',
+   'Образец с листа. Где? → Dativ: in dem Schlafzimmer = <b>im</b> Schlafzimmer. Место встало первым — значит, глагол <b>findet</b> сразу вторым.'],
+  ['Wo findet man ein Sofa? → ___', 'Im Wohnzimmer findet man ein Sofa. ' + playBtn('wz2'), null, 'Где находится диван?',
+   '<i>das Wohnzimmer</i> → im Wohnzimmer.'],
+  ['Wo findet man eine Mikrowelle? → ___', 'In der Küche findet man eine Mikrowelle. ' + playBtn('wz3'), null, 'Где находится микроволновка?',
+   '<i>die Küche</i> — женский род: в Dativ <b>in der</b> Küche, без сокращения.'],
+  ['Wo findet man einen Esstisch? → ___', 'Im Esszimmer findet man einen Esstisch. ' + playBtn('wz4'), null, 'Где находится обеденный стол?',
+   '«findet man was?» — Akkusativ: der Esstisch → <b>einen</b> Esstisch. А место — Dativ: im Esszimmer.'],
+  ['Wo findet man eine Toilette? → ___', 'Im Badezimmer findet man eine Toilette. ' + playBtn('wz5'), null, 'Где находится унитаз?',
+   '<i>das Badezimmer</i> → im. Отдельный туалет по-немецки — <i>die Toilette</i> или <i>das WC</i>.'],
+  ['Wo findet man einen Computer? → ___', 'Im Arbeitszimmer findet man einen Computer. ' + playBtn('wz6'), null, 'Где находится компьютер?',
+   '<i>das Arbeitszimmer</i> — кабинет: <i>arbeiten</i> + <i>das Zimmer</i>.'],
+  ['Wo findet man ein Auto? → ___', 'In der Garage findet man ein Auto. ' + playBtn('wz7'), null, 'Где находится машина?',
+   '<i>die Garage</i> → in der Garage.'],
+  ['Wo findet man Blumen und Gras? → ___', 'Im Garten findet man Blumen und Gras. ' + playBtn('wz8'), null, 'Где растут цветы и трава?',
+   '<i>der Garten</i> → im Garten. Blumen — множественное без артикля.'],
+  ['Wo findet man die Waschmaschine? → ___', 'Im Keller findet man die Waschmaschine. ' + playBtn('wz9'), null, 'Где находится стиральная машина?',
+   '<i>der Keller</i> → im Keller — ровно как у Клары: «Die Waschmaschine steht im Keller». Задание просит в каждом ответе новую комнату — здесь все девять разные.'],
+];
+blanksBlock('hwZimmer', ЗИММЕР, 'zm_');
+кнопкаОтветов('кОтветыZimmer', 'otvetyZimmer', ЗИММЕР);
+
+// Задание 5: перевод про квартиру — мой вариант за кнопкой (ключи f_tr0–f_tr10 — прежние)
 const ПЕРЕВОД = [
-  ["Где ты живёшь? — Я живу в многоэтажке.", "Wo wohnst du? — Ich wohne in einem Hochhaus.", "tr1"],
-  ["На каком этаже ты живёшь? — Я живу на первом этаже.", "In welchem Stock wohnst du? — Ich wohne im ersten Stock.", null],
-  ["Как ты находишь свою квартиру? — Она не большая, но светлая и красивая.", "Wie findest du deine Wohnung? — Sie ist nicht groß, aber hell und schön.", null],
-  ["Какие комнаты имеет квартира? — Она имеет гостиную, спальню и кухню.", "Welche Zimmer hat die Wohnung? — Sie hat ein Wohnzimmer, ein Schlafzimmer und eine Küche.", null],
-  ["Она определённо дорогая, не так ли? — Нет, она дешёвая.", "Sie ist bestimmt teuer, oder? — Nein, sie ist günstig.", null],
-  ["Какой размер квартиры? — Квартира имеет 50 квадратных метров.", "Wie groß ist die Wohnung? — Die Wohnung hat fünfzig Quadratmeter.", "tr3"],
-  ["Сколько стоит квартира? — Она стоит 700 евро в месяц.", "Wie viel kostet die Wohnung? — Sie kostet siebenhundert Euro im Monat.", "tr5"],
-  ["Сколько комнат в квартире? — Квартира имеет 2½ комнаты.", "Wie viele Zimmer hat die Wohnung? — Die Wohnung hat zweieinhalb Zimmer.", null],
-  ["Где квартира? — Она расположена в Альтоне.", "Wo ist die Wohnung? — Sie liegt in Altona.", null],
-  ["Какой номер телефона? — Мой мобильный 0176/70021225.", "Wie ist die Telefonnummer? — Meine Handynummer ist null eins sieben sechs, sieben null null zwei eins zwei zwei fünf.", null],
-  ["Когда квартира свободна? — Квартира свободна с 01.08.2018.", "Ab wann ist die Wohnung frei? — Die Wohnung ist ab dem ersten August frei.", null],
+  ["Где ты живёшь? — Я живу в многоэтажке.", "Wo wohnst du? — Ich wohne in einem Hochhaus.", "pv1",
+   "<i>das Hochhaus</i> — многоэтажка. Где? → Dativ: in <b>einem</b> Hochhaus (ein → einem)."],
+  ["На каком этаже ты живёшь? — Я живу на первом этаже.", "In welchem Stock wohnst du? — Ich wohne im Erdgeschoss.", "pv2",
+   "⚠️ Здесь раньше стоял мой ошибочный вариант «im ersten Stock» — исправлено 11.09. Немцы считают этажи от земли: русский «первый этаж» — это <b>das Erdgeschoss</b>, а «der erste Stock» — уже наш второй."],
+  ["Как ты находишь свою квартиру? — Она не большая, но светлая и красивая.", "Wie findest du deine Wohnung? — Sie ist nicht groß, aber hell und schön.", "pv3",
+   "«Как тебе…?» — <i>Wie findest du…?</i> die Wohnung → в ответе <b>sie</b> (она)."],
+  ["Какие комнаты имеет квартира? — Она имеет гостиную, спальню и кухню.", "Welche Zimmer hat die Wohnung? — Sie hat ein Wohnzimmer, ein Schlafzimmer und eine Küche.", "pv4",
+   "После <i>haben</i> — Akkusativ, но у среднего (ein Wohnzimmer) и женского (eine Küche) рода в Akkusativ ничего не меняется."],
+  ["Она определённо дорогая, не так ли? — Нет, она дешёвая.", "Sie ist bestimmt teuer, oder? — Nein, sie ist günstig.", "pv5",
+   "«…, не так ли?» — <i>…, oder?</i> <b>günstig</b> — «выгодная, недорогая», звучит лучше, чем <i>billig</i> (дешёвая, дешёвка)."],
+  ["Какой размер квартиры? — Квартира имеет 50 квадратных метров.", "Wie groß ist die Wohnung? — Die Wohnung hat fünfzig Quadratmeter.", "pv6",
+   "Размер спрашивают <i>Wie groß…?</i>, а отвечают через <i>haben</i>: «квартира имеет 50 м²»."],
+  ["Сколько стоит квартира? — Она стоит 700 евро в месяц.", "Wie viel kostet die Wohnung? — Sie kostet siebenhundert Euro im Monat.", "pv7",
+   "<i>im Monat</i> — «в месяц» (in dem Monat). Euro во множественном не меняется: 700 Euro."],
+  ["Сколько комнат в квартире? — Квартира имеет 2½ комнаты.", "Wie viele Zimmer hat die Wohnung? — Die Wohnung hat zweieinhalb Zimmer.", "pv8",
+   "<b>wie viele</b> — для того, что считают (комнаты), <b>wie viel</b> — для неисчисляемого (деньги в вопросе 7). 2½ = <i>zweieinhalb</i>."],
+  ["Где квартира? — Она расположена в Альтоне.", "Wo ist die Wohnung? — Sie liegt in Altona.", "pv9",
+   "<i>liegen</i> — «располагаться» про место. Альтона — район Гамбурга; города и районы — без артикля."],
+  ["Какой номер телефона? — Мой мобильный 0176/70021225.", "Wie ist die Telefonnummer? — Meine Handynummer ist null eins sieben sechs, sieben null null zwei eins zwei zwei fünf.", "pv10",
+   "Номер диктуют по одной цифре. <i>die Handynummer</i> — номер мобильного."],
+  ["Когда квартира свободна? — Квартира свободна с 01.08.2018.", "Ab wann ist die Wohnung frei? — Die Wohnung ist ab dem ersten August frei.", "pv11",
+   "<b>ab</b> + Dativ — «начиная с»: ab <b>dem</b> ersten August. Дата — порядковое числительное: der erste."],
 ];
-document.getElementById('hwPerevod').innerHTML = ПЕРЕВОД.map(([ru,de,aid],i)=>`
+document.getElementById('hwPerevod').innerHTML = ПЕРЕВОД.map(([ru,de,aid,почему],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
     <div style="font-size:13px;color:var(--ink-faint);margin-bottom:4px">${ru}</div>
-    <input class="fld" data-save="f_tr${i}" placeholder="твой перевод на немецкий"><br>
-    <div style="margin-top:4px;font-size:12.5px">
-      <span style="font-family:Georgia,serif">${de}</span> ${aid ? playBtn(aid) : ''}
-    </div>
+    <input class="fld" data-save="f_tr${i}" placeholder="твой перевод на немецкий" style="width:100%;max-width:520px"><br>
+    <button type="button" class="hw-tr-btn" style="margin:6px 0 0" onclick="var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');">мой вариант</button><span class="hw-tr" hidden style="font-style:normal">
+      <span style="font-family:Georgia,serif;color:var(--ink)">${de}</span> ${playBtn(aid)}
+      <span class="hw-why" style="display:block">${почему}</span>
+    </span>
   </span></div>`).join('');
 
 (function(){
