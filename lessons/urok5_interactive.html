@@ -64,6 +64,18 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
   footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+</style>
 
 <style id="backbar-css">
   .backbar{
@@ -96,10 +108,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -270,8 +278,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 5. Все числа — количественные и порядковые</h1>
-  <p class="lede">Числа врачу нужны каждый день: возраст, давление, пульс, дозы, дата приёма. Здесь и обычные числа (сколько?), и порядковые (какой по счёту?). Главная ловушка — двузначные «задом наперёд». Жми 🔊.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Числа врачу нужны каждый день: возраст, давление, пульс, вес, дозы, дата приёма. Здесь и обычные числа (сколько?), и порядковые (какой по счёту?), и то, как немцы говорят «тридцать восемь и пять» и «одна тысяча девятьсот восьмидесятый». Главная ловушка — двузначные «задом наперёд». Жми 🔊.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
     <h2><span class="num">1</span> 0–12 — фундамент</h2>
@@ -300,16 +308,32 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 
   <section class="block">
     <h2><span class="num">5</span> Сотни, тысячи, год</h2>
+    <div class="grammar-box">
+      Годы до 2000 читают <b class="hl">сотнями</b>: 1980 — не «тысяча девятьсот», а «девятнадцать сотен восемьдесят» — <b>neunzehnhundertachtzig</b>. С 2000 — обычным числом: <i>zweitausendsechsundzwanzig</i>.
+    </div>
     <div class="num-grid" id="g5"></div>
   </section>
 
   <section class="block">
     <h2><span class="num">6</span> Числа в работе врача</h2>
+    <div class="grammar-box">Давление читают через <b>zu</b>: <i>hundertzwanzig zu achtzig</i> — «120 на 80». Рост — в метрах: <i>eins achtzig</i> (1,80).</div>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Вес и рост</b> спрашивают на каждом первичном приёме: <i>Wie viel wiegen Sie? — Wie groß sind Sie?</i> Отвечают коротко: <i>achtzig Kilo, eins achtzig</i>.
+    </div>
   </section>
 
   <section class="block">
-    <h2><span class="num">7</span> Порядковые числительные: какой по счёту?</h2>
+    <h2><span class="num">7</span> Запятая и дозы</h2>
+    <div class="grammar-box">
+      Дробь в немецком пишут через <b>запятую</b> и читают «<b class="hl">Komma</b>»: 38,5 — <i>achtunddreißig Komma fünf</i>. Точка разделяет тысячи: 10.000 — десять тысяч.<br><br>
+      Дозы: <i>zweimal täglich</i> — два раза в день, <i>alle acht Stunden</i> — каждые восемь часов, <i>vor / nach dem Essen</i> — до / после еды.
+    </div>
+    <div class="card-list" id="dose"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">8</span> Порядковые числительные: какой по счёту?</h2>
     <div class="grammar-box">
       Обычное число отвечает «сколько?», порядковое — «<b>какой по счёту?</b>» (первый, второй, третий). Правило простое:
       от 1 до 19 добавляем <b class="hl">-te</b>, от 20 и выше — <b class="hl">-ste</b>. Перед словом почти всегда стоит артикль <i>der/die/das</i>.
@@ -323,26 +347,50 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block">
-    <h2><span class="num">8</span> Порядковые в работе врача</h2>
+    <h2><span class="num">9</span> Порядковые в работе врача и даты</h2>
     <p class="desc">Дата приёма, «первый/второй раз», номер таблетки, этаж. Врачу порядковые нужны каждый день.</p>
     <div class="warn-box">Важный нюанс про этажи: <b>der erste Stock = наш «второй этаж»</b> (первый над землёй). Наш первый этаж немцы зовут <i>Erdgeschoss</i> (земляной этаж).</div>
     <div class="card-list" id="medp"></div>
+    <div class="grammar-box" style="margin-top:14px">
+      Дата: «какое сегодня число?» — <i>Der Wievielte ist heute?</i> После <b>am</b> порядковое получает <b class="hl">-en</b>: <i>am zwölften Mai, am ersten Oktober</i>.
+    </div>
+    <div class="card-list" id="dates"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">9</span> Диалог: возраст, давление, дата приёма</h2>
+    <h2><span class="num">10</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">zwanzigvier</span><span class="good">vierundzwanzig</span><span class="why">единицы — вперёд, через und</span></div>
+      <div class="err-row"><span class="bad">sechszig</span><span class="good">sechzig</span><span class="why">в 60 s выпадает, как в 16</span></div>
+      <div class="err-row"><span class="bad">dreizig</span><span class="good">dreißig</span><span class="why">30 — единственное на -ßig</span></div>
+      <div class="err-row"><span class="bad">der dreite</span><span class="good">der dritte</span><span class="why">исключение: 3 — dritte</span></div>
+      <div class="err-row"><span class="bad">der einste</span><span class="good">der erste</span><span class="why">исключение: 1 — erste</span></div>
+      <div class="err-row"><span class="bad">tausendneunhundertachtzig — год</span><span class="good">neunzehnhundertachtzig</span><span class="why">годы до 2000 — сотнями</span></div>
+      <div class="err-row"><span class="bad">38.5</span><span class="good">38,5 — achtunddreißig Komma fünf</span><span class="why">дробь — через запятую</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">11</span> Диалоги</h2>
+    <div class="desc">Первый — возраст, давление, дата следующего приёма. Второй — медсестра измеряет давление, вес, рост и температуру. Третий — как принимать лекарство.</div>
+    <h3 class="dlg-title">Возраст, давление, дата приёма</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Измерения перед приёмом</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Как принимать лекарство</h3>
+    <div class="dialogue" id="dialog3"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">10</span> Домашка</h2>
+    <h2><span class="num">12</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Скажи вслух свой возраст и «телефон» из 6 цифр — по-немецки.</li>
         <li>Назови 5 чисел от 21 до 99 (помни: единицы — вперёд!).</li>
-        <li>Скажи давление пациента: <i>Der Blutdruck ist … zu …</i></li>
+        <li>Скажи давление, пульс и температуру пациента: <i>Der Blutdruck ist … zu …</i>, <i>… Komma …</i></li>
         <li>Назови порядковые: 1-й, 2-й, 3-й, 7-й, 8-й, 20-й (не забудь исключения).</li>
-        <li>Скажи по-немецки: «Это мой первый приём», «Сегодня 11-е августа».</li>
+        <li>Скажи свою дату рождения полностью: <i>Ich bin am … geboren</i> — с годом сотнями.</li>
+        <li>Объясни пациенту приём таблеток: сколько раз в день, до или после еды, сколько дней.</li>
       </ol>
     </div>
   </section>
@@ -901,11 +949,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium), голос Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"n0": "../zvuk/urok5/n0.mp3", "n1": "../zvuk/urok5/n1.mp3", "n2": "../zvuk/urok5/n2.mp3", "n3": "../zvuk/urok5/n3.mp3", "n4": "../zvuk/urok5/n4.mp3", "n5": "../zvuk/urok5/n5.mp3", "n6": "../zvuk/urok5/n6.mp3", "n7": "../zvuk/urok5/n7.mp3", "n8": "../zvuk/urok5/n8.mp3", "n9": "../zvuk/urok5/n9.mp3", "n10": "../zvuk/urok5/n10.mp3", "n11": "../zvuk/urok5/n11.mp3", "n12": "../zvuk/urok5/n12.mp3", "n13": "../zvuk/urok5/n13.mp3", "n14": "../zvuk/urok5/n14.mp3", "n15": "../zvuk/urok5/n15.mp3", "n16": "../zvuk/urok5/n16.mp3", "n17": "../zvuk/urok5/n17.mp3", "n18": "../zvuk/urok5/n18.mp3", "n19": "../zvuk/urok5/n19.mp3", "n20": "../zvuk/urok5/n20.mp3", "n30": "../zvuk/urok5/n30.mp3", "n40": "../zvuk/urok5/n40.mp3", "n50": "../zvuk/urok5/n50.mp3", "n60": "../zvuk/urok5/n60.mp3", "n70": "../zvuk/urok5/n70.mp3", "n80": "../zvuk/urok5/n80.mp3", "n90": "../zvuk/urok5/n90.mp3", "n100": "../zvuk/urok5/n100.mp3", "c21": "../zvuk/urok5/c21.mp3", "c24": "../zvuk/urok5/c24.mp3", "c24slow": "../zvuk/urok5/c24slow.mp3", "c32": "../zvuk/urok5/c32.mp3", "c47": "../zvuk/urok5/c47.mp3", "c65": "../zvuk/urok5/c65.mp3", "c99": "../zvuk/urok5/c99.mp3", "h200": "../zvuk/urok5/h200.mp3", "h500": "../zvuk/urok5/h500.mp3", "t1000": "../zvuk/urok5/t1000.mp3", "y2026": "../zvuk/urok5/y2026.mp3", "m1": "../zvuk/urok5/m1.mp3", "m2": "../zvuk/urok5/m2.mp3", "m3": "../zvuk/urok5/m3.mp3", "m4": "../zvuk/urok5/m4.mp3", "m5": "../zvuk/urok5/m5.mp3", "o1": "../zvuk/urok5/o1.mp3", "o2": "../zvuk/urok5/o2.mp3", "o3": "../zvuk/urok5/o3.mp3", "o4": "../zvuk/urok5/o4.mp3", "o5": "../zvuk/urok5/o5.mp3", "o6": "../zvuk/urok5/o6.mp3", "o7": "../zvuk/urok5/o7.mp3", "o8": "../zvuk/urok5/o8.mp3", "o9": "../zvuk/urok5/o9.mp3", "o10": "../zvuk/urok5/o10.mp3", "o11": "../zvuk/urok5/o11.mp3", "o12": "../zvuk/urok5/o12.mp3", "o20": "../zvuk/urok5/o20.mp3", "o21": "../zvuk/urok5/o21.mp3", "o30": "../zvuk/urok5/o30.mp3", "o100": "../zvuk/urok5/o100.mp3", "p1": "../zvuk/urok5/p1.mp3", "p2": "../zvuk/urok5/p2.mp3", "p3": "../zvuk/urok5/p3.mp3", "p4": "../zvuk/urok5/p4.mp3", "p5": "../zvuk/urok5/p5.mp3", "d1": "../zvuk/urok5/d1.mp3", "d2": "../zvuk/urok5/d2.mp3", "d3": "../zvuk/urok5/d3.mp3", "d4": "../zvuk/urok5/d4.mp3", "d5": "../zvuk/urok5/d5.mp3"};
+const AUDIO = {"n0": "../zvuk/urok5/n0.mp3", "n1": "../zvuk/urok5/n1.mp3", "n2": "../zvuk/urok5/n2.mp3", "n3": "../zvuk/urok5/n3.mp3", "n4": "../zvuk/urok5/n4.mp3", "n5": "../zvuk/urok5/n5.mp3", "n6": "../zvuk/urok5/n6.mp3", "n7": "../zvuk/urok5/n7.mp3", "n8": "../zvuk/urok5/n8.mp3", "n9": "../zvuk/urok5/n9.mp3", "n10": "../zvuk/urok5/n10.mp3", "n11": "../zvuk/urok5/n11.mp3", "n12": "../zvuk/urok5/n12.mp3", "n13": "../zvuk/urok5/n13.mp3", "n14": "../zvuk/urok5/n14.mp3", "n15": "../zvuk/urok5/n15.mp3", "n16": "../zvuk/urok5/n16.mp3", "n17": "../zvuk/urok5/n17.mp3", "n18": "../zvuk/urok5/n18.mp3", "n19": "../zvuk/urok5/n19.mp3", "n20": "../zvuk/urok5/n20.mp3", "n30": "../zvuk/urok5/n30.mp3", "n40": "../zvuk/urok5/n40.mp3", "n50": "../zvuk/urok5/n50.mp3", "n60": "../zvuk/urok5/n60.mp3", "n70": "../zvuk/urok5/n70.mp3", "n80": "../zvuk/urok5/n80.mp3", "n90": "../zvuk/urok5/n90.mp3", "n100": "../zvuk/urok5/n100.mp3", "c21": "../zvuk/urok5/c21.mp3", "c24": "../zvuk/urok5/c24.mp3", "c24slow": "../zvuk/urok5/c24slow.mp3", "c32": "../zvuk/urok5/c32.mp3", "c47": "../zvuk/urok5/c47.mp3", "c65": "../zvuk/urok5/c65.mp3", "c99": "../zvuk/urok5/c99.mp3", "h200": "../zvuk/urok5/h200.mp3", "h500": "../zvuk/urok5/h500.mp3", "t1000": "../zvuk/urok5/t1000.mp3", "y2026": "../zvuk/urok5/y2026.mp3", "m1": "../zvuk/urok5/m1.mp3", "m2": "../zvuk/urok5/m2.mp3", "m3": "../zvuk/urok5/m3.mp3", "m4": "../zvuk/urok5/m4.mp3", "m5": "../zvuk/urok5/m5.mp3", "o1": "../zvuk/urok5/o1.mp3", "o2": "../zvuk/urok5/o2.mp3", "o3": "../zvuk/urok5/o3.mp3", "o4": "../zvuk/urok5/o4.mp3", "o5": "../zvuk/urok5/o5.mp3", "o6": "../zvuk/urok5/o6.mp3", "o7": "../zvuk/urok5/o7.mp3", "o8": "../zvuk/urok5/o8.mp3", "o9": "../zvuk/urok5/o9.mp3", "o10": "../zvuk/urok5/o10.mp3", "o11": "../zvuk/urok5/o11.mp3", "o12": "../zvuk/urok5/o12.mp3", "o20": "../zvuk/urok5/o20.mp3", "o21": "../zvuk/urok5/o21.mp3", "o30": "../zvuk/urok5/o30.mp3", "o100": "../zvuk/urok5/o100.mp3", "p1": "../zvuk/urok5/p1.mp3", "p2": "../zvuk/urok5/p2.mp3", "p3": "../zvuk/urok5/p3.mp3", "p4": "../zvuk/urok5/p4.mp3", "p5": "../zvuk/urok5/p5.mp3", "d1": "../zvuk/urok5/d1.mp3", "d2": "../zvuk/urok5/d2.mp3", "d3": "../zvuk/urok5/d3.mp3", "d4": "../zvuk/urok5/d4.mp3", "d5": "../zvuk/urok5/d5.mp3", "y1980": "../zvuk/urok5/y1980.mp3", "m6": "../zvuk/urok5/m6.mp3", "m7": "../zvuk/urok5/m7.mp3", "m8": "../zvuk/urok5/m8.mp3", "m9": "../zvuk/urok5/m9.mp3", "m10": "../zvuk/urok5/m10.mp3", "m11": "../zvuk/urok5/m11.mp3", "km1": "../zvuk/urok5/km1.mp3", "km2": "../zvuk/urok5/km2.mp3", "km3": "../zvuk/urok5/km3.mp3", "km4": "../zvuk/urok5/km4.mp3", "km5": "../zvuk/urok5/km5.mp3", "km6": "../zvuk/urok5/km6.mp3", "km7": "../zvuk/urok5/km7.mp3", "dt1": "../zvuk/urok5/dt1.mp3", "dt2": "../zvuk/urok5/dt2.mp3", "dt3": "../zvuk/urok5/dt3.mp3", "dt4": "../zvuk/urok5/dt4.mp3", "ms1": "../zvuk/urok5/ms1.mp3", "ms2": "../zvuk/urok5/ms2.mp3", "ms3": "../zvuk/urok5/ms3.mp3", "ms4": "../zvuk/urok5/ms4.mp3", "ms5": "../zvuk/urok5/ms5.mp3", "ms6": "../zvuk/urok5/ms6.mp3", "ms7": "../zvuk/urok5/ms7.mp3", "ms8": "../zvuk/urok5/ms8.mp3", "ds1": "../zvuk/urok5/ds1.mp3", "ds2": "../zvuk/urok5/ds2.mp3", "ds3": "../zvuk/urok5/ds3.mp3", "ds4": "../zvuk/urok5/ds4.mp3", "ds5": "../zvuk/urok5/ds5.mp3", "ds6": "../zvuk/urok5/ds6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -926,71 +974,110 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-function numCards(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,val,de,tr])=>`
+// числа: [id, немецкое, транскрипция, значение]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,val])=>`
   <div class="num-card"><span class="val">${val}</span><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-numCards('g1',[
-  ["n0","0","null","нуль"],["n1","1","eins","айнс"],["n2","2","zwei","цвай"],["n3","3","drei","драй"],
-  ["n4","4","vier","фиа"],["n5","5","fünf","фюнф"],["n6","6","sechs","зэкс"],["n7","7","sieben","зибэн"],
-  ["n8","8","acht","ахт"],["n9","9","neun","нойн"],["n10","10","zehn","цэн"],["n11","11","elf","эльф"],["n12","12","zwölf","цвёльф"],
+words('g1',[
+  ["n0","null","нуль","0"],["n1","eins","айнс","1"],["n2","zwei","цвай","2"],["n3","drei","драй","3"],
+  ["n4","vier","фиа","4"],["n5","fünf","фюнф","5"],["n6","sechs","зэкс","6"],["n7","sieben","зибэн","7"],
+  ["n8","acht","ахт","8"],["n9","neun","нойн","9"],["n10","zehn","цэн","10"],["n11","elf","эльф","11"],["n12","zwölf","цвёльф","12"],
 ]);
-numCards('g2',[
-  ["n13","13","dreizehn","драйцэн"],["n14","14","vierzehn","фиацэн"],["n15","15","fünfzehn","фюнфцэн"],
-  ["n16","16","sechzehn","зэхьцэн"],["n17","17","siebzehn","зипцэн"],["n18","18","achtzehn","ахтцэн"],["n19","19","neunzehn","нойнцэн"],
+words('g2',[
+  ["n13","dreizehn","драйцэн","13"],["n14","vierzehn","фиацэн","14"],["n15","fünfzehn","фюнфцэн","15"],
+  ["n16","sechzehn","зэхьцэн","16"],["n17","siebzehn","зипцэн","17"],["n18","achtzehn","ахтцэн","18"],["n19","neunzehn","нойнцэн","19"],
 ]);
-numCards('g3',[
-  ["n20","20","zwanzig","цванцихь"],["n30","30","dreißig","драйсихь"],["n40","40","vierzig","фирцихь"],
-  ["n50","50","fünfzig","фюнфцихь"],["n60","60","sechzig","зэхьцихь"],["n70","70","siebzig","зипцихь"],
-  ["n80","80","achtzig","ахтцихь"],["n90","90","neunzig","нойнцихь"],["n100","100","hundert","хундэрт"],
+words('g3',[
+  ["n20","zwanzig","цванцихь","20"],["n30","dreißig","драйсихь","30"],["n40","vierzig","фирцихь","40"],
+  ["n50","fünfzig","фюнфцихь","50"],["n60","sechzig","зэхьцихь","60"],["n70","siebzig","зипцихь","70"],
+  ["n80","achtzig","ахтцихь","80"],["n90","neunzig","нойнцихь","90"],["n100","hundert","хундэрт","100"],
 ]);
-numCards('g4',[
-  ["c21","21","einundzwanzig","айн-унт-цванцихь"],["c24","24","vierundzwanzig","фиа-унт-цванцихь"],
-  ["c32","32","zweiunddreißig","цвай-унт-драйсихь"],["c47","47","siebenundvierzig","зибэн-унт-фирцихь"],
-  ["c65","65","fünfundsechzig","фюнф-унт-зэхьцихь"],["c99","99","neunundneunzig","нойн-унт-нойнцихь"],
+words('g4',[
+  ["c21","einundzwanzig","айн-унт-цванцихь","21"],["c24","vierundzwanzig","фиа-унт-цванцихь","24"],
+  ["c32","zweiunddreißig","цвай-унт-драйсихь","32"],["c47","siebenundvierzig","зибэн-унт-фирцихь","47"],
+  ["c65","fünfundsechzig","фюнф-унт-зэхьцихь","65"],["c99","neunundneunzig","нойн-унт-нойнцихь","99"],
 ]);
-numCards('g5',[
-  ["n100","100","hundert","хундэрт"],["h200","200","zweihundert","цвай-хундэрт"],["h500","500","fünfhundert","фюнф-хундэрт"],
-  ["t1000","1000","tausend","таузэнт"],["y2026","2026","zweitausendsechsundzwanzig","цвай-таузэнт-зэкс-унт-цванцихь"],
+words('g5',[
+  ["h200","zweihundert","цвай-хундэрт","200"],["h500","fünfhundert","фюнф-хундэрт","500"],
+  ["t1000","tausend","таузэнт","1000"],["y1980","neunzehnhundertachtzig","нойнцэн-хундэрт-ахтцихь","1980 — год"],
+  ["y2026","zweitausendsechsundzwanzig","цвай-таузэнт-зэкс-унт-цванцихь","2026"],
 ]);
-numCards('g7a',[
-  ["o1","1.","erste","эрстэ"],["o2","2.","zweite","цвайтэ"],["o3","3.","dritte","дриттэ"],["o4","4.","vierte","фиртэ"],
-  ["o5","5.","fünfte","фюнфтэ"],["o6","6.","sechste","зэкстэ"],["o7","7.","siebte","зибтэ"],["o8","8.","achte","ахтэ"],
-  ["o9","9.","neunte","нойнтэ"],["o10","10.","zehnte","цэнтэ"],["o11","11.","elfte","эльфтэ"],["o12","12.","zwölfte","цвёльфтэ"],
+phrases('med',[
+  ["m1","Ich bin einunddreißig Jahre alt.","ихь бин айнунтдрайсихь ярэ альт","Мне 31 год."],
+  ["m2","Der Blutdruck ist hundertzwanzig zu achtzig.","дэа блутдрук ист хундэртцванцихь цу ахтцихь","Давление 120 на 80."],
+  ["m6","Der Blutdruck ist zu niedrig.","дэа блутдрук ист цу нидрихь","Давление слишком низкое."],
+  ["m3","Der Puls ist achtundsechzig.","дэа пульс ист ахтунтзэхьцихь","Пульс 68."],
+  ["m4","Die Temperatur ist neununddreißig Grad.","ди тэмпэратуа ист нойнунтдрайсихь грат","Температура 39 градусов."],
+  ["m7","Die Temperatur ist normal.","ди тэмпэратуа ист нормаль","Температура нормальная."],
+  ["m8","Wie viel wiegen Sie?","ви филь вигэн зи","Сколько Вы весите?"],
+  ["m9","Ich wiege achtzig Kilo.","ихь вигэ ахтцихь кило","Я вешу 80 килограммов."],
+  ["m10","Wie groß sind Sie?","ви грос зинт зи","Какой у Вас рост?"],
+  ["m11","Ich bin eins achtzig.","ихь бин айнс ахтцихь","Мой рост — метр восемьдесят."],
+  ["m5","Nehmen Sie dreimal täglich eine Tablette.","нээмэн зи драймаль тэглихь айнэ таблэттэ","Принимайте 3 раза в день по таблетке."],
 ]);
-numCards('g7b',[
-  ["o20","20.","zwanzigste","цванцихьстэ"],["o21","21.","einundzwanzigste","айн-унт-цванцихьстэ"],
-  ["o30","30.","dreißigste","драйсихьстэ"],["o100","100.","hundertste","хундэртстэ"],
+phrases('dose',[
+  ["km1","achtunddreißig Komma fünf","ахтунтдрайсихь комма фюнф","38,5"],
+  ["km2","null Komma fünf Milligramm","нуль комма фюнф миллиграм","0,5 миллиграмма"],
+  ["km3","eine halbe Tablette","айнэ хальбэ таблэттэ","половина таблетки"],
+  ["km4","zweimal täglich","цваймаль тэглихь","два раза в день"],
+  ["km5","alle acht Stunden","аллэ ахт штундэн","каждые восемь часов"],
+  ["km6","vor dem Essen","фоа дэм эсэн","до еды"],
+  ["km7","nach dem Essen","нах дэм эсэн","после еды"],
 ]);
-
-const med = [
-  ["m1","Ich bin einunddreißig Jahre alt.","Мне 31 год."],
-  ["m2","Der Blutdruck ist hundertzwanzig zu achtzig.","Давление 120 на 80."],
-  ["m3","Der Puls ist achtundsechzig.","Пульс 68."],
-  ["m4","Die Temperatur ist neununddreißig Grad.","Температура 39 градусов."],
-  ["m5","Nehmen Sie dreimal täglich eine Tablette.","Принимайте 3 раза в день по таблетке."],
-];
-const medp = [
-  ["p1","Das ist mein erster Termin.","Это мой первый приём."],
-  ["p2","Kommen Sie zum zweiten Mal?","Вы во второй раз?"],
-  ["p3","Nehmen Sie die zweite Tablette am dritten Tag.","Примите вторую таблетку на третий день."],
-  ["p4","Die Praxis ist im ersten Stock.","Кабинет на втором этаже (1-м над землёй)."],
-  ["p5","Heute ist der elfte August.","Сегодня 11-е августа."],
-];
-function fill(id, arr){ document.getElementById(id).innerHTML = arr.map(([cid,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(cid)}</div>`).join(''); }
-fill('med',med); fill('medp',medp);
-
-const dialog = [
-  ["d1","left","врач","Wie alt sind Sie?","Сколько Вам лет?"],
-  ["d2","right","пац.","Ich bin vierundfünfzig Jahre alt.","Мне 54 года."],
-  ["d3","left","врач","Der Blutdruck ist hundertvierzig zu neunzig. Das ist zu hoch.","Давление 140 на 90. Это слишком высоко."],
-  ["d4","right","пац.","Und wann komme ich wieder?","А когда мне прийти снова?"],
-  ["d5","left","врач","Am zwanzigsten Mai. Das ist Ihr zweiter Termin.","20-го мая. Это Ваш второй приём."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+words('g7a',[
+  ["o1","erste","эрстэ","1."],["o2","zweite","цвайтэ","2."],["o3","dritte","дриттэ","3."],["o4","vierte","фиртэ","4."],
+  ["o5","fünfte","фюнфтэ","5."],["o6","sechste","зэкстэ","6."],["o7","siebte","зибтэ","7."],["o8","achte","ахтэ","8."],
+  ["o9","neunte","нойнтэ","9."],["o10","zehnte","цэнтэ","10."],["o11","elfte","эльфтэ","11."],["o12","zwölfte","цвёльфтэ","12."],
+]);
+words('g7b',[
+  ["o20","zwanzigste","цванцихьстэ","20."],["o21","einundzwanzigste","айн-унт-цванцихьстэ","21."],
+  ["o30","dreißigste","драйсихьстэ","30."],["o100","hundertste","хундэртстэ","100."],
+]);
+phrases('medp',[
+  ["p1","Das ist mein erster Termin.","дас ист майн эрстэа тэрмин","Это мой первый приём."],
+  ["p2","Kommen Sie zum zweiten Mal?","коммэн зи цум цвайтэн маль","Вы во второй раз?"],
+  ["p3","Nehmen Sie die zweite Tablette am dritten Tag.","нээмэн зи ди цвайтэ таблэттэ ам дриттэн так","Примите вторую таблетку на третий день."],
+  ["p4","Die Praxis ist im ersten Stock.","ди праксис ист им эрстэн шток","Кабинет на втором этаже (первом над землёй)."],
+  ["p5","Heute ist der elfte August.","хойтэ ист дэа эльфтэ аугуст","Сегодня 11-е августа."],
+]);
+phrases('dates',[
+  ["dt1","Der Wievielte ist heute?","дэа вифильтэ ист хойтэ","Какое сегодня число?"],
+  ["dt2","Heute ist der elfte September.","хойтэ ист дэа эльфтэ зэптэмбэа","Сегодня 11 сентября."],
+  ["dt4","am ersten Oktober","ам эрстэн октобэа","первого октября"],
+  ["dt3","Ich bin am zwölften Mai neunzehnhundertachtzig geboren.","ихь бин ам цвёльфтэн май нойнцэнхундэртахтцихь гэборэн","Я родился 12 мая 1980 года."],
+]);
+dlg('dialog',[
+  ["d1","left","Вр","Wie alt sind Sie?","ви альт зинт зи","Сколько Вам лет?"],
+  ["d2","right","П","Ich bin vierundfünfzig Jahre alt.","ихь бин фиаунтфюнфцихь ярэ альт","Мне 54 года."],
+  ["d3","left","Вр","Der Blutdruck ist hundertvierzig zu neunzig. Das ist zu hoch.","дэа блутдрук ист хундэртфирцихь цу нойнцихь. дас ист цу хох","Давление 140 на 90. Это слишком высоко."],
+  ["d4","right","П","Und wann komme ich wieder?","унт ван коммэ ихь видэа","А когда мне прийти снова?"],
+  ["d5","left","Вр","Am zwanzigsten Mai. Das ist Ihr zweiter Termin.","ам цванцихьстэн май. дас ист иа цвайтэа тэрмин","20-го мая. Это Ваш второй приём."],
+]);
+dlg('dialog2',[
+  ["ms1","left","Мс","Guten Morgen! Ich messe jetzt Ihren Blutdruck.","гутэн морген! ихь мэсэ етцт ирэн блутдрук","Доброе утро! Сейчас я измерю Вам давление."],
+  ["ms2","right","П","Gut. Wie hoch ist er?","гут. ви хох ист эа","Хорошо. Какое оно?"],
+  ["ms3","left","Мс","Hundertdreißig zu fünfundachtzig. Das ist in Ordnung.","хундэртдрайсихь цу фюнфунтахтцихь. дас ист ин орднунг","130 на 85. Это нормально."],
+  ["ms4","left","Мс","Wie viel wiegen Sie?","ви филь вигэн зи","Сколько Вы весите?"],
+  ["ms5","right","П","Ich wiege zweiundachtzig Kilo.","ихь вигэ цвайунтахтцихь кило","Я вешу 82 килограмма."],
+  ["ms6","left","Мс","Und wie groß sind Sie?","унт ви грос зинт зи","А какой у Вас рост?"],
+  ["ms7","right","П","Ich bin eins achtundsiebzig.","ихь бин айнс ахтунтзипцихь","Метр семьдесят восемь."],
+  ["ms8","left","Мс","Danke. Die Temperatur ist sechsunddreißig Komma sechs. Alles normal.","данкэ. ди тэмпэратуа ист зэксунтдрайсихь комма зэкс. аллес нормаль","Спасибо. Температура 36,6. Всё в норме."],
+]);
+dlg('dialog3',[
+  ["ds1","left","Вр","Nehmen Sie diese Tabletten dreimal täglich.","нээмэн зи дизэ таблэттэн драймаль тэглихь","Принимайте эти таблетки три раза в день."],
+  ["ds2","right","П","Vor oder nach dem Essen?","фоа одэа нах дэм эсэн","До еды или после?"],
+  ["ds3","left","Вр","Nach dem Essen. Immer eine Tablette.","нах дэм эсэн. иммэа айнэ таблэттэ","После еды. Каждый раз по одной таблетке."],
+  ["ds4","right","П","Und wie lange?","унт ви лангэ","И сколько дней?"],
+  ["ds5","left","Вр","Zehn Tage. Am einundzwanzigsten September kommen Sie wieder.","цэн тагэ. ам айнунтцванцихьстэн зэптэмбэа коммэн зи видэа","Десять дней. 21 сентября придёте снова."],
+  ["ds6","right","П","Gut, vielen Dank!","гут, филен данк","Хорошо, большое спасибо!"],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>

@@ -4,68 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Урок 6 — Времена года и месяцы</title>
-
-<style>
-  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
-    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
-    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
-  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
-    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
-    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
-  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
-    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
-    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
-  * { box-sizing:border-box; } body { margin:0; }
-  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:760px; margin:0 auto; padding:28px 18px 64px; line-height:1.5; }
-  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
-  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
-  .lp h1 { font-size:clamp(24px,5vw,32px); font-weight:600; color:var(--ink); }
-  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:62ch; }
-  .lp .hint { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
-  section.block { margin-top:34px; }
-  .block h2 { font-size:19px; font-weight:600; color:var(--ink); display:flex; align-items:baseline; gap:10px; }
-  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
-  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:62ch; }
-  button.play { flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
-  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
-  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
-  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
-  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
-  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
-  /* сезоны */
-  .season-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
-  .season-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); display:flex; align-items:center; gap:12px; }
-  .season-card .emoji { font-size:30px; line-height:1; }
-  .season-card .txt { flex:1; }
-  .season-card .de { font-family:Georgia,serif; font-weight:700; font-size:17px; }
-  .season-card .ru { font-size:12.5px; color:var(--ink-muted); }
-  /* месяцы */
-  .month-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
-  .month-card { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 14px; box-shadow:var(--shadow); }
-  .month-card .txt { flex:1; }
-  .month-card .de { font-family:Georgia,serif; font-weight:600; font-size:15.5px; }
-  .month-card .ru { font-size:12px; color:var(--ink-muted); }
-  .month-card button.play { width:30px; height:30px; font-size:13px; }
-  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
-  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
-  .card-list { display:flex; flex-direction:column; gap:8px; }
-  .phrase-card { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 16px; box-shadow:var(--shadow); }
-  .phrase-card .txt { flex:1; min-width:0; }
-  .phrase-card .de { font-family:Georgia,serif; font-size:16px; font-weight:600; color:var(--ink); }
-  .phrase-card .de b { color:var(--play); } .phrase-card .ru { font-size:13px; color:var(--ink-muted); margin-top:2px; }
-  .dialogue { display:flex; flex-direction:column; gap:10px; }
-  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
-  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
-  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
-  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
-  .bubble { max-width:80%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
-  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
-  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; } .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:2px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
-  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
-  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
-  footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
-</style>
-
 <style id="backbar-css">
   .backbar{
     position:sticky; top:0; z-index:9999;
@@ -98,9 +36,6 @@
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
 
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -267,54 +202,174 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </head>
 <body>
 <div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Урок 6 — Времена года и месяцы</span></div>
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:760px; margin:0 auto; padding:28px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(24px,5vw,32px); font-weight:600; color:var(--ink); }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:62ch; }
+  .lp .hint { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  section.block { margin-top:34px; }
+  .block h2 { font-size:19px; font-weight:600; color:var(--ink); display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:62ch; }
+  button.play { flex-shrink:0; width:40px; height:40px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  /* сезоны */
+  .season-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:10px; }
+  .season-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px; box-shadow:var(--shadow); display:flex; align-items:center; gap:12px; }
+  .season-card .emoji { font-size:30px; line-height:1; }
+  .season-card .txt { flex:1; }
+  .season-card .de { font-family:Georgia,serif; font-weight:700; font-size:17px; }
+  .season-card .ru { font-size:12.5px; color:var(--ink-muted); }
+  /* месяцы */
+  .month-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(150px,1fr)); gap:8px; }
+  .month-card { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 14px; box-shadow:var(--shadow); }
+  .month-card .txt { flex:1; }
+  .month-card .de { font-family:Georgia,serif; font-weight:600; font-size:15.5px; }
+  .month-card .ru { font-size:12px; color:var(--ink-muted); }
+  .month-card button.play { width:30px; height:30px; font-size:13px; }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .phrase-card { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 16px; box-shadow:var(--shadow); }
+  .phrase-card .txt { flex:1; min-width:0; }
+  .phrase-card .de { font-family:Georgia,serif; font-size:16px; font-weight:600; color:var(--ink); }
+  .phrase-card .de b { color:var(--play); } .phrase-card .ru { font-size:13px; color:var(--ink-muted); margin-top:2px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:80%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; } .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:2px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
+  footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+</style>
 
+<style>
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr, .month-card .tr, .season-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
+</style>
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 6. Времена года и месяцы</h1>
-  <p class="lede">Приятная тема: месяцы почти как русские, запомнятся быстро. Плюс предлог <b>im</b> («летом», «в мае») и даты — тебе для записи на приём и дат рождения. Жми 🔊.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Приятная тема: месяцы почти как русские и запоминаются быстро. Плюс предлог im («летом», «в мае»), даты через am, «с … по …» — для записи на приём, больничного и дат рождения. Жми 🔊.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
     <h2><span class="num">1</span> Времена года (die Jahreszeiten)</h2>
-    <p class="desc">Все четыре — <b>мужского рода (der)</b>. «Летом/зимой» = <b>im</b> + сезон.</p>
+    <div class="grammar-box">Все четыре — мужского рода: <b>der</b> Frühling, <b>der</b> Sommer, <b>der</b> Herbst, <b>der</b> Winter. «Летом, зимой» — <b>im</b> + сезон: <i>im Sommer</i>.</div>
     <div class="season-grid" id="seasons"></div>
   </section>
 
   <section class="block">
     <h2><span class="num">2</span> Месяцы (die Monate)</h2>
-    <p class="desc">Хорошая новость: почти все как в русском — узнаешь сразу. Все мужского рода (der).</p>
+    <div class="grammar-box">
+      Почти как в русском — узнаёшь сразу. Все мужского рода (<b>der</b>). Внимание на <b>März</b> — с умляутом.<br><br>
+      <b class="hl">Juni и Juli</b> на слух легко спутать. По телефону немцы для ясности говорят <i>Juno</i> и <i>Julei</i> — как <i>zwo</i> вместо <i>zwei</i>.
+    </div>
     <div class="month-grid" id="months"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">3</span> Предлог im + вопрос Wann? (когда)</h2>
-    <div class="grammar-box">
-      «В таком-то месяце/сезоне» = <b class="hl">im</b> + слово: <i>im Mai</i>, <i>im Sommer</i>. Вопрос «когда?» — <b class="hl">Wann?</b>
-    </div>
+    <h2><span class="num">3</span> im + месяц или сезон, вопрос Wann?</h2>
+    <div class="grammar-box">«В каком-то месяце или сезоне» — <b>im</b> + слово: <i>im Mai, im Sommer</i>. Вопрос «когда?» — <b>Wann?</b></div>
     <div class="card-list" id="im"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">4</span> Даты и «первое, второе…» (порядковые)</h2>
+    <h2><span class="num">4</span> Даты: am + порядковое</h2>
     <div class="grammar-box">
-      Числа-порядковые: до 19 — число + <b>-te</b> (der vier<b>te</b> = четвёртый), от 20 — число + <b>-ste</b> (der zwanzig<b>ste</b>). Исключения: <b class="hl">erste</b> (1), <b class="hl">dritte</b> (3), <b class="hl">siebte</b> (7), <b class="hl">achte</b> (8). Дата: <i>am + порядковое + месяц</i> → <i>am zehnten Oktober</i>. Подробно порядковые разберём отдельно — пока хватит для дат.
+      Порядковые: до 19 — число + <b>-te</b> (<i>der vierte</i>), от 20 — <b>-ste</b> (<i>der zwanzigste</i>). Исключения: <i>erste, dritte, siebte, achte</i> (подробно — урок 5).<br><br>
+      Какое число — <i>der sechste August</i>. <b class="hl">Какого числа</b> — <b>am</b> + порядковое на <b>-en</b>: <i>am zehnten Oktober</i>.
     </div>
     <div class="card-list" id="dates"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">5</span> Диалог: запись на приём</h2>
-    <p class="desc">Anna — регистратура, Markus — пациент. Всё из урока в деле.</p>
-    <div class="dialogue" id="dialog"></div>
+    <h2><span class="num">5</span> «С … по …» и год</h2>
+    <div class="grammar-box">
+      «С первого по десятое» — <b>vom</b> … <b>bis zum</b> …: <i>vom ersten bis zum zehnten Juli</i>.<br><br>
+      <b class="hl">Год — без предлога:</b> не «in 1980», а просто <i>Ich bin 1980 geboren</i>. Годы до 2000 читают сотнями: <i>neunzehnhundertachtzig</i>.
+    </div>
+    <div class="card-list" id="range"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">6</span> Домашка</h2>
+    <h2><span class="num">6</span> Сезон и здоровье</h2>
+    <div class="grammar-box doc">
+      🩺 <b>Для врача.</b> У каждого сезона свои пациенты: зимой — грипп (<i>die Grippe</i>), весной — аллергия на пыльцу (<i>die Pollenallergie</i>, в быту — <i>Heuschnupfen</i>), летом — жара и мало воды. Для флеболога лето — сезон отёков и тяжести в ногах.
+    </div>
+    <div class="card-list" id="season"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">7</span> День рождения</h2>
+    <div class="grammar-box">День рождения «имеют»: <i>Ich habe im Mai Geburtstag</i>. Поздравление — <b>Herzlichen Glückwunsch zum Geburtstag!</b> или короче <b>Alles Gute!</b></div>
+    <div class="card-list" id="gb"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">8</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">in Mai</span><span class="good">im Mai</span><span class="why">месяц и сезон — через im</span></div>
+      <div class="err-row"><span class="bad">im fünften Mai</span><span class="good">am fünften Mai</span><span class="why">дата — через am</span></div>
+      <div class="err-row"><span class="bad">am drei Mai</span><span class="good">am dritten Mai</span><span class="why">в дате — порядковое на -en</span></div>
+      <div class="err-row"><span class="bad">die Winter</span><span class="good">der Winter</span><span class="why">все сезоны и месяцы — der</span></div>
+      <div class="err-row"><span class="bad">Marz</span><span class="good">März</span><span class="why">март — с умляутом</span></div>
+      <div class="err-row"><span class="bad">Ich bin in 1980 geboren.</span><span class="good">Ich bin 1980 geboren.</span><span class="why">год — без предлога</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">9</span> Диалоги</h2>
+    <div class="desc">Первый — запись на приём. Второй — врач выписывает больничный «до двадцатого». Третий — коллеги говорят об отпуске, на «ты».</div>
+    <h3 class="dlg-title">Запись на приём</h3>
+    <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Больничный</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Когда у тебя отпуск?</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">10</span> Домашка</h2>
     <div class="hw">
       <ol>
-        <li>Назови вслух все 12 месяцев по порядку.</li>
-        <li>Скажи, в каком месяце у тебя день рождения: <i>Ich habe im … Geburtstag.</i></li>
-        <li>Скажи, какое сегодня число (<i>Heute ist der … August</i>) и какой сейчас сезон.</li>
+        <li>Назови подряд все 12 месяцев и 4 времени года — с артиклем.</li>
+        <li>Скажи, когда день рождения у тебя, у Полины и у родителей: <i>Ich habe im … Geburtstag</i>, <i>am …</i></li>
+        <li>Скажи свою дату рождения полностью: <i>Ich bin am … geboren</i>, и отдельно год: <i>Ich bin … geboren</i>.</li>
+        <li>Скажи пациенту: «Я выпишу Вам больничный до 20 сентября. Приходите 19-го».</li>
+        <li>Разыграй с Полиной диалог 3 про отпуск.</li>
       </ol>
     </div>
   </section>
@@ -873,11 +928,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Markus (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"s_fru": "../zvuk/urok6/s_fru.mp3", "s_som": "../zvuk/urok6/s_som.mp3", "s_her": "../zvuk/urok6/s_her.mp3", "s_win": "../zvuk/urok6/s_win.mp3", "mo1": "../zvuk/urok6/mo1.mp3", "mo2": "../zvuk/urok6/mo2.mp3", "mo3": "../zvuk/urok6/mo3.mp3", "mo4": "../zvuk/urok6/mo4.mp3", "mo5": "../zvuk/urok6/mo5.mp3", "mo6": "../zvuk/urok6/mo6.mp3", "mo7": "../zvuk/urok6/mo7.mp3", "mo8": "../zvuk/urok6/mo8.mp3", "mo9": "../zvuk/urok6/mo9.mp3", "mo10": "../zvuk/urok6/mo10.mp3", "mo11": "../zvuk/urok6/mo11.mp3", "mo12": "../zvuk/urok6/mo12.mp3", "im1": "../zvuk/urok6/im1.mp3", "im2": "../zvuk/urok6/im2.mp3", "im3": "../zvuk/urok6/im3.mp3", "im4": "../zvuk/urok6/im4.mp3", "im5": "../zvuk/urok6/im5.mp3", "date_q": "../zvuk/urok6/date_q.mp3", "date_today": "../zvuk/urok6/date_today.mp3", "ord": "../zvuk/urok6/ord.mp3", "born_q": "../zvuk/urok6/born_q.mp3", "born_a": "../zvuk/urok6/born_a.mp3", "d1": "../zvuk/urok6/d1.mp3", "d2": "../zvuk/urok6/d2.mp3", "d3": "../zvuk/urok6/d3.mp3", "d4": "../zvuk/urok6/d4.mp3", "d5": "../zvuk/urok6/d5.mp3", "d6": "../zvuk/urok6/d6.mp3"};
+const AUDIO = {"s_fru": "../zvuk/urok6/s_fru.mp3", "s_som": "../zvuk/urok6/s_som.mp3", "s_her": "../zvuk/urok6/s_her.mp3", "s_win": "../zvuk/urok6/s_win.mp3", "mo1": "../zvuk/urok6/mo1.mp3", "mo2": "../zvuk/urok6/mo2.mp3", "mo3": "../zvuk/urok6/mo3.mp3", "mo4": "../zvuk/urok6/mo4.mp3", "mo5": "../zvuk/urok6/mo5.mp3", "mo6": "../zvuk/urok6/mo6.mp3", "mo7": "../zvuk/urok6/mo7.mp3", "mo8": "../zvuk/urok6/mo8.mp3", "mo9": "../zvuk/urok6/mo9.mp3", "mo10": "../zvuk/urok6/mo10.mp3", "mo11": "../zvuk/urok6/mo11.mp3", "mo12": "../zvuk/urok6/mo12.mp3", "im1": "../zvuk/urok6/im1.mp3", "im2": "../zvuk/urok6/im2.mp3", "im3": "../zvuk/urok6/im3.mp3", "im4": "../zvuk/urok6/im4.mp3", "im5": "../zvuk/urok6/im5.mp3", "date_q": "../zvuk/urok6/date_q.mp3", "date_today": "../zvuk/urok6/date_today.mp3", "ord": "../zvuk/urok6/ord.mp3", "born_q": "../zvuk/urok6/born_q.mp3", "born_a": "../zvuk/urok6/born_a.mp3", "d1": "../zvuk/urok6/d1.mp3", "d3": "../zvuk/urok6/d3.mp3", "d5": "../zvuk/urok6/d5.mp3", "dm2": "../zvuk/urok6/dm2.mp3", "dm4": "../zvuk/urok6/dm4.mp3", "dm6": "../zvuk/urok6/dm6.mp3", "im6": "../zvuk/urok6/im6.mp3", "im7": "../zvuk/urok6/im7.mp3", "dt1": "../zvuk/urok6/dt1.mp3", "dt2": "../zvuk/urok6/dt2.mp3", "dt3": "../zvuk/urok6/dt3.mp3", "dt4": "../zvuk/urok6/dt4.mp3", "sz1": "../zvuk/urok6/sz1.mp3", "sz2": "../zvuk/urok6/sz2.mp3", "sz3": "../zvuk/urok6/sz3.mp3", "gb1": "../zvuk/urok6/gb1.mp3", "gb2": "../zvuk/urok6/gb2.mp3", "kr1": "../zvuk/urok6/kr1.mp3", "kr2": "../zvuk/urok6/kr2.mp3", "kr3": "../zvuk/urok6/kr3.mp3", "kr4": "../zvuk/urok6/kr4.mp3", "kr5": "../zvuk/urok6/kr5.mp3", "kr6": "../zvuk/urok6/kr6.mp3", "ur1": "../zvuk/urok6/ur1.mp3", "ur2": "../zvuk/urok6/ur2.mp3", "ur3": "../zvuk/urok6/ur3.mp3", "ur4": "../zvuk/urok6/ur4.mp3", "ur5": "../zvuk/urok6/ur5.mp3", "ur6": "../zvuk/urok6/ur6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -898,53 +953,86 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-const seasons = [
-  ["s_fru","🌱","der Frühling","весна"],
-  ["s_som","☀️","der Sommer","лето"],
-  ["s_her","🍂","der Herbst","осень"],
-  ["s_win","❄️","der Winter","зима"],
-];
-document.getElementById('seasons').innerHTML = seasons.map(([id,em,de,ru])=>`
-  <div class="season-card"><span class="emoji">${em}</span><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join('');
+// слова: [id, немецкое, транскрипция, перевод, пятое — значок сезона или артикль месяца]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,x])=>
+  el === 'seasons'
+    ? `<div class="season-card"><span class="emoji">${x}</span><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`
+    : `<div class="month-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-const months = [
-  ["mo1","Januar","январь"],["mo2","Februar","февраль"],["mo3","März","март"],["mo4","April","апрель"],
-  ["mo5","Mai","май"],["mo6","Juni","июнь"],["mo7","Juli","июль"],["mo8","August","август"],
-  ["mo9","September","сентябрь"],["mo10","Oktober","октябрь"],["mo11","November","ноябрь"],["mo12","Dezember","декабрь"],
-];
-document.getElementById('months').innerHTML = months.map(([id,de,ru])=>`
-  <div class="month-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join('');
-
-const im = [
-  ["im1","Im Sommer ist es warm.","Летом тепло."],
-  ["im2","Im Winter ist es kalt.","Зимой холодно."],
-  ["im3","Wann haben Sie Geburtstag?","Когда у Вас день рождения?"],
-  ["im4","Ich habe im Mai Geburtstag.","У меня день рождения в мае."],
-  ["im5","Der Termin ist im März.","Приём в марте."],
-];
-const dates = [
-  ["date_q","Welches Datum ist heute?","Какое сегодня число?"],
-  ["date_today","Heute ist der sechste August.","Сегодня 6 августа."],
-  ["ord","der erste, der zweite, der dritte, der vierte, der fünfte","первый, второй, третий, четвёртый, пятый"],
-  ["born_q","Wann sind Sie geboren?","Когда Вы родились?"],
-  ["born_a","Ich bin am zehnten Oktober geboren.","Я родился 10 октября."],
-];
-function fill(id, arr){ document.getElementById(id).innerHTML = arr.map(([cid,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(cid)}</div>`).join(''); }
-fill('im',im); fill('dates',dates);
-
-const dialog = [
-  ["d1","left","рег.","Wann möchten Sie einen Termin?","Когда Вы хотите приём?"],
-  ["d2","right","пац.","Im September, bitte.","В сентябре, пожалуйста."],
-  ["d3","left","рег.","Der zwölfte September?","Двенадцатое сентября?"],
-  ["d4","right","пац.","Ja, das passt.","Да, подходит."],
-  ["d5","left","рег.","Und wann sind Sie geboren?","А когда Вы родились?"],
-  ["d6","right","пац.","Am dritten Mai.","Третьего мая."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+words('seasons',[
+  ["s_fru","der Frühling","дэа фрюлинг","весна","🌱"],
+  ["s_som","der Sommer","дэа зоммэа","лето","☀️"],
+  ["s_her","der Herbst","дэа хэрпст","осень","🍂"],
+  ["s_win","der Winter","дэа винтэа","зима","❄️"],
+]);
+words('months',[
+  ["mo1","Januar","януар","январь","der"],["mo2","Februar","фэбруар","февраль","der"],["mo3","März","мэрц","март","der"],
+  ["mo4","April","априль","апрель","der"],["mo5","Mai","май","май","der"],["mo6","Juni","юни","июнь","der"],
+  ["mo7","Juli","юли","июль","der"],["mo8","August","аугуст","август","der"],["mo9","September","зэптэмбэа","сентябрь","der"],
+  ["mo10","Oktober","октобэа","октябрь","der"],["mo11","November","новэмбэа","ноябрь","der"],["mo12","Dezember","дэцэмбэа","декабрь","der"],
+]);
+phrases('im',[
+  ["im1","Im Sommer ist es warm.","им зоммэа ист эс варм","Летом тепло."],
+  ["im2","Im Winter ist es kalt.","им винтэа ист эс кальт","Зимой холодно."],
+  ["im7","Im Herbst regnet es oft.","им хэрпст рэгнэт эс офт","Осенью часто идёт дождь."],
+  ["im5","Der Termin ist im März.","дэа тэрмин ист им мэрц","Приём в марте."],
+  ["im6","Im Juli habe ich Urlaub.","им юли хабэ ихь урлауп","В июле у меня отпуск."],
+]);
+phrases('dates',[
+  ["date_q","Welches Datum ist heute?","вэльхес датум ист хойтэ","Какое сегодня число?"],
+  ["date_today","Heute ist der sechste August.","хойтэ ист дэа зэкстэ аугуст","Сегодня 6 августа."],
+  ["dt1","Heute ist der erste März.","хойтэ ист дэа эрстэ мэрц","Сегодня первое марта."],
+  ["ord","der erste, der zweite, der dritte, der vierte, der fünfte","дэа эрстэ, дэа цвайтэ, дэа дриттэ, дэа фиртэ, дэа фюнфтэ","первый, второй, третий, четвёртый, пятый"],
+  ["dt2","am vierzehnten Februar","ам фирцэнтэн фэбруар","четырнадцатого февраля"],
+  ["born_q","Wann sind Sie geboren?","ван зинт зи гэборэн","Когда Вы родились?"],
+  ["born_a","Ich bin am zehnten Oktober geboren.","ихь бин ам цэнтэн октобэа гэборэн","Я родился 10 октября."],
+]);
+phrases('range',[
+  ["dt3","vom ersten bis zum zehnten Juli","фом эрстэн бис цум цэнтэн юли","с первого по десятое июля"],
+  ["dt4","Ich bin neunzehnhundertachtzig geboren.","ихь бин нойнцэнхундэртахтцихь гэборэн","Я родился в 1980 году."],
+]);
+phrases('season',[
+  ["sz1","Im Winter haben viele Leute Grippe.","им винтэа хабэн филе лойтэ гриппэ","Зимой многие болеют гриппом."],
+  ["sz2","Im Frühling haben viele eine Pollenallergie.","им фрюлинг хабэн филе айнэ поллэналлергии","Весной у многих аллергия на пыльцу."],
+  ["sz3","Im Sommer trinken Sie bitte viel Wasser.","им зоммэа тринкэн зи битэ филь вассэа","Летом, пожалуйста, пейте много воды."],
+]);
+phrases('gb',[
+  ["im3","Wann haben Sie Geburtstag?","ван хабэн зи гэбуртстак","Когда у Вас день рождения?"],
+  ["im4","Ich habe im Mai Geburtstag.","ихь хабэ им май гэбуртстак","У меня день рождения в мае."],
+  ["gb1","Herzlichen Glückwunsch zum Geburtstag!","хэрцлихен глюквунш цум гэбуртстак","С днём рождения!"],
+  ["gb2","Alles Gute!","аллес гутэ","Всего хорошего!"],
+]);
+dlg('dialog',[
+  ["d1","left","Рег","Wann möchten Sie einen Termin?","ван мёхьтэн зи айнэн тэрмин","Когда Вы хотите записаться?"],
+  ["dm2","right","П","Im September, bitte.","им зэптэмбэа, битэ","В сентябре, пожалуйста."],
+  ["d3","left","Рег","Der zwölfte September?","дэа цвёльфтэ зэптэмбэа","Двенадцатое сентября?"],
+  ["dm4","right","П","Ja, das passt.","я, дас пасст","Да, подходит."],
+  ["d5","left","Рег","Und wann sind Sie geboren?","унт ван зинт зи гэборэн","А когда Вы родились?"],
+  ["dm6","right","П","Am dritten Mai.","ам дриттэн май","Третьего мая."],
+]);
+dlg('dialog2',[
+  ["kr1","left","Вр","Sie haben Grippe. Sie brauchen eine Krankschreibung.","зи хабэн гриппэ. зи браухэн айнэ кранкшрайбунг","У Вас грипп. Вам нужен больничный."],
+  ["kr2","right","П","Bis wann?","бис ван","До какого числа?"],
+  ["kr3","left","Вр","Ich schreibe Sie bis zum zwanzigsten September krank.","ихь шрайбэ зи бис цум цванцихьстэн зэптэмбэа кранк","Я выпишу Вам больничный до 20 сентября."],
+  ["kr4","right","П","Und wann komme ich wieder?","унт ван коммэ ихь видэа","А когда мне прийти снова?"],
+  ["kr5","left","Вр","Am neunzehnten September, bitte.","ам нойнцэнтэн зэптэмбэа, битэ","Девятнадцатого сентября, пожалуйста."],
+  ["kr6","right","П","Gut. Danke, Herr Doktor.","гут. данкэ, хэа доктор","Хорошо. Спасибо, доктор."],
+]);
+dlg('dialog3',[
+  ["ur1","left","Ю","Wann hast du Urlaub?","ван хаст ду урлауп","Когда у тебя отпуск?"],
+  ["ur2","right","Гр","Im Oktober. Vom ersten bis zum vierzehnten.","им октобэа. фом эрстэн бис цум фирцэнтэн","В октябре. С первого по четырнадцатое."],
+  ["ur3","left","Ю","Schön! Im Herbst ist es ruhig in der Klinik.","шён! им хэрпст ист эс руихь ин дэа клиник","Здорово! Осенью в клинике спокойно."],
+  ["ur4","right","Гр","Und du? Wann hast du Urlaub?","унт ду? ван хаст ду урлауп","А ты? Когда у тебя отпуск?"],
+  ["ur5","left","Ю","Im Juli. Im Sommer fahre ich ans Meer.","им юли. им зоммэа фарэ ихь анс мэа","В июле. Летом я еду на море."],
+  ["ur6","right","Гр","Toll! Ich habe im Juli Geburtstag.","толь! ихь хабэ им юли гэбуртстак","Здорово! У меня день рождения в июле."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
