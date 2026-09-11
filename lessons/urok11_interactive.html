@@ -68,6 +68,18 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:5px 0; }
   footer.lp-foot { margin-top:40px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .phrase-card .tr, .mini-card .tr { font-size:11.5px; color:var(--ink-faint); margin-top:1px; }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+</style>
 
 <style id="backbar-css">
   .backbar{
@@ -100,10 +112,6 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -275,9 +283,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 11. Предлоги места (Wo? + Dativ)</h1>
-  <p class="lede">Где что находится — где болит, где кабинет, где аптека. Предлоги места отвечают на вопрос <b>Wo?</b> и требуют падеж <b>Dativ</b>. Разберём по-простому. Жми 🔊.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
-  <div class="voicebadge">🎙️ В этом уроке роль пациента озвучивает <b>новый мужской голос — Yannick</b> (вместо Markus). Послушай диалог в разделе 7 и скажи, лучше ли стало.</div>
+  <p class="lede">Где что находится — где болит, где кабинет, где аптека, где лежит вена. Предлоги места отвечают на вопрос <b>Wo?</b> и требуют падеж <b>Dativ</b>. Плюс четыре глагола, без которых немец не скажет «где»: стоит, лежит, висит, сидит. Жми 🔊.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <section class="block">
     <h2><span class="num">1</span> 9 предлогов места</h2>
@@ -296,7 +303,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <tr><td>die (жен.) →</td><td><span class="art">die</span> Tasche → in <span class="datv">der</span> Tasche</td></tr>
       <tr><td>die (мн.) →</td><td><span class="art">die</span> Betten → in <span class="datv">den</span> Betten</td></tr>
     </table>
-    <div class="grammar-box" style="margin-top:14px">Запомни: муж. и ср. род в Dativ дают <b class="hl">dem</b>, женский — <b class="hl">der</b>, множественное — <b class="hl">den</b>.</div>
+    <div class="grammar-box" style="margin-top:14px">Запомни: муж. и ср. род в Dativ дают <b class="hl">dem</b>, женский — <b class="hl">der</b>, множественное — <b class="hl">den</b>, и к самому слову во множественном добавляется <b>-n</b>, если его нет: <i>die Kinder → in den Kinder<b>n</b></i>.</div>
+    <div class="grid2" id="dat"></div>
   </section>
 
   <section class="block">
@@ -307,31 +315,65 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   <section class="block">
     <h2><span class="num">4</span> Слияния: in+dem=im, an+dem=am…</h2>
     <div class="grammar-box">
-      Немцы «склеивают» частые предлоги с артиклем: <b class="hl">in dem → im</b>, <b class="hl">an dem → am</b>, <b class="hl">zu dem → zum</b>, <b class="hl">zu der → zur</b>, <b class="hl">in das → ins</b>. Говори коротко — так звучит по-немецки.
+      Немцы «склеивают» частые предлоги с артиклем: <b class="hl">in dem → im</b>, <b class="hl">an dem → am</b>, <b class="hl">bei dem → beim</b>, <b class="hl">zu dem → zum</b>, <b class="hl">zu der → zur</b>, <b class="hl">in das → ins</b>. Говори коротко — так звучит по-немецки.<br><br>
+      <b>beim Arzt</b> — «у врача» (где?), <b>zum Arzt</b> — «к врачу» (куда?). Путают постоянно.
     </div>
     <div class="grid2" id="merges"></div>
     <div class="card-list" id="mergePhrases" style="margin-top:10px"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">5</span> Wo? в работе врача</h2>
+    <h2><span class="num">5</span> Стоит, лежит, висит, сидит</h2>
+    <div class="grammar-box">
+      По-русски можно сказать «книга на столе». Немец почти всегда уточнит, <b>как</b> она там: <b class="hl">stehen</b> — стоит (вертикально), <b class="hl">liegen</b> — лежит (горизонтально), <b class="hl">hängen</b> — висит, <b class="hl">sitzen</b> — сидит. Для пациента: <i>Er liegt im Bett</i> — лежит в постели, <i>er sitzt</i> — сидит.
+    </div>
+    <div class="card-list" id="sl"></div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">6</span> Wo? в работе врача</h2>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>В клинике</b> этажи считают от земли: <i>im zweiten Stock</i> — это наш <b>третий</b> этаж. Операционная — <i>der OP</i>. А на УЗИ вен все объяснения пациенту — предлоги места: <i>unter der Haut, in der Leiste, in der Vene</i>.
+    </div>
+    <div class="card-list" id="med2"></div>
   </section>
 
   <section class="block">
-    <h2><span class="num">6</span> Диалог: осмотр — где болит и где что находится</h2>
-    <p class="desc">Роль пациента — новый мужской голос Yannick. Сравни с прежним Markus.</p>
+    <h2><span class="num">7</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ich bin in das Zimmer.</span><span class="good">Ich bin im Zimmer.</span><span class="why">где? → Dativ: in dem = im</span></div>
+      <div class="err-row"><span class="bad">auf der Tisch</span><span class="good">auf dem Tisch</span><span class="why">der Tisch → dem</span></div>
+      <div class="err-row"><span class="bad">Ich bin zum Arzt. — «я у врача»</span><span class="good">Ich bin beim Arzt.</span><span class="why">где — beim, куда — zum</span></div>
+      <div class="err-row"><span class="bad">Das Buch steht auf dem Tisch.</span><span class="good">Das Buch liegt auf dem Tisch.</span><span class="why">лежит — liegen</span></div>
+      <div class="err-row"><span class="bad">in der Krankenhaus</span><span class="good">im Krankenhaus</span><span class="why">das Krankenhaus → dem → im</span></div>
+      <div class="err-row"><span class="bad">neben die Apotheke</span><span class="good">neben der Apotheke</span><span class="why">где? → Dativ</span></div>
+    </div>
+  </section>
+
+  <section class="block">
+    <h2><span class="num">8</span> Диалоги</h2>
+    <div class="desc">Первый — осмотр: где болит и где что находится. Второй — как пройти в клинике. Третий — УЗИ вен: где вена, где клапан, есть ли тромб.</div>
+    <h3 class="dlg-title">Осмотр — где болит</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Как пройти в клинике</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">УЗИ вен</h3>
+    <div class="dialogue" id="dialog3"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <i>die Klappe</i> — венозный клапан; <i>in der Leiste</i> — в паху, где большая подкожная вена впадает в глубокую. <i>Die Klappe ist kaputt</i> — по-простому для пациента; в заключении напишут <i>Klappeninsuffizienz</i>.
+    </div>
   </section>
 
   <section class="block">
-    <h2><span class="num">7</span> Домашка</h2>
+    <h2><span class="num">9</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Назови вслух 9 предлогов места.</li>
         <li>Поставь в Dativ: der Tisch, das Zimmer, die Tasche, die Betten (артикль → dem/der/den).</li>
-        <li>Скажи 3 фразы «предмет + где»: <i>Das … ist in/auf/unter dem/der …</i></li>
-        <li>Сократи: in dem → …, an dem → …, zu dem → …, zu der → …</li>
+        <li>Опиши свою комнату 5 фразами со <i>steht, liegt, hängt</i>: <i>Das … liegt auf dem …</i></li>
+        <li>Объясни пациенту дорогу в клинике: рентген, туалет, зал ожидания.</li>
+        <li>Разыграй с Полиной диалог 2: ты спрашиваешь дорогу, она — регистратура.</li>
       </ol>
     </div>
   </section>
@@ -890,11 +932,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"p_in": "../zvuk/urok11/p_in.mp3", "p_auf": "../zvuk/urok11/p_auf.mp3", "p_unter": "../zvuk/urok11/p_unter.mp3", "p_ueber": "../zvuk/urok11/p_ueber.mp3", "p_neben": "../zvuk/urok11/p_neben.mp3", "p_vor": "../zvuk/urok11/p_vor.mp3", "p_hinter": "../zvuk/urok11/p_hinter.mp3", "p_zwischen": "../zvuk/urok11/p_zwischen.mp3", "p_an": "../zvuk/urok11/p_an.mp3", "d_der": "../zvuk/urok11/d_der.mp3", "d_die": "../zvuk/urok11/d_die.mp3", "d_das": "../zvuk/urok11/d_das.mp3", "d_pl": "../zvuk/urok11/d_pl.mp3", "e1": "../zvuk/urok11/e1.mp3", "e2": "../zvuk/urok11/e2.mp3", "e3": "../zvuk/urok11/e3.mp3", "e4": "../zvuk/urok11/e4.mp3", "e5": "../zvuk/urok11/e5.mp3", "e6": "../zvuk/urok11/e6.mp3", "m_im": "../zvuk/urok11/m_im.mp3", "m_am": "../zvuk/urok11/m_am.mp3", "m_ins": "../zvuk/urok11/m_ins.mp3", "m_zum": "../zvuk/urok11/m_zum.mp3", "m_zur": "../zvuk/urok11/m_zur.mp3", "m1": "../zvuk/urok11/m1.mp3", "m2": "../zvuk/urok11/m2.mp3", "m3": "../zvuk/urok11/m3.mp3", "w1": "../zvuk/urok11/w1.mp3", "w2": "../zvuk/urok11/w2.mp3", "w3": "../zvuk/urok11/w3.mp3", "w4": "../zvuk/urok11/w4.mp3", "w5": "../zvuk/urok11/w5.mp3", "dl1": "../zvuk/urok11/dl1.mp3", "dl2": "../zvuk/urok11/dl2.mp3", "dl3": "../zvuk/urok11/dl3.mp3", "dl4": "../zvuk/urok11/dl4.mp3", "dl5": "../zvuk/urok11/dl5.mp3", "dl6": "../zvuk/urok11/dl6.mp3", "dl7": "../zvuk/urok11/dl7.mp3"};
+const AUDIO = {"p_in": "../zvuk/urok11/p_in.mp3", "p_auf": "../zvuk/urok11/p_auf.mp3", "p_unter": "../zvuk/urok11/p_unter.mp3", "p_ueber": "../zvuk/urok11/p_ueber.mp3", "p_neben": "../zvuk/urok11/p_neben.mp3", "p_vor": "../zvuk/urok11/p_vor.mp3", "p_hinter": "../zvuk/urok11/p_hinter.mp3", "p_zwischen": "../zvuk/urok11/p_zwischen.mp3", "p_an": "../zvuk/urok11/p_an.mp3", "d_der": "../zvuk/urok11/d_der.mp3", "d_die": "../zvuk/urok11/d_die.mp3", "d_das": "../zvuk/urok11/d_das.mp3", "d_pl": "../zvuk/urok11/d_pl.mp3", "e1": "../zvuk/urok11/e1.mp3", "e2": "../zvuk/urok11/e2.mp3", "e3": "../zvuk/urok11/e3.mp3", "e4": "../zvuk/urok11/e4.mp3", "e5": "../zvuk/urok11/e5.mp3", "e6": "../zvuk/urok11/e6.mp3", "m_im": "../zvuk/urok11/m_im.mp3", "m_am": "../zvuk/urok11/m_am.mp3", "m_ins": "../zvuk/urok11/m_ins.mp3", "m_zum": "../zvuk/urok11/m_zum.mp3", "m_zur": "../zvuk/urok11/m_zur.mp3", "m1": "../zvuk/urok11/m1.mp3", "m2": "../zvuk/urok11/m2.mp3", "m3": "../zvuk/urok11/m3.mp3", "w1": "../zvuk/urok11/w1.mp3", "w2": "../zvuk/urok11/w2.mp3", "w3": "../zvuk/urok11/w3.mp3", "w4": "../zvuk/urok11/w4.mp3", "w5": "../zvuk/urok11/w5.mp3", "dl1": "../zvuk/urok11/dl1.mp3", "dl2": "../zvuk/urok11/dl2.mp3", "dl3": "../zvuk/urok11/dl3.mp3", "dl4": "../zvuk/urok11/dl4.mp3", "dl5": "../zvuk/urok11/dl5.mp3", "dl6": "../zvuk/urok11/dl6.mp3", "dl7": "../zvuk/urok11/dl7.mp3", "m_beim": "../zvuk/urok11/m_beim.mp3", "ex1": "../zvuk/urok11/ex1.mp3", "ex2": "../zvuk/urok11/ex2.mp3", "ex3": "../zvuk/urok11/ex3.mp3", "ex4": "../zvuk/urok11/ex4.mp3", "mg1": "../zvuk/urok11/mg1.mp3", "mg2": "../zvuk/urok11/mg2.mp3", "sl1": "../zvuk/urok11/sl1.mp3", "sl2": "../zvuk/urok11/sl2.mp3", "sl3": "../zvuk/urok11/sl3.mp3", "sl4": "../zvuk/urok11/sl4.mp3", "sl5": "../zvuk/urok11/sl5.mp3", "wm1": "../zvuk/urok11/wm1.mp3", "wm2": "../zvuk/urok11/wm2.mp3", "wm3": "../zvuk/urok11/wm3.mp3", "wm4": "../zvuk/urok11/wm4.mp3", "wm5": "../zvuk/urok11/wm5.mp3", "wm6": "../zvuk/urok11/wm6.mp3", "wg1": "../zvuk/urok11/wg1.mp3", "wg2": "../zvuk/urok11/wg2.mp3", "wg3": "../zvuk/urok11/wg3.mp3", "wg4": "../zvuk/urok11/wg4.mp3", "wg5": "../zvuk/urok11/wg5.mp3", "wg6": "../zvuk/urok11/wg6.mp3", "wg7": "../zvuk/urok11/wg7.mp3", "wg8": "../zvuk/urok11/wg8.mp3", "us1": "../zvuk/urok11/us1.mp3", "us2": "../zvuk/urok11/us2.mp3", "us3": "../zvuk/urok11/us3.mp3", "us4": "../zvuk/urok11/us4.mp3", "us5": "../zvuk/urok11/us5.mp3", "us6": "../zvuk/urok11/us6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -915,56 +957,101 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
-function miniCards(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,ru])=>`
+// слова: [id, немецкое, транскрипция, перевод]
+function words(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="mini-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// артикли в Dativ — только плитки, в колоду ЗУБРа не идут
+function dtiles(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,ru])=>`
   <div class="mini-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// фразы: [id, немецкое, транскрипция, перевод]
+function phrases(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div><div class="tr">[${tr}]</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join(''); }
 
-miniCards('preps',[
-  ["p_in","in","в (внутри)"],["p_auf","auf","на (сверху)"],["p_unter","unter","под"],
-  ["p_ueber","über","над"],["p_neben","neben","рядом"],["p_vor","vor","перед"],
-  ["p_hinter","hinter","за, позади"],["p_zwischen","zwischen","между"],["p_an","an","у, к (вплотную)"],
+words('preps',[
+  ["p_in","in","ин","в (внутри)"],["p_auf","auf","ауф","на (сверху)"],["p_unter","unter","унтэа","под"],
+  ["p_ueber","über","юбэа","над"],["p_neben","neben","нэбэн","рядом"],["p_vor","vor","фоа","перед"],
+  ["p_hinter","hinter","хинтэа","за, позади"],["p_zwischen","zwischen","цвишэн","между"],["p_an","an","ан","у, к (вплотную)"],
 ]);
-miniCards('merges',[
-  ["m_im","im","= in dem"],["m_am","am","= an dem"],["m_ins","ins","= in das"],
-  ["m_zum","zum","= zu dem"],["m_zur","zur","= zu der"],
+dtiles('dat',[
+  ["d_der","dem","der → dem (муж.)"],["d_das","dem","das → dem (ср.)"],
+  ["d_die","der","die → der (жен.)"],["d_pl","den","die → den (мн.)"],
 ]);
-
-const examples = [
-  ["e1","Das Rezept ist in der Tasche.","Рецепт в сумке. (die → der)"],
-  ["e2","Der Arzt ist in dem Zimmer.","Врач в кабинете. (das → dem)"],
-  ["e3","Die Tablette ist auf dem Tisch.","Таблетка на столе. (der → dem)"],
-  ["e4","Der Patient wartet vor der Tür.","Пациент ждёт перед дверью."],
-  ["e5","Die Praxis ist neben der Apotheke.","Кабинет рядом с аптекой."],
-  ["e6","Das Bett steht an der Wand.","Кровать стоит у стены."],
-];
-const mergePhrases = [
-  ["m1","Ich bin im Krankenhaus.","Я в больнице. (in dem → im)"],
-  ["m2","Ich gehe zum Arzt.","Я иду к врачу. (zu dem → zum)"],
-  ["m3","Ich gehe zur Apotheke.","Я иду в аптеку. (zu der → zur)"],
-];
-const med = [
-  ["w1","Wo haben Sie Schmerzen?","Где у Вас болит?"],
-  ["w2","Wo ist die Apotheke?","Где аптека?"],
-  ["w3","Die Schmerzen sind im Rücken.","Боли в спине."],
-  ["w4","Der Schmerz ist unter dem Knie.","Боль под коленом."],
-  ["w5","Das Krankenhaus ist hinter dem Bahnhof.","Больница за вокзалом."],
-];
-function fill(id, arr){ document.getElementById(id).innerHTML = arr.map(([cid,de,ru])=>`
-  <div class="phrase-card"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(cid)}</div>`).join(''); }
-fill('examples',examples); fill('mergePhrases',mergePhrases); fill('med',med);
-
-const dialog = [
-  ["dl1","left","врач","Guten Tag! Wo tut es weh?","Здравствуйте! Где болит?"],
-  ["dl2","right","пац.","Der Schmerz ist hier, im Bauch und unter den Rippen.","Боль вот здесь, в животе и под рёбрами."],
-  ["dl3","left","врач","Liegen Sie bitte auf dem Rücken. Tut das hier weh?","Лягте, пожалуйста, на спину. Здесь болит?"],
-  ["dl4","right","пац.","Ja, genau da. Und manchmal auch im Rücken.","Да, именно там. И иногда в спине."],
-  ["dl5","left","врач","Gut. Die Apotheke ist neben dem Ausgang, im Erdgeschoss.","Хорошо. Аптека рядом с выходом, на первом этаже."],
-  ["dl6","right","пац.","Vielen Dank, Herr Doktor. Wo ist der Ausgang?","Большое спасибо, доктор. Где выход?"],
-  ["dl7","left","врач","Geradeaus, hinter der Tür links.","Прямо, за дверью налево."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt"><div class="de">${de}</div><div class="ru">${ru}</div></div>${playBtn(id)}</div></div>`).join('');
+phrases('examples',[
+  ["e1","Das Rezept ist in der Tasche.","дас рэцэпт ист ин дэа ташэ","Рецепт в сумке. (die → der)"],
+  ["e2","Der Arzt ist in dem Zimmer.","дэа арцт ист ин дэм циммэа","Врач в кабинете. (das → dem)"],
+  ["e3","Die Tablette ist auf dem Tisch.","ди таблэттэ ист ауф дэм тиш","Таблетка на столе. (der → dem)"],
+  ["e4","Der Patient wartet vor der Tür.","дэа пациэнт вартэт фоа дэа тюа","Пациент ждёт перед дверью."],
+  ["e5","Die Praxis ist neben der Apotheke.","ди праксис ист нэбэн дэа апотэкэ","Кабинет рядом с аптекой."],
+  ["e6","Das Bett steht an der Wand.","дас бэт штээт ан дэа ванд","Кровать стоит у стены."],
+  ["ex1","Das Handy liegt unter dem Bett.","дас хэнди ликт унтэа дэм бэт","Телефон лежит под кроватью."],
+  ["ex2","Die Lampe hängt über dem Tisch.","ди лампэ хэнгт юбэа дэм тиш","Лампа висит над столом."],
+  ["ex3","Der Stuhl steht zwischen dem Tisch und dem Fenster.","дэа штуль штээт цвишэн дэм тиш унт дэм фэнстэа","Стул стоит между столом и окном."],
+  ["ex4","Die Katze sitzt hinter dem Sofa.","ди кацэ зицт хинтэа дэм зофа","Кошка сидит за диваном."],
+]);
+words('merges',[
+  ["m_im","im","им","= in dem"],["m_am","am","ам","= an dem"],["m_beim","beim","байм","= bei dem"],
+  ["m_ins","ins","инс","= in das (куда!)"],["m_zum","zum","цум","= zu dem"],["m_zur","zur","цуа","= zu der"],
+]);
+phrases('mergePhrases',[
+  ["m1","Ich bin im Krankenhaus.","ихь бин им кранкэнхаус","Я в больнице. (in dem → im)"],
+  ["mg1","Ich bin beim Arzt.","ихь бин байм арцт","Я у врача. (где — beim)"],
+  ["m2","Ich gehe zum Arzt.","ихь гээ цум арцт","Я иду к врачу. (куда — zum)"],
+  ["m3","Ich gehe zur Apotheke.","ихь гээ цуа апотэкэ","Я иду в аптеку. (zu der → zur)"],
+  ["mg2","Er ist am Bahnhof.","эа ист ам банхоф","Он на вокзале. (an dem → am)"],
+]);
+phrases('sl',[
+  ["sl1","Das Glas steht auf dem Tisch.","дас глас штээт ауф дэм тиш","Стакан стоит на столе."],
+  ["sl2","Das Buch liegt auf dem Tisch.","дас бух ликт ауф дэм тиш","Книга лежит на столе."],
+  ["sl3","Das Bild hängt an der Wand.","дас бильт хэнгт ан дэа ванд","Картина висит на стене."],
+  ["sl4","Der Patient sitzt auf dem Stuhl.","дэа пациэнт зицт ауф дэм штуль","Пациент сидит на стуле."],
+  ["sl5","Der Patient liegt im Bett.","дэа пациэнт ликт им бэт","Пациент лежит в постели."],
+]);
+phrases('med',[
+  ["w1","Wo haben Sie Schmerzen?","во хабэн зи шмэрцэн","Где у Вас болит?"],
+  ["w3","Die Schmerzen sind im Rücken.","ди шмэрцэн зинт им рюкэн","Боли в спине."],
+  ["w4","Der Schmerz ist unter dem Knie.","дэа шмэрц ист унтэа дэм кни","Боль под коленом."],
+  ["w2","Wo ist die Apotheke?","во ист ди апотэкэ","Где аптека?"],
+  ["w5","Das Krankenhaus ist hinter dem Bahnhof.","дас кранкэнхаус ист хинтэа дэм банхоф","Больница за вокзалом."],
+  ["wm1","Die Radiologie ist im zweiten Stock.","ди радиологи ист им цвайтэн шток","Рентген на третьем этаже (im zweiten Stock!)."],
+  ["wm2","Das Wartezimmer ist links.","дас вартэциммэа ист линкс","Зал ожидания слева."],
+  ["wm3","Die Toilette ist neben dem Aufzug.","ди туалэттэ ист нэбэн дэм ауфцук","Туалет рядом с лифтом."],
+  ["wm4","Der Arzt ist im OP.","дэа арцт ист им опэ","Врач в операционной."],
+]);
+phrases('med2',[
+  ["wm5","Die Vene liegt unter der Haut.","ди вэнэ ликт унтэа дэа хаут","Вена лежит под кожей."],
+  ["wm6","Der Thrombus sitzt in der Vene.","дэа тромбус зицт ин дэа вэнэ","Тромб сидит в вене."],
+]);
+dlg('dialog',[
+  ["dl1","left","Вр","Guten Tag! Wo tut es weh?","гутэн так! во тут эс вэ","Здравствуйте! Где болит?"],
+  ["dl2","right","П","Der Schmerz ist hier, im Bauch und unter den Rippen.","дэа шмэрц ист хиа, им баух унт унтэа дэн риппэн","Боль вот здесь, в животе и под рёбрами."],
+  ["dl3","left","Вр","Liegen Sie bitte auf dem Rücken. Tut das hier weh?","лигэн зи битэ ауф дэм рюкэн. тут дас хиа вэ","Лягте, пожалуйста, на спину. Здесь болит?"],
+  ["dl4","right","П","Ja, genau da. Und manchmal auch im Rücken.","я, гэнау да. унт манхмаль аух им рюкэн","Да, именно там. И иногда в спине."],
+  ["dl5","left","Вр","Gut. Die Apotheke ist neben dem Ausgang, im Erdgeschoss.","гут. ди апотэкэ ист нэбэн дэм аусганг, им эрдгэшос","Хорошо. Аптека рядом с выходом, на первом этаже."],
+  ["dl6","right","П","Vielen Dank, Herr Doktor. Wo ist der Ausgang?","филен данк, хэа доктор. во ист дэа аусганг","Большое спасибо, доктор. Где выход?"],
+  ["dl7","left","Вр","Geradeaus, hinter der Tür links.","гэрадэаус, хинтэа дэа тюа линкс","Прямо, за дверью налево."],
+]);
+dlg('dialog2',[
+  ["wg1","right","Гр","Entschuldigung, wo ist die Radiologie?","энтшульдигунг, во ист ди радиологи","Извините, где рентген?"],
+  ["wg2","left","Рег","Im zweiten Stock, neben dem Aufzug.","им цвайтэн шток, нэбэн дэм ауфцук","На третьем этаже, рядом с лифтом."],
+  ["wg3","right","Гр","Und wo ist die Toilette?","унт во ист ди туалэттэ","А где туалет?"],
+  ["wg4","left","Рег","Hier links, hinter der Tür.","хиа линкс, хинтэа дэа тюа","Здесь слева, за дверью."],
+  ["wg5","right","Гр","Wo kann ich warten?","во кан ихь вартэн","Где можно подождать?"],
+  ["wg6","left","Рег","Im Wartezimmer, gegenüber der Anmeldung.","им вартэциммэа, гэгэнюбэа дэа анмэльдунг","В зале ожидания, напротив регистратуры."],
+  ["wg7","right","Гр","Danke schön!","данкэ шён","Большое спасибо!"],
+  ["wg8","left","Рег","Bitte schön!","битэ шён","Пожалуйста!"],
+]);
+dlg('dialog3',[
+  ["us1","left","Вр","Die Vene liegt hier, unter der Haut.","ди вэнэ ликт хиа, унтэа дэа хаут","Вена лежит вот здесь, под кожей."],
+  ["us2","right","П","Ist das die Krampfader?","ист дас ди крампфадэа","Это и есть варикозная вена?"],
+  ["us3","left","Вр","Ja. Und hier, in der Leiste, ist die Klappe kaputt.","я. унт хиа, ин дэа ляйстэ, ист ди клаппэ капут","Да. А вот здесь, в паху, не работает клапан."],
+  ["us4","right","П","Ist in der Vene ein Thrombus?","ист ин дэа вэнэ айн тромбус","В вене есть тромб?"],
+  ["us5","left","Вр","Nein, in der Vene ist kein Thrombus.","найн, ин дэа вэнэ ист кайн тромбус","Нет, тромба в вене нет."],
+  ["us6","right","П","Gott sei Dank!","гот зай данк","Слава богу!"],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
