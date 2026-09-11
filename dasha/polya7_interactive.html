@@ -164,7 +164,31 @@
   .saveinfo { font-size:12px; color:var(--ink-faint); margin-top:10px; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
-
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  .hwbox .grammar-box { background:var(--surface); border-radius:10px; padding:10px 14px; }
+</style>
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
     padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
@@ -181,9 +205,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -355,7 +376,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   <div class="eyebrow">Занятия Полины с Дашей · конспект 7</div>
   <h1>Занятие 7. Разбор текста и феминитивы</h1>
   <p class="lede">26 августа 2026, 26 минут — короткое занятие. Дочитали текст про девушку, которая учит немецкий (разобрали <i>vor allem</i>, <i>Spaß machen</i>, <i>aufschreiben</i>), выяснили, почему у <i>Kinderbücher haben viele Bilder</i> нет артикля, и Даша начала <b>новую тему — женский род существительных</b>. У каждой фразы озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <div class="hint">🔊 &nbsp;= нажми и слушай — звук встроен в страницу, интернет не нужен</div>
 
   <div class="toc">
     <b>Что в занятии</b>
@@ -521,7 +542,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 
   <section class="block" id="s13">
     <h2><span class="num">13</span> 📚 Домашка от Даши</h2>
-    <p class="desc">Прислана в Telegram 26.08.2026. Пять пунктов — поля можно заполнять прямо здесь, написанное сохраняется в браузере.</p>
+    <p class="desc">Прислана в Telegram 26.08.2026. Пять пунктов — поля можно заполнять прямо здесь, написанное сохраняется в браузере. Сначала пиши своё, потом сверяйся: <b>«мой пример»</b> у каждого предложения и <b>мой список слов</b> к тексту — с пояснениями.</p>
 
     <div class="hwbox">
       <span class="hwnum">Задание 1</span>
@@ -537,6 +558,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
         💡 Текст «Deutsch lernen (A1)» с озвучкой по абзацам — в разделе 11 этой страницы. Можно слушать оттуда и сверяться.
       </div>
       <textarea class="fld" id="f_worte" rows="5" placeholder="слово — перевод, по одному в строке"></textarea>
+      <button id="кСловаWorte" class="кн-ответы">Мой список слов — сверить</button>
+      <div id="slovaWorte" hidden style="margin-top:10px"></div>
     </div>
 
     <div class="hwbox">
@@ -1128,7 +1151,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"t1": "../zvuk/polya7/t1.mp3", "t2": "../zvuk/polya7/t2.mp3", "t3": "../zvuk/polya7/t3.mp3", "t4": "../zvuk/polya7/t4.mp3", "v1": "../zvuk/polya7/v1.mp3", "v2": "../zvuk/polya7/v2.mp3", "v3": "../zvuk/polya7/v3.mp3", "v4": "../zvuk/polya7/v4.mp3", "r1": "../zvuk/polya7/r1.mp3", "r2": "../zvuk/polya7/r2.mp3", "r3": "../zvuk/polya7/r3.mp3", "m1": "../zvuk/polya7/m1.mp3", "m2": "../zvuk/polya7/m2.mp3", "m3": "../zvuk/polya7/m3.mp3", "m4": "../zvuk/polya7/m4.mp3", "b1": "../zvuk/polya7/b1.mp3", "b2": "../zvuk/polya7/b2.mp3", "b3": "../zvuk/polya7/b3.mp3", "b4": "../zvuk/polya7/b4.mp3", "b5": "../zvuk/polya7/b5.mp3", "b6": "../zvuk/polya7/b6.mp3", "sp1": "../zvuk/polya7/sp1.mp3", "sp2": "../zvuk/polya7/sp2.mp3", "sp3": "../zvuk/polya7/sp3.mp3", "f1": "../zvuk/polya7/f1.mp3", "f2": "../zvuk/polya7/f2.mp3", "f3": "../zvuk/polya7/f3.mp3", "f4": "../zvuk/polya7/f4.mp3", "f5": "../zvuk/polya7/f5.mp3", "f6": "../zvuk/polya7/f6.mp3", "p1": "../zvuk/polya7/p1.mp3", "p2": "../zvuk/polya7/p2.mp3", "a1": "../zvuk/polya7/a1.mp3", "fem_arzt": "../zvuk/polya7/fem_arzt.mp3", "fem_lehrer": "../zvuk/polya7/fem_lehrer.mp3", "fem_schueler": "../zvuk/polya7/fem_schueler.mp3", "fem_student": "../zvuk/polya7/fem_student.mp3", "fem_kellner": "../zvuk/polya7/fem_kellner.mp3", "fem_schausp": "../zvuk/polya7/fem_schausp.mp3", "fem_loewe": "../zvuk/polya7/fem_loewe.mp3", "fem_koenig": "../zvuk/polya7/fem_koenig.mp3", "fem_prinz": "../zvuk/polya7/fem_prinz.mp3", "pl1": "../zvuk/polya7/pl1.mp3", "pl2": "../zvuk/polya7/pl2.mp3", "pl3": "../zvuk/polya7/pl3.mp3", "pl4": "../zvuk/polya7/pl4.mp3", "e1": "../zvuk/polya7/e1.mp3", "e2": "../zvuk/polya7/e2.mp3", "ht1": "../zvuk/polya7/ht1.mp3", "ht2": "../zvuk/polya7/ht2.mp3", "ht3": "../zvuk/polya7/ht3.mp3", "nw_stets": "../zvuk/polya7/nw_stets.mp3", "nw_garnicht": "../zvuk/polya7/nw_garnicht.mp3", "nw_natuerlich": "../zvuk/polya7/nw_natuerlich.mp3", "nw_fortschritte": "../zvuk/polya7/nw_fortschritte.mp3", "nz_immer": "../zvuk/polya7/nz_immer.mp3", "nz_fastimmer": "../zvuk/polya7/nz_fastimmer.mp3", "nz_meistens": "../zvuk/polya7/nz_meistens.mp3", "nz_normalerweise": "../zvuk/polya7/nz_normalerweise.mp3", "nz_oft": "../zvuk/polya7/nz_oft.mp3", "nz_prowoche": "../zvuk/polya7/nz_prowoche.mp3", "nz_manchmal": "../zvuk/polya7/nz_manchmal.mp3", "nz_gelegentlich": "../zvuk/polya7/nz_gelegentlich.mp3", "nz_abundzu": "../zvuk/polya7/nz_abundzu.mp3", "nz_selten": "../zvuk/polya7/nz_selten.mp3", "nz_fastnie": "../zvuk/polya7/nz_fastnie.mp3", "nz_nie": "../zvuk/polya7/nz_nie.mp3", "nz_b1": "../zvuk/polya7/nz_b1.mp3", "nz_b2": "../zvuk/polya7/nz_b2.mp3", "nz_b3": "../zvuk/polya7/nz_b3.mp3"};
+const AUDIO = {"t1": "../zvuk/polya7/t1.mp3", "t2": "../zvuk/polya7/t2.mp3", "t3": "../zvuk/polya7/t3.mp3", "t4": "../zvuk/polya7/t4.mp3", "v1": "../zvuk/polya7/v1.mp3", "v2": "../zvuk/polya7/v2.mp3", "v3": "../zvuk/polya7/v3.mp3", "v4": "../zvuk/polya7/v4.mp3", "r1": "../zvuk/polya7/r1.mp3", "r2": "../zvuk/polya7/r2.mp3", "r3": "../zvuk/polya7/r3.mp3", "m1": "../zvuk/polya7/m1.mp3", "m2": "../zvuk/polya7/m2.mp3", "m3": "../zvuk/polya7/m3.mp3", "m4": "../zvuk/polya7/m4.mp3", "b1": "../zvuk/polya7/b1.mp3", "b2": "../zvuk/polya7/b2.mp3", "b3": "../zvuk/polya7/b3.mp3", "b4": "../zvuk/polya7/b4.mp3", "b5": "../zvuk/polya7/b5.mp3", "b6": "../zvuk/polya7/b6.mp3", "sp1": "../zvuk/polya7/sp1.mp3", "sp2": "../zvuk/polya7/sp2.mp3", "sp3": "../zvuk/polya7/sp3.mp3", "f1": "../zvuk/polya7/f1.mp3", "f2": "../zvuk/polya7/f2.mp3", "f3": "../zvuk/polya7/f3.mp3", "f4": "../zvuk/polya7/f4.mp3", "f5": "../zvuk/polya7/f5.mp3", "f6": "../zvuk/polya7/f6.mp3", "p1": "../zvuk/polya7/p1.mp3", "p2": "../zvuk/polya7/p2.mp3", "a1": "../zvuk/polya7/a1.mp3", "fem_arzt": "../zvuk/polya7/fem_arzt.mp3", "fem_lehrer": "../zvuk/polya7/fem_lehrer.mp3", "fem_schueler": "../zvuk/polya7/fem_schueler.mp3", "fem_student": "../zvuk/polya7/fem_student.mp3", "fem_kellner": "../zvuk/polya7/fem_kellner.mp3", "fem_schausp": "../zvuk/polya7/fem_schausp.mp3", "fem_loewe": "../zvuk/polya7/fem_loewe.mp3", "fem_koenig": "../zvuk/polya7/fem_koenig.mp3", "fem_prinz": "../zvuk/polya7/fem_prinz.mp3", "pl1": "../zvuk/polya7/pl1.mp3", "pl2": "../zvuk/polya7/pl2.mp3", "pl3": "../zvuk/polya7/pl3.mp3", "pl4": "../zvuk/polya7/pl4.mp3", "e1": "../zvuk/polya7/e1.mp3", "e2": "../zvuk/polya7/e2.mp3", "ht1": "../zvuk/polya7/ht1.mp3", "ht2": "../zvuk/polya7/ht2.mp3", "ht3": "../zvuk/polya7/ht3.mp3", "nw_stets": "../zvuk/polya7/nw_stets.mp3", "nw_garnicht": "../zvuk/polya7/nw_garnicht.mp3", "nw_natuerlich": "../zvuk/polya7/nw_natuerlich.mp3", "nw_fortschritte": "../zvuk/polya7/nw_fortschritte.mp3", "nz_immer": "../zvuk/polya7/nz_immer.mp3", "nz_fastimmer": "../zvuk/polya7/nz_fastimmer.mp3", "nz_meistens": "../zvuk/polya7/nz_meistens.mp3", "nz_normalerweise": "../zvuk/polya7/nz_normalerweise.mp3", "nz_oft": "../zvuk/polya7/nz_oft.mp3", "nz_prowoche": "../zvuk/polya7/nz_prowoche.mp3", "nz_manchmal": "../zvuk/polya7/nz_manchmal.mp3", "nz_gelegentlich": "../zvuk/polya7/nz_gelegentlich.mp3", "nz_abundzu": "../zvuk/polya7/nz_abundzu.mp3", "nz_selten": "../zvuk/polya7/nz_selten.mp3", "nz_fastnie": "../zvuk/polya7/nz_fastnie.mp3", "nz_nie": "../zvuk/polya7/nz_nie.mp3", "nz_b1": "../zvuk/polya7/nz_b1.mp3", "nz_b2": "../zvuk/polya7/nz_b2.mp3", "nz_b3": "../zvuk/polya7/nz_b3.mp3", "av1": "../zvuk/polya7/av1.mp3", "av2": "../zvuk/polya7/av2.mp3", "av3": "../zvuk/polya7/av3.mp3", "av4": "../zvuk/polya7/av4.mp3", "av5": "../zvuk/polya7/av5.mp3", "av6": "../zvuk/polya7/av6.mp3", "av7": "../zvuk/polya7/av7.mp3", "av8": "../zvuk/polya7/av8.mp3", "av9": "../zvuk/polya7/av9.mp3", "av10": "../zvuk/polya7/av10.mp3", "av11": "../zvuk/polya7/av11.mp3", "av12": "../zvuk/polya7/av12.mp3", "vw1": "../zvuk/polya7/vw1.mp3", "vw2": "../zvuk/polya7/vw2.mp3", "vw3": "../zvuk/polya7/vw3.mp3", "vw4": "../zvuk/polya7/vw4.mp3", "vw5": "../zvuk/polya7/vw5.mp3", "vw6": "../zvuk/polya7/vw6.mp3", "vw7": "../zvuk/polya7/vw7.mp3", "vw8": "../zvuk/polya7/vw8.mp3", "vw9": "../zvuk/polya7/vw9.mp3", "vw10": "../zvuk/polya7/vw10.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1286,17 +1309,128 @@ phrases('adverbBsp',[
   ["nz_b3","Er kommt <b>selten</b> zu spät.","эа коммт зэльтэн цу шпэт","Он редко опаздывает."],
 ], 'hb');
 
-// ===== поля домашки =====
-const ADV = ['immer','fast immer','meistens','normalerweise','häufig / oft','… pro Woche',
-             'manchmal','gelegentlich','ab und zu','selten','fast nie','nie / niemals'];
-document.getElementById('hwAdverb').innerHTML = ADV.map((a,i)=>`
+// ===== поля домашки (11.09: «мой пример» и мой список слов) =====
+
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+function переключить(b){ var t = b.nextElementSibling; t.hidden = !t.hidden; b.classList.toggle('on'); }
+function мойПример(de, clip, ru, почему){
+  return '<button type="button" class="hw-tr-btn" style="margin:6px 0 0" onclick="переключить(this)">мой пример</button>' +
+    '<span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">' + de + '</span> ' + playBtn(clip) +
+    '<span class="hw-why" style="display:block">' + ru + (почему ? '<br>' + почему : '') + '</span></span>';
+}
+
+// Задание 2: незнакомые слова из текста — мой список для сверки (поле f_worte — прежнее)
+const СЛОВА = [
+  ['die Sprache, die Sprachen','язык, языки',''],
+  ['verstehen','понимать','ich verstehe, du verstehst.'],
+  ['die Muttersprache','родной язык','die Mutter + die Sprache — «язык мамы».'],
+  ['vor allem','прежде всего',''],
+  ['stets','всегда','То же, что immer, но книжнее.','nw_stets'],
+  ['meinen','считать, полагать','⚠️ Не путать с mein (мой): Sie meint — «она считает».'],
+  ['am besten','лучше всего','gut → besser → am besten.'],
+  ['manche','некоторые',''],
+  ['einfach','простой, просто',''],
+  ['das Wort, die Wörter','слово, слова','Во множественном умляут и -er.'],
+  ['ein paar','несколько','⚠️ Не «пара»: ein paar Bücher — несколько книг. «Пара» — ein Paar с большой буквы.'],
+  ['schenken (hat geschenkt)','дарить (подарил)','hat … geschenkt — прошедшее время, его пройдём позже.'],
+  ['das Bild, die Bilder','картинка, картинки',''],
+  ['nun','теперь, ну','То же, что jetzt.'],
+  ['Spaß machen','доставлять удовольствие','das macht mir Spaß — мне это нравится, в радость.'],
+  ['ansehen','смотреть (фильм)','Отделяемая приставка: Ich sehe viele Filme <b>an</b>.'],
+  ['gar nicht schlimm','совсем не страшно','gar nicht — «совсем не».','nw_garnicht'],
+  ['aufschreiben','записывать','Ich schreibe mir einige Sätze <b>auf</b> — приставка в конец.'],
+  ['erzählen','рассказывать',''],
+  ['noch einmal','ещё раз',''],
+  ['Fortschritte machen','делать успехи','der Fortschritt, die Fortschritte.','nw_fortschritte'],
+  ['natürlich','конечно, естественно','','nw_natuerlich'],
+];
+(function(){
+  const к = document.getElementById('кСловаWorte'), б = document.getElementById('slovaWorte');
+  к.dataset.showText = 'Мой список слов — сверить';
+  к.dataset.hideText = 'Скрыть список';
+  к.textContent = к.dataset.showText;
+  к.onclick = function(){ showAnswers(this, б, СЛОВА.map(([de,ru,почему,clip]) =>
+    ['', de + (clip ? ' ' + playBtn(clip) : '') + ' — ' + ru, null, null, почему])); };
+})();
+
+// Задание 4: наречие времени в предложении (ключи f_adv0–11 — прежние)
+const ПОСЛЕ = 'Наречие стоит сразу <b>после глагола</b>.';
+const ВПЕРЁД = 'Наречие поставили <b>первым</b> — глагол всё равно второй, а подлежащее уходит за него.';
+const ADV = [
+  ['immer','Ich trinke immer am Morgen Kaffee.','av1','Я всегда пью кофе по утрам.', ПОСЛЕ],
+  ['fast immer','Ich komme fast immer pünktlich.','av2','Я почти всегда прихожу вовремя.', ПОСЛЕ],
+  ['meistens','Am Wochenende schlafe ich meistens lange.','av3','В выходные я чаще всего долго сплю.', 'Впереди «когда» (am Wochenende) — глагол вторым, ich за ним, наречие дальше.'],
+  ['normalerweise','Normalerweise frühstücke ich um sieben Uhr.','av4','Обычно я завтракаю в семь часов.', ВПЕРЁД],
+  ['häufig / oft','Wir gehen oft spazieren.','av5','Мы часто гуляем.', ПОСЛЕ + ' spazieren gehen — «гулять».'],
+  ['… pro Woche','Ich lerne dreimal pro Woche Deutsch.','av6','Я учу немецкий три раза в неделю.', 'einmal, zweimal, dreimal — слитно. «Когда / как часто» — раньше, чем «что» (Deutsch).'],
+  ['manchmal','Manchmal koche ich für meine Familie.','av7','Иногда я готовлю для своей семьи.', ВПЕРЁД + ' für + Akkusativ: für meine Familie.'],
+  ['gelegentlich','Ich lese gelegentlich die Zeitung.','av8','Я изредка читаю газету.', ПОСЛЕ],
+  ['ab und zu','Ab und zu sehe ich einen Film auf Deutsch.','av9','Время от времени я смотрю фильм на немецком.', ВПЕРЁД + ' «на немецком» — auf Deutsch.'],
+  ['selten','Ich esse selten Fleisch.','av10','Я редко ем мясо.', ПОСЛЕ + ' essen: ich esse, но du isst, er isst.'],
+  ['fast nie','Er ist fast nie krank.','av11','Он почти никогда не болеет.', ПОСЛЕ + ' По-русски «не болеет» с «не», а по-немецки nie уже содержит отрицание — nicht не нужно.'],
+  ['nie / niemals','Ich rauche nie.','av12','Я никогда не курю.', '🩺 Частый вопрос врача: «Rauchen Sie?» — «Nein, ich rauche nie.» nie — без nicht.'],
+];
+document.getElementById('hwAdverb').innerHTML = ADV.map(([a,de,clip,ru,почему],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
     <div style="font-size:12.5px; color:var(--ink-faint); margin-bottom:4px">${a}</div>
-    <input class="fld" data-save="f_adv${i}" placeholder="предложение с «${a}»"></span></div>`).join('');
+    <input class="fld" data-save="f_adv${i}" placeholder="предложение с «${a}»"><br>
+    ${мойПример(de, clip, ru, почему)}</span></div>`).join('');
 
-document.getElementById('hwVerben').innerHTML = Array.from({length:10},(_,i)=>`
+// Задание 5: глаголы с изменяемой гласной (ключи f_vrb0–9 — прежние)
+const ГЛАСНАЯ = [
+  ['Du sprichst sehr gut Deutsch.','vw1','Ты очень хорошо говоришь по-немецки.','sprechen: e → i — du sprichst, er spricht.'],
+  ['Sie fährt jeden Tag mit dem Bus.','vw2','Она каждый день ездит на автобусе.','fahren: a → ä. mit + Dativ: mit dem Bus.'],
+  ['Er liest gern Bücher.','vw3','Он любит читать книги.','lesen: e → ie — du liest, er liest.'],
+  ['Du isst zu viel Schokolade.','vw4','Ты ешь слишком много шоколада.','essen: e → i; у du и er одна форма — isst.'],
+  ['Sie schläft am Sonntag lange.','vw5','Она в воскресенье долго спит.','schlafen: a → ä.'],
+  ['Er nimmt einen Kaffee.','vw6','Он берёт кофе.','nehmen: du nimmst, er nimmt — меняется и согласная (h → mm).'],
+  ['Du vergisst immer deinen Schlüssel.','vw7','Ты всегда забываешь свой ключ.','vergessen: e → i — du vergisst. der Schlüssel → deinen (Akkusativ).'],
+  ['Sie trägt heute ein Kleid.','vw8','Сегодня она в платье.','tragen: a → ä — «носить, быть одетым в».'],
+  ['Du hilfst mir immer.','vw9','Ты мне всегда помогаешь.','helfen: e → i; helfen + Dativ — <i>mir</i>, не mich.'],
+  ['Er läuft jeden Morgen im Park.','vw10','Он каждое утро бегает в парке.','laufen: au → äu.'],
+];
+document.getElementById('hwVerben').innerHTML = ГЛАСНАЯ.map(([de,clip,ru,почему],i)=>`
   <div class="hwrow"><span class="n">${i+1}.</span><span class="q">
-    <input class="fld" data-save="f_vrb${i}" placeholder="предложение с глаголом из карточек"></span></div>`).join('');
+    <input class="fld" data-save="f_vrb${i}" placeholder="предложение с глаголом из карточек"><br>
+    ${мойПример(de, clip, ru, почему + ' У ich гласная не меняется.')}</span></div>`).join('');
 
 (function(){
   const KEY = 'polya7_hw_';
