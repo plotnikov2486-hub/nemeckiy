@@ -87,6 +87,24 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
 
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
@@ -104,9 +122,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -279,7 +294,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 12. Прошедшее время (Perfekt)</h1>
   <p class="lede">Язык анамнеза: «когда началось», «что вы принимали», «были ли операции». В разговоре немцы рассказывают о прошлом именно через Perfekt — без него приём не собрать. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <div class="toc">
     <b>Что в уроке</b>
@@ -291,16 +306,19 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <li><a href="#s5">haben или sein?</a></li>
       <li><a href="#s6">Когда ge- НЕ ставится</a></li>
       <li><a href="#s7">Отделяемые приставки</a></li>
-      <li><a href="#s8">Perfekt в анамнезе</a></li>
-      <li><a href="#s9">Диалог: первичный приём</a></li>
-      <li><a href="#s10">Домашка</a></li>
+      <li><a href="#s8">war и hatte — короче, чем Perfekt</a></li>
+      <li><a href="#s9">Когда это было? seit или vor</a></li>
+      <li><a href="#s10">Perfekt в анамнезе</a></li>
+      <li><a href="#s11">Частые ошибки</a></li>
+      <li><a href="#s12">Диалоги</a></li>
+      <li><a href="#s13">Домашка</a></li>
     </ol>
   </div>
 
   <section class="block" id="s1">
     <h2><span class="num">1</span> Зачем нужен Perfekt</h2>
     <div class="grammar-box">
-      В немецком есть два прошедших времени. В <b>разговоре</b> почти всегда используют <b class="hl">Perfekt</b> — его и учим. Второе (Präteritum) живёт в книгах и отчётах; из него в речи берут только <i>war</i> (был) и <i>hatte</i> (имел) — их разберём позже.<br><br>
+      В немецком есть два прошедших времени. В <b>разговоре</b> почти всегда используют <b class="hl">Perfekt</b> — его и учим. Второе (Präteritum) живёт в книгах и отчётах; из него в речи берут только <i>war</i> (был) и <i>hatte</i> (имел) — они в разделе 8.<br><br>
       Для тебя это <b>язык анамнеза</b>: всё, что пациент рассказывает о случившемся, идёт в Perfekt.
     </div>
     <div class="card-list" id="intro"></div>
@@ -340,14 +358,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       Оканчиваются на <b>-en</b>, и часто меняется гласная в корне (<i>trinken → getr<b>u</b>nken</i>, <i>sprechen → gespr<b>o</b>chen</i>). Логики нет, но список частых — небольшой. Начни с этих двенадцати.
     </div>
     <div class="grid2" id="strong"></div>
+    <p class="desc" style="margin-top:16px">Ещё шесть — постоянно звучат в анамнезе (<b style="color:var(--sn)">sein!</b> — значит, Perfekt через sein):</p>
+    <div class="grid2" id="strong2"></div>
   </section>
 
   <section class="block" id="s5">
     <h2><span class="num">5</span> haben или sein? — главный вопрос</h2>
     <div class="warn-box">
       <span class="big">По умолчанию — haben. Через sein только два случая</span>
-      1️⃣ <b>Движение из точки А в точку Б:</b> gehen, kommen, fahren, laufen, stürzen (упасть).<br>
-      2️⃣ <b>Смена состояния:</b> einschlafen (заснуть), aufstehen (встать), werden (стать), passieren (случиться).<br>
+      1️⃣ <b>Движение из точки А в точку Б:</b> gehen, kommen, fahren, fliegen, laufen, stürzen (упасть).<br>
+      2️⃣ <b>Смена состояния:</b> einschlafen (заснуть), aufstehen (встать), werden (стать), anschwellen (отечь), passieren (случиться).<br>
       Плюс отдельно запомнить: <b>sein</b> и <b>bleiben</b> тоже идут с sein.
     </div>
     <p class="desc"><b style="color:var(--hb)">С haben</b> — большинство глаголов:</p>
@@ -376,26 +396,80 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block" id="s8">
-    <h2><span class="num">8</span> Perfekt в анамнезе — твой рабочий блок</h2>
-    <p class="desc">Десять фраз, из которых реально состоит сбор анамнеза. Выучи блоком — на приёме они звучат почти каждый раз.</p>
-    <div class="card-list" id="med"></div>
+    <h2><span class="num">8</span> war и hatte — короче, чем Perfekt</h2>
+    <div class="grammar-box">
+      У двух самых частых глаголов немцы в разговоре <b>не говорят</b> длинный Perfekt: вместо <i>ich bin gewesen</i> — просто <b class="hl">ich war</b> (я был), вместо <i>ich habe gehabt</i> — <b class="hl">ich hatte</b> (у меня был). Правильно и так, и так, но так звучит живая речь. В анамнезе — на каждом шагу: «была температура», «были операции», «был у врача».
+    </div>
+    <div class="tabwrap"><table class="ftab">
+      <tr><th></th><th>sein → был</th><th>haben → имел</th></tr>
+      <tr><td>ich</td><td>war</td><td>hatte</td></tr>
+      <tr><td>du</td><td>warst</td><td>hattest</td></tr>
+      <tr><td>er / sie / es</td><td>war</td><td>hatte</td></tr>
+      <tr><td>wir</td><td>waren</td><td>hatten</td></tr>
+      <tr><td>ihr</td><td>wart</td><td>hattet</td></tr>
+      <tr><td>sie / Sie</td><td>waren</td><td>hatten</td></tr>
+    </table></div>
+    <div class="card-list" id="warHatte"></div>
   </section>
 
   <section class="block" id="s9">
-    <h2><span class="num">9</span> Диалог: первичный приём флеболога</h2>
-    <p class="desc">Весь разговор о прошлом — в Perfekt. Роль пациента озвучивает Yannick.</p>
-    <div class="dialogue" id="dialog"></div>
+    <h2><span class="num">9</span> Когда это было? seit или vor</h2>
+    <p class="desc">Слова, которые ставят рассказ в прошлое:</p>
+    <div class="grid2" id="wann"></div>
+    <div class="warn-box" style="margin-top:14px">
+      <span class="big">Ловушка анамнеза: seit и vor</span>
+      <b>vor</b> + время = «… назад»: событие случилось и <b>закончилось</b> → <b>Perfekt</b>. <i>Die Schmerzen haben vor drei Tagen angefangen</i> — начались три дня назад.<br>
+      <b>seit</b> + время = «уже … (и до сих пор)»: всё ещё длится → <b>настоящее время</b>, не Perfekt! <i>Ich habe seit drei Tagen Schmerzen</i> — болит уже три дня. Русскоговорящие тут почти всегда ставят Perfekt.
+    </div>
+    <div class="card-list" id="seitVor"></div>
   </section>
 
   <section class="block" id="s10">
-    <h2><span class="num">10</span> Домашка</h2>
+    <h2><span class="num">10</span> Perfekt в анамнезе — твой рабочий блок</h2>
+    <p class="desc">Фразы, из которых реально состоит сбор анамнеза. Выучи блоком — на приёме они звучат почти каждый раз.</p>
+    <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Флебо-анамнез при отёчной икре.</b> Долгий перелёт или поездка (больше 4 часов), мало питья, без компрессионного трикотажа, тромбоз у родственников — вопросы о факторах риска тромбоза глубоких вен. Все они — в Perfekt или с <i>hatte</i>.
+    </div>
+    <div class="card-list" id="med2"></div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ich habe nach Hause gegangen.</span><span class="good">Ich bin nach Hause gegangen.</span><span class="why">движение из А в Б → sein</span></div>
+      <div class="err-row"><span class="bad">Ich habe gearbeitet gestern.</span><span class="good">Ich habe gestern gearbeitet.</span><span class="why">Partizip II — в самый конец</span></div>
+      <div class="err-row"><span class="bad">Er hat geoperiert.</span><span class="good">Er hat operiert.</span><span class="why">-ieren — без ge-</span></div>
+      <div class="err-row"><span class="bad">Ich habe gebekommen.</span><span class="good">Ich habe bekommen.</span><span class="why">приставка be- — без ge-</span></div>
+      <div class="err-row"><span class="bad">Ich bin gestanden auf.</span><span class="good">Ich bin aufgestanden.</span><span class="why">auf + ge + standen, слитно</span></div>
+      <div class="err-row"><span class="bad">Ich habe seit drei Tagen Schmerzen gehabt.</span><span class="good">Ich habe seit drei Tagen Schmerzen.</span><span class="why">seit = и сейчас болит → настоящее время</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Диалоги</h2>
+    <div class="desc">Весь разговор о прошлом — в Perfekt. Роль пациента и Григория озвучивает Yannick.</div>
+    <h3 class="dlg-title">Первичный приём флеболога</h3>
+    <div class="dialogue" id="dialog"></div>
+    <div class="grammar-box" style="margin-top:12px">
+      <i>ich bin noch nie operiert worden</i> — «меня ещё ни разу не оперировали». Это Perfekt страдательного залога (<i>worden</i>) — пока просто запомни фразу целиком, она частая.
+    </div>
+    <h3 class="dlg-title">Отёк икры после перелёта</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Григорий рассказывает о выходных</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Образуй Partizip II: <i>machen, lernen, kaufen, warten, arbeiten</i> (правильные — ge…t).</li>
         <li>Выучи наизусть 12 сильных глаголов из раздела 4 — это база, дальше будет проще.</li>
-        <li>Реши, <b>haben или sein</b>: <i>gehen, nehmen, stürzen, trinken, aufstehen, untersuchen</i>. Объясни почему.</li>
-        <li>Скажи о вчерашнем дне 5 предложений в Perfekt: где был, что делал, кого смотрел.</li>
-        <li>Собери анамнез вслух: задай пациенту 4 вопроса в Perfekt (когда началось, что принимал, были ли операции, падал ли).</li>
+        <li>Реши, <b>haben или sein</b>: <i>gehen, nehmen, stürzen, trinken, aufstehen, untersuchen, fliegen</i>. Объясни почему.</li>
+        <li>Скажи о вчерашнем дне 5 предложений в Perfekt: где был, что делал, кого смотрел. Два из них — с <i>war</i> или <i>hatte</i>.</li>
+        <li>Переведи: «Боли уже неделю» и «Боли начались неделю назад» (seit / vor).</li>
+        <li>Собери флебо-анамнез вслух: 5 вопросов пациенту с отёчной икрой (перелёт, чулки, тромбоз раньше, в семье, лекарства).</li>
       </ol>
     </div>
   </section>
@@ -954,11 +1028,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"f1": "../zvuk/urok12/f1.mp3", "f2": "../zvuk/urok12/f2.mp3", "f3": "../zvuk/urok12/f3.mp3", "r_machen": "../zvuk/urok12/r_machen.mp3", "r_arbeiten": "../zvuk/urok12/r_arbeiten.mp3", "r_lernen": "../zvuk/urok12/r_lernen.mp3", "r_fragen": "../zvuk/urok12/r_fragen.mp3", "r_sagen": "../zvuk/urok12/r_sagen.mp3", "r_kaufen": "../zvuk/urok12/r_kaufen.mp3", "r_hoeren": "../zvuk/urok12/r_hoeren.mp3", "r_warten": "../zvuk/urok12/r_warten.mp3", "s_sein": "../zvuk/urok12/s_sein.mp3", "s_haben": "../zvuk/urok12/s_haben.mp3", "s_gehen": "../zvuk/urok12/s_gehen.mp3", "s_kommen": "../zvuk/urok12/s_kommen.mp3", "s_nehmen": "../zvuk/urok12/s_nehmen.mp3", "s_trinken": "../zvuk/urok12/s_trinken.mp3", "s_essen": "../zvuk/urok12/s_essen.mp3", "s_sprechen": "../zvuk/urok12/s_sprechen.mp3", "s_schlafen": "../zvuk/urok12/s_schlafen.mp3", "s_helfen": "../zvuk/urok12/s_helfen.mp3", "s_sehen": "../zvuk/urok12/s_sehen.mp3", "s_schreiben": "../zvuk/urok12/s_schreiben.mp3", "h1": "../zvuk/urok12/h1.mp3", "h2": "../zvuk/urok12/h2.mp3", "h3": "../zvuk/urok12/h3.mp3", "b1": "../zvuk/urok12/b1.mp3", "b2": "../zvuk/urok12/b2.mp3", "b3": "../zvuk/urok12/b3.mp3", "b4": "../zvuk/urok12/b4.mp3", "g1": "../zvuk/urok12/g1.mp3", "g2": "../zvuk/urok12/g2.mp3", "g3": "../zvuk/urok12/g3.mp3", "g4": "../zvuk/urok12/g4.mp3", "g5": "../zvuk/urok12/g5.mp3", "g6": "../zvuk/urok12/g6.mp3", "g7": "../zvuk/urok12/g7.mp3", "t1": "../zvuk/urok12/t1.mp3", "t2": "../zvuk/urok12/t2.mp3", "t3": "../zvuk/urok12/t3.mp3", "t4": "../zvuk/urok12/t4.mp3", "t5": "../zvuk/urok12/t5.mp3", "t6": "../zvuk/urok12/t6.mp3", "m1": "../zvuk/urok12/m1.mp3", "m2": "../zvuk/urok12/m2.mp3", "m3": "../zvuk/urok12/m3.mp3", "m4": "../zvuk/urok12/m4.mp3", "m5": "../zvuk/urok12/m5.mp3", "m6": "../zvuk/urok12/m6.mp3", "m7": "../zvuk/urok12/m7.mp3", "m8": "../zvuk/urok12/m8.mp3", "m9": "../zvuk/urok12/m9.mp3", "m10": "../zvuk/urok12/m10.mp3", "d1": "../zvuk/urok12/d1.mp3", "d2": "../zvuk/urok12/d2.mp3", "d3": "../zvuk/urok12/d3.mp3", "d4": "../zvuk/urok12/d4.mp3", "d5": "../zvuk/urok12/d5.mp3", "d6": "../zvuk/urok12/d6.mp3", "d7": "../zvuk/urok12/d7.mp3", "d8": "../zvuk/urok12/d8.mp3", "d9": "../zvuk/urok12/d9.mp3"};
+const AUDIO = {"f1": "../zvuk/urok12/f1.mp3", "f2": "../zvuk/urok12/f2.mp3", "f3": "../zvuk/urok12/f3.mp3", "r_machen": "../zvuk/urok12/r_machen.mp3", "r_arbeiten": "../zvuk/urok12/r_arbeiten.mp3", "r_lernen": "../zvuk/urok12/r_lernen.mp3", "r_fragen": "../zvuk/urok12/r_fragen.mp3", "r_sagen": "../zvuk/urok12/r_sagen.mp3", "r_kaufen": "../zvuk/urok12/r_kaufen.mp3", "r_hoeren": "../zvuk/urok12/r_hoeren.mp3", "r_warten": "../zvuk/urok12/r_warten.mp3", "s_sein": "../zvuk/urok12/s_sein.mp3", "s_haben": "../zvuk/urok12/s_haben.mp3", "s_gehen": "../zvuk/urok12/s_gehen.mp3", "s_kommen": "../zvuk/urok12/s_kommen.mp3", "s_nehmen": "../zvuk/urok12/s_nehmen.mp3", "s_trinken": "../zvuk/urok12/s_trinken.mp3", "s_essen": "../zvuk/urok12/s_essen.mp3", "s_sprechen": "../zvuk/urok12/s_sprechen.mp3", "s_schlafen": "../zvuk/urok12/s_schlafen.mp3", "s_helfen": "../zvuk/urok12/s_helfen.mp3", "s_sehen": "../zvuk/urok12/s_sehen.mp3", "s_schreiben": "../zvuk/urok12/s_schreiben.mp3", "h1": "../zvuk/urok12/h1.mp3", "h2": "../zvuk/urok12/h2.mp3", "h3": "../zvuk/urok12/h3.mp3", "b1": "../zvuk/urok12/b1.mp3", "b2": "../zvuk/urok12/b2.mp3", "b3": "../zvuk/urok12/b3.mp3", "b4": "../zvuk/urok12/b4.mp3", "g1": "../zvuk/urok12/g1.mp3", "g2": "../zvuk/urok12/g2.mp3", "g3": "../zvuk/urok12/g3.mp3", "g4": "../zvuk/urok12/g4.mp3", "g5": "../zvuk/urok12/g5.mp3", "g6": "../zvuk/urok12/g6.mp3", "g7": "../zvuk/urok12/g7.mp3", "t1": "../zvuk/urok12/t1.mp3", "t2": "../zvuk/urok12/t2.mp3", "t3": "../zvuk/urok12/t3.mp3", "t4": "../zvuk/urok12/t4.mp3", "t5": "../zvuk/urok12/t5.mp3", "t6": "../zvuk/urok12/t6.mp3", "m1": "../zvuk/urok12/m1.mp3", "m3": "../zvuk/urok12/m3.mp3", "m4": "../zvuk/urok12/m4.mp3", "m5": "../zvuk/urok12/m5.mp3", "m6": "../zvuk/urok12/m6.mp3", "m7": "../zvuk/urok12/m7.mp3", "m8": "../zvuk/urok12/m8.mp3", "m9": "../zvuk/urok12/m9.mp3", "m10": "../zvuk/urok12/m10.mp3", "d1": "../zvuk/urok12/d1.mp3", "d3": "../zvuk/urok12/d3.mp3", "d4": "../zvuk/urok12/d4.mp3", "d5": "../zvuk/urok12/d5.mp3", "d6": "../zvuk/urok12/d6.mp3", "d7": "../zvuk/urok12/d7.mp3", "d8": "../zvuk/urok12/d8.mp3", "d9": "../zvuk/urok12/d9.mp3", "s_fahren": "../zvuk/urok12/s_fahren.mp3", "s_fliegen": "../zvuk/urok12/s_fliegen.mp3", "s_bleiben": "../zvuk/urok12/s_bleiben.mp3", "s_tragen": "../zvuk/urok12/s_tragen.mp3", "s_geben": "../zvuk/urok12/s_geben.mp3", "s_finden": "../zvuk/urok12/s_finden.mp3", "b5": "../zvuk/urok12/b5.mp3", "b6": "../zvuk/urok12/b6.mp3", "g8": "../zvuk/urok12/g8.mp3", "t7": "../zvuk/urok12/t7.mp3", "t8": "../zvuk/urok12/t8.mp3", "pw1": "../zvuk/urok12/pw1.mp3", "pw2": "../zvuk/urok12/pw2.mp3", "pw3": "../zvuk/urok12/pw3.mp3", "pw4": "../zvuk/urok12/pw4.mp3", "pw5": "../zvuk/urok12/pw5.mp3", "z1": "../zvuk/urok12/z1.mp3", "z2": "../zvuk/urok12/z2.mp3", "z3": "../zvuk/urok12/z3.mp3", "z4": "../zvuk/urok12/z4.mp3", "z5": "../zvuk/urok12/z5.mp3", "z6": "../zvuk/urok12/z6.mp3", "z7": "../zvuk/urok12/z7.mp3", "z8": "../zvuk/urok12/z8.mp3", "sv1": "../zvuk/urok12/sv1.mp3", "sv2": "../zvuk/urok12/sv2.mp3", "sv3": "../zvuk/urok12/sv3.mp3", "fa1": "../zvuk/urok12/fa1.mp3", "fa2": "../zvuk/urok12/fa2.mp3", "fa3": "../zvuk/urok12/fa3.mp3", "fa4": "../zvuk/urok12/fa4.mp3", "fa5": "../zvuk/urok12/fa5.mp3", "fa6": "../zvuk/urok12/fa6.mp3", "fa7": "../zvuk/urok12/fa7.mp3", "fa8": "../zvuk/urok12/fa8.mp3", "dn2": "../zvuk/urok12/dn2.mp3", "ft1": "../zvuk/urok12/ft1.mp3", "ft2": "../zvuk/urok12/ft2.mp3", "ft3": "../zvuk/urok12/ft3.mp3", "ft4": "../zvuk/urok12/ft4.mp3", "ft5": "../zvuk/urok12/ft5.mp3", "ft6": "../zvuk/urok12/ft6.mp3", "ft7": "../zvuk/urok12/ft7.mp3", "tg1": "../zvuk/urok12/tg1.mp3", "tg2": "../zvuk/urok12/tg2.mp3", "tg3": "../zvuk/urok12/tg3.mp3", "tg4": "../zvuk/urok12/tg4.mp3", "tg5": "../zvuk/urok12/tg5.mp3", "tg6": "../zvuk/urok12/tg6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -979,14 +1053,21 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
+// слова и фразы: [id, немецкое, транскрипция, перевод]
 function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
 function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
 
 phrases('intro',[
   ["f1","Ich habe gearbeitet.","ихь хабэ гэарбайтэт","Я работал."],
   ["f2","Ich bin gekommen.","ихь бин гэкоммэн","Я пришёл."],
+  ["f3","Ich habe gestern lange gearbeitet.","ихь хабэ гэстэрн лангэ гэарбайтэт","Я вчера долго работал."],
 ]);
 
 words('regular',[
@@ -1014,6 +1095,14 @@ words('strong',[
   ["s_sehen","sehen → <b>gesehen</b>","зээн → гэзээн","видеть → видел"],
   ["s_schreiben","schreiben → <b>geschrieben</b>","шрайбэн → гэшрибэн","писать → писал"],
 ]);
+words('strong2',[
+  ["s_fahren","fahren → <b>gefahren</b>","фарэн → гэфарэн","ехать → ехал (sein!)"],
+  ["s_fliegen","fliegen → <b>geflogen</b>","флигэн → гэфлогэн","лететь → летел (sein!)"],
+  ["s_bleiben","bleiben → <b>geblieben</b>","блайбэн → гэблибэн","оставаться → остался (sein!)"],
+  ["s_tragen","tragen → <b>getragen</b>","трагэн → гэтрагэн","носить → носил"],
+  ["s_geben","geben → <b>gegeben</b>","гэбэн → гэгэбэн","давать → дал"],
+  ["s_finden","finden → <b>gefunden</b>","финдэн → гэфундэн","находить → нашёл"],
+]);
 
 phrases('withHaben',[
   ["h1","Ich <b>habe</b> das Bein untersucht.","ихь хабэ дас байн унтэрзухт","Я осмотрел ногу."],
@@ -1026,6 +1115,8 @@ phrases('withSein',[
   ["b2","Der Patient <b>ist</b> gestürzt.","дэа пациэнт ист гэштюрцт","Пациент упал. (движение)"],
   ["b3","Sie <b>ist</b> schnell eingeschlafen.","зи ист шнэлль айнгэшлафэн","Она быстро заснула. (смена состояния)"],
   ["b4","Ich <b>bin</b> gestern in der Klinik gewesen.","ихь бин гэстэрн ин дэа клиник гэвэзэн","Я вчера был в клинике. (sein)"],
+  ["b5","Er <b>ist</b> nach Berlin geflogen.","эа ист нах бэрлин гэфлогэн","Он улетел в Берлин. (движение)"],
+  ["b6","Der Patient <b>ist</b> im Bett geblieben.","дэа пациэнт ист им бэт гэблибэн","Пациент остался в постели. (bleiben)"],
 ], 'sn');
 
 words('noGe',[
@@ -1036,6 +1127,7 @@ words('noGe',[
   ["g5","verstehen → <b>verstanden</b>","фэрштээн → фэрштандэн","понимать (ver- приставка)"],
   ["g6","besuchen → <b>besucht</b>","бэзухэн → бэзухт","навещать (be- приставка)"],
   ["g7","erzählen → <b>erzählt</b>","эрцэлэн → эрцэльт","рассказывать (er- приставка)"],
+  ["g8","verschreiben → <b>verschrieben</b>","фэршрайбэн → фэршрибэн","назначать, выписывать (ver-)"],
 ]);
 
 words('trennbar',[
@@ -1043,15 +1135,41 @@ words('trennbar',[
   ["t2","aufstehen → auf<b>ge</b>standen","ауфштээн → ауфгэштандэн","вставать"],
   ["t3","einkaufen → ein<b>ge</b>kauft","айнкауфэн → айнгэкауфт","закупаться"],
   ["t4","mitkommen → mit<b>ge</b>kommen","миткоммэн → митгэкоммэн","пойти вместе"],
+  ["t7","anfangen → an<b>ge</b>fangen","анфангэн → ангэфангэн","начинаться"],
+  ["t8","zunehmen → zu<b>ge</b>nommen","цунэмэн → цугэноммэн","набирать вес"],
 ]);
 phrases('trennbarEx',[
   ["t5","Ich habe den Kollegen <b>angerufen</b>.","ихь хабэ дэн коллегэн ангэруфэн","Я позвонил коллеге."],
   ["t6","Er ist um sechs Uhr <b>aufgestanden</b>.","эа ист ум зэкс уа ауфгэштандэн","Он встал в шесть часов."],
 ]);
 
+phrases('warHatte',[
+  ["pw1","Ich <b>war</b> gestern beim Arzt.","ихь ва гэстэрн байм арцт","Я вчера был у врача."],
+  ["pw2","Ich <b>hatte</b> Fieber.","ихь хаттэ фиба","У меня была температура."],
+  ["pw3","Wie <b>war</b> die Operation?","ви ва ди опэрацьон","Как прошла операция?"],
+  ["pw4","Ich <b>war</b> zwei Wochen krank.","ихь ва цвай вохэн кранк","Я две недели болел."],
+  ["pw5","<b>Hatten</b> Sie Schmerzen?","хаттэн зи шмэрцэн","У Вас были боли?"],
+  ["m10","<b>Waren</b> Sie schon beim Arzt?","варэн зи шон байм арцт","Вы уже были у врача?"],
+]);
+
+words('wann',[
+  ["z1","letzte Woche","лецтэ вохэ","на прошлой неделе"],
+  ["z2","letztes Jahr","лецтэс яа","в прошлом году"],
+  ["z3","vor drei Tagen","фоа драй тагэн","три дня назад"],
+  ["z4","vor einem Jahr","фоа айнэм яа","год назад"],
+  ["z5","früher","фрюэа","раньше"],
+  ["z6","schon einmal","шон айнмаль","уже когда-нибудь"],
+  ["z7","noch nie","нох ни","ещё никогда"],
+  ["z8","in letzter Zeit","ин лецтэа цайт","в последнее время"],
+]);
+phrases('seitVor',[
+  ["sv1","Ich habe <b>seit</b> drei Tagen Schmerzen.","ихь хабэ зайт драй тагэн шмэрцэн","У меня болит уже три дня. (и сейчас — Präsens)"],
+  ["sv2","Die Schmerzen haben <b>vor</b> drei Tagen angefangen.","ди шмэрцэн хабэн фоа драй тагэн ангэфангэн","Боли начались три дня назад. (Perfekt)"],
+  ["sv3","<b>Seit wann</b> haben Sie die Schmerzen?","зайт ван хабэн зи ди шмэрцэн","С каких пор у Вас боли?"],
+]);
+
 phrases('med',[
   ["m1","Wann <b>haben</b> die Schmerzen <b>angefangen</b>?","ван хабэн ди шмэрцэн ангэфангэн","Когда начались боли?"],
-  ["m2","Ich <b>habe</b> seit drei Tagen Schmerzen <b>gehabt</b>.","ихь хабэ зайт драй тагэн шмэрцэн гэхабт","У меня боли уже три дня."],
   ["m3","<b>Haben</b> Sie Medikamente <b>genommen</b>?","хабэн зи мэдикамэнтэ гэноммэн","Вы принимали лекарства?"],
   ["m4","<b>Haben</b> Sie schon eine Operation <b>gehabt</b>?","хабэн зи шон айнэ опэрацьон гэхабт","У Вас уже была операция?"],
   ["m5","Ich <b>bin</b> <b>gestürzt</b>.","ихь бин гэштюрцт","Я упал."],
@@ -1059,12 +1177,21 @@ phrases('med',[
   ["m7","Wie lange <b>hat</b> das <b>gedauert</b>?","ви лангэ хат дас гэдауэрт","Как долго это длилось?"],
   ["m8","Das Bein <b>ist</b> dick <b>geworden</b>.","дас байн ист дик гэвордэн","Нога отекла (стала толстой)."],
   ["m9","Ich <b>habe</b> das Bein schon <b>untersucht</b>.","ихь хабэ дас байн шон унтэрзухт","Я уже осмотрел ногу."],
-  ["m10","<b>Waren</b> Sie schon beim Arzt?","варэн зи шон байм арцт","Вы уже были у врача?"],
+]);
+phrases('med2',[
+  ["fa1","<b>Sind</b> Sie in letzter Zeit lange <b>geflogen</b>?","зинт зи ин лецтэа цайт лангэ гэфлогэн","Вы в последнее время долго летели?"],
+  ["fa2","<b>Haben</b> Sie Kompressionsstrümpfe <b>getragen</b>?","хабэн зи компрэссьонсштрюмпфэ гэтрагэн","Вы носили компрессионные чулки?"],
+  ["fa3","<b>Hatten</b> Sie schon einmal eine Thrombose?","хаттэн зи шон айнмаль айнэ тромбозэ","У Вас уже когда-нибудь был тромбоз?"],
+  ["fa4","<b>Hatte</b> jemand in Ihrer Familie eine Thrombose?","хаттэ йэманд ин ирэа фамилиэ айнэ тромбозэ","Был ли тромбоз у кого-то в семье?"],
+  ["fa5","Das Bein <b>ist</b> plötzlich <b>angeschwollen</b>.","дас байн ист плётцлихь ангэшволлен","Нога внезапно отекла. (смена состояния — sein)"],
+  ["fa6","<b>Haben</b> Sie in letzter Zeit <b>zugenommen</b>?","хабэн зи ин лецтэа цайт цугэноммэн","Вы в последнее время набрали вес?"],
+  ["fa7","<b>Haben</b> Sie früher <b>geraucht</b>?","хабэн зи фрюэа гэраухт","Вы раньше курили?"],
+  ["fa8","Der Hausarzt <b>hat</b> Heparin <b>verschrieben</b>.","дэа хаусарцт хат хэпарин фэршрибэн","Семейный врач назначил гепарин."],
 ]);
 
-const dialog = [
+dlg('dialog',[
   ["d1","left","врач","Guten Tag! Was ist passiert?","гутэн так! вас ист пассирт","Здравствуйте! Что случилось?"],
-  ["d2","right","пац.","Mein Bein ist seit einer Woche dick geworden.","майн байн ист зайт айнэа вохэ дик гэвордэн","Моя нога уже неделю как отекла."],
+  ["dn2","right","пац.","Vor einer Woche ist mein Bein dick geworden.","фоа айнэа вохэ ист майн байн дик гэвордэн","Неделю назад у меня отекла нога."],
   ["d3","left","врач","Wann haben die Schmerzen angefangen?","ван хабэн ди шмэрцэн ангэфангэн","Когда начались боли?"],
   ["d4","right","пац.","Vor drei Tagen. Ich bin auch einmal gestürzt.","фор драй тагэн. ихь бин аух айнмаль гэштюрцт","Три дня назад. Я ещё и упал один раз."],
   ["d5","left","врач","Haben Sie Medikamente genommen?","хабэн зи мэдикамэнтэ гэноммэн","Вы принимали лекарства?"],
@@ -1072,13 +1199,25 @@ const dialog = [
   ["d7","left","врач","Haben Sie schon eine Operation an den Venen gehabt?","хабэн зи шон айнэ опэрацьон ан дэн вэнэн гэхабт","У Вас уже была операция на венах?"],
   ["d8","right","пац.","Nein, ich bin noch nie operiert worden.","найн, ихь бин нох ни опэрирт вордэн","Нет, меня ещё ни разу не оперировали."],
   ["d9","left","врач","Gut. Ich habe alles notiert. Jetzt untersuche ich das Bein.","гут. ихь хабэ аллес нотирт. йецт унтэрзухэ ихь дас байн","Хорошо. Я всё записал. Теперь осмотрю ногу."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
-    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
-  </div>${playBtn(id)}</div></div>`).join('');
+]);
+dlg('dialog2',[
+  ["ft1","left","врач","Seit wann ist die Wade so dick?","зайт ван ист ди вадэ зо дик","С каких пор икра такая толстая?"],
+  ["ft2","right","пац.","Seit zwei Tagen. Am Sonntag bin ich elf Stunden geflogen.","зайт цвай тагэн. ам зонтак бин ихь эльф штундэн гэфлогэн","Уже два дня. В воскресенье я летел одиннадцать часов."],
+  ["ft3","left","врач","Haben Sie im Flugzeug Kompressionsstrümpfe getragen?","хабэн зи им флюкцойк компрэссьонсштрюмпфэ гэтрагэн","Вы в самолёте были в компрессионных чулках?"],
+  ["ft4","right","пац.","Nein. Und ich habe wenig getrunken.","найн. унт ихь хабэ вэнихь гэтрункэн","Нет. И я мало пил."],
+  ["ft5","left","врач","Hatten Sie schon einmal eine Thrombose?","хаттэн зи шон айнмаль айнэ тромбозэ","У Вас уже когда-нибудь был тромбоз?"],
+  ["ft6","right","пац.","Nein, aber meine Mutter hatte eine Thrombose.","найн, абэа майнэ муттэа хаттэ айнэ тромбозэ","Нет, но у моей мамы был тромбоз."],
+  ["ft7","left","врач","Gut. Wir machen jetzt sofort einen Ultraschall.","гут. виа махэн йецт зофорт айнэн ультрашаль","Хорошо. Сейчас же сделаем УЗИ."],
+]);
+dlg('dialog3',[
+  ["tg1","left","Кол.","Was hast du am Wochenende gemacht?","вас хаст ду ам вохэнэндэ гэмахт","Что ты делал на выходных?"],
+  ["tg2","right","Гр","Am Samstag habe ich Deutsch gelernt. Am Sonntag bin ich ins Kino gegangen.","ам замстак хабэ ихь дойч гэлернт. ам зонтак бин ихь инс кино гэгангэн","В субботу учил немецкий. В воскресенье ходил в кино."],
+  ["tg3","left","Кол.","Und wie war der Film?","унт ви ва дэа фильм","И как фильм?"],
+  ["tg4","right","Гр","Sehr gut! Danach haben wir Pizza gegessen.","зэа гут! данах хабэн виа пицца гэгэссэн","Очень хороший! Потом мы ели пиццу."],
+  ["tg5","left","Кол.","Und hast du gut geschlafen?","унт хаст ду гут гэшлафэн","А выспался?"],
+  ["tg6","right","Гр","Nein, ich bin spät nach Hause gekommen.","найн, ихь бин шпэт нах хаузэ гэкоммэн","Нет, я поздно пришёл домой."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
