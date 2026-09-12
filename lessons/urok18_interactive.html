@@ -106,6 +106,24 @@
   .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
   .pair button.play { width:30px; height:30px; font-size:13px; }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
 
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
@@ -123,9 +141,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -297,8 +312,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · УРОВЕНЬ A2 · урок 2</div>
   <h1>Урок 18. Возвратные глаголы (sich waschen)</h1>
-  <p class="lede">Обещал в прошлом уроке — разбираем. Это те самые <i>Setzen Sie <b>sich</b></i> и <i>Legen Sie <b>sich</b></i>, которые ты уже говоришь на осмотре не понимая, откуда там лишнее слово. А ещё здесь живёт главный вопрос врача: <b>Wie fühlen Sie sich?</b> У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Обещал в прошлом уроке — разбираем. Это те самые <i>Setzen Sie <b>sich</b></i> и <i>Legen Sie <b>sich</b></i>, которые ты уже говоришь на осмотре не понимая, откуда там лишнее слово. А ещё здесь живёт главный вопрос врача: <b>Wie fühlen Sie sich?</b> — и половина слов из заключений: воспалилось, спало, улучшилось. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <div class="toc">
     <b>Что в уроке</b>
@@ -309,10 +324,13 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <li><a href="#s4">⚠️ Ловушка: русское «-ся» врёт</a></li>
       <li><a href="#s5">⚠️ Ловушка: mich или mir</a></li>
       <li><a href="#s6">Четырнадцать рабочих глаголов</a></li>
-      <li><a href="#s7">Возвратные в Perfekt</a></li>
-      <li><a href="#s8">Врачебный блок</a></li>
-      <li><a href="#s9">Диалог: осмотр</a></li>
-      <li><a href="#s10">Домашка</a></li>
+      <li><a href="#s7">Утро: распорядок дня</a></li>
+      <li><a href="#s8">sich + предлог</a></li>
+      <li><a href="#s9">Возвратные в Perfekt</a></li>
+      <li><a href="#s10">Врачебный блок</a></li>
+      <li><a href="#s11">Частые ошибки</a></li>
+      <li><a href="#s12">Диалоги</a></li>
+      <li><a href="#s13">Домашка</a></li>
     </ol>
   </div>
 
@@ -391,7 +409,27 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block" id="s7">
-    <h2><span class="num">7</span> Возвратные в прошедшем времени</h2>
+    <h2><span class="num">7</span> Утро: распорядок дня</h2>
+    <div class="grammar-box">
+      Классическая тема для возвратных — и лучшая тренировка ловушки из раздела 5. Смотри: <i>Ich rasiere <b>mich</b></i> (бреюсь — больше ничего), но <i>Ich putze <b>mir</b> die Zähne</i> (чищу себе <b>зубы</b> — появилось второе дополнение).
+    </div>
+    <div class="card-list" id="morgen"></div>
+  </section>
+
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> sich + предлог — учить парой</h2>
+    <div class="grammar-box">
+      Многие возвратные глаголы держат при себе <b>свой предлог</b>, и его учат вместе с глаголом, как артикль у существительного:<br><br>
+      <b class="hl">sich freuen auf</b> — радоваться тому, что <b>будет</b> (ждать с радостью) · <b class="hl">sich freuen über</b> — тому, что <b>уже есть</b><br>
+      <b class="hl">sich erinnern an</b> — помнить · <b class="hl">sich kümmern um</b> — заботиться · <b class="hl">sich interessieren für</b> — интересоваться<br><br>
+      А <i>sich Sorgen machen</i> (волноваться) — с Dativ, как в разделе 5: <i>Ich mache <b>mir</b> Sorgen</i>, <i>Mach <b>dir</b> keine Sorgen!</i>
+    </div>
+    <div class="grid2" id="praep"></div>
+    <div class="card-list" id="praepEx" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Возвратные в прошедшем времени</h2>
     <div class="link-box">
       🔗 <b>Perfekt из урока 12 работает без изменений</b>, и даже проще обычного: возвратные глаголы <b>всегда идут с haben</b> — про выбор haben/sein здесь думать не нужно вообще. Местоимение остаётся на своём месте, сразу после <i>habe</i>.<br><br>
       <i>Ich <b>habe mich</b> verletzt.</i> — Я травмировался.
@@ -399,30 +437,53 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <div class="card-list" id="perfekt"></div>
   </section>
 
-  <section class="block" id="s8">
-    <h2><span class="num">8</span> Врачебный блок — здесь тема окупается сразу</h2>
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> Врачебный блок — здесь тема окупается сразу</h2>
     <div class="grammar-box">
       Первая фраза списка — <b class="hl">Wie fühlen Sie sich?</b> — это вопрос, которым начинается почти любой приём и почти любая станция на Fachsprachprüfung. Выучи её до автоматизма.<br><br>
       Дальше идёт весь осмотр: разденьтесь, сядьте, лягте, расслабьтесь, не двигайтесь — все эти команды возвратные.
     </div>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Язык заключений и контроля после операции</b> — тоже возвратный: <i>sich entzünden</i> (воспалиться), <i>sich zurückbilden</i> (регрессировать, спасть — об отёке, гематоме), <i>sich verbessern / verschlechtern</i> (улучшиться / ухудшиться), <i>sich melden</i> (дать о себе знать, позвонить).
+    </div>
+    <div class="card-list" id="med2"></div>
   </section>
 
-  <section class="block" id="s9">
-    <h2><span class="num">9</span> Диалог: осмотр с начала до конца</h2>
-    <p class="desc">Считай, сколько раз здесь звучит <i>sich</i>. Ты слева, пациент — Yannick — справа.</p>
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ich wasche. (= я моюсь)</span><span class="good">Ich wasche mich.</span><span class="why">без sich — «я стираю, мою что-то»</span></div>
+      <div class="err-row"><span class="bad">Ich lerne mich Deutsch.</span><span class="good">Ich lerne Deutsch.</span><span class="why">lernen — без sich</span></div>
+      <div class="err-row"><span class="bad">Ich wasche mich die Hände.</span><span class="good">Ich wasche mir die Hände.</span><span class="why">есть второе дополнение → mir</span></div>
+      <div class="err-row"><span class="bad">Setzen Sie Sich.</span><span class="good">Setzen Sie sich.</span><span class="why">sich — с маленькой буквы</span></div>
+      <div class="err-row"><span class="bad">Ich bin mich verletzt.</span><span class="good">Ich habe mich verletzt.</span><span class="why">возвратные в Perfekt — всегда с haben</span></div>
+      <div class="err-row"><span class="bad">Ich erhole.</span><span class="good">Ich erhole mich.</span><span class="why">erholen — только с sich</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Диалоги</h2>
+    <div class="desc">Считай, сколько раз звучит <i>sich</i>. Пациента и Григория озвучивает Yannick.</div>
+    <h3 class="dlg-title">Осмотр с начала до конца</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Контроль после флебэктомии</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Утро дома — всё на du</h3>
+    <div class="dialogue" id="dialog3"></div>
   </section>
 
-  <section class="block" id="s10">
-    <h2><span class="num">10</span> Домашка</h2>
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Проспрягай <b>sich fühlen</b> целиком вслух: ich fühle mich, du … Шесть форм.</li>
         <li><b>mich</b> или <b>mir</b>? <i>Ich ziehe ___ an.</i> · <i>Ich putze ___ die Zähne.</i> · <i>Ich wasche ___.</i> Объясни, по какому признаку выбрал.</li>
         <li>С <i>sich</i> или без? <i>erholen, lernen, freuen, beginnen, beeilen</i>. Не по русскому «-ся», а по памяти.</li>
+        <li>Расскажи своё утро пятью фразами: встаю, моюсь, бреюсь, чищу зубы, одеваюсь.</li>
+        <li>auf или über? «Я жду отпуска», «Я рад результату анализа».</li>
         <li>Проведи осмотр вслух, пять команд подряд: разденьтесь → сядьте → лягте → расслабьтесь → одевайтесь.</li>
-        <li>Скажи в Perfekt: «Я простудился», «Я травмировал ногу», «Мы хорошо отдохнули».</li>
+        <li>Контроль после операции: спроси о самочувствии, скажи, что отёк спал и рана не воспалилась, успокой пациента.</li>
       </ol>
     </div>
   </section>
@@ -981,11 +1042,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · уровень A2 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · уровень A2 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"c1": "../zvuk/urok18/c1.mp3", "c2": "../zvuk/urok18/c2.mp3", "c3": "../zvuk/urok18/c3.mp3", "c4": "../zvuk/urok18/c4.mp3", "c5": "../zvuk/urok18/c5.mp3", "c6": "../zvuk/urok18/c6.mp3", "rp1": "../zvuk/urok18/rp1.mp3", "rp2": "../zvuk/urok18/rp2.mp3", "rp3": "../zvuk/urok18/rp3.mp3", "rp4": "../zvuk/urok18/rp4.mp3", "rp5": "../zvuk/urok18/rp5.mp3", "dv1": "../zvuk/urok18/dv1.mp3", "dv2": "../zvuk/urok18/dv2.mp3", "dv3": "../zvuk/urok18/dv3.mp3", "dv4": "../zvuk/urok18/dv4.mp3", "dv5": "../zvuk/urok18/dv5.mp3", "t1": "../zvuk/urok18/t1.mp3", "t2": "../zvuk/urok18/t2.mp3", "t3": "../zvuk/urok18/t3.mp3", "t4": "../zvuk/urok18/t4.mp3", "v_duschen": "../zvuk/urok18/v_duschen.mp3", "v_anziehen": "../zvuk/urok18/v_anziehen.mp3", "v_ausziehen": "../zvuk/urok18/v_ausziehen.mp3", "v_setzen": "../zvuk/urok18/v_setzen.mp3", "v_legen": "../zvuk/urok18/v_legen.mp3", "v_fuehlen": "../zvuk/urok18/v_fuehlen.mp3", "v_ausruhen": "../zvuk/urok18/v_ausruhen.mp3", "v_beeilen": "../zvuk/urok18/v_beeilen.mp3", "v_entspannen": "../zvuk/urok18/v_entspannen.mp3", "v_bewegen": "../zvuk/urok18/v_bewegen.mp3", "v_verletzen": "../zvuk/urok18/v_verletzen.mp3", "v_erkaelten": "../zvuk/urok18/v_erkaelten.mp3", "v_vorstellen": "../zvuk/urok18/v_vorstellen.mp3", "v_interessieren": "../zvuk/urok18/v_interessieren.mp3", "pf1": "../zvuk/urok18/pf1.mp3", "pf2": "../zvuk/urok18/pf2.mp3", "pf3": "../zvuk/urok18/pf3.mp3", "m1": "../zvuk/urok18/m1.mp3", "m2": "../zvuk/urok18/m2.mp3", "m3": "../zvuk/urok18/m3.mp3", "m4": "../zvuk/urok18/m4.mp3", "m5": "../zvuk/urok18/m5.mp3", "m6": "../zvuk/urok18/m6.mp3", "m7": "../zvuk/urok18/m7.mp3", "m8": "../zvuk/urok18/m8.mp3", "m9": "../zvuk/urok18/m9.mp3", "m10": "../zvuk/urok18/m10.mp3", "m11": "../zvuk/urok18/m11.mp3", "m12": "../zvuk/urok18/m12.mp3", "d1": "../zvuk/urok18/d1.mp3", "d2": "../zvuk/urok18/d2.mp3", "d3": "../zvuk/urok18/d3.mp3", "d4": "../zvuk/urok18/d4.mp3", "d5": "../zvuk/urok18/d5.mp3", "d6": "../zvuk/urok18/d6.mp3", "d7": "../zvuk/urok18/d7.mp3", "d8": "../zvuk/urok18/d8.mp3", "d9": "../zvuk/urok18/d9.mp3", "d10": "../zvuk/urok18/d10.mp3"};
+const AUDIO = {"c1": "../zvuk/urok18/c1.mp3", "c2": "../zvuk/urok18/c2.mp3", "c3": "../zvuk/urok18/c3.mp3", "c4": "../zvuk/urok18/c4.mp3", "c5": "../zvuk/urok18/c5.mp3", "c6": "../zvuk/urok18/c6.mp3", "rp1": "../zvuk/urok18/rp1.mp3", "rp2": "../zvuk/urok18/rp2.mp3", "rp3": "../zvuk/urok18/rp3.mp3", "rp4": "../zvuk/urok18/rp4.mp3", "rp5": "../zvuk/urok18/rp5.mp3", "dv1": "../zvuk/urok18/dv1.mp3", "dv2": "../zvuk/urok18/dv2.mp3", "dv3": "../zvuk/urok18/dv3.mp3", "dv4": "../zvuk/urok18/dv4.mp3", "dv5": "../zvuk/urok18/dv5.mp3", "t1": "../zvuk/urok18/t1.mp3", "t2": "../zvuk/urok18/t2.mp3", "t3": "../zvuk/urok18/t3.mp3", "t4": "../zvuk/urok18/t4.mp3", "v_duschen": "../zvuk/urok18/v_duschen.mp3", "v_anziehen": "../zvuk/urok18/v_anziehen.mp3", "v_ausziehen": "../zvuk/urok18/v_ausziehen.mp3", "v_setzen": "../zvuk/urok18/v_setzen.mp3", "v_legen": "../zvuk/urok18/v_legen.mp3", "v_fuehlen": "../zvuk/urok18/v_fuehlen.mp3", "v_ausruhen": "../zvuk/urok18/v_ausruhen.mp3", "v_beeilen": "../zvuk/urok18/v_beeilen.mp3", "v_entspannen": "../zvuk/urok18/v_entspannen.mp3", "v_bewegen": "../zvuk/urok18/v_bewegen.mp3", "v_verletzen": "../zvuk/urok18/v_verletzen.mp3", "v_erkaelten": "../zvuk/urok18/v_erkaelten.mp3", "v_vorstellen": "../zvuk/urok18/v_vorstellen.mp3", "v_interessieren": "../zvuk/urok18/v_interessieren.mp3", "pf1": "../zvuk/urok18/pf1.mp3", "pf2": "../zvuk/urok18/pf2.mp3", "pf3": "../zvuk/urok18/pf3.mp3", "m1": "../zvuk/urok18/m1.mp3", "m2": "../zvuk/urok18/m2.mp3", "m3": "../zvuk/urok18/m3.mp3", "m4": "../zvuk/urok18/m4.mp3", "m5": "../zvuk/urok18/m5.mp3", "m6": "../zvuk/urok18/m6.mp3", "m7": "../zvuk/urok18/m7.mp3", "m8": "../zvuk/urok18/m8.mp3", "m9": "../zvuk/urok18/m9.mp3", "m10": "../zvuk/urok18/m10.mp3", "m11": "../zvuk/urok18/m11.mp3", "m12": "../zvuk/urok18/m12.mp3", "d1": "../zvuk/urok18/d1.mp3", "d2": "../zvuk/urok18/d2.mp3", "d3": "../zvuk/urok18/d3.mp3", "d4": "../zvuk/urok18/d4.mp3", "d5": "../zvuk/urok18/d5.mp3", "d6": "../zvuk/urok18/d6.mp3", "d7": "../zvuk/urok18/d7.mp3", "d8": "../zvuk/urok18/d8.mp3", "d9": "../zvuk/urok18/d9.mp3", "d10": "../zvuk/urok18/d10.mp3", "ro1": "../zvuk/urok18/ro1.mp3", "ro2": "../zvuk/urok18/ro2.mp3", "ro3": "../zvuk/urok18/ro3.mp3", "ro4": "../zvuk/urok18/ro4.mp3", "ro5": "../zvuk/urok18/ro5.mp3", "vp_erinnern": "../zvuk/urok18/vp_erinnern.mp3", "vp_kuemmern": "../zvuk/urok18/vp_kuemmern.mp3", "vp_freuen": "../zvuk/urok18/vp_freuen.mp3", "vp_sorgen": "../zvuk/urok18/vp_sorgen.mp3", "pp1": "../zvuk/urok18/pp1.mp3", "pp2": "../zvuk/urok18/pp2.mp3", "pp3": "../zvuk/urok18/pp3.mp3", "pp4": "../zvuk/urok18/pp4.mp3", "pp5": "../zvuk/urok18/pp5.mp3", "pp6": "../zvuk/urok18/pp6.mp3", "fm1": "../zvuk/urok18/fm1.mp3", "fm2": "../zvuk/urok18/fm2.mp3", "fm3": "../zvuk/urok18/fm3.mp3", "fm4": "../zvuk/urok18/fm4.mp3", "fm5": "../zvuk/urok18/fm5.mp3", "fm6": "../zvuk/urok18/fm6.mp3", "fm7": "../zvuk/urok18/fm7.mp3", "ko1": "../zvuk/urok18/ko1.mp3", "ko2": "../zvuk/urok18/ko2.mp3", "ko3": "../zvuk/urok18/ko3.mp3", "ko4": "../zvuk/urok18/ko4.mp3", "ko5": "../zvuk/urok18/ko5.mp3", "ko6": "../zvuk/urok18/ko6.mp3", "ko7": "../zvuk/urok18/ko7.mp3", "mo1": "../zvuk/urok18/mo1.mp3", "mo2": "../zvuk/urok18/mo2.mp3", "mo3": "../zvuk/urok18/mo3.mp3", "mo4": "../zvuk/urok18/mo4.mp3", "mo5": "../zvuk/urok18/mo5.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1006,15 +1067,22 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
+// слова и фразы: [id, немецкое, транскрипция, перевод]
 function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
 function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// пара из двух строк с подписями labA / labB
 function pairs(el, arr, labA, labB){ document.getElementById(el).innerHTML = arr.map(([a,b])=>`
   <div class="pair">
     <div class="prow wo"><span class="tag">${labA}</span><div class="txt"><div class="de">${a[1]}</div><div class="tr">[${a[2]}]</div><div class="ru">${a[3]}</div></div>${playBtn(a[0])}</div>
     <div class="prow wohin"><span class="tag">${labB}</span><div class="txt"><div class="de">${b[1]}</div><div class="tr">[${b[2]}]</div><div class="ru">${b[3]}</div></div>${playBtn(b[0])}</div>
   </div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
 
 words('conj',[
   ["c1","ich wasche <b>mich</b>","ихь вашэ михь","я моюсь"],
@@ -1036,8 +1104,8 @@ words('pron',[
 words('trap',[
   ["t3","<b>sich</b> freuen","зихь фройэн","радоваться — совпало ✅"],
   ["t1","<b>sich</b> erholen","зихь эрхолен","отдыхать — по-русски БЕЗ «-ся» ❌"],
-  ["t2","lernen <span style=\"color:var(--warn)\">(без sich)</span>","лернэн","учиться — по-русски С «-ся» ❌"],
-  ["t4","beginnen <span style=\"color:var(--warn)\">(без sich)</span>","бэгиннэн","начинаться — тоже без sich ❌"],
+  ["t2","lernen <span style='color:var(--warn)'>(без sich)</span>","лернэн","учиться — по-русски С «-ся» ❌"],
+  ["t4","beginnen <span style='color:var(--warn)'>(без sich)</span>","бэгиннэн","начинаться — тоже без sich ❌"],
 ], 'wn');
 
 pairs('dativPair',[
@@ -1068,6 +1136,29 @@ words('verbs',[
   ["v_interessieren","sich <b>interessieren</b>","зихь интэрэссирэн","интересоваться"],
 ]);
 
+phrases('morgen',[
+  ["ro1","Ich dusche <b>mich</b> jeden Morgen.","ихь душэ михь йэдэн моргэн","Я каждое утро принимаю душ."],
+  ["ro2","Ich rasiere <b>mich</b>.","ихь разирэ михь","Я бреюсь."],
+  ["ro3","Ich putze <b>mir</b> die Zähne.","ихь путцэ миа ди цэнэ","Я чищу зубы. (зубы — второе дополнение → mir)"],
+  ["ro4","Ich ziehe <b>mich</b> schnell an.","ихь цийэ михь шнэль ан","Я быстро одеваюсь."],
+  ["ro5","Ich kämme <b>mir</b> die Haare.","ихь кэммэ миа ди хаарэ","Я причёсываюсь. (букв. «чешу себе волосы»)"],
+]);
+
+words('praep',[
+  ["vp_freuen","sich freuen <b>auf</b>","зихь фройэн ауф","ждать с радостью (будущее)"],
+  ["vp_erinnern","sich erinnern <b>an</b>","зихь эриннэрн ан","помнить, вспоминать"],
+  ["vp_kuemmern","sich kümmern <b>um</b>","зихь кюммэрн ум","заботиться, ухаживать"],
+  ["vp_sorgen","sich <b>Sorgen</b> machen","зихь зоргэн махэн","волноваться, беспокоиться"],
+], 'sn');
+phrases('praepEx',[
+  ["pp1","Ich freue mich <b>auf</b> das Wochenende.","ихь фройэ михь ауф дас вохэнэндэ","Жду не дождусь выходных. (впереди)"],
+  ["pp2","Ich freue mich <b>über</b> das Geschenk.","ихь фройэ михь юбэа дас гэшэнк","Я рад подарку. (уже получил)"],
+  ["pp3","Ich interessiere mich <b>für</b> Geschichte.","ихь интэрэссирэ михь фюа гэшихьтэ","Я интересуюсь историей."],
+  ["pp4","Erinnern Sie sich <b>an</b> den Unfall?","эриннэрн зи зихь ан дэн унфаль","Вы помните, как произошёл несчастный случай?"],
+  ["pp5","Wer kümmert sich <b>um</b> Sie zu Hause?","вэа кюммэрт зихь ум зи цу хаузэ","Кто ухаживает за Вами дома?"],
+  ["pp6","Machen Sie sich keine Sorgen.","махэн зи зихь кайнэ зоргэн","Не волнуйтесь."],
+]);
+
 phrases('perfekt',[
   ["pf1","Ich <b>habe mich</b> verletzt.","ихь хабэ михь фэрлецт","Я травмировался."],
   ["pf2","Er <b>hat sich</b> erkältet.","эа хат зихь эркэльтэт","Он простудился."],
@@ -1088,25 +1179,45 @@ phrases('med',[
   ["m11","Ich habe mich erkältet.","ихь хабэ михь эркэльтэт","Я простудился."],
   ["m12","Ruhen Sie sich aus.","руэн зи зихь аус","Отдохните."],
 ]);
+phrases('med2',[
+  ["fm1","Haben Sie sich <b>gestoßen</b>?","хабэн зи зихь гэштосэн","Вы ударились?"],
+  ["fm2","Ich habe mich am Knöchel <b>gestoßen</b>.","ихь хабэ михь ам кнёхэль гэштосэн","Я ударился лодыжкой."],
+  ["fm3","Die Wunde hat sich <b>entzündet</b>.","ди вундэ хат зихь энтцюндэт","Рана воспалилась."],
+  ["fm4","Die Schwellung hat sich <b>zurückgebildet</b>.","ди швэллунг хат зихь цурюкгэбильдэт","Отёк спал."],
+  ["fm5","Der Zustand hat sich <b>verbessert</b>.","дэа цуштант хат зихь фэрбэссэрт","Состояние улучшилось."],
+  ["fm6","<b>Melden Sie sich</b>, wenn das Bein anschwillt.","мэльдэн зи зихь, вэн дас байн аншвильт","Дайте знать, если нога отечёт."],
+  ["fm7","Legen Sie sich abends hin und legen Sie die Beine hoch.","легэн зи зихь абэндс хин унт легэн зи ди байнэ хох","Вечером прилягте и поднимите ноги."],
+]);
 
-const dialog = [
+dlg('dialog',[
   ["d1","left","врач","Guten Tag! Wie fühlen Sie sich heute?","гутэн так! ви фюлен зи зихь хойтэ","Здравствуйте! Как Вы себя сегодня чувствуете?"],
   ["d2","right","пац.","Nicht so gut. Ich habe mich am Bein verletzt.","нихьт зо гут. ихь хабэ михь ам байн фэрлецт","Не очень. Я повредил ногу."],
   ["d3","left","врач","Ziehen Sie sich bitte aus und setzen Sie sich.","цийэн зи зихь биттэ аус унт зэцэн зи зихь","Разденьтесь, пожалуйста, и садитесь."],
   ["d4","right","пац.","So?","зо","Так?"],
   ["d5","left","врач","Ja. Legen Sie sich jetzt bitte hin und entspannen Sie sich.","я. легэн зи зихь йецт биттэ хин унт энтшпаннэн зи зихь","Да. Теперь прилягте и расслабьтесь."],
-  ["d6","right","пац.","Tut das weh?","тут дас вэй","Это будет больно?"],
+  ["d6","right","пац.","Tut das weh?","тут дас вээ","Это больно?"],
   ["d7","left","врач","Nein. Bewegen Sie sich einfach nicht.","найн. бэвэгэн зи зихь айнфах нихьт","Нет. Просто не двигайтесь."],
   ["d8","right","пац.","Wann kann ich mich wieder anziehen?","ван кан ихь михь видэр анцийэн","Когда мне можно одеться?"],
   ["d9","left","врач","Gleich. Ruhen Sie sich heute aus und bewegen Sie sich morgen wieder mehr.","гляйхь. руэн зи зихь хойтэ аус унт бэвэгэн зи зихь моргэн видэр мэа","Сейчас. Сегодня отдохните, а завтра снова больше двигайтесь."],
   ["d10","right","пац.","Danke, Herr Doktor.","данкэ, хэр доктор","Спасибо, доктор."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
-    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
-  </div>${playBtn(id)}</div></div>`).join('');
+]);
+dlg('dialog2',[
+  ["ko1","left","врач","Wie fühlen Sie sich nach der Operation?","ви фюлен зи зихь нах дэа опэрацьон","Как Вы себя чувствуете после операции?"],
+  ["ko2","right","пац.","Viel besser. Die Schwellung hat sich schon zurückgebildet.","филь бэссэа. ди швэллунг хат зихь шон цурюкгэбильдэт","Гораздо лучше. Отёк уже спал."],
+  ["ko3","left","врач","Sehr gut. Haben Sie sich viel bewegt?","зэа гут. хабэн зи зихь филь бэвэгт","Отлично. Вы много двигались?"],
+  ["ko4","right","пац.","Ja, ich bin jeden Tag spazieren gegangen.","я, ихь бин йэдэн так шпацирэн гэгангэн","Да, я каждый день гулял."],
+  ["ko5","left","врач","Zeigen Sie mal die Wunde. Hat sie sich entzündet?","цайгэн зи маль ди вундэ. хат зи зихь энтцюндэт","Покажите-ка рану. Не воспалилась?"],
+  ["ko6","right","пац.","Nein, aber hier ist ein blauer Fleck.","найн, абэа хиа ист айн блауэа флэк","Нет, но вот тут синяк."],
+  ["ko7","left","врач","Das ist normal. Machen Sie sich keine Sorgen.","дас ист нормаль. махэн зи зихь кайнэ зоргэн","Это нормально. Не волнуйтесь."],
+]);
+dlg('dialog3',[
+  ["mo1","left","Пол","Beeil dich, wir müssen um acht los!","бэайль дихь, виа мюссэн ум ахт лос","Поторопись, в восемь выходим!"],
+  ["mo2","right","Гр","Ich dusche mich noch schnell und ziehe mich an.","ихь душэ михь нох шнэль унт цийэ михь ан","Я ещё быстро в душ и оденусь."],
+  ["mo3","left","Пол","Und rasier dich bitte!","унт разиа дихь биттэ","И побрейся, пожалуйста!"],
+  ["mo4","right","Гр","Ja, ja. Freust du dich auf den Ausflug?","я, я. фройст ду дихь ауф дэн аусфлюк","Да-да. Ты рада поездке?"],
+  ["mo5","left","Пол","Sehr! Ich freue mich schon die ganze Woche darauf.","зэа! ихь фройэ михь шон ди ганцэ вохэ дарауф","Очень! Жду её уже всю неделю."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
