@@ -85,6 +85,24 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
 
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
@@ -102,9 +120,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -276,8 +291,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 14. Еда и напитки (Essen und Trinken)</h1>
-  <p class="lede">Тема, которая работает сразу в двух местах: твоя жизнь (магазин, столовая клиники, кафе) и приём — «что вы сегодня ели», «вы натощак?», «ешьте меньше соли». У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Тема, которая работает сразу в двух местах: твоя жизнь (магазин, пекарня, столовая клиники, кафе) и приём — «что вы сегодня ели», «вы натощак?», «ешьте меньше соли». У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <div class="toc">
     <b>Что в уроке</b>
@@ -286,13 +301,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <li><a href="#s2">Три приёма пищи</a></li>
       <li><a href="#s3">⚠️ essen и trinken</a></li>
       <li><a href="#s4">Еда (артикли цветом)</a></li>
-      <li><a href="#s5">Напитки + вода с газом</a></li>
-      <li><a href="#s6">Стакан, чашка, бутылка</a></li>
-      <li><a href="#s7">⚠️ «Люблю» и «нравится»</a></li>
-      <li><a href="#s8">В кафе: заказать и заплатить</a></li>
-      <li><a href="#s9">Еда в работе врача</a></li>
-      <li><a href="#s10">Диалог: обед в кафе</a></li>
-      <li><a href="#s11">Домашка</a></li>
+      <li><a href="#s5">Какое на вкус?</a></li>
+      <li><a href="#s6">Напитки + вода с газом</a></li>
+      <li><a href="#s7">Стакан, чашка, кило, фунт</a></li>
+      <li><a href="#s8">⚠️ «Люблю» и «нравится»</a></li>
+      <li><a href="#s9">В магазине и в пекарне</a></li>
+      <li><a href="#s10">В кафе: заказать и заплатить</a></li>
+      <li><a href="#s11">Еда в работе врача</a></li>
+      <li><a href="#s12">Частые ошибки</a></li>
+      <li><a href="#s13">Диалоги</a></li>
+      <li><a href="#s14">Домашка</a></li>
     </ol>
   </div>
 
@@ -337,10 +355,21 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <span><span class="dot" style="background:var(--das)"></span> <b style="color:var(--das)">das</b> — ср. род</span>
     </div>
     <div class="grid2" id="food"></div>
+    <p class="desc" style="margin-top:16px">Ещё десять — из холодильника и с рынка. Масло бывает двух слов: <i>die Butter</i> — сливочное, <i>das Öl</i> — растительное. А <i>der Quark</i> — это наш творог.</p>
+    <div class="grid2" id="food2"></div>
   </section>
 
   <section class="block" id="s5">
-    <h2><span class="num">5</span> Напитки — и главный вопрос в немецком ресторане</h2>
+    <h2><span class="num">5</span> Какое на вкус?</h2>
+    <div class="grammar-box">
+      Прилагательное после <i>ist</i> не меняется — никаких окончаний: <i>Die Suppe ist <b>salzig</b></i>, <i>Der Kaffee ist <b>bitter</b></i>. «Слишком» — <b class="hl">zu</b>: <i>zu salzig</i>, <i>zu scharf</i>.
+    </div>
+    <div class="grid2" id="taste"></div>
+    <div class="card-list" id="tasteEx" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s6">
+    <h2><span class="num">6</span> Напитки — и главный вопрос в немецком ресторане</h2>
     <div class="grid2" id="drinks"></div>
     <div class="warn-box" style="margin-top:14px">
       <span class="big">Попросишь «воду» — принесут газированную</span>
@@ -349,16 +378,17 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <div class="card-list" id="water"></div>
   </section>
 
-  <section class="block" id="s6">
-    <h2><span class="num">6</span> Стакан, чашка, бутылка</h2>
+  <section class="block" id="s7">
+    <h2><span class="num">7</span> Стакан, чашка, кило, фунт</h2>
     <div class="grammar-box">
-      Важная мелочь: между «стаканом» и «водой» <b class="hl">ничего не ставится</b> — ни предлога, ни падежа. Просто два слова подряд: <i>ein Glas Wasser</i> (стакан воды), <i>eine Tasse Kaffee</i> (чашка кофе). Проще, чем в русском.
+      Важная мелочь: между «стаканом» и «водой» <b class="hl">ничего не ставится</b> — ни предлога, ни падежа. Просто два слова подряд: <i>ein Glas Wasser</i> (стакан воды), <i>eine Tasse Kaffee</i> (чашка кофе). Проще, чем в русском. Так же с весом: <i>hundert Gramm Käse</i>.<br><br>
+      ⚖️ <b>ein Pfund</b> на рынке в Германии — это ровно <b>полкило</b> (500 г), а не английский фунт.
     </div>
     <div class="grid2" id="menge"></div>
   </section>
 
-  <section class="block" id="s7">
-    <h2><span class="num">7</span> ⚠️ «Люблю» и «нравится» — три разных способа</h2>
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> ⚠️ «Люблю» и «нравится» — три разных способа</h2>
     <div class="grammar-box">
       1️⃣ <b class="hl">gern</b> + глагол = «люблю что-то делать»: <i>Ich esse <b>gern</b> Fisch</i> — буквально «я ем охотно рыбу». Самый частый способ.<br>
       2️⃣ <b class="hl">mögen</b> = «любить» про сам продукт: <i>Ich <b>mag</b> Käse</i>. Это седьмой модальный глагол — родной брат <i>möchten</i>, который был у Даши.<br>
@@ -366,41 +396,77 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     </div>
     <div class="grid2" id="mag"></div>
     <div class="warn-box" style="margin-top:14px">
-      <span class="big">Ловушка schmecken: вкусно НЕ «мне», а «мне» в дательном</span>
-      Немец не говорит «мне нравится» — он говорит <b>«оно мне вкусится»</b>: <i>Das schmeckt <b>mir</b> gut</i>. Подлежащее — сама еда, а ты стоишь в <b>Dativ</b> (тот самый падеж из урока 11). Вежливая форма — <i>Schmeckt es <b>Ihnen</b>?</i>
+      <span class="big">Ловушка schmecken: подлежащее — еда, а ты — в Dativ</span>
+      Немец не говорит «я нахожу вкусным» — он говорит <b>«оно мне вкусно»</b>: <i>Das schmeckt <b>mir</b> gut</i>. Подлежащее — сама еда, а ты стоишь в <b>Dativ</b> (тот самый падеж из урока 11). Вежливая форма — <i>Schmeckt es <b>Ihnen</b>?</i>
     </div>
     <div class="card-list" id="gern"></div>
   </section>
 
-  <section class="block" id="s8">
-    <h2><span class="num">8</span> В кафе: заказать и заплатить</h2>
-    <p class="desc">Шесть фраз, которых хватит на любое кафе и на столовую клиники.</p>
-    <div class="card-list" id="cafe"></div>
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> В магазине и в пекарне</h2>
+    <p class="desc">Пекарня (<i>die Bäckerei</i>) в Германии — на каждом углу, и разговор там всегда один и тот же. Выучи эти шесть фраз — и ты его пройдёшь.</p>
+    <div class="card-list" id="shop"></div>
   </section>
 
-  <section class="block" id="s9">
-    <h2><span class="num">9</span> Еда в работе врача — рабочий блок</h2>
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> В кафе: заказать и заплатить</h2>
+    <p class="desc">Фразы, которых хватит на любое кафе и на столовую клиники.</p>
+    <div class="card-list" id="cafe"></div>
+    <div class="warn-box" style="margin-top:14px">
+      <span class="big">Два немецких обычая</span>
+      1️⃣ Официант спросит <b>Zusammen oder getrennt?</b> — платите вместе или каждый за себя. Раздельно — совершенно нормально.<br>
+      2️⃣ <b>Чаевые</b> — 5–10%, их не оставляют на столе, а называют сумму вслух с округлением. Или просто говорят <b>Stimmt so</b> — «сдачи не надо».<br>
+      <b>Ich hätte gern…</b> — самое вежливое «мне, пожалуйста». Как <i>Könnten Sie</i> из урока 13 — запомни целиком.
+    </div>
+    <div class="card-list" id="cafe2"></div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Еда в работе врача — рабочий блок</h2>
     <div class="link-box">
       🔗 <b>Здесь сходится всё, что ты уже прошёл:</b> вопрос в <b>Perfekt</b> (урок 12 — «что вы ели»), команды в <b>Imperativ</b> (урок 13 — «пейте больше воды»), <b>nach dem Essen</b> с Dativ (урок 11), модальные <i>dürfen/sollten</i> (занятие 2 с Дашей). Тема новая — а грамматика вся знакомая.
     </div>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Флебологу про еду нужны четыре вещи:</b> соль (отёки), вес (нагрузка на вены), запоры (натуживание поднимает давление в венах ног) и витамин K — у пациентов на Маркумаре после тромбоза резкая смена рациона сдвигает МНО.
+    </div>
+    <div class="card-list" id="med2"></div>
   </section>
 
-  <section class="block" id="s10">
-    <h2><span class="num">10</span> Диалог: обед в кафе</h2>
-    <p class="desc">Ты — гость (слева), официант — Yannick (справа). От меню до счёта.</p>
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Du esst.</span><span class="good">Du isst.</span><span class="why">essen: e → i у du и er</span></div>
+      <div class="err-row"><span class="bad">Ich mag nicht Fisch.</span><span class="good">Ich mag keinen Fisch.</span><span class="why">перед существительным — kein</span></div>
+      <div class="err-row"><span class="bad">Ich schmecke den Kuchen gut.</span><span class="good">Der Kuchen schmeckt mir gut.</span><span class="why">подлежащее — еда, я — в Dativ</span></div>
+      <div class="err-row"><span class="bad">ein Glas von Wasser</span><span class="good">ein Glas Wasser</span><span class="why">между ними ничего не ставится</span></div>
+      <div class="err-row"><span class="bad">Ich gern esse Fisch.</span><span class="good">Ich esse gern Fisch.</span><span class="why">gern — после глагола</span></div>
+      <div class="err-row"><span class="bad">Ich möchte eine Wasser.</span><span class="good">Ich möchte ein Wasser.</span><span class="why">das Wasser → ein</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Диалоги</h2>
+    <div class="desc">Мужские роли — официант, пациент и Григорий в пекарне — озвучивает Yannick.</div>
+    <h3 class="dlg-title">Обед в кафе</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Питание пациента с отёками</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">В пекарне</h3>
+    <div class="dialogue" id="dialog3"></div>
   </section>
 
-  <section class="block" id="s11">
-    <h2><span class="num">11</span> Домашка</h2>
+  <section class="block" id="s14">
+    <h2><span class="num">14</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Проспрягай <b>essen</b> целиком вслух. Проверь себя на главном: какие два лица звучат одинаково?</li>
         <li>Назови 10 продуктов <b>с артиклем</b>. Не помнишь род — смотри на цвет полоски, он для этого и сделан.</li>
         <li>Расскажи, что ты ел сегодня: <i>Zum Frühstück habe ich … gegessen</i> (это Perfekt из урока 12 — тренируем вместе).</li>
-        <li>Закажи вслух обед: суп, салат и негазированную воду. Потом попроси счёт.</li>
-        <li>Дай пациенту четыре совета про питание в <b>Imperativ</b>: больше воды, меньше соли, больше овощей, таблетки после еды.</li>
+        <li>Опиши вкус трёх блюд: <i>süß, salzig, scharf, zu …</i></li>
+        <li>Купи вслух в пекарне: четыре булочки, 200 г сыра, картой, без пакета.</li>
+        <li>Закажи вслух обед: суп, салат и негазированную воду. Потом попроси счёт — раздельно.</li>
+        <li>Дай пациенту с отёками пять советов про питание в <b>Imperativ</b>: вода, соль, клетчатка, вес, таблетки после еды.</li>
       </ol>
     </div>
   </section>
@@ -959,11 +1025,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"h1": "../zvuk/urok14/h1.mp3", "h2": "../zvuk/urok14/h2.mp3", "h3": "../zvuk/urok14/h3.mp3", "mahl1": "../zvuk/urok14/mahl1.mp3", "mahl2": "../zvuk/urok14/mahl2.mp3", "mahl3": "../zvuk/urok14/mahl3.mp3", "mahl4": "../zvuk/urok14/mahl4.mp3", "mahl5": "../zvuk/urok14/mahl5.mp3", "mahl6": "../zvuk/urok14/mahl6.mp3", "c_e1": "../zvuk/urok14/c_e1.mp3", "c_e2": "../zvuk/urok14/c_e2.mp3", "c_e3": "../zvuk/urok14/c_e3.mp3", "c_e4": "../zvuk/urok14/c_e4.mp3", "c_e5": "../zvuk/urok14/c_e5.mp3", "c_e6": "../zvuk/urok14/c_e6.mp3", "c_t1": "../zvuk/urok14/c_t1.mp3", "c_t2": "../zvuk/urok14/c_t2.mp3", "c_t3": "../zvuk/urok14/c_t3.mp3", "f_brot": "../zvuk/urok14/f_brot.mp3", "f_broetchen": "../zvuk/urok14/f_broetchen.mp3", "f_butter": "../zvuk/urok14/f_butter.mp3", "f_kaese": "../zvuk/urok14/f_kaese.mp3", "f_ei": "../zvuk/urok14/f_ei.mp3", "f_wurst": "../zvuk/urok14/f_wurst.mp3", "f_fleisch": "../zvuk/urok14/f_fleisch.mp3", "f_fisch": "../zvuk/urok14/f_fisch.mp3", "f_haehnchen": "../zvuk/urok14/f_haehnchen.mp3", "f_suppe": "../zvuk/urok14/f_suppe.mp3", "f_salat": "../zvuk/urok14/f_salat.mp3", "f_gemuese": "../zvuk/urok14/f_gemuese.mp3", "f_obst": "../zvuk/urok14/f_obst.mp3", "f_apfel": "../zvuk/urok14/f_apfel.mp3", "f_banane": "../zvuk/urok14/f_banane.mp3", "f_kartoffel": "../zvuk/urok14/f_kartoffel.mp3", "f_reis": "../zvuk/urok14/f_reis.mp3", "f_nudeln": "../zvuk/urok14/f_nudeln.mp3", "f_zucker": "../zvuk/urok14/f_zucker.mp3", "f_salz": "../zvuk/urok14/f_salz.mp3", "d_wasser": "../zvuk/urok14/d_wasser.mp3", "d_kaffee": "../zvuk/urok14/d_kaffee.mp3", "d_tee": "../zvuk/urok14/d_tee.mp3", "d_saft": "../zvuk/urok14/d_saft.mp3", "d_milch": "../zvuk/urok14/d_milch.mp3", "d_bier": "../zvuk/urok14/d_bier.mp3", "d_wein": "../zvuk/urok14/d_wein.mp3", "d_cola": "../zvuk/urok14/d_cola.mp3", "w1": "../zvuk/urok14/w1.mp3", "w2": "../zvuk/urok14/w2.mp3", "w3": "../zvuk/urok14/w3.mp3", "q1": "../zvuk/urok14/q1.mp3", "q2": "../zvuk/urok14/q2.mp3", "q3": "../zvuk/urok14/q3.mp3", "q4": "../zvuk/urok14/q4.mp3", "g1": "../zvuk/urok14/g1.mp3", "g2": "../zvuk/urok14/g2.mp3", "g3": "../zvuk/urok14/g3.mp3", "g4": "../zvuk/urok14/g4.mp3", "g5": "../zvuk/urok14/g5.mp3", "g6": "../zvuk/urok14/g6.mp3", "g7": "../zvuk/urok14/g7.mp3", "mag1": "../zvuk/urok14/mag1.mp3", "mag2": "../zvuk/urok14/mag2.mp3", "mag3": "../zvuk/urok14/mag3.mp3", "k1": "../zvuk/urok14/k1.mp3", "k2": "../zvuk/urok14/k2.mp3", "k3": "../zvuk/urok14/k3.mp3", "k4": "../zvuk/urok14/k4.mp3", "k5": "../zvuk/urok14/k5.mp3", "k6": "../zvuk/urok14/k6.mp3", "m1": "../zvuk/urok14/m1.mp3", "m2": "../zvuk/urok14/m2.mp3", "m3": "../zvuk/urok14/m3.mp3", "m4": "../zvuk/urok14/m4.mp3", "m5": "../zvuk/urok14/m5.mp3", "m6": "../zvuk/urok14/m6.mp3", "m7": "../zvuk/urok14/m7.mp3", "m8": "../zvuk/urok14/m8.mp3", "m9": "../zvuk/urok14/m9.mp3", "m10": "../zvuk/urok14/m10.mp3", "m11": "../zvuk/urok14/m11.mp3", "m12": "../zvuk/urok14/m12.mp3", "m13": "../zvuk/urok14/m13.mp3", "m14": "../zvuk/urok14/m14.mp3", "m15": "../zvuk/urok14/m15.mp3", "d1": "../zvuk/urok14/d1.mp3", "d2": "../zvuk/urok14/d2.mp3", "d3": "../zvuk/urok14/d3.mp3", "d4": "../zvuk/urok14/d4.mp3", "d5": "../zvuk/urok14/d5.mp3", "d6": "../zvuk/urok14/d6.mp3", "d7": "../zvuk/urok14/d7.mp3", "d8": "../zvuk/urok14/d8.mp3", "d9": "../zvuk/urok14/d9.mp3", "d10": "../zvuk/urok14/d10.mp3"};
+const AUDIO = {"h1": "../zvuk/urok14/h1.mp3", "h2": "../zvuk/urok14/h2.mp3", "h3": "../zvuk/urok14/h3.mp3", "mahl1": "../zvuk/urok14/mahl1.mp3", "mahl2": "../zvuk/urok14/mahl2.mp3", "mahl3": "../zvuk/urok14/mahl3.mp3", "mahl4": "../zvuk/urok14/mahl4.mp3", "mahl5": "../zvuk/urok14/mahl5.mp3", "mahl6": "../zvuk/urok14/mahl6.mp3", "c_e1": "../zvuk/urok14/c_e1.mp3", "c_e2": "../zvuk/urok14/c_e2.mp3", "c_e3": "../zvuk/urok14/c_e3.mp3", "c_e4": "../zvuk/urok14/c_e4.mp3", "c_e5": "../zvuk/urok14/c_e5.mp3", "c_e6": "../zvuk/urok14/c_e6.mp3", "c_t1": "../zvuk/urok14/c_t1.mp3", "c_t2": "../zvuk/urok14/c_t2.mp3", "c_t3": "../zvuk/urok14/c_t3.mp3", "f_brot": "../zvuk/urok14/f_brot.mp3", "f_broetchen": "../zvuk/urok14/f_broetchen.mp3", "f_butter": "../zvuk/urok14/f_butter.mp3", "f_kaese": "../zvuk/urok14/f_kaese.mp3", "f_ei": "../zvuk/urok14/f_ei.mp3", "f_wurst": "../zvuk/urok14/f_wurst.mp3", "f_fleisch": "../zvuk/urok14/f_fleisch.mp3", "f_fisch": "../zvuk/urok14/f_fisch.mp3", "f_haehnchen": "../zvuk/urok14/f_haehnchen.mp3", "f_suppe": "../zvuk/urok14/f_suppe.mp3", "f_salat": "../zvuk/urok14/f_salat.mp3", "f_gemuese": "../zvuk/urok14/f_gemuese.mp3", "f_obst": "../zvuk/urok14/f_obst.mp3", "f_apfel": "../zvuk/urok14/f_apfel.mp3", "f_banane": "../zvuk/urok14/f_banane.mp3", "f_kartoffel": "../zvuk/urok14/f_kartoffel.mp3", "f_reis": "../zvuk/urok14/f_reis.mp3", "f_nudeln": "../zvuk/urok14/f_nudeln.mp3", "f_zucker": "../zvuk/urok14/f_zucker.mp3", "f_salz": "../zvuk/urok14/f_salz.mp3", "d_wasser": "../zvuk/urok14/d_wasser.mp3", "d_kaffee": "../zvuk/urok14/d_kaffee.mp3", "d_tee": "../zvuk/urok14/d_tee.mp3", "d_saft": "../zvuk/urok14/d_saft.mp3", "d_milch": "../zvuk/urok14/d_milch.mp3", "d_bier": "../zvuk/urok14/d_bier.mp3", "d_wein": "../zvuk/urok14/d_wein.mp3", "d_cola": "../zvuk/urok14/d_cola.mp3", "w1": "../zvuk/urok14/w1.mp3", "w2": "../zvuk/urok14/w2.mp3", "w3": "../zvuk/urok14/w3.mp3", "q1": "../zvuk/urok14/q1.mp3", "q2": "../zvuk/urok14/q2.mp3", "q3": "../zvuk/urok14/q3.mp3", "q4": "../zvuk/urok14/q4.mp3", "g1": "../zvuk/urok14/g1.mp3", "g2": "../zvuk/urok14/g2.mp3", "g3": "../zvuk/urok14/g3.mp3", "g4": "../zvuk/urok14/g4.mp3", "g5": "../zvuk/urok14/g5.mp3", "g6": "../zvuk/urok14/g6.mp3", "g7": "../zvuk/urok14/g7.mp3", "mag1": "../zvuk/urok14/mag1.mp3", "mag2": "../zvuk/urok14/mag2.mp3", "mag3": "../zvuk/urok14/mag3.mp3", "k1": "../zvuk/urok14/k1.mp3", "k2": "../zvuk/urok14/k2.mp3", "k3": "../zvuk/urok14/k3.mp3", "k4": "../zvuk/urok14/k4.mp3", "k5": "../zvuk/urok14/k5.mp3", "k6": "../zvuk/urok14/k6.mp3", "m1": "../zvuk/urok14/m1.mp3", "m2": "../zvuk/urok14/m2.mp3", "m3": "../zvuk/urok14/m3.mp3", "m4": "../zvuk/urok14/m4.mp3", "m5": "../zvuk/urok14/m5.mp3", "m6": "../zvuk/urok14/m6.mp3", "m7": "../zvuk/urok14/m7.mp3", "m8": "../zvuk/urok14/m8.mp3", "m9": "../zvuk/urok14/m9.mp3", "m10": "../zvuk/urok14/m10.mp3", "m11": "../zvuk/urok14/m11.mp3", "m12": "../zvuk/urok14/m12.mp3", "m13": "../zvuk/urok14/m13.mp3", "m14": "../zvuk/urok14/m14.mp3", "m15": "../zvuk/urok14/m15.mp3", "d1": "../zvuk/urok14/d1.mp3", "d2": "../zvuk/urok14/d2.mp3", "d3": "../zvuk/urok14/d3.mp3", "d4": "../zvuk/urok14/d4.mp3", "d5": "../zvuk/urok14/d5.mp3", "d6": "../zvuk/urok14/d6.mp3", "d7": "../zvuk/urok14/d7.mp3", "d8": "../zvuk/urok14/d8.mp3", "d9": "../zvuk/urok14/d9.mp3", "d10": "../zvuk/urok14/d10.mp3", "f_joghurt": "../zvuk/urok14/f_joghurt.mp3", "f_quark": "../zvuk/urok14/f_quark.mp3", "f_kuchen": "../zvuk/urok14/f_kuchen.mp3", "f_schokolade": "../zvuk/urok14/f_schokolade.mp3", "f_tomate": "../zvuk/urok14/f_tomate.mp3", "f_gurke": "../zvuk/urok14/f_gurke.mp3", "f_zwiebel": "../zvuk/urok14/f_zwiebel.mp3", "f_knoblauch": "../zvuk/urok14/f_knoblauch.mp3", "f_oel": "../zvuk/urok14/f_oel.mp3", "f_nuesse": "../zvuk/urok14/f_nuesse.mp3", "t_suess": "../zvuk/urok14/t_suess.mp3", "t_salzig": "../zvuk/urok14/t_salzig.mp3", "t_sauer": "../zvuk/urok14/t_sauer.mp3", "t_scharf": "../zvuk/urok14/t_scharf.mp3", "t_bitter": "../zvuk/urok14/t_bitter.mp3", "t_fettig": "../zvuk/urok14/t_fettig.mp3", "ta1": "../zvuk/urok14/ta1.mp3", "ta2": "../zvuk/urok14/ta2.mp3", "ta3": "../zvuk/urok14/ta3.mp3", "q5": "../zvuk/urok14/q5.mp3", "q6": "../zvuk/urok14/q6.mp3", "q7": "../zvuk/urok14/q7.mp3", "q8": "../zvuk/urok14/q8.mp3", "ek1": "../zvuk/urok14/ek1.mp3", "ek2": "../zvuk/urok14/ek2.mp3", "ek3": "../zvuk/urok14/ek3.mp3", "ek4": "../zvuk/urok14/ek4.mp3", "ek5": "../zvuk/urok14/ek5.mp3", "ek6": "../zvuk/urok14/ek6.mp3", "k7": "../zvuk/urok14/k7.mp3", "k8": "../zvuk/urok14/k8.mp3", "k9": "../zvuk/urok14/k9.mp3", "k10": "../zvuk/urok14/k10.mp3", "k11": "../zvuk/urok14/k11.mp3", "k12": "../zvuk/urok14/k12.mp3", "fe1": "../zvuk/urok14/fe1.mp3", "fe2": "../zvuk/urok14/fe2.mp3", "fe3": "../zvuk/urok14/fe3.mp3", "fe4": "../zvuk/urok14/fe4.mp3", "fe5": "../zvuk/urok14/fe5.mp3", "ed1": "../zvuk/urok14/ed1.mp3", "ed2": "../zvuk/urok14/ed2.mp3", "ed3": "../zvuk/urok14/ed3.mp3", "ed4": "../zvuk/urok14/ed4.mp3", "ed5": "../zvuk/urok14/ed5.mp3", "ed6": "../zvuk/urok14/ed6.mp3", "ed7": "../zvuk/urok14/ed7.mp3", "bk1": "../zvuk/urok14/bk1.mp3", "bk2": "../zvuk/urok14/bk2.mp3", "bk3": "../zvuk/urok14/bk3.mp3", "bk4": "../zvuk/urok14/bk4.mp3", "bk5": "../zvuk/urok14/bk5.mp3", "bk6": "../zvuk/urok14/bk6.mp3", "bk7": "../zvuk/urok14/bk7.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -984,6 +1050,7 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
+// слова и фразы: [id, немецкое, транскрипция, перевод]
 function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
 function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
@@ -991,6 +1058,11 @@ function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(
 // карточка существительного: артикль отдельным цветным полем (5-е поле массива)
 function nouns(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,art])=>`
   <div class="wcard ${art}"><div class="txt"><div class="de"><span class="art-${art}">${art}</span> ${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
 
 phrases('hunger',[
   ["h1","Ich <b>habe</b> Hunger.","ихь хабэ хунгэр","Я голоден. (букв. «имею голод»)"],
@@ -1026,7 +1098,7 @@ words('conjT',[
 nouns('food',[
   ["f_brot","Brot","брот","хлеб","das"],
   ["f_broetchen","Brötchen","брётхен","булочка","das"],
-  ["f_butter","Butter","буттэр","масло","die"],
+  ["f_butter","Butter","буттэр","масло (сливочное)","die"],
   ["f_kaese","Käse","кэзэ","сыр","der"],
   ["f_ei","Ei","ай","яйцо","das"],
   ["f_wurst","Wurst","вурст","колбаса","die"],
@@ -1045,11 +1117,37 @@ nouns('food',[
   ["f_zucker","Zucker","цукэр","сахар","der"],
   ["f_salz","Salz","зальц","соль","das"],
 ]);
+nouns('food2',[
+  ["f_joghurt","Joghurt","йогурт","йогурт","der"],
+  ["f_quark","Quark","кварк","творог","der"],
+  ["f_kuchen","Kuchen","кухэн","пирог, торт","der"],
+  ["f_schokolade","Schokolade","шоколадэ","шоколад","die"],
+  ["f_tomate","Tomate","томатэ","помидор","die"],
+  ["f_gurke","Gurke","гуркэ","огурец","die"],
+  ["f_zwiebel","Zwiebel","цвибэль","лук","die"],
+  ["f_knoblauch","Knoblauch","кноплаух","чеснок","der"],
+  ["f_oel","Öl","ёль","масло (растительное)","das"],
+  ["f_nuesse","Nüsse","нюссэ","орехи (мн.ч.)","die"],
+]);
+
+words('taste',[
+  ["t_suess","süß","зюс","сладкий"],
+  ["t_salzig","salzig","зальцихь","солёный"],
+  ["t_sauer","sauer","зауэа","кислый"],
+  ["t_scharf","scharf","шарф","острый"],
+  ["t_bitter","bitter","биттэа","горький"],
+  ["t_fettig","fettig","фэттихь","жирный"],
+]);
+phrases('tasteEx',[
+  ["ta1","Die Suppe ist <b>zu salzig</b>.","ди зуппэ ист цу зальцихь","Суп слишком солёный."],
+  ["ta2","Der Kaffee ist sehr <b>bitter</b>.","дэа каффэ ист зэа биттэа","Кофе очень горький."],
+  ["ta3","Ist das <b>scharf</b>?","ист дас шарф","Это острое?"],
+]);
 
 nouns('drinks',[
   ["d_wasser","Wasser","вассэр","вода","das"],
   ["d_kaffee","Kaffee","каффэ","кофе","der"],
-  ["d_tee","Tee","тэй","чай","der"],
+  ["d_tee","Tee","тээ","чай","der"],
   ["d_saft","Saft","зафт","сок","der"],
   ["d_milch","Milch","мильхь","молоко","die"],
   ["d_bier","Bier","биа","пиво","das"],
@@ -1067,6 +1165,10 @@ words('menge',[
   ["q2","eine <b>Tasse</b> Kaffee","айнэ тассэ каффэ","чашка кофе"],
   ["q3","eine <b>Flasche</b> Wein","айнэ флашэ вайн","бутылка вина"],
   ["q4","ein <b>Stück</b> Kuchen","айн штюк кухэн","кусок пирога"],
+  ["q5","ein <b>Kilo</b> Äpfel","айн кило эпфэль","кило яблок"],
+  ["q6","ein <b>Pfund</b> Tomaten","айн пфунт томатэн","фунт помидоров (= 500 г!)"],
+  ["q7","hundert <b>Gramm</b> Käse","хундэрт грам кэзэ","сто грамм сыра"],
+  ["q8","ein <b>Liter</b> Milch","айн литэа мильхь","литр молока"],
 ]);
 
 words('mag',[
@@ -1085,7 +1187,17 @@ phrases('gern',[
   ["g7","<b>Schmeckt es Ihnen?</b>","шмэкт эс инэн","Вам вкусно? (вежливо)"],
 ]);
 
+phrases('shop',[
+  ["ek1","Was kostet das?","вас костэт дас","Сколько это стоит?"],
+  ["ek2","Ich möchte zweihundert Gramm Käse.","ихь мёхьтэ цвайхундэрт грам кэзэ","Мне двести грамм сыра."],
+  ["ek3","Haben Sie Vollkornbrot?","хабэн зи фолькорнброт","У Вас есть цельнозерновой хлеб?"],
+  ["ek4","Sonst noch etwas?","зонст нох этвас","Что-нибудь ещё? (спросит продавец)"],
+  ["ek5","Nein, danke, das ist alles.","найн, данкэ, дас ист аллес","Нет, спасибо, это всё."],
+  ["ek6","Mit Karte oder bar?","мит картэ одэа бар","Картой или наличными?"],
+], 'hb');
+
 phrases('cafe',[
+  ["k7","Ist hier noch frei?","ист хиа нох фрай","Здесь свободно?"],
   ["k3","Die Speisekarte, bitte.","ди шпайзэкартэ биттэ","Меню, пожалуйста."],
   ["k1","Ich <b>möchte</b> einen Kaffee, bitte.","ихь мёхьтэ айнэн каффэ биттэ","Я хотел бы кофе, пожалуйста."],
   ["k2","Ich <b>nehme</b> die Suppe.","ихь нэмэ ди зуппэ","Я возьму суп."],
@@ -1093,6 +1205,13 @@ phrases('cafe',[
   ["k5","Zahlen, bitte.","цалэн биттэ","Счёт, пожалуйста."],
   ["k6","Das war lecker.","дас вар лекэр","Было вкусно."],
 ], 'hb');
+phrases('cafe2',[
+  ["k8","Ich <b>hätte gern</b> ein Wasser.","ихь хэттэ гэрн айн вассэр","Мне, пожалуйста, воды. (очень вежливо)"],
+  ["k9","Zusammen oder getrennt?","цузаммэн одэа гэтрэнт","Вместе или раздельно? (спросит официант)"],
+  ["k10","Getrennt, bitte.","гэтрэнт биттэ","Раздельно, пожалуйста."],
+  ["k11","Stimmt so.","штимт зо","Сдачи не надо."],
+  ["k12","Kann ich mit Karte zahlen?","кан ихь мит картэ цалэн","Можно заплатить картой?"],
+]);
 
 phrases('med',[
   ["m1","Was <b>haben</b> Sie heute <b>gegessen</b>?","вас хабэн зи хойтэ гэгэссэн","Что Вы сегодня ели? (Perfekt)"],
@@ -1111,8 +1230,15 @@ phrases('med',[
   ["m14","Mir ist schlecht.","миа ист шлехьт","Меня тошнит."],
   ["m15","Sie <b>sollten</b> ein bisschen abnehmen.","зи зольтэн айн бисхен апнэмэн","Вам стоило бы немного похудеть."],
 ]);
+phrases('med2',[
+  ["fe1","Trinken Sie mindestens zwei Liter am Tag.","тринкэн зи миндэстэнс цвай литэа ам так","Пейте не меньше двух литров в день."],
+  ["fe2","Essen Sie mehr Ballaststoffe.","эссэн зи мэа балластштоффэ","Ешьте больше клетчатки. (против запоров)"],
+  ["fe3","Übergewicht belastet die Venen.","юбэагэвихьт бэластэт ди вэнэн","Лишний вес нагружает вены."],
+  ["fe4","Kommen Sie morgen <b>nüchtern</b> zur Blutabnahme.","коммэн зи моргэн нюхьтэрн цуа блутапнамэ","Приходите завтра натощак на анализ крови."],
+  ["fe5","Essen Sie nicht plötzlich sehr viel Kohl oder Spinat.","эссэн зи нихьт плётцлихь зэа филь коль одэа шпинат","Не ешьте вдруг много капусты или шпината. (при Маркумаре)"],
+]);
 
-const dialog = [
+dlg('dialog',[
   ["d1","right","офиц.","Guten Tag! Was darf es sein?","гутэн так! вас дарф эс зайн","Здравствуйте! Что желаете?"],
   ["d2","left","я","Die Speisekarte, bitte.","ди шпайзэкартэ биттэ","Меню, пожалуйста."],
   ["d3","right","офиц.","Hier, bitte schön.","хиа, биттэ шён","Вот, пожалуйста."],
@@ -1123,13 +1249,26 @@ const dialog = [
   ["d8","left","я","Danke. Das schmeckt sehr gut.","данкэ. дас шмэкт зэа гут","Спасибо. Очень вкусно."],
   ["d9","left","я","Zahlen, bitte. Was macht das?","цалэн биттэ. вас махт дас","Счёт, пожалуйста. Сколько с меня?"],
   ["d10","right","офиц.","Das macht vierzehn Euro achtzig.","дас махт фирцэн ойро ахтцихь","С Вас четырнадцать евро восемьдесят."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
-    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
-  </div>${playBtn(id)}</div></div>`).join('');
+]);
+dlg('dialog2',[
+  ["ed1","left","врач","Was essen Sie normalerweise?","вас эссэн зи нормальвайзэ","Что Вы обычно едите?"],
+  ["ed2","right","пац.","Morgens nur Kaffee. Mittags esse ich oft Wurst und Brot.","моргэнс нуа каффэ. миттагс эссэ ихь офт вурст унт брот","Утром только кофе. В обед часто ем колбасу с хлебом."],
+  ["ed3","left","врач","Und wie viel trinken Sie am Tag?","унт ви филь тринкэн зи ам так","А сколько Вы пьёте в день?"],
+  ["ed4","right","пац.","Nicht viel. Vielleicht einen Liter.","нихьт филь. филяйхьт айнэн литэа","Немного. Может, литр."],
+  ["ed5","left","врач","Das ist zu wenig. Trinken Sie zwei Liter Wasser am Tag.","дас ист цу вэнихь. тринкэн зи цвай литэа вассэа ам так","Это мало. Пейте два литра воды в день."],
+  ["ed6","right","пац.","Und was ist mit Salz?","унт вас ист мит зальц","А что с солью?"],
+  ["ed7","left","врач","Essen Sie weniger Salz, dann sind die Beine abends nicht so dick.","эссэн зи вэнигэа зальц, дан зинт ди байнэ абэндс нихьт зо дик","Ешьте меньше соли — тогда вечером ноги не будут так отекать."],
+]);
+dlg('dialog3',[
+  ["bk1","left","прод.","Guten Morgen! Was darf es sein?","гутэн моргэн! вас дарф эс зайн","Доброе утро! Что желаете?"],
+  ["bk2","right","Гр","Vier Brötchen und ein Vollkornbrot, bitte.","фиа брётхен унт айн фолькорнброт, биттэ","Четыре булочки и цельнозерновой хлеб, пожалуйста."],
+  ["bk3","left","прод.","Sonst noch einen Wunsch?","зонст нох айнэн вунш","Ещё что-нибудь?"],
+  ["bk4","right","Гр","Ja, zweihundert Gramm Käse, bitte.","я, цвайхундэрт грам кэзэ, биттэ","Да, двести грамм сыра, пожалуйста."],
+  ["bk5","left","прод.","Das macht sieben Euro zwanzig. Mit Karte oder bar?","дас махт зибэн ойро цванцихь. мит картэ одэа бар","С Вас семь евро двадцать. Картой или наличными?"],
+  ["bk6","right","Гр","Mit Karte. Danke, ich brauche keine Tüte.","мит картэ. данкэ, ихь браухэ кайнэ тютэ","Картой. Спасибо, пакет не нужен."],
+  ["bk7","left","прод.","Schönen Tag noch!","шёнэн так нох","Хорошего дня!"],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
