@@ -85,6 +85,24 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
 
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
@@ -102,9 +120,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -276,8 +291,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 16. Погода (das Wetter)</h1>
-  <p class="lede">Последняя тема уровня A1 — и не такая пустая, как кажется. Погодой в Германии начинается любой разговор, а для флеболога жара — это прямой клинический фактор: летом ноги тяжелеют и отекают сильнее. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Последняя тема уровня A1 — и не такая пустая, как кажется. Погодой в Германии начинается любой разговор, а для флеболога жара — это прямой клинический фактор: летом ноги тяжелеют и отекают сильнее, а зимний гололёд опасен пациенту на антикоагулянтах. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <div class="toc">
     <b>Что в уроке</b>
@@ -287,12 +302,15 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <li><a href="#s3">Явления: дождь, снег, гроза</a></li>
       <li><a href="#s4">Три погодных глагола</a></li>
       <li><a href="#s5">Температура и градусы</a></li>
-      <li><a href="#s6">Погода по временам года</a></li>
-      <li><a href="#s7">Прогноз: что будет завтра</a></li>
-      <li><a href="#s8">Жара и вены — рабочий блок</a></li>
-      <li><a href="#s9">Small talk о погоде</a></li>
-      <li><a href="#s10">Диалог: приём в жару</a></li>
-      <li><a href="#s11">Домашка</a></li>
+      <li><a href="#s6">⚠️ «Мне холодно» — Mir ist kalt</a></li>
+      <li><a href="#s7">Погода по временам года</a></li>
+      <li><a href="#s8">Прогноз: что будет завтра</a></li>
+      <li><a href="#s9">Какая была погода</a></li>
+      <li><a href="#s10">Погода и вены — рабочий блок</a></li>
+      <li><a href="#s11">Small talk о погоде</a></li>
+      <li><a href="#s12">Частые ошибки</a></li>
+      <li><a href="#s13">Диалоги</a></li>
+      <li><a href="#s14">Домашка</a></li>
     </ol>
   </div>
 
@@ -306,7 +324,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     </div>
     <div class="card-list" id="esBlock"></div>
     <div class="grammar-box" style="margin-top:14px">
-      Спросить погоду — двумя способами: <b>Wie ist das Wetter?</b> (какая сейчас) и <b>Wie wird das Wetter?</b> (какая будет). Разницу между <i>ist</i> и <i>wird</i> разберём в разделе 7.
+      Спросить погоду — двумя способами: <b>Wie ist das Wetter?</b> (какая сейчас) и <b>Wie wird das Wetter?</b> (какая будет). Разницу между <i>ist</i> и <i>wird</i> разберём в разделе 8.
     </div>
     <div class="card-list" id="fragen"></div>
   </section>
@@ -328,6 +346,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <span><span class="dot" style="background:var(--das)"></span> <b style="color:var(--das)">das</b> — ср. род</span>
     </div>
     <div class="grid2" id="nat"></div>
+    <p class="desc" style="margin-top:16px">Ещё шесть — из прогноза и из жизни. <i>das Glatteis</i> (гололёд) запомни особо — это слово из раздела 10.</p>
+    <div class="grid2" id="nat2"></div>
   </section>
 
   <section class="block" id="s4">
@@ -348,53 +368,97 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block" id="s6">
-    <h2><span class="num">6</span> Погода по временам года</h2>
+    <h2><span class="num">6</span> ⚠️ «Мне холодно» — Mir ist kalt</h2>
+    <div class="warn-box">
+      <span class="big">«Ich bin kalt» значит «я холодный человек»</span>
+      Когда холодно или жарко <b>тебе</b>, немец ставит тебя в <b>Dativ</b> — как в <i>Das schmeckt mir</i> из урока 14: <b class="hl">Mir ist kalt</b> — «мне холодно». Вежливо пациенту — <b class="hl">Ist Ihnen kalt?</b> Это вопрос, который задают на каждом осмотре, пока пациент стоит раздетый.
+    </div>
+    <div class="card-list" id="mir"></div>
+  </section>
+
+  <section class="block" id="s7">
+    <h2><span class="num">7</span> Погода по временам года</h2>
     <div class="link-box">
-      🔗 <b>Повтор урока 6:</b> времена года идут с предлогом <b>im</b> — <i>im Sommer</i>, <i>im Winter</i>. Здесь ты просто достраиваешь к ним погоду.
+      🔗 <b>Повтор урока 6:</b> времена года идут с предлогом <b>im</b> — <i>im Sommer</i>, <i>im Winter</i>. Здесь ты просто достраиваешь к ним погоду. И заметь порядок слов: <i>Im Sommer <b>ist</b> es heiß</i> — глагол всё равно на втором месте.
     </div>
     <div class="card-list" id="jahr"></div>
   </section>
 
-  <section class="block" id="s7">
-    <h2><span class="num">7</span> Прогноз: что будет завтра</h2>
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> Прогноз: что будет завтра</h2>
     <div class="grammar-box">
       Будущее время в разговорной погоде делается глаголом <b class="hl">werden</b> = «становиться»: <i>Morgen <b>wird</b> es kalt</i> — «завтра станет холодно».<br><br>
-      Это тот самый <i>werden</i>, который Полина проходила у Даши в списке глаголов-исключений. Пока достаточно запомнить одну форму — <b>wird</b> (для es), её хватает на всю погоду.
+      Это тот самый <i>werden</i>, который Полина проходила у Даши в списке глаголов-исключений. Пока достаточно запомнить одну форму — <b>wird</b> (для es), её хватает на всю погоду.<br><br>
+      А «обещают», «по прогнозу» — это <b class="hl">soll</b>: <i>Morgen <b>soll</b> es regnen</i> — «завтра, говорят, будет дождь».
     </div>
     <div class="card-list" id="prognose"></div>
   </section>
 
-  <section class="block" id="s8">
-    <h2><span class="num">8</span> Жара и вены — твой рабочий блок</h2>
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Какая была погода</h2>
+    <div class="grammar-box">
+      Погодные глаголы в Perfekt (урок 12) — всегда с <b class="hl">haben</b>: <i>es <b>hat</b> geregnet</i>, <i>es <b>hat</b> geschneit</i>. А «было жарко / холодно» — короче, через <b class="hl">war</b>: <i>Es <b>war</b> heiß</i>.
+    </div>
+    <div class="card-list" id="vorbei"></div>
+  </section>
+
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> Погода и вены — твой рабочий блок</h2>
     <div class="link-box">
       🔗 <b>Почему эта «бытовая» тема тебе профессионально нужна:</b> в жару вены расширяются, отёк усиливается, пациенты с ХЗВ приходят летом с жалобами «ноги как гири». Это разговор, который ты будешь вести каждое лето — и по-немецки его надо уметь вести сразу. Грамматика здесь вся знакомая: команды в Imperativ (урок 13), предлог <b>bei</b> + Dativ (урок 11).
     </div>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Сезонный календарь флеболога.</b> Лето — тяжесть и отёки, загар после склеротерапии (риск пигментации) и отпуска с долгими переездами (риск тромбоза). Зима — гололёд: пациенту на антикоагулянтах падение, особенно на голову, опаснее обычного.
+    </div>
+    <div class="card-list" id="med2"></div>
   </section>
 
-  <section class="block" id="s9">
-    <h2><span class="num">9</span> Small talk — вход в любой разговор</h2>
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Small talk — вход в любой разговор</h2>
     <div class="grammar-box">
       Погода в Германии — это социальный ритуал, а не метеорология. Фраза о погоде в лифте, в очереди, перед началом приёма — <b>нормальный способ начать разговор</b> и снять неловкость с пациентом.
     </div>
     <div class="card-list" id="small"></div>
   </section>
 
-  <section class="block" id="s10">
-    <h2><span class="num">10</span> Диалог: приём в тридцатиградусную жару</h2>
-    <p class="desc">Ты слева, пациентка — Yannick — справа. Реальный летний приём флеболога.</p>
-    <div class="dialogue" id="dialog"></div>
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ist kalt.</span><span class="good">Es ist kalt.</span><span class="why">у погоды всегда есть es</span></div>
+      <div class="err-row"><span class="bad">Ich bin kalt.</span><span class="good">Mir ist kalt.</span><span class="why">«мне холодно» — Dativ</span></div>
+      <div class="err-row"><span class="bad">Es ist regnen.</span><span class="good">Es regnet.</span><span class="why">погодный глагол спрягается сам, без ist</span></div>
+      <div class="err-row"><span class="bad">Im Sommer es ist heiß.</span><span class="good">Im Sommer ist es heiß.</span><span class="why">глагол — на втором месте</span></div>
+      <div class="err-row"><span class="bad">zehn Grade</span><span class="good">zehn Grad</span><span class="why">Grad после числа не меняется</span></div>
+      <div class="err-row"><span class="bad">Gestern ist es geregnet.</span><span class="good">Gestern hat es geregnet.</span><span class="why">погода в Perfekt — с haben</span></div>
+    </div>
   </section>
 
-  <section class="block" id="s11">
-    <h2><span class="num">11</span> Домашка</h2>
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Диалоги</h2>
+    <div class="desc">Пациентов и Григория озвучивает Yannick.</div>
+    <h3 class="dlg-title">Приём в тридцатиградусную жару</h3>
+    <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Small talk в лифте клиники</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <div class="grammar-box" style="margin-top:12px">
+      Коллеги в немецких клиниках часто на <i>du</i> — поэтому <i>Nimm meinen</i> (урок 13), а не <i>Nehmen Sie</i>. С пациентами — только <i>Sie</i>.
+    </div>
+    <h3 class="dlg-title">Зима: гололёд и антикоагулянты</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block" id="s14">
+    <h2><span class="num">14</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Опиши погоду за окном прямо сейчас — три предложения, все через <b>es</b>.</li>
         <li>Назови температуру: +10, +30, 0, −5. Следи за <i>Es ist</i> / <i>Es sind</i>.</li>
+        <li>Скажи, что тебе холодно, что жарко, и спроси пациента на осмотре, не холодно ли ему.</li>
+        <li>Расскажи, какая погода была вчера и на прошлой неделе (<i>hat geregnet</i>, <i>war</i>).</li>
         <li>Четыре времени года — по одному предложению о погоде на каждое (предлог im).</li>
-        <li>Объясни пациенту вслух, почему летом ноги тяжелее и что делать: четыре совета из раздела 8.</li>
-        <li>Начни разговор с погоды тремя разными фразами из раздела 9.</li>
+        <li>Объясни пациенту вслух, почему летом ноги тяжелее и что делать: четыре совета из раздела 10.</li>
+        <li>Начни разговор с погоды тремя разными фразами из раздела 11.</li>
       </ol>
     </div>
   </section>
@@ -953,11 +1017,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"w1": "../zvuk/urok16/w1.mp3", "w2": "../zvuk/urok16/w2.mp3", "e1": "../zvuk/urok16/e1.mp3", "e2": "../zvuk/urok16/e2.mp3", "e3": "../zvuk/urok16/e3.mp3", "e4": "../zvuk/urok16/e4.mp3", "e5": "../zvuk/urok16/e5.mp3", "a_kalt": "../zvuk/urok16/a_kalt.mp3", "a_kuehl": "../zvuk/urok16/a_kuehl.mp3", "a_warm": "../zvuk/urok16/a_warm.mp3", "a_heiss": "../zvuk/urok16/a_heiss.mp3", "a_sonnig": "../zvuk/urok16/a_sonnig.mp3", "a_bewoelkt": "../zvuk/urok16/a_bewoelkt.mp3", "a_windig": "../zvuk/urok16/a_windig.mp3", "a_neblig": "../zvuk/urok16/a_neblig.mp3", "a_trocken": "../zvuk/urok16/a_trocken.mp3", "a_nass": "../zvuk/urok16/a_nass.mp3", "a_schoen": "../zvuk/urok16/a_schoen.mp3", "a_schlecht": "../zvuk/urok16/a_schlecht.mp3", "n_sonne": "../zvuk/urok16/n_sonne.mp3", "n_regen": "../zvuk/urok16/n_regen.mp3", "n_schnee": "../zvuk/urok16/n_schnee.mp3", "n_wind": "../zvuk/urok16/n_wind.mp3", "n_wolke": "../zvuk/urok16/n_wolke.mp3", "n_nebel": "../zvuk/urok16/n_nebel.mp3", "n_gewitter": "../zvuk/urok16/n_gewitter.mp3", "n_sturm": "../zvuk/urok16/n_sturm.mp3", "n_hitze": "../zvuk/urok16/n_hitze.mp3", "n_kaelte": "../zvuk/urok16/n_kaelte.mp3", "v_regnen": "../zvuk/urok16/v_regnen.mp3", "v_schneien": "../zvuk/urok16/v_schneien.mp3", "v_scheinen": "../zvuk/urok16/v_scheinen.mp3", "t1": "../zvuk/urok16/t1.mp3", "t2": "../zvuk/urok16/t2.mp3", "t3": "../zvuk/urok16/t3.mp3", "t4": "../zvuk/urok16/t4.mp3", "t5": "../zvuk/urok16/t5.mp3", "j1": "../zvuk/urok16/j1.mp3", "j2": "../zvuk/urok16/j2.mp3", "j3": "../zvuk/urok16/j3.mp3", "j4": "../zvuk/urok16/j4.mp3", "f1": "../zvuk/urok16/f1.mp3", "f2": "../zvuk/urok16/f2.mp3", "f3": "../zvuk/urok16/f3.mp3", "m1": "../zvuk/urok16/m1.mp3", "m2": "../zvuk/urok16/m2.mp3", "m3": "../zvuk/urok16/m3.mp3", "m4": "../zvuk/urok16/m4.mp3", "m5": "../zvuk/urok16/m5.mp3", "m6": "../zvuk/urok16/m6.mp3", "m7": "../zvuk/urok16/m7.mp3", "m8": "../zvuk/urok16/m8.mp3", "m9": "../zvuk/urok16/m9.mp3", "s1": "../zvuk/urok16/s1.mp3", "s2": "../zvuk/urok16/s2.mp3", "s3": "../zvuk/urok16/s3.mp3", "s4": "../zvuk/urok16/s4.mp3", "d1": "../zvuk/urok16/d1.mp3", "d2": "../zvuk/urok16/d2.mp3", "d3": "../zvuk/urok16/d3.mp3", "d4": "../zvuk/urok16/d4.mp3", "d5": "../zvuk/urok16/d5.mp3", "d6": "../zvuk/urok16/d6.mp3", "d7": "../zvuk/urok16/d7.mp3", "d8": "../zvuk/urok16/d8.mp3", "d9": "../zvuk/urok16/d9.mp3", "d10": "../zvuk/urok16/d10.mp3"};
+const AUDIO = {"w1": "../zvuk/urok16/w1.mp3", "w2": "../zvuk/urok16/w2.mp3", "e1": "../zvuk/urok16/e1.mp3", "e2": "../zvuk/urok16/e2.mp3", "e3": "../zvuk/urok16/e3.mp3", "e4": "../zvuk/urok16/e4.mp3", "e5": "../zvuk/urok16/e5.mp3", "a_kalt": "../zvuk/urok16/a_kalt.mp3", "a_kuehl": "../zvuk/urok16/a_kuehl.mp3", "a_warm": "../zvuk/urok16/a_warm.mp3", "a_heiss": "../zvuk/urok16/a_heiss.mp3", "a_sonnig": "../zvuk/urok16/a_sonnig.mp3", "a_bewoelkt": "../zvuk/urok16/a_bewoelkt.mp3", "a_windig": "../zvuk/urok16/a_windig.mp3", "a_neblig": "../zvuk/urok16/a_neblig.mp3", "a_trocken": "../zvuk/urok16/a_trocken.mp3", "a_nass": "../zvuk/urok16/a_nass.mp3", "a_schoen": "../zvuk/urok16/a_schoen.mp3", "a_schlecht": "../zvuk/urok16/a_schlecht.mp3", "n_sonne": "../zvuk/urok16/n_sonne.mp3", "n_regen": "../zvuk/urok16/n_regen.mp3", "n_schnee": "../zvuk/urok16/n_schnee.mp3", "n_wind": "../zvuk/urok16/n_wind.mp3", "n_wolke": "../zvuk/urok16/n_wolke.mp3", "n_nebel": "../zvuk/urok16/n_nebel.mp3", "n_gewitter": "../zvuk/urok16/n_gewitter.mp3", "n_sturm": "../zvuk/urok16/n_sturm.mp3", "n_hitze": "../zvuk/urok16/n_hitze.mp3", "n_kaelte": "../zvuk/urok16/n_kaelte.mp3", "v_regnen": "../zvuk/urok16/v_regnen.mp3", "v_schneien": "../zvuk/urok16/v_schneien.mp3", "v_scheinen": "../zvuk/urok16/v_scheinen.mp3", "t1": "../zvuk/urok16/t1.mp3", "t2": "../zvuk/urok16/t2.mp3", "t3": "../zvuk/urok16/t3.mp3", "t4": "../zvuk/urok16/t4.mp3", "t5": "../zvuk/urok16/t5.mp3", "j1": "../zvuk/urok16/j1.mp3", "j2": "../zvuk/urok16/j2.mp3", "j3": "../zvuk/urok16/j3.mp3", "j4": "../zvuk/urok16/j4.mp3", "f1": "../zvuk/urok16/f1.mp3", "f2": "../zvuk/urok16/f2.mp3", "f3": "../zvuk/urok16/f3.mp3", "m1": "../zvuk/urok16/m1.mp3", "m2": "../zvuk/urok16/m2.mp3", "m3": "../zvuk/urok16/m3.mp3", "m4": "../zvuk/urok16/m4.mp3", "m5": "../zvuk/urok16/m5.mp3", "m6": "../zvuk/urok16/m6.mp3", "m7": "../zvuk/urok16/m7.mp3", "m8": "../zvuk/urok16/m8.mp3", "m9": "../zvuk/urok16/m9.mp3", "s1": "../zvuk/urok16/s1.mp3", "s2": "../zvuk/urok16/s2.mp3", "s3": "../zvuk/urok16/s3.mp3", "s4": "../zvuk/urok16/s4.mp3", "d1": "../zvuk/urok16/d1.mp3", "d2": "../zvuk/urok16/d2.mp3", "d3": "../zvuk/urok16/d3.mp3", "d4": "../zvuk/urok16/d4.mp3", "d5": "../zvuk/urok16/d5.mp3", "d6": "../zvuk/urok16/d6.mp3", "d7": "../zvuk/urok16/d7.mp3", "d8": "../zvuk/urok16/d8.mp3", "d9": "../zvuk/urok16/d9.mp3", "d10": "../zvuk/urok16/d10.mp3", "n_bericht": "../zvuk/urok16/n_bericht.mp3", "n_schauer": "../zvuk/urok16/n_schauer.mp3", "n_glatteis": "../zvuk/urok16/n_glatteis.mp3", "n_hagel": "../zvuk/urok16/n_hagel.mp3", "n_himmel": "../zvuk/urok16/n_himmel.mp3", "n_schirm": "../zvuk/urok16/n_schirm.mp3", "mk1": "../zvuk/urok16/mk1.mp3", "mk2": "../zvuk/urok16/mk2.mp3", "mk3": "../zvuk/urok16/mk3.mp3", "mk4": "../zvuk/urok16/mk4.mp3", "mk5": "../zvuk/urok16/mk5.mp3", "vg1": "../zvuk/urok16/vg1.mp3", "vg2": "../zvuk/urok16/vg2.mp3", "vg3": "../zvuk/urok16/vg3.mp3", "vg4": "../zvuk/urok16/vg4.mp3", "f4": "../zvuk/urok16/f4.mp3", "s5": "../zvuk/urok16/s5.mp3", "wh1": "../zvuk/urok16/wh1.mp3", "wh2": "../zvuk/urok16/wh2.mp3", "wh3": "../zvuk/urok16/wh3.mp3", "wh4": "../zvuk/urok16/wh4.mp3", "sm1": "../zvuk/urok16/sm1.mp3", "sm2": "../zvuk/urok16/sm2.mp3", "sm3": "../zvuk/urok16/sm3.mp3", "sm4": "../zvuk/urok16/sm4.mp3", "sm5": "../zvuk/urok16/sm5.mp3", "sm6": "../zvuk/urok16/sm6.mp3", "gl1": "../zvuk/urok16/gl1.mp3", "gl2": "../zvuk/urok16/gl2.mp3", "gl3": "../zvuk/urok16/gl3.mp3", "gl4": "../zvuk/urok16/gl4.mp3", "gl5": "../zvuk/urok16/gl5.mp3", "gl6": "../zvuk/urok16/gl6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -978,12 +1042,19 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
+// слова и фразы: [id, немецкое, транскрипция, перевод]
 function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
 function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// существительное: артикль отдельным цветным полем (5-е поле)
 function nouns(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,art])=>`
   <div class="wcard ${art}"><div class="txt"><div class="de"><span class="art-${art}">${art}</span> ${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
 
 phrases('esBlock',[
   ["e1","<b>Es</b> ist kalt.","эс ист кальт","Холодно."],
@@ -1016,7 +1087,7 @@ words('adj',[
 nouns('nat',[
   ["n_sonne","Sonne","зоннэ","солнце","die"],
   ["n_regen","Regen","рэгэн","дождь","der"],
-  ["n_schnee","Schnee","шнэй","снег","der"],
+  ["n_schnee","Schnee","шнээ","снег","der"],
   ["n_wind","Wind","винт","ветер","der"],
   ["n_wolke","Wolke","волькэ","облако, туча","die"],
   ["n_nebel","Nebel","нэбэль","туман","der"],
@@ -1024,6 +1095,14 @@ nouns('nat',[
   ["n_sturm","Sturm","штурм","буря, шторм","der"],
   ["n_hitze","Hitze","хицэ","жара (важно для вен!)","die"],
   ["n_kaelte","Kälte","кэльтэ","холод","die"],
+]);
+nouns('nat2',[
+  ["n_bericht","Wetterbericht","вэттэрбэрихьт","прогноз погоды","der"],
+  ["n_schauer","Schauer","шауэа","ливень (короткий)","der"],
+  ["n_glatteis","Glatteis","глатайс","гололёд","das"],
+  ["n_hagel","Hagel","хагэль","град","der"],
+  ["n_himmel","Himmel","химмэль","небо","der"],
+  ["n_schirm","Regenschirm","рэгэнширм","зонт","der"],
 ]);
 
 words('verbs',[
@@ -1040,6 +1119,14 @@ phrases('temp',[
   ["t5","Es <b>ist</b> null Grad.","эс ист нуль грат","Ноль градусов. (ist, не sind!)"],
 ]);
 
+phrases('mir',[
+  ["mk1","<b>Mir</b> ist kalt.","миа ист кальт","Мне холодно."],
+  ["mk2","<b>Mir</b> ist heiß.","миа ист хайс","Мне жарко."],
+  ["mk3","Ist <b>Ihnen</b> kalt?","ист инэн кальт","Вам не холодно? (на осмотре)"],
+  ["mk4","Ich friere.","ихь фриэрэ","Я мёрзну."],
+  ["mk5","Ich schwitze.","ихь швицэ","Я потею."],
+], 'wn');
+
 phrases('jahr',[
   ["j1","<b>Im</b> Sommer ist es heiß.","им зоммэр ист эс хайс","Летом жарко."],
   ["j2","<b>Im</b> Winter ist es kalt und es schneit.","им винтэр ист эс кальт унт эс шнайт","Зимой холодно и идёт снег."],
@@ -1051,10 +1138,18 @@ phrases('prognose',[
   ["f1","Morgen <b>wird</b> es kalt.","моргэн вирт эс кальт","Завтра станет холодно."],
   ["f2","Morgen <b>wird</b> es sonnig.","моргэн вирт эс зоннихь","Завтра будет солнечно."],
   ["f3","Heute <b>bleibt</b> es trocken.","хойтэ бляйпт эс трокэн","Сегодня останется сухо."],
+  ["f4","Morgen <b>soll</b> es regnen.","моргэн золь эс рэгнэн","Завтра, говорят, будет дождь."],
 ], 'hb');
 
+phrases('vorbei',[
+  ["vg1","Gestern <b>hat</b> es <b>geregnet</b>.","гэстэрн хат эс гэрэгнэт","Вчера шёл дождь."],
+  ["vg2","Es <b>hat</b> die ganze Nacht <b>geschneit</b>.","эс хат ди ганцэ нахт гэшнайт","Всю ночь шёл снег."],
+  ["vg3","Letzte Woche <b>war</b> es sehr heiß.","лецтэ вохэ ва эс зэа хайс","На прошлой неделе было очень жарко."],
+  ["vg4","Wie <b>war</b> das Wetter im Urlaub?","ви ва дас вэттэа им урлауп","Какая была погода в отпуске?"],
+]);
+
 phrases('med',[
-  ["m9","Wie geht es Ihnen <b>bei diesem Wetter</b>?","ви гейт эс инэн бай дизэм веттэр","Как Вы себя чувствуете в такую погоду?"],
+  ["m9","Wie geht es Ihnen <b>bei diesem Wetter</b>?","ви гээт эс инэн бай дизэм веттэр","Как Вы себя чувствуете в такую погоду?"],
   ["m1","<b>Bei Hitze</b> werden die Beine schwer.","бай хицэ вэрдэн ди байнэ швэа","В жару ноги становятся тяжёлыми."],
   ["m2","Im Sommer schwellen die Beine mehr an.","им зоммэр швэлен ди байнэ мэа ан","Летом ноги отекают сильнее."],
   ["m3","<b>Vermeiden Sie</b> lange Sonnenbäder.","фэрмайдэн зи лангэ зоннэнбэдэр","Избегайте долгого пребывания на солнце."],
@@ -1064,16 +1159,23 @@ phrases('med',[
   ["m7","<b>Tragen Sie</b> die Kompressionsstrümpfe auch im Sommer.","трагэн зи ди компрэсьонсштрюмпфэ аух им зоммэр","Носите компрессионные чулки и летом."],
   ["m8","<b>Trinken Sie</b> bei Hitze mehr Wasser.","тринкэн зи бай хицэ мэа вассэр","В жару пейте больше воды."],
 ]);
+phrases('med2',[
+  ["wh1","<b>Schützen Sie</b> nach der Sklerotherapie die Beine vor der Sonne.","шютцэн зи нах дэа склеротэрапи ди байнэ фоа дэа зоннэ","После склеротерапии берегите ноги от солнца. (пигментация)"],
+  ["wh2","Es gibt auch dünne Kompressionsstrümpfe für den Sommer.","эс гипт аух дюннэ компрэсьонсштрюмпфэ фюа дэн зоммэа","Есть и тонкие компрессионные чулки для лета."],
+  ["wh3","<b>Machen Sie</b> auf langen Autofahrten regelmäßig Pausen.","махэн зи ауф лангэн аутофартэн рэгэльмэсихь паузэн","В долгих поездках на машине регулярно делайте остановки."],
+  ["wh4","<b>Passen Sie</b> bei Glatteis <b>auf</b>, Sie nehmen Blutverdünner.","пассэн зи бай глатайс ауф, зи нэмэн блютфэрдюннэа","Осторожно в гололёд: Вы принимаете антикоагулянты."],
+]);
 
 phrases('small',[
   ["s1","Schönes Wetter heute!","шёнэс веттэр хойтэ","Хорошая сегодня погода!"],
   ["s2","Was für ein Wetter!","вас фюр айн веттэр","Ну и погода!"],
   ["s3","Es ist furchtbar heiß.","эс ист фурхьтбар хайс","Ужасно жарко."],
   ["s4","Endlich Sonne!","энтлихь зоннэ","Наконец-то солнце!"],
+  ["s5","Hoffentlich bleibt es so!","хоффэнтлихь бляйпт эс зо","Надеюсь, так и останется!"],
 ], 'hb');
 
-const dialog = [
-  ["d1","left","врач","Guten Tag! Wie geht es Ihnen bei dieser Hitze?","гутэн так! ви гейт эс инэн бай дизэр хицэ","Здравствуйте! Как Вы в такую жару?"],
+dlg('dialog',[
+  ["d1","left","врач","Guten Tag! Wie geht es Ihnen bei dieser Hitze?","гутэн так! ви гээт эс инэн бай дизэр хицэ","Здравствуйте! Как Вы в такую жару?"],
   ["d2","right","пац.","Nicht gut. Im Sommer werden meine Beine immer schwer.","нихьт гут. им зоммэр вэрдэн майнэ байнэ иммэр швэа","Плохо. Летом ноги всегда тяжелеют."],
   ["d3","left","врач","Das ist normal. Bei Hitze weiten sich die Venen.","дас ист нормаль. бай хицэ вайтэн зихь ди вэнэн","Это нормально. В жару вены расширяются."],
   ["d4","right","пац.","Soll ich die Strümpfe auch bei dreißig Grad tragen?","золь ихь ди штрюмпфэ аух бай драйсихь грат трагэн","Мне носить чулки и при тридцати градусах?"],
@@ -1083,13 +1185,24 @@ const dialog = [
   ["d8","right","пац.","Was hilft noch?","вас хильфт нох","Что ещё помогает?"],
   ["d9","left","врач","Kühlen Sie die Beine mit kaltem Wasser und trinken Sie viel.","кюлен зи ди байнэ мит кальтэм вассэр унт тринкэн зи филь","Охлаждайте ноги холодной водой и пейте много."],
   ["d10","right","пац.","Gut, danke. Hoffentlich wird es bald kühler.","гут, данкэ. хоффэнтлихь вирт эс бальт кюлер","Хорошо, спасибо. Надеюсь, скоро похолодает."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
-    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
-  </div>${playBtn(id)}</div></div>`).join('');
+]);
+dlg('dialog2',[
+  ["sm1","left","Кол.","Guten Morgen! Was für ein Wetter heute!","гутэн моргэн! вас фюа айн вэттэа хойтэ","Доброе утро! Ну и погода сегодня!"],
+  ["sm2","right","Гр","Ja, es regnet schon seit drei Tagen.","я, эс рэгнэт шон зайт драй тагэн","Да, дождь уже три дня. (seit — настоящее время!)"],
+  ["sm3","left","Кол.","Und morgen soll es noch kälter werden.","унт моргэн золь эс нох кэльтэа вэрдэн","А завтра, говорят, станет ещё холоднее."],
+  ["sm4","right","Гр","Wirklich? Ich habe keinen Regenschirm dabei.","вирклихь? ихь хабэ кайнэн рэгэнширм дабай","Правда? А у меня с собой нет зонта."],
+  ["sm5","left","Кол.","Nimm meinen, ich habe zwei.","ним майнэн, ихь хабэ цвай","Возьми мой, у меня их два."],
+  ["sm6","right","Гр","Danke, das ist nett!","данкэ, дас ист нэт","Спасибо, очень мило!"],
+]);
+dlg('dialog3',[
+  ["gl1","left","врач","Wie geht es Ihnen mit dem Blutverdünner?","ви гээт эс инэн мит дэм блютфэрдюннэа","Как Вы на антикоагулянте?"],
+  ["gl2","right","пац.","Gut. Aber gestern bin ich auf dem Glatteis fast gestürzt.","гут. абэа гэстэрн бин ихь ауф дэм глатайс фаст гэштюрцт","Хорошо. Но вчера я чуть не упал на гололёде."],
+  ["gl3","left","врач","Oh! Passen Sie bitte gut auf. Tragen Sie Schuhe mit gutem Profil.","о! пассэн зи биттэ гут ауф. трагэн зи шуэ мит гутэм профиль","Ой! Будьте очень осторожны. Носите обувь с хорошим протектором."],
+  ["gl4","right","пац.","Was mache ich, wenn ich doch falle?","вас махэ ихь, вэн ихь дох фаллэ","А что делать, если я всё-таки упаду?"],
+  ["gl5","left","врач","Wenn Sie auf den Kopf fallen, kommen Sie sofort in die Klinik.","вэн зи ауф дэн копф фаллэн, коммэн зи зофорт ин ди клиник","Если ударитесь головой — сразу в клинику."],
+  ["gl6","right","пац.","Verstanden. Bei Glatteis bleibe ich lieber zu Hause.","фэрштандэн. бай глатайс бляйбэ ихь либэа цу хаузэ","Понял. В гололёд лучше посижу дома."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
