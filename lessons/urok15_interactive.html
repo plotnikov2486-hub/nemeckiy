@@ -85,6 +85,24 @@
   .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
   footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
 
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
@@ -102,9 +120,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -276,8 +291,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
   <h1>Урок 15. Квартира и жильё (Wohnung und Haus)</h1>
-  <p class="lede">Самый практичный урок курса: снять квартиру — первое, что ты будешь делать в Германии, ещё до первого приёма. Плюс две ловушки, на которых теряют деньги, и врачебный блок «жильё в анамнезе». У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Самый практичный урок курса: снять квартиру — первое, что ты будешь делать в Германии, ещё до первого приёма. Плюс ловушки, на которых теряют деньги, переезд с регистрацией, звонок хозяйке и врачебный блок «жильё в анамнезе». У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <div class="toc">
     <b>Что в уроке</b>
@@ -285,14 +300,18 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <li><a href="#s1">Дом и квартира</a></li>
       <li><a href="#s2">Комнаты</a></li>
       <li><a href="#s3">⚠️ Ловушка: счёт комнат</a></li>
-      <li><a href="#s4">Мебель</a></li>
+      <li><a href="#s4">Мебель и техника</a></li>
       <li><a href="#s5">Где что стоит (Wo? + Dativ)</a></li>
       <li><a href="#s6">⚠️ Ловушка: этажи</a></li>
       <li><a href="#s7">⚠️ Аренда: Kalt или Warm</a></li>
-      <li><a href="#s8">Вопросы при поиске жилья</a></li>
-      <li><a href="#s9">Жильё в анамнезе</a></li>
-      <li><a href="#s10">Диалог: смотрим квартиру</a></li>
-      <li><a href="#s11">Домашка</a></li>
+      <li><a href="#s8">Как читать объявление</a></li>
+      <li><a href="#s9">Вопросы при поиске жилья</a></li>
+      <li><a href="#s10">Переезд и регистрация</a></li>
+      <li><a href="#s11">Что-то сломалось</a></li>
+      <li><a href="#s12">Жильё в анамнезе</a></li>
+      <li><a href="#s13">Частые ошибки</a></li>
+      <li><a href="#s14">Диалоги</a></li>
+      <li><a href="#s15">Домашка</a></li>
     </ol>
   </div>
 
@@ -328,9 +347,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block" id="s4">
-    <h2><span class="num">4</span> Мебель</h2>
+    <h2><span class="num">4</span> Мебель и техника</h2>
     <p class="desc">Двенадцать предметов, которых хватит, чтобы описать любую квартиру — и на осмотре, и в разговоре.</p>
     <div class="grid2" id="furniture"></div>
+    <p class="desc" style="margin-top:16px">Кухня и ванная — что там должно быть:</p>
+    <div class="grid2" id="geraete"></div>
+    <div class="warn-box" style="margin-top:14px">
+      <span class="big">Ловушка: в квартире может не быть кухни ВООБЩЕ</span>
+      В Германии квартиру часто сдают с голыми стенами на кухне — ни плиты, ни шкафов, ни раковины: прежний жилец увёз свою кухню с собой. Ищи в объявлении <b>Einbauküche</b> (сокращённо <b>EBK</b>) — «встроенная кухня». Нет этого слова — готовься покупать кухню сам.
+    </div>
+    <div class="card-list" id="ebk"></div>
   </section>
 
   <section class="block" id="s5">
@@ -377,34 +403,100 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block" id="s8">
-    <h2><span class="num">8</span> Восемь вопросов при поиске жилья</h2>
+    <h2><span class="num">8</span> Как читать объявление</h2>
+    <div class="grammar-box">
+      Объявления пишут сокращениями — место на сайте платное. Вот расшифровка того, что встретишь почти в каждом:
+    </div>
+    <div class="tabwrap"><table class="ftab">
+      <tr><th>пишут</th><th>значит</th><th>по-русски</th></tr>
+      <tr><td>Zi.</td><td>Zimmer</td><td>жилых комнат</td></tr>
+      <tr><td>KM / WM</td><td>Kaltmiete / Warmmiete</td><td>аренда без / с коммуналкой</td></tr>
+      <tr><td>NK</td><td>Nebenkosten</td><td>коммуналка</td></tr>
+      <tr><td>EBK</td><td>Einbauküche</td><td>встроенная кухня есть</td></tr>
+      <tr><td>EG / 2. OG / DG</td><td>Erdgeschoss / Obergeschoss / Dachgeschoss</td><td>1-й этаж / наш 3-й / мансарда</td></tr>
+      <tr><td>m² (qm)</td><td>Quadratmeter</td><td>квадратные метры</td></tr>
+      <tr><td>WG</td><td>Wohngemeinschaft</td><td>квартира на нескольких жильцов</td></tr>
+      <tr><td>ab sofort</td><td>—</td><td>свободна сразу</td></tr>
+    </table></div>
+    <div class="grid2" id="anzeige"></div>
+    <div class="card-list" id="anzeigeEx" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Восемь вопросов при поиске жилья</h2>
     <p class="desc">Этого набора хватит на телефонный звонок и на осмотр. Выучи блоком — спросишь ровно то, что решает дело.</p>
     <div class="card-list" id="fragen"></div>
   </section>
 
-  <section class="block" id="s9">
-    <h2><span class="num">9</span> Жильё в анамнезе — твой рабочий блок</h2>
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> Переезд и регистрация</h2>
+    <div class="grammar-box">
+      «Переезжать» — <b class="hl">umziehen</b>, «въезжать» — <b class="hl">einziehen</b>. Оба с отделяемой приставкой (урок 13) и в Perfekt идут через <b>sein</b> — это движение (урок 12): <i>Wir <b>sind</b> eingezogen</i>.
+    </div>
+    <div class="warn-box">
+      <span class="big">Anmeldung — обязательно, в течение двух недель</span>
+      После въезда нужно зарегистрироваться по месту жительства в <b>Bürgeramt</b> (районная служба). Хозяин квартиры даёт для этого бумагу — <b>Wohnungsgeberbestätigung</b>. После первой регистрации по почте приходит налоговый номер (<i>Steuer-ID</i>), а его спросит работодатель — то есть клиника.
+    </div>
+    <div class="card-list" id="umzug"></div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Что-то сломалось — звоним хозяину</h2>
+    <div class="grammar-box">
+      Мелкий ремонт в съёмной квартире обычно делает хозяин — ему и звонят. Мастер — <b class="hl">der Handwerker</b>. И ещё одно немецкое правило: в домовых правилах (<i>Hausordnung</i>) почти всегда есть <b>Nachtruhe</b> — тишина обычно с 22 до 6 часов.
+    </div>
+    <div class="card-list" id="defekt"></div>
+  </section>
+
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Жильё в анамнезе — твой рабочий блок</h2>
     <div class="link-box">
       🔗 <b>Зачем флебологу спрашивать про квартиру:</b> после ЭВЛО и при тяжёлой ХЗВ важно, сколько человек ходит по лестнице, может ли поднять ноги дома и есть ли кому помочь. Этаж и лифт — это не светская беседа, а часть плана реабилитации. Заодно тут повторяются модальные глаголы (können, müssen, sollten) от Даши.
     </div>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Дома при ХЗВ:</b> приподнятый ножной конец кровати (бруски 10–15 см под ножки) и душ вместо горячей ванны. Ограничения после операции — лестницы, нагрузки — называй по своему протоколу. <i>unter die Beine</i> — «под ноги» с вопросом «куда?», поэтому Akkusativ; разберём отдельно.
+    </div>
+    <div class="card-list" id="med2"></div>
   </section>
 
-  <section class="block" id="s10">
-    <h2><span class="num">10</span> Диалог: смотрим квартиру</h2>
-    <p class="desc">Ты слева, маклер — Yannick — справа. Реальный сценарий Besichtigung: комнаты, лифт, деньги, сроки.</p>
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Das Bett liegt im Schlafzimmer.</span><span class="good">Das Bett steht im Schlafzimmer.</span><span class="why">кровать стоит</span></div>
+      <div class="err-row"><span class="bad">der Schlafzimmer</span><span class="good">das Schlafzimmer</span><span class="why">род даёт последнее слово: das Zimmer</span></div>
+      <div class="err-row"><span class="bad">Ich bin in die Küche.</span><span class="good">Ich bin in der Küche.</span><span class="why">где? → Dativ</span></div>
+      <div class="err-row"><span class="bad">Ich suche ein Wohnung.</span><span class="good">Ich suche eine Wohnung.</span><span class="why">die Wohnung → eine</span></div>
+      <div class="err-row"><span class="bad">Ich habe umgezogen.</span><span class="good">Ich bin umgezogen.</span><span class="why">переезд — движение → sein</span></div>
+      <div class="err-row"><span class="bad">im ersten Stock (про наш 1-й)</span><span class="good">im Erdgeschoss</span><span class="why">наш первый этаж — Erdgeschoss</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="s14">
+    <h2><span class="num">14</span> Диалоги</h2>
+    <div class="desc">Маклера, Григория и пациента озвучивает Yannick.</div>
+    <h3 class="dlg-title">Смотрим квартиру</h3>
     <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Звонок хозяйке: не работает отопление</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <div class="grammar-box" style="margin-top:12px">
+      <i>Auf Wiederhören!</i> — «до свидания» по телефону: «до нового слышания», ведь увидеться нельзя. Вживую — <i>Auf Wiedersehen</i>.
+    </div>
+    <h3 class="dlg-title">Жильё в анамнезе перед операцией</h3>
+    <div class="dialogue" id="dialog3"></div>
   </section>
 
-  <section class="block" id="s11">
-    <h2><span class="num">11</span> Домашка</h2>
+  <section class="block" id="s15">
+    <h2><span class="num">15</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Назови все комнаты своей квартиры с артиклем. Проверь себя: почему они почти все <i>das</i>?</li>
         <li>Опиши, где что стоит — пять предложений с <b>stehen / liegen / hängen</b> и Dativ. Следи за позой предмета.</li>
         <li>Ты видишь объявление: <i>«3 Zimmer, 75 m², Kaltmiete 900 €, NK 180 €, Kaution 3 KM»</i>. Сколько комнат жилых, сколько ты платишь в месяц и сколько нужно денег при въезде?</li>
+        <li>Расшифруй: <i>«2 Zi., 58 m², 2. OG, EBK, KM 780 €, NK 190 €, ab sofort»</i>. На каком это этаже по-нашему и есть ли кухня?</li>
         <li>На каком этаже ты живёшь — по-немецки? (Осторожно: сдвиг на один.)</li>
-        <li>Задай маклеру пять вопросов из раздела 8 вслух, не подглядывая.</li>
+        <li>Позвони хозяйке (вслух): не работает отопление в спальне, с какого времени, когда ты дома.</li>
+        <li>Задай маклеру пять вопросов из раздела 9 вслух, не подглядывая.</li>
       </ol>
     </div>
   </section>
@@ -963,11 +1055,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"b_haus": "../zvuk/urok15/b_haus.mp3", "b_wohnung": "../zvuk/urok15/b_wohnung.mp3", "b_zimmer": "../zvuk/urok15/b_zimmer.mp3", "b_stock": "../zvuk/urok15/b_stock.mp3", "b_etage": "../zvuk/urok15/b_etage.mp3", "b_aufzug": "../zvuk/urok15/b_aufzug.mp3", "b_treppe": "../zvuk/urok15/b_treppe.mp3", "b_balkon": "../zvuk/urok15/b_balkon.mp3", "b_garten": "../zvuk/urok15/b_garten.mp3", "b_keller": "../zvuk/urok15/b_keller.mp3", "r_wohnzimmer": "../zvuk/urok15/r_wohnzimmer.mp3", "r_schlafzimmer": "../zvuk/urok15/r_schlafzimmer.mp3", "r_kueche": "../zvuk/urok15/r_kueche.mp3", "r_bad": "../zvuk/urok15/r_bad.mp3", "r_toilette": "../zvuk/urok15/r_toilette.mp3", "r_flur": "../zvuk/urok15/r_flur.mp3", "r_kinderzimmer": "../zvuk/urok15/r_kinderzimmer.mp3", "r_arbeitszimmer": "../zvuk/urok15/r_arbeitszimmer.mp3", "z1": "../zvuk/urok15/z1.mp3", "z2": "../zvuk/urok15/z2.mp3", "m_tisch": "../zvuk/urok15/m_tisch.mp3", "m_stuhl": "../zvuk/urok15/m_stuhl.mp3", "m_bett": "../zvuk/urok15/m_bett.mp3", "m_schrank": "../zvuk/urok15/m_schrank.mp3", "m_sofa": "../zvuk/urok15/m_sofa.mp3", "m_sessel": "../zvuk/urok15/m_sessel.mp3", "m_lampe": "../zvuk/urok15/m_lampe.mp3", "m_teppich": "../zvuk/urok15/m_teppich.mp3", "m_regal": "../zvuk/urok15/m_regal.mp3", "m_spiegel": "../zvuk/urok15/m_spiegel.mp3", "m_fenster": "../zvuk/urok15/m_fenster.mp3", "m_tuer": "../zvuk/urok15/m_tuer.mp3", "v1": "../zvuk/urok15/v1.mp3", "v2": "../zvuk/urok15/v2.mp3", "v3": "../zvuk/urok15/v3.mp3", "p1": "../zvuk/urok15/p1.mp3", "p2": "../zvuk/urok15/p2.mp3", "p3": "../zvuk/urok15/p3.mp3", "p4": "../zvuk/urok15/p4.mp3", "e1": "../zvuk/urok15/e1.mp3", "e2": "../zvuk/urok15/e2.mp3", "e3": "../zvuk/urok15/e3.mp3", "e4": "../zvuk/urok15/e4.mp3", "mi1": "../zvuk/urok15/mi1.mp3", "mi2": "../zvuk/urok15/mi2.mp3", "mi3": "../zvuk/urok15/mi3.mp3", "mi4": "../zvuk/urok15/mi4.mp3", "mi5": "../zvuk/urok15/mi5.mp3", "mi6": "../zvuk/urok15/mi6.mp3", "mi7": "../zvuk/urok15/mi7.mp3", "mi8": "../zvuk/urok15/mi8.mp3", "mi9": "../zvuk/urok15/mi9.mp3", "kw1": "../zvuk/urok15/kw1.mp3", "kw2": "../zvuk/urok15/kw2.mp3", "q1": "../zvuk/urok15/q1.mp3", "q2": "../zvuk/urok15/q2.mp3", "q3": "../zvuk/urok15/q3.mp3", "q4": "../zvuk/urok15/q4.mp3", "q5": "../zvuk/urok15/q5.mp3", "q6": "../zvuk/urok15/q6.mp3", "q7": "../zvuk/urok15/q7.mp3", "q8": "../zvuk/urok15/q8.mp3", "h1": "../zvuk/urok15/h1.mp3", "h2": "../zvuk/urok15/h2.mp3", "h3": "../zvuk/urok15/h3.mp3", "h4": "../zvuk/urok15/h4.mp3", "h5": "../zvuk/urok15/h5.mp3", "h6": "../zvuk/urok15/h6.mp3", "h7": "../zvuk/urok15/h7.mp3", "d1": "../zvuk/urok15/d1.mp3", "d2": "../zvuk/urok15/d2.mp3", "d3": "../zvuk/urok15/d3.mp3", "d4": "../zvuk/urok15/d4.mp3", "d5": "../zvuk/urok15/d5.mp3", "d6": "../zvuk/urok15/d6.mp3", "d7": "../zvuk/urok15/d7.mp3", "d8": "../zvuk/urok15/d8.mp3", "d9": "../zvuk/urok15/d9.mp3", "d10": "../zvuk/urok15/d10.mp3", "d11": "../zvuk/urok15/d11.mp3"};
+const AUDIO = {"b_haus": "../zvuk/urok15/b_haus.mp3", "b_wohnung": "../zvuk/urok15/b_wohnung.mp3", "b_zimmer": "../zvuk/urok15/b_zimmer.mp3", "b_stock": "../zvuk/urok15/b_stock.mp3", "b_etage": "../zvuk/urok15/b_etage.mp3", "b_aufzug": "../zvuk/urok15/b_aufzug.mp3", "b_treppe": "../zvuk/urok15/b_treppe.mp3", "b_balkon": "../zvuk/urok15/b_balkon.mp3", "b_garten": "../zvuk/urok15/b_garten.mp3", "b_keller": "../zvuk/urok15/b_keller.mp3", "r_wohnzimmer": "../zvuk/urok15/r_wohnzimmer.mp3", "r_schlafzimmer": "../zvuk/urok15/r_schlafzimmer.mp3", "r_kueche": "../zvuk/urok15/r_kueche.mp3", "r_bad": "../zvuk/urok15/r_bad.mp3", "r_toilette": "../zvuk/urok15/r_toilette.mp3", "r_flur": "../zvuk/urok15/r_flur.mp3", "r_kinderzimmer": "../zvuk/urok15/r_kinderzimmer.mp3", "r_arbeitszimmer": "../zvuk/urok15/r_arbeitszimmer.mp3", "z1": "../zvuk/urok15/z1.mp3", "z2": "../zvuk/urok15/z2.mp3", "m_tisch": "../zvuk/urok15/m_tisch.mp3", "m_stuhl": "../zvuk/urok15/m_stuhl.mp3", "m_bett": "../zvuk/urok15/m_bett.mp3", "m_schrank": "../zvuk/urok15/m_schrank.mp3", "m_sofa": "../zvuk/urok15/m_sofa.mp3", "m_sessel": "../zvuk/urok15/m_sessel.mp3", "m_lampe": "../zvuk/urok15/m_lampe.mp3", "m_teppich": "../zvuk/urok15/m_teppich.mp3", "m_regal": "../zvuk/urok15/m_regal.mp3", "m_spiegel": "../zvuk/urok15/m_spiegel.mp3", "m_fenster": "../zvuk/urok15/m_fenster.mp3", "m_tuer": "../zvuk/urok15/m_tuer.mp3", "v1": "../zvuk/urok15/v1.mp3", "v2": "../zvuk/urok15/v2.mp3", "v3": "../zvuk/urok15/v3.mp3", "p1": "../zvuk/urok15/p1.mp3", "p2": "../zvuk/urok15/p2.mp3", "p3": "../zvuk/urok15/p3.mp3", "p4": "../zvuk/urok15/p4.mp3", "e1": "../zvuk/urok15/e1.mp3", "e2": "../zvuk/urok15/e2.mp3", "e3": "../zvuk/urok15/e3.mp3", "e4": "../zvuk/urok15/e4.mp3", "mi1": "../zvuk/urok15/mi1.mp3", "mi2": "../zvuk/urok15/mi2.mp3", "mi3": "../zvuk/urok15/mi3.mp3", "mi4": "../zvuk/urok15/mi4.mp3", "mi5": "../zvuk/urok15/mi5.mp3", "mi6": "../zvuk/urok15/mi6.mp3", "mi7": "../zvuk/urok15/mi7.mp3", "mi8": "../zvuk/urok15/mi8.mp3", "mi9": "../zvuk/urok15/mi9.mp3", "kw1": "../zvuk/urok15/kw1.mp3", "kw2": "../zvuk/urok15/kw2.mp3", "q1": "../zvuk/urok15/q1.mp3", "q2": "../zvuk/urok15/q2.mp3", "q3": "../zvuk/urok15/q3.mp3", "q4": "../zvuk/urok15/q4.mp3", "q5": "../zvuk/urok15/q5.mp3", "q6": "../zvuk/urok15/q6.mp3", "q7": "../zvuk/urok15/q7.mp3", "q8": "../zvuk/urok15/q8.mp3", "h1": "../zvuk/urok15/h1.mp3", "h2": "../zvuk/urok15/h2.mp3", "h3": "../zvuk/urok15/h3.mp3", "h4": "../zvuk/urok15/h4.mp3", "h5": "../zvuk/urok15/h5.mp3", "h6": "../zvuk/urok15/h6.mp3", "h7": "../zvuk/urok15/h7.mp3", "d1": "../zvuk/urok15/d1.mp3", "d2": "../zvuk/urok15/d2.mp3", "d3": "../zvuk/urok15/d3.mp3", "d4": "../zvuk/urok15/d4.mp3", "d5": "../zvuk/urok15/d5.mp3", "d6": "../zvuk/urok15/d6.mp3", "d7": "../zvuk/urok15/d7.mp3", "d8": "../zvuk/urok15/d8.mp3", "d9": "../zvuk/urok15/d9.mp3", "d10": "../zvuk/urok15/d10.mp3", "d11": "../zvuk/urok15/d11.mp3", "g_herd": "../zvuk/urok15/g_herd.mp3", "g_kuehlschrank": "../zvuk/urok15/g_kuehlschrank.mp3", "g_waschmaschine": "../zvuk/urok15/g_waschmaschine.mp3", "g_spuelmaschine": "../zvuk/urok15/g_spuelmaschine.mp3", "g_dusche": "../zvuk/urok15/g_dusche.mp3", "g_badewanne": "../zvuk/urok15/g_badewanne.mp3", "g_heizung": "../zvuk/urok15/g_heizung.mp3", "g_steckdose": "../zvuk/urok15/g_steckdose.mp3", "ek1": "../zvuk/urok15/ek1.mp3", "ek2": "../zvuk/urok15/ek2.mp3", "an_qm": "../zvuk/urok15/an_qm.mp3", "an_og": "../zvuk/urok15/an_og.mp3", "an_dg": "../zvuk/urok15/an_dg.mp3", "an_wg": "../zvuk/urok15/an_wg.mp3", "an1": "../zvuk/urok15/an1.mp3", "um1": "../zvuk/urok15/um1.mp3", "um2": "../zvuk/urok15/um2.mp3", "um3": "../zvuk/urok15/um3.mp3", "um4": "../zvuk/urok15/um4.mp3", "um5": "../zvuk/urok15/um5.mp3", "pr1": "../zvuk/urok15/pr1.mp3", "pr2": "../zvuk/urok15/pr2.mp3", "pr3": "../zvuk/urok15/pr3.mp3", "pr4": "../zvuk/urok15/pr4.mp3", "pr5": "../zvuk/urok15/pr5.mp3", "hm1": "../zvuk/urok15/hm1.mp3", "hm2": "../zvuk/urok15/hm2.mp3", "hm3": "../zvuk/urok15/hm3.mp3", "hm4": "../zvuk/urok15/hm4.mp3", "vm1": "../zvuk/urok15/vm1.mp3", "vm2": "../zvuk/urok15/vm2.mp3", "vm3": "../zvuk/urok15/vm3.mp3", "vm4": "../zvuk/urok15/vm4.mp3", "vm5": "../zvuk/urok15/vm5.mp3", "vm6": "../zvuk/urok15/vm6.mp3", "vm7": "../zvuk/urok15/vm7.mp3", "vm8": "../zvuk/urok15/vm8.mp3", "hw1": "../zvuk/urok15/hw1.mp3", "hw2": "../zvuk/urok15/hw2.mp3", "hw3": "../zvuk/urok15/hw3.mp3", "hw4": "../zvuk/urok15/hw4.mp3", "hw5": "../zvuk/urok15/hw5.mp3", "hw6": "../zvuk/urok15/hw6.mp3", "hw7": "../zvuk/urok15/hw7.mp3", "hw8": "../zvuk/urok15/hw8.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -988,12 +1080,19 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
+// слова и фразы: [id, немецкое, транскрипция, перевод]
 function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
 function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// существительное: артикль отдельным цветным полем (5-е поле)
 function nouns(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,art])=>`
   <div class="wcard ${art}"><div class="txt"><div class="de"><span class="art-${art}">${art}</span> ${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
 
 nouns('basis',[
   ["b_haus","Haus","хаус","дом","das"],
@@ -1013,7 +1112,7 @@ nouns('rooms',[
   ["r_schlafzimmer","Schlafzimmer","шлафциммэр","спальня (schlafen — спать)","das"],
   ["r_kueche","Küche","кюхе","кухня","die"],
   ["r_bad","Badezimmer","бадэциммэр","ванная","das"],
-  ["r_toilette","Toilette","тоалеттэ","туалет","die"],
+  ["r_toilette","Toilette","туалэттэ","туалет","die"],
   ["r_flur","Flur","флуа","коридор, прихожая","der"],
   ["r_kinderzimmer","Kinderzimmer","киндэрциммэр","детская (у вас — Викина)","das"],
   ["r_arbeitszimmer","Arbeitszimmer","арбайтсциммэр","кабинет","das"],
@@ -1038,6 +1137,20 @@ nouns('furniture',[
   ["m_fenster","Fenster","фэнстэр","окно","das"],
   ["m_tuer","Tür","тюа","дверь","die"],
 ]);
+nouns('geraete',[
+  ["g_herd","Herd","хэрт","плита","der"],
+  ["g_kuehlschrank","Kühlschrank","кюльшранк","холодильник","der"],
+  ["g_waschmaschine","Waschmaschine","вашмашинэ","стиральная машина","die"],
+  ["g_spuelmaschine","Spülmaschine","шпюльмашинэ","посудомойка","die"],
+  ["g_dusche","Dusche","душэ","душ","die"],
+  ["g_badewanne","Badewanne","бадэваннэ","ванна","die"],
+  ["g_heizung","Heizung","хайцунг","отопление, батарея","die"],
+  ["g_steckdose","Steckdose","штэкдозэ","розетка","die"],
+]);
+phrases('ebk',[
+  ["ek1","Die Wohnung hat eine <b>Einbauküche</b>.","ди вонунг хат айнэ айнбаукюхе","В квартире есть встроенная кухня."],
+  ["ek2","Gibt es eine <b>Einbauküche</b>?","гипт эс айнэ айнбаукюхе","Кухня в квартире есть?"],
+], 'wn');
 
 words('posVerbs',[
   ["v1","<b>stehen</b>","штээн","стоять — вертикальное"],
@@ -1046,10 +1159,10 @@ words('posVerbs',[
 ], 'hb');
 
 phrases('position',[
-  ["p1","Das Bett <b>steht</b> im Schlafzimmer.","дас бэтт штэйт им шлафциммэр","Кровать стоит в спальне."],
+  ["p1","Das Bett <b>steht</b> im Schlafzimmer.","дас бэтт штээт им шлафциммэр","Кровать стоит в спальне."],
   ["p2","Der Teppich <b>liegt</b> im Wohnzimmer.","дэа тэппихь лигт им вонциммэр","Ковёр лежит в гостиной."],
   ["p3","Die Lampe <b>hängt</b> über dem Tisch.","ди лампэ хэнгт юбэр дэм тиш","Лампа висит над столом."],
-  ["p4","Der Stuhl <b>steht</b> am Fenster.","дэа штуль штэйт ам фэнстэр","Стул стоит у окна."],
+  ["p4","Der Stuhl <b>steht</b> am Fenster.","дэа штуль штээт ам фэнстэр","Стул стоит у окна."],
 ]);
 
 phrases('floors',[
@@ -1079,6 +1192,16 @@ words('moebl',[
   ["mi9","<b>möbliert</b>","мёблирт","с мебелью (без — unmöbliert)"],
 ], 'sn');
 
+nouns('anzeige',[
+  ["an_qm","Quadratmeter","квадратмэтэа","квадратный метр (m², qm)","der"],
+  ["an_og","Obergeschoss","обэргэшосс","этаж выше первого (OG)","das"],
+  ["an_dg","Dachgeschoss","дахгэшосс","мансарда, последний этаж (DG)","das"],
+  ["an_wg","Wohngemeinschaft","вонгэмайншафт","квартира на нескольких жильцов (WG)","die"],
+]);
+phrases('anzeigeEx',[
+  ["an1","Die Wohnung ist <b>ab sofort</b> frei.","ди вонунг ист ап зофорт фрай","Квартира свободна сразу."],
+]);
+
 phrases('fragen',[
   ["q1","Ich suche eine Wohnung.","ихь зухэ айнэ вонунг","Я ищу квартиру."],
   ["q4","Wie viele Zimmer hat die Wohnung?","ви филе циммэр хат ди вонунг","Сколько в квартире комнат?"],
@@ -1090,6 +1213,22 @@ phrases('fragen',[
   ["q6","Kann ich die Wohnung besichtigen?","кан ихь ди вонунг бэзихьтигэн","Можно посмотреть квартиру?"],
 ], 'hb');
 
+phrases('umzug',[
+  ["um1","Wir <b>ziehen</b> nächsten Monat <b>um</b>.","виа цийэн нэхьстэн монат ум","Мы переезжаем в следующем месяце."],
+  ["um2","Wann kann ich <b>einziehen</b>?","ван кан ихь айнцийэн","Когда можно въехать?"],
+  ["um3","Wir <b>sind</b> gerade <b>eingezogen</b>.","виа зинт гэрадэ айнгэцогэн","Мы только что въехали. (Perfekt через sein)"],
+  ["um4","Ich muss mich beim Bürgeramt <b>anmelden</b>.","ихь мус михь байм бюргэрамт анмэльдэн","Мне нужно зарегистрироваться в Бюргерамте."],
+  ["um5","Ich brauche eine Wohnungsgeberbestätigung.","ихь браухэ айнэ вонунгсгэбэрбэштэтигунг","Мне нужна справка от хозяина квартиры."],
+]);
+
+phrases('defekt',[
+  ["pr1","Die Heizung funktioniert nicht.","ди хайцунг функцьонирт нихьт","Отопление не работает."],
+  ["pr2","Das Fenster geht nicht zu.","дас фэнстэа гээт нихьт цу","Окно не закрывается."],
+  ["pr3","In der Küche tropft der Wasserhahn.","ин дэа кюхе тропфт дэа вассэахан","На кухне капает кран."],
+  ["pr4","Können Sie einen Handwerker schicken?","кённэн зи айнэн хантвэркэа шикэн","Можете прислать мастера?"],
+  ["pr5","Die Nachbarn sind nachts sehr laut.","ди нахбарн зинт нахтс зэа лаут","Соседи ночью очень шумят."],
+]);
+
 phrases('med',[
   ["h1","Wohnen Sie allein?","вонэн зи аляйн","Вы живёте один?"],
   ["h2","In welchem Stock wohnen Sie?","ин вэльхем шток вонэн зи","На каком этаже Вы живёте?"],
@@ -1099,8 +1238,14 @@ phrases('med',[
   ["h6","<b>Können</b> Sie zu Hause die Beine hochlegen?","кённэн зи цу хаузэ ди байнэ хохлегэн","Вы можете дома держать ноги приподнятыми?"],
   ["h7","Haben Sie zu Hause Hilfe?","хабэн зи цу хаузэ хильфэ","Есть ли дома кому помочь?"],
 ]);
+phrases('med2',[
+  ["hm1","Legen Sie nachts ein Kissen unter die Beine.","легэн зи нахтс айн киссэн унтэа ди байнэ","Кладите на ночь подушку под ноги."],
+  ["hm2","Das Bett sollte am Fußende etwas höher sein.","дас бэтт зольтэ ам фусэндэ этвас хёэа зайн","Ножной конец кровати должен быть чуть выше."],
+  ["hm3","Nehmen Sie lieber eine Dusche als ein heißes Bad.","нэмэн зи либэа айнэ душэ альс айн хайсэс бат","Лучше принимайте душ, а не горячую ванну."],
+  ["hm4","Wer bringt Sie nach der Operation nach Hause?","вэа брингт зи нах дэа опэрацьон нах хаузэ","Кто отвезёт Вас домой после операции?"],
+]);
 
-const dialog = [
+dlg('dialog',[
   ["d1","left","я","Guten Tag, ich habe einen Termin zur Besichtigung.","гутэн так, ихь хабэ айнэн тэрмин цур бэзихьтигунг","Здравствуйте, у меня назначен осмотр."],
   ["d2","right","маклер","Guten Tag! Kommen Sie bitte herein.","гутэн так! коммэн зи биттэ хэрайн","Здравствуйте! Проходите, пожалуйста."],
   ["d3","left","я","Wie viele Zimmer hat die Wohnung?","ви филе циммэр хат ди вонунг","Сколько в квартире комнат?"],
@@ -1112,13 +1257,28 @@ const dialog = [
   ["d9","left","я","Und wie hoch ist die Kaution?","унт ви хох ист ди кауцьон","А залог какой?"],
   ["d10","right","маклер","Drei Kaltmieten. Ab wann brauchen Sie die Wohnung?","драй кальтмитэн. ап ван браухэн зи ди вонунг","Три холодные аренды. С какого числа Вам нужна квартира?"],
   ["d11","left","я","Ab dem ersten Oktober. Die Wohnung gefällt mir sehr.","ап дэм эрстэн октобэр. ди вонунг гэфэльт миа зэа","С первого октября. Квартира мне очень нравится."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
-    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
-  </div>${playBtn(id)}</div></div>`).join('');
+]);
+dlg('dialog2',[
+  ["vm1","right","Гр","Guten Tag, Frau Weber, hier ist Plotnikov aus dem zweiten Stock.","гутэн так, фрау вэбэа, хиа ист плотников аус дэм цвайтэн шток","Здравствуйте, фрау Вебер, это Плотников с третьего этажа."],
+  ["vm2","left","хоз.","Guten Tag, Herr Plotnikov. Was ist los?","гутэн так, хэа плотников. вас ист лос","Здравствуйте, господин Плотников. Что случилось?"],
+  ["vm3","right","Гр","Die Heizung im Schlafzimmer funktioniert nicht. Es ist sehr kalt.","ди хайцунг им шлафциммэр функцьонирт нихьт. эс ист зэа кальт","В спальне не работает отопление. Очень холодно."],
+  ["vm4","left","хоз.","Oh, das tut mir leid. Seit wann?","о, дас тут миа лайт. зайт ван","Ой, мне жаль. С какого времени?"],
+  ["vm5","right","Гр","Seit gestern Abend.","зайт гэстэрн абэнт","Со вчерашнего вечера."],
+  ["vm6","left","хоз.","Ich schicke morgen früh einen Handwerker. Sind Sie zu Hause?","ихь шикэ моргэн фрю айнэн хантвэркэа. зинт зи цу хаузэ","Пришлю завтра утром мастера. Вы будете дома?"],
+  ["vm7","right","Гр","Ab acht bin ich in der Klinik. Der Schlüssel ist beim Nachbarn.","ап ахт бин ихь ин дэа клиник. дэа шлюссэль ист байм нахбарн","С восьми я в клинике. Ключ у соседа."],
+  ["vm8","left","хоз.","Gut, kein Problem. Auf Wiederhören!","гут, кайн проблэм. ауф видэрхёрэн","Хорошо, без проблем. До свидания!"],
+]);
+dlg('dialog3',[
+  ["hw1","left","врач","Wohnen Sie in einem Haus oder in einer Wohnung?","вонэн зи ин айнэм хаус одэа ин айнэа вонунг","Вы живёте в доме или в квартире?"],
+  ["hw2","right","пац.","In einer Wohnung, im vierten Stock.","ин айнэа вонунг, им фиртэн шток","В квартире, на пятом этаже (по-нашему)."],
+  ["hw3","left","врач","Gibt es einen Aufzug?","гипт эс айнэн ауфцуг","Лифт есть?"],
+  ["hw4","right","пац.","Nein, leider nicht. Ich muss jeden Tag viele Treppen steigen.","найн, ляйдэа нихьт. ихь мус йэдэн так филе трэппэн штайгэн","Нет, к сожалению. Каждый день приходится много ходить по лестнице."],
+  ["hw5","left","врач","Wer hilft Ihnen nach der Operation?","вэа хильфт инэн нах дэа опэрацьон","Кто Вам поможет после операции?"],
+  ["hw6","right","пац.","Mein Sohn wohnt im selben Haus.","майн зон вонт им зэльбэн хаус","Мой сын живёт в том же доме."],
+  ["hw7","left","врач","Sehr gut. Können Sie zu Hause die Beine hochlegen?","зэа гут. кённэн зи цу хаузэ ди байнэ хохлегэн","Отлично. Вы можете дома держать ноги повыше?"],
+  ["hw8","right","пац.","Ja, im Wohnzimmer habe ich ein großes Sofa.","я, им вонциммэр хабэ ихь айн гросэс зофа","Да, в гостиной у меня большой диван."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
