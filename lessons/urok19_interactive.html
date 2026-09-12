@@ -106,6 +106,24 @@
   .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
   .pair button.play { width:30px; height:30px; font-size:13px; }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
 
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
@@ -123,9 +141,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -297,8 +312,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · УРОВЕНЬ A2 · урок 3</div>
   <h1>Урок 19. Präteritum: war, hatte и модальные</h1>
-  <p class="lede">Долг с урока 12 — я обещал и возвращаюсь. Там мы выучили Perfekt для разговора о прошлом, но с оговоркой: <b>есть слова, которые в разговоре так не употребляют</b>. Сказать <i>Ich bin gewesen</i> формально можно, но живой немец скажет <i>Ich war</i>. Сегодня разбираем именно эту группу — и она вся про анамнез. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Долг с урока 12 — я обещал и возвращаюсь. Там мы выучили Perfekt для разговора о прошлом, но с оговоркой: <b>есть слова, которые в разговоре так не употребляют</b>. Сказать <i>Ich bin gewesen</i> формально можно, но живой немец скажет <i>Ich war</i>. Сегодня разбираем именно эту группу — и она вся про анамнез. А в конце — язык выписки, где Präteritum главный. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <div class="toc">
     <b>Что в уроке</b>
@@ -310,21 +325,23 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <li><a href="#s5">⚠️ konnte или könnte</a></li>
       <li><a href="#s6">Как это устроено</a></li>
       <li><a href="#s7">⭐ Что когда употреблять</a></li>
-      <li><a href="#s8">Анамнез в прошедшем</a></li>
-      <li><a href="#s9">Präteritum в Arztbrief</a></li>
-      <li><a href="#s10">Диалог: сбор анамнеза</a></li>
-      <li><a href="#s11">Домашка</a></li>
+      <li><a href="#s8">Ещё четыре: gab, wusste, dachte, fand</a></li>
+      <li><a href="#s9">Анамнез в прошедшем</a></li>
+      <li><a href="#s10">Präteritum в Arztbrief</a></li>
+      <li><a href="#s11">Частые ошибки</a></li>
+      <li><a href="#s12">Диалоги</a></li>
+      <li><a href="#s13">Домашка</a></li>
     </ol>
   </div>
 
   <section class="block" id="s1">
     <h2><span class="num">1</span> ⚠️ Зачем нужно второе прошедшее время</h2>
     <div class="link-box">
-      🔗 <b>Возвращаемся к уроку 12.</b> Там я сказал: в разговоре немцы используют Perfekt, а Präteritum живёт в книгах и отчётах — «из него в речи берут только <i>war</i> и <i>hatte</i>, разберём позже». Вот это «позже» и наступило.
+      🔗 <b>Возвращаемся к уроку 12.</b> Там я сказал: в разговоре немцы используют Perfekt, а Präteritum живёт в книгах и отчётах — «из него в речи берут только <i>war</i> и <i>hatte</i>». В уроке 12 ты их уже встретил, сегодня разбираем всю группу целиком.
     </div>
     <div class="warn-box">
       <span class="big">Для этих слов правило переворачивается</span>
-      У <b>sein</b>, <b>haben</b> и <b>модальных глаголов</b> форма Perfekt в живой речи звучит тяжело и book-ish. Немцы вместо неё говорят Präteritum. Послушай обе пары подряд — разница слышна сразу:
+      У <b>sein</b>, <b>haben</b> и <b>модальных глаголов</b> форма Perfekt в живой речи звучит тяжело и книжно. Немцы вместо неё говорят Präteritum. Послушай обе пары подряд — разница слышна сразу:
     </div>
     <div class="pairs" id="intro"></div>
     <div class="grammar-box" style="margin-top:14px">
@@ -375,7 +392,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <h2><span class="num">6</span> Как это устроено — одно правило на всех</h2>
     <div class="grammar-box">
       Схема простая: <b class="hl">основа + te + окончание</b>. И самое приятное — <b>ich и er/sie/es всегда одинаковые</b>, окончания у них нет вообще.<br><br>
-      Поэтому таблицу можно не зубрить: помнишь одну форму — достаешь остальные.
+      Поэтому таблицу можно не зубрить: помнишь одну форму — достаёшь остальные.
     </div>
     <table class="casetab">
       <tr><th>лицо</th><th>окончание</th><th>пример (können)</th></tr>
@@ -393,44 +410,80 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <h2><span class="num">7</span> ⭐ Что когда употреблять — короткое правило</h2>
     <div class="grammar-box">
       Чтобы не путаться, держи в голове ровно это:<br><br>
-      <b class="hl">war, hatte, модальные</b> → в разговоре <b>Präteritum</b>. Всегда.<br>
-      <b class="hl">все остальные глаголы</b> → в разговоре <b>Perfekt</b> (урок 12), в письменном тексте — Präteritum (раздел 9).<br><br>
+      <b class="hl">war, hatte, модальные</b> (и четыре слова из раздела 8) → в разговоре <b>Präteritum</b>.<br>
+      <b class="hl">все остальные глаголы</b> → в разговоре <b>Perfekt</b> (урок 12), в письменном тексте — Präteritum (раздел 10).<br><br>
       То есть в одном предложении они спокойно уживаются: <i>Ich <b>war</b> beim Arzt und <b>habe</b> Tabletten <b>bekommen</b>.</i>
     </div>
     <div class="card-list" id="usage"></div>
   </section>
 
   <section class="block" id="s8">
-    <h2><span class="num">8</span> Анамнез в прошедшем — твой рабочий блок</h2>
+    <h2><span class="num">8</span> Ещё четыре, которые и в речи идут в Präteritum</h2>
+    <div class="grammar-box">
+      Кроме war, hatte и модальных, немцы в разговоре почти всегда говорят Präteritum ещё у нескольких частых глаголов. Самое нужное врачу — <b class="hl">es gab</b> («было, имелось»): <i>Es gab keine Komplikationen</i> — «осложнений не было».
+    </div>
+    <div class="grid2" id="mehr"></div>
+    <div class="card-list" id="mehrEx" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Анамнез в прошедшем — твой рабочий блок</h2>
     <div class="link-box">
       🔗 <b>Вот ради чего урок.</b> Сбор анамнеза — это почти целиком разговор о прошлом, и почти все ключевые вопросы строятся на <i>war</i>, <i>hatte</i> и модальных. «Как долго было?», «были ли Вы у врача?», «могли ли спать?», «должны ли были принимать?» — всё здесь.
+    </div>
+    <div class="warn-box">
+      <span class="big">Ловушка из урока 12 никуда не делась: seit</span>
+      Если болит <b>до сих пор</b> — настоящее время: <i>Ich <b>habe</b> seit drei Wochen Schmerzen</i>. Если прошло — Präteritum и <b>lang</b>: <i>Ich <b>hatte</b> drei Wochen lang Schmerzen</i>. «Hatte … seit» — ошибка.
     </div>
     <div class="card-list" id="anamnese"></div>
   </section>
 
-  <section class="block" id="s9">
-    <h2><span class="num">9</span> Präteritum в письме — язык выписки</h2>
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> Präteritum в письме — язык выписки</h2>
     <div class="grammar-box">
       А вот в <b>Arztbrief</b> (врачебном письме, выписке) Präteritum используется <b class="hl">для всех глаголов подряд</b> — это стандартный письменный стиль. Тебе это понадобится на Fachsprachprüfung, где надо писать заключение.<br><br>
-      Пока просто посмотри, как это выглядит — подробно разберём, когда дойдём до документации.
+      Обрати внимание на <i>wurde entlassen</i> — «был выписан»: это страдательный залог в Präteritum, в выписках он на каждом шагу.
     </div>
     <div class="card-list" id="brief"></div>
-  </section>
-
-  <section class="block" id="s10">
-    <h2><span class="num">10</span> Диалог: сбор анамнеза</h2>
-    <p class="desc">Посчитай, сколько раз здесь звучат war, hatte и модальные. Ты слева, пациент — Yannick — справа.</p>
-    <div class="dialogue" id="dialog"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Готовые обороты выписки</b>, которые на экзамене ждут почти дословно: <i>verlief komplikationslos</i> (прошло без осложнений), <i>regelrecht</i> (без особенностей, в норме), <i>wurde entlassen</i> (выписан), <i>führten … durch</i> (провели). Твоя ЭВЛО по-немецки — <i>endovenöse Lasertherapie</i>.
+    </div>
+    <div class="card-list" id="brief2"></div>
   </section>
 
   <section class="block" id="s11">
-    <h2><span class="num">11</span> Домашка</h2>
+    <h2><span class="num">11</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ich könnte nicht schlafen. (= не мог)</span><span class="good">Ich konnte nicht schlafen.</span><span class="why">без точек — прошлое, с точками — «мог бы»</span></div>
+      <div class="err-row"><span class="bad">Er waren krank.</span><span class="good">Er war krank.</span><span class="why">er = ich-форма, без окончания</span></div>
+      <div class="err-row"><span class="bad">Ich müsste Tabletten nehmen. (= пришлось)</span><span class="good">Ich musste Tabletten nehmen.</span><span class="why">в прошедшем умляут исчезает</span></div>
+      <div class="err-row"><span class="bad">Ich hatte seit drei Wochen Schmerzen. (болит и сейчас)</span><span class="good">Ich habe seit drei Wochen Schmerzen.</span><span class="why">seit + до сих пор → настоящее время</span></div>
+      <div class="err-row"><span class="bad">Ich habe nicht schlafen gekonnt.</span><span class="good">Ich konnte nicht schlafen.</span><span class="why">модальные в речи — Präteritum</span></div>
+      <div class="err-row"><span class="bad">Gestern ich war beim Arzt.</span><span class="good">Gestern war ich beim Arzt.</span><span class="why">глагол — на втором месте</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Диалоги</h2>
+    <div class="desc">Посчитай, сколько раз здесь звучат war, hatte и модальные. Пациента и Григория озвучивает Yannick.</div>
+    <h3 class="dlg-title">Сбор анамнеза</h3>
+    <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Григорий рассказывает о прошлой работе</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">Прошлая операция на венах</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Проспрягай вслух <b>war</b> и <b>hatte</b> целиком. Проверь себя: какие два лица звучат одинаково и почему?</li>
         <li>Поставь в прошедшее: <i>Ich kann nicht schlafen</i> · <i>Er muss Tabletten nehmen</i> · <i>Sie darf nicht aufstehen</i> · <i>Wir wollen operieren</i>.</li>
         <li><b>konnte</b> или <b>könnte</b>? «Я не мог прийти» и «я мог бы прийти». Скажи оба вслух, поймай разницу.</li>
-        <li>Собери анамнез вслух: спроси пациента, как долго были боли, был ли он у врача, мог ли спать, должен ли был принимать лекарства.</li>
+        <li>Переведи: «Боли уже три недели» и «Три недели были боли, сейчас прошли» (seit / lang).</li>
+        <li>Собери анамнез вслух: спроси пациента, как долго были боли, был ли он у врача, мог ли спать, должен ли был принимать лекарства, были ли осложнения.</li>
+        <li>Напиши три фразы выписки после своей ЭВЛО: провели, прошло без осложнений, выписан.</li>
         <li>Расскажи про свой вчерашний день пятью предложениями, смешивая оба времени: где <b>был</b> (Präteritum) и что <b>делал</b> (Perfekt).</li>
       </ol>
     </div>
@@ -990,11 +1043,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · уровень A2 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · уровень A2 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"i1": "../zvuk/urok19/i1.mp3", "i2": "../zvuk/urok19/i2.mp3", "i3": "../zvuk/urok19/i3.mp3", "i4": "../zvuk/urok19/i4.mp3", "w1": "../zvuk/urok19/w1.mp3", "w2": "../zvuk/urok19/w2.mp3", "w3": "../zvuk/urok19/w3.mp3", "w4": "../zvuk/urok19/w4.mp3", "w5": "../zvuk/urok19/w5.mp3", "w6": "../zvuk/urok19/w6.mp3", "h1": "../zvuk/urok19/h1.mp3", "h2": "../zvuk/urok19/h2.mp3", "h3": "../zvuk/urok19/h3.mp3", "h4": "../zvuk/urok19/h4.mp3", "h5": "../zvuk/urok19/h5.mp3", "h6": "../zvuk/urok19/h6.mp3", "m_koennen": "../zvuk/urok19/m_koennen.mp3", "m_muessen": "../zvuk/urok19/m_muessen.mp3", "m_duerfen": "../zvuk/urok19/m_duerfen.mp3", "m_wollen": "../zvuk/urok19/m_wollen.mp3", "m_sollen": "../zvuk/urok19/m_sollen.mp3", "m_moegen": "../zvuk/urok19/m_moegen.mp3", "k1": "../zvuk/urok19/k1.mp3", "k2": "../zvuk/urok19/k2.mp3", "r1": "../zvuk/urok19/r1.mp3", "r2": "../zvuk/urok19/r2.mp3", "r3": "../zvuk/urok19/r3.mp3", "r4": "../zvuk/urok19/r4.mp3", "u1": "../zvuk/urok19/u1.mp3", "u2": "../zvuk/urok19/u2.mp3", "a1": "../zvuk/urok19/a1.mp3", "a2": "../zvuk/urok19/a2.mp3", "a3": "../zvuk/urok19/a3.mp3", "a4": "../zvuk/urok19/a4.mp3", "a5": "../zvuk/urok19/a5.mp3", "a6": "../zvuk/urok19/a6.mp3", "a7": "../zvuk/urok19/a7.mp3", "a8": "../zvuk/urok19/a8.mp3", "a9": "../zvuk/urok19/a9.mp3", "a10": "../zvuk/urok19/a10.mp3", "a11": "../zvuk/urok19/a11.mp3", "a12": "../zvuk/urok19/a12.mp3", "a13": "../zvuk/urok19/a13.mp3", "a14": "../zvuk/urok19/a14.mp3", "b1": "../zvuk/urok19/b1.mp3", "b2": "../zvuk/urok19/b2.mp3", "b3": "../zvuk/urok19/b3.mp3", "d1": "../zvuk/urok19/d1.mp3", "d2": "../zvuk/urok19/d2.mp3", "d3": "../zvuk/urok19/d3.mp3", "d4": "../zvuk/urok19/d4.mp3", "d5": "../zvuk/urok19/d5.mp3", "d6": "../zvuk/urok19/d6.mp3", "d7": "../zvuk/urok19/d7.mp3", "d8": "../zvuk/urok19/d8.mp3", "d9": "../zvuk/urok19/d9.mp3", "d10": "../zvuk/urok19/d10.mp3"};
+const AUDIO = {"i1": "../zvuk/urok19/i1.mp3", "i2": "../zvuk/urok19/i2.mp3", "i3": "../zvuk/urok19/i3.mp3", "i4": "../zvuk/urok19/i4.mp3", "w1": "../zvuk/urok19/w1.mp3", "w2": "../zvuk/urok19/w2.mp3", "w3": "../zvuk/urok19/w3.mp3", "w4": "../zvuk/urok19/w4.mp3", "w5": "../zvuk/urok19/w5.mp3", "w6": "../zvuk/urok19/w6.mp3", "h1": "../zvuk/urok19/h1.mp3", "h2": "../zvuk/urok19/h2.mp3", "h3": "../zvuk/urok19/h3.mp3", "h4": "../zvuk/urok19/h4.mp3", "h5": "../zvuk/urok19/h5.mp3", "h6": "../zvuk/urok19/h6.mp3", "m_koennen": "../zvuk/urok19/m_koennen.mp3", "m_muessen": "../zvuk/urok19/m_muessen.mp3", "m_duerfen": "../zvuk/urok19/m_duerfen.mp3", "m_wollen": "../zvuk/urok19/m_wollen.mp3", "m_sollen": "../zvuk/urok19/m_sollen.mp3", "m_moegen": "../zvuk/urok19/m_moegen.mp3", "k1": "../zvuk/urok19/k1.mp3", "k2": "../zvuk/urok19/k2.mp3", "r1": "../zvuk/urok19/r1.mp3", "r2": "../zvuk/urok19/r2.mp3", "r3": "../zvuk/urok19/r3.mp3", "r4": "../zvuk/urok19/r4.mp3", "u1": "../zvuk/urok19/u1.mp3", "u2": "../zvuk/urok19/u2.mp3", "a1": "../zvuk/urok19/a1.mp3", "a3": "../zvuk/urok19/a3.mp3", "a4": "../zvuk/urok19/a4.mp3", "a5": "../zvuk/urok19/a5.mp3", "a6": "../zvuk/urok19/a6.mp3", "a7": "../zvuk/urok19/a7.mp3", "a8": "../zvuk/urok19/a8.mp3", "a9": "../zvuk/urok19/a9.mp3", "a10": "../zvuk/urok19/a10.mp3", "a11": "../zvuk/urok19/a11.mp3", "a12": "../zvuk/urok19/a12.mp3", "a13": "../zvuk/urok19/a13.mp3", "a14": "../zvuk/urok19/a14.mp3", "b1": "../zvuk/urok19/b1.mp3", "b2": "../zvuk/urok19/b2.mp3", "b3": "../zvuk/urok19/b3.mp3", "d1": "../zvuk/urok19/d1.mp3", "d3": "../zvuk/urok19/d3.mp3", "d4": "../zvuk/urok19/d4.mp3", "d7": "../zvuk/urok19/d7.mp3", "d8": "../zvuk/urok19/d8.mp3", "d9": "../zvuk/urok19/d9.mp3", "d10": "../zvuk/urok19/d10.mp3", "an2": "../zvuk/urok19/an2.mp3", "st1": "../zvuk/urok19/st1.mp3", "pr_gab": "../zvuk/urok19/pr_gab.mp3", "pr_wusste": "../zvuk/urok19/pr_wusste.mp3", "pr_dachte": "../zvuk/urok19/pr_dachte.mp3", "pr_fand": "../zvuk/urok19/pr_fand.mp3", "pg1": "../zvuk/urok19/pg1.mp3", "pg2": "../zvuk/urok19/pg2.mp3", "pg3": "../zvuk/urok19/pg3.mp3", "b4": "../zvuk/urok19/b4.mp3", "b5": "../zvuk/urok19/b5.mp3", "b6": "../zvuk/urok19/b6.mp3", "b7": "../zvuk/urok19/b7.mp3", "dn2": "../zvuk/urok19/dn2.mp3", "dn5": "../zvuk/urok19/dn5.mp3", "dn6": "../zvuk/urok19/dn6.mp3", "ar1": "../zvuk/urok19/ar1.mp3", "ar2": "../zvuk/urok19/ar2.mp3", "ar3": "../zvuk/urok19/ar3.mp3", "ar4": "../zvuk/urok19/ar4.mp3", "ar5": "../zvuk/urok19/ar5.mp3", "ar6": "../zvuk/urok19/ar6.mp3", "vo1": "../zvuk/urok19/vo1.mp3", "vo2": "../zvuk/urok19/vo2.mp3", "vo3": "../zvuk/urok19/vo3.mp3", "vo4": "../zvuk/urok19/vo4.mp3", "vo5": "../zvuk/urok19/vo5.mp3", "vo6": "../zvuk/urok19/vo6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1014,15 +1067,22 @@ window.addEventListener('load', function () {
 function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
+// слова и фразы: [id, немецкое, транскрипция, перевод]
 function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
 function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// пара из двух строк с подписями labA / labB
 function pairs(el, arr, labA, labB){ document.getElementById(el).innerHTML = arr.map(([a,b])=>`
   <div class="pair">
     <div class="prow wo"><span class="tag">${labA}</span><div class="txt"><div class="de">${a[1]}</div><div class="tr">[${a[2]}]</div><div class="ru">${a[3]}</div></div>${playBtn(a[0])}</div>
     <div class="prow wohin"><span class="tag">${labB}</span><div class="txt"><div class="de">${b[1]}</div><div class="tr">[${b[2]}]</div><div class="ru">${b[3]}</div></div>${playBtn(b[0])}</div>
   </div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
 
 pairs('intro',[
   [["i1","Ich bin in der Klinik <b>gewesen</b>.","ихь бин ин дэа клиник гэвэзэн","Я был в клинике. — так не говорят"],
@@ -1075,9 +1135,22 @@ phrases('usage',[
   ["u2","Ich <b>habe</b> gestern <b>gearbeitet</b>.","ихь хабэ гэстэрн гэарбайтэт","Я вчера работал. → Perfekt"],
 ], 'hb');
 
+words('mehr',[
+  ["pr_gab","es gibt → <b>es gab</b>","эс гипт → эс гап","есть → было, имелось"],
+  ["pr_wusste","wissen → <b>wusste</b>","виссэн → вусстэ","знать → знал"],
+  ["pr_dachte","denken → <b>dachte</b>","дэнкэн → дахтэ","думать → думал"],
+  ["pr_fand","finden → <b>fand</b>","финдэн → фант","находить, считать → находил, считал"],
+], 'sn');
+phrases('mehrEx',[
+  ["pg1","Es <b>gab</b> keine Komplikationen.","эс гап кайнэ компликацьонэн","Осложнений не было."],
+  ["pg2","Ich <b>wusste</b> das nicht.","ихь вусстэ дас нихьт","Я этого не знал."],
+  ["pg3","Ich <b>dachte</b>, das ist nichts Schlimmes.","ихь дахтэ, дас ист нихьтс шлиммэс","Я думал, ничего страшного."],
+]);
+
 phrases('anamnese',[
-  ["a1","Wie lange <b>hatten</b> Sie die Schmerzen?","ви лангэ хаттэн зи ди шмэрцэн","Как долго у Вас были боли?"],
-  ["a2","Ich <b>hatte</b> die Schmerzen seit drei Wochen.","ихь хаттэ ди шмэрцэн зайт драй вохэн","Боли у меня три недели."],
+  ["a1","Wie lange <b>hatten</b> Sie die Schmerzen?","ви лангэ хаттэн зи ди шмэрцэн","Как долго у Вас были боли? (если уже прошли)"],
+  ["an2","Ich <b>hatte</b> drei Wochen lang Schmerzen.","ихь хаттэ драй вохэн ланг шмэрцэн","У меня три недели были боли. (сейчас прошли)"],
+  ["st1","Ich <b>habe</b> seit drei Wochen Schmerzen.","ихь хабэ зайт драй вохэн шмэрцэн","У меня болит уже три недели. (и сейчас — настоящее!)"],
   ["a3","<b>Waren</b> Sie schon beim Arzt?","варэн зи шон байм арцт","Вы уже были у врача?"],
   ["a4","Ich <b>war</b> letzte Woche in der Klinik.","ихь вар лецтэ вохэ ин дэа клиник","Я был на прошлой неделе в клинике."],
   ["a5","<b>Hatten</b> Sie Fieber?","хаттэн зи фибэр","У Вас была температура?"],
@@ -1097,25 +1170,42 @@ phrases('brief',[
   ["b2","Die Untersuchung <b>zeigte</b> eine Insuffizienz.","ди унтэрзухунг цайгтэ айнэ инзуффициэнц","Обследование показало недостаточность."],
   ["b3","Wir <b>empfahlen</b> eine Kompressionstherapie.","виа эмпфалэн айнэ компрэсьонстэрапи","Мы рекомендовали компрессионную терапию."],
 ], 'sn');
+phrases('brief2',[
+  ["b7","Wir <b>führten</b> eine endovenöse Lasertherapie <b>durch</b>.","виа фюртэн айнэ эндовэнёзэ лазэатэрапи дурхь","Мы провели эндовенозную лазерную коагуляцию."],
+  ["b4","Die Operation <b>verlief</b> komplikationslos.","ди опэрацьон фэрлиф компликацьонслос","Операция прошла без осложнений."],
+  ["b6","Die Wundheilung <b>verlief</b> regelrecht.","ди вундхайлунг фэрлиф рэгэльрэхьт","Заживление раны — без особенностей."],
+  ["b5","Der Patient <b>wurde</b> am dritten Tag <b>entlassen</b>.","дэа пациэнт вурдэ ам дриттэн так энтлассэн","Пациент выписан на третий день."],
+], 'sn');
 
-const dialog = [
+dlg('dialog',[
   ["d1","left","врач","Guten Tag! Wie lange hatten Sie die Schmerzen?","гутэн так! ви лангэ хаттэн зи ди шмэрцэн","Здравствуйте! Как долго были боли?"],
-  ["d2","right","пац.","Ich hatte sie seit drei Wochen.","ихь хаттэ зи зайт драй вохэн","Они у меня уже три недели."],
+  ["dn2","right","пац.","Drei Wochen lang. Jetzt ist es etwas besser.","драй вохэн ланг. йецт ист эс этвас бэссэа","Три недели. Сейчас немного лучше."],
   ["d3","left","врач","Waren Sie deswegen schon beim Arzt?","варэн зи дэсвэгэн шон байм арцт","Вы обращались с этим к врачу?"],
   ["d4","right","пац.","Ja, ich war letzte Woche in der Klinik.","я, ихь вар лецтэ вохэ ин дэа клиник","Да, я был на прошлой неделе в клинике."],
-  ["d5","left","врач","Und was sagte man dort?","унт вас загтэ ман дорт","И что там сказали?"],
-  ["d6","right","пац.","Ich musste Tabletten nehmen, aber sie halfen nicht.","ихь мусстэ таблеттэн нэмэн, абэр зи хальфэн нихьт","Мне пришлось принимать таблетки, но они не помогли."],
+  ["dn5","left","врач","Und was hat man Ihnen dort gesagt?","унт вас хат ман инэн дорт гэзагт","И что Вам там сказали? (sagen — Perfekt)"],
+  ["dn6","right","пац.","Ich musste Tabletten nehmen, aber sie haben nicht geholfen.","ихь мусстэ таблеттэн нэмэн, абэа зи хабэн нихьт гэхольфэн","Мне пришлось принимать таблетки, но они не помогли."],
   ["d7","left","врач","Konnten Sie nachts schlafen?","коннтэн зи нахьтс шлафэн","Вы могли спать по ночам?"],
   ["d8","right","пац.","Nein, ich konnte nicht schlafen. Das Bein war zu schwer.","найн, ихь коннтэ нихьт шлафэн. дас байн вар цу швэа","Нет, не мог. Нога была слишком тяжёлой."],
   ["d9","left","врач","Hatten Sie früher schon eine Thrombose?","хаттэн зи фрюэр шон айнэ тромбозэ","У Вас раньше был тромбоз?"],
   ["d10","right","пац.","Nein, das hatte ich nie.","найн, дас хаттэ ихь ни","Нет, никогда не было."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
-    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
-  </div>${playBtn(id)}</div></div>`).join('');
+]);
+dlg('dialog2',[
+  ["ar1","left","Кол.","Wo haben Sie früher gearbeitet?","во хабэн зи фрюэа гэарбайтэт","Где Вы раньше работали?"],
+  ["ar2","right","Гр","Ich war lange Phlebologe in einer Klinik in Russland.","ихь вар лангэ флеболёгэ ин айнэа клиник ин руссланд","Я долго был флебологом в клинике в России."],
+  ["ar3","left","Кол.","Hatten Sie viele Patienten?","хаттэн зи филе пациэнтэн","У Вас было много пациентов?"],
+  ["ar4","right","Гр","Ja, sehr viele. Ich musste oft bis spät arbeiten.","я, зэа филе. ихь мусстэ офт бис шпэт арбайтэн","Да, очень много. Часто приходилось работать допоздна."],
+  ["ar5","left","Кол.","Und warum wollten Sie nach Deutschland?","унт варум волльтэн зи нах дойчланд","А почему Вы захотели в Германию?"],
+  ["ar6","right","Гр","Ich wollte neue Methoden kennenlernen.","ихь волльтэ ноэ мэтодэн кэннэнлернэн","Я хотел узнать новые методы."],
+]);
+dlg('dialog3',[
+  ["vo1","left","врач","Hatten Sie schon eine Venenoperation?","хаттэн зи шон айнэ вэнэнопэрацьон","У Вас уже была операция на венах?"],
+  ["vo2","right","пац.","Ja, vor fünf Jahren. Das war am linken Bein.","я, фоа фюнф ярэн. дас вар ам линкэн байн","Да, пять лет назад. На левой ноге."],
+  ["vo3","left","врач","Gab es Komplikationen?","гап эс компликацьонэн","Были осложнения?"],
+  ["vo4","right","пац.","Nein, es gab keine. Aber ich musste lange Strümpfe tragen.","найн, эс гап кайнэ. абэа ихь мусстэ лангэ штрюмпфэ трагэн","Нет, не было. Но пришлось долго носить чулки."],
+  ["vo5","left","врач","Und durften Sie danach Sport machen?","унт дурфтэн зи данах шпорт махэн","А спортом потом можно было заниматься?"],
+  ["vo6","right","пац.","Nach vier Wochen durfte ich wieder joggen.","нах фиа вохэн дурфтэ ихь видэа джоггэн","Через четыре недели мне снова разрешили бегать."],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
