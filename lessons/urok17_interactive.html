@@ -106,6 +106,24 @@
   .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
   .pair button.play { width:30px; height:30px; font-size:13px; }
 </style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
 
 <style id="backbar-css">
   .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
@@ -123,9 +141,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-<!--ТЕМА-JS-START-->
-<script src="../tema.js"></script>
-<!--ТЕМА-JS-END-->
 
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -297,8 +312,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <div class="lp">
   <div class="eyebrow">Курс немецкого · Григорий · УРОВЕНЬ A2 · урок 1</div>
   <h1>Урок 17. Куда? — Wohin? + Akkusativ</h1>
-  <p class="lede">Первый урок уровня A2 — и он закрывает долг: в уроке 11 ты выучил <b>Wo?</b> (где) с Dativ, теперь берём вторую половину — <b>Wohin?</b> (куда) с Akkusativ. Это ядро немецкой падежной системы: девять предлогов, которые меняют падеж в зависимости от того, есть движение или нет. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
-  <div class="hint">🔊 &nbsp;= нажми и слушай — открыл урок с интернетом — дальше звук работает и без него</div>
+  <p class="lede">Первый урок уровня A2 — и он закрывает долг: в уроке 11 ты выучил <b>Wo?</b> (где) с Dativ, теперь берём вторую половину — <b>Wohin?</b> (куда) с Akkusativ. Это ядро немецкой падежной системы: девять предлогов, которые меняют падеж в зависимости от того, есть движение или нет. Плюс «откуда», дорога по клинике и команды на УЗИ вен. У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
 
   <div class="toc">
     <b>Что в уроке</b>
@@ -311,8 +326,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <li><a href="#s6">⚠️ Глаголы-близнецы</a></li>
       <li><a href="#s7">Команды «куда» на осмотре</a></li>
       <li><a href="#s8">⚠️ Предлоги-однолюбы</a></li>
-      <li><a href="#s9">Диалог: маршрут пациента</a></li>
-      <li><a href="#s10">Домашка</a></li>
+      <li><a href="#s9">Wo? Wohin? Woher? — вся тройка</a></li>
+      <li><a href="#s10">Как пройти: направления</a></li>
+      <li><a href="#s11">Частые ошибки</a></li>
+      <li><a href="#s12">Диалоги</a></li>
+      <li><a href="#s13">Домашка</a></li>
     </ol>
   </div>
 
@@ -384,7 +402,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       <b>stehen</b> (стоять) → <b class="hl">stellen</b> (ставить)<br>
       <b>liegen</b> (лежать) → <b class="hl">legen</b> (класть)<br>
       <b>sitzen</b> (сидеть) → <b class="hl">setzen</b> (сажать, садиться)<br><br>
-      Логика железная: <b>первый глагол = состояние</b> (никто ничего не делает, предмет просто есть) → Dativ. <b>Второй = действие</b> (кто-то что-то перемещает) → Akkusativ. Если в предложении есть тот, кто действует, — бери второй глагол.
+      Логика железная: <b>первый глагол = состояние</b> (никто ничего не делает, предмет просто есть) → Dativ. <b>Второй = действие</b> (кто-то что-то перемещает) → Akkusativ. Если в предложении есть тот, кто действует, — бери второй глагол. <i>hängen</i> — исключение: один глагол на обе роли, решает только падеж.
     </div>
     <div class="grid2" id="verbs"></div>
     <div class="pairs" id="verbPairs" style="margin-top:12px"></div>
@@ -394,9 +412,13 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <h2><span class="num">7</span> Команды «куда» на осмотре — рабочий блок</h2>
     <div class="link-box">
       🔗 <b>Здесь тема становится твоей рабочей.</b> Почти каждая команда на приёме — это движение, то есть <b>Akkusativ</b>: «лягте НА кушетку», «сядьте НА стул», «встаньте НА весы», «положите ногу НА подушку». Форма команды — Imperativ из урока 13, падеж — новый.<br><br>
-      Обрати внимание на <i>Legen Sie <b>sich</b></i> и <i>Setzen Sie <b>sich</b></i>: это возвратные глаголы (тема A2, разберём отдельно) — «положите СЕБЯ», «посадите СЕБЯ». Пока просто запомни как готовую фразу.
+      Обрати внимание на <i>Legen Sie <b>sich</b></i> и <i>Setzen Sie <b>sich</b></i>: это возвратные глаголы (урок 18) — «положите СЕБЯ», «посадите СЕБЯ». Пока просто запомни как готовую фразу.
     </div>
     <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Дуплекс вен ног</b> делают стоя: пациента ставят на ступеньку и разворачивают спиной к врачу. Малую подкожную вену удобнее смотреть лёжа на животе. Все эти команды — «куда», значит Akkusativ. Кроме <i>zur Wand</i>: <i>zu</i> — однолюб, всегда Dativ (раздел 8).
+    </div>
+    <div class="card-list" id="med2"></div>
   </section>
 
   <section class="block" id="s8">
@@ -415,19 +437,61 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   </section>
 
   <section class="block" id="s9">
-    <h2><span class="num">9</span> Диалог: маршрут пациента по клинике</h2>
-    <p class="desc">Весь разговор — сплошное «куда». Ты слева, пациент — Yannick — справа.</p>
-    <div class="dialogue" id="dialog"></div>
+    <h2><span class="num">9</span> Wo? Wohin? Woher? — вся тройка</h2>
+    <div class="grammar-box">
+      К «где» и «куда» добавляется третий вопрос — <b class="hl">Woher?</b> (откуда). Ответ на него — предлоги <b>aus</b> (из здания, из страны) и <b>von</b> (от человека, с места), оба всегда с <b>Dativ</b>. <i>von dem → <b>vom</b></i>.
+    </div>
+    <div class="tabwrap"><table class="ftab">
+      <tr><th></th><th>клиника</th><th>врач</th><th>дом</th></tr>
+      <tr><td>Wo? — где</td><td>in der Klinik</td><td>beim Arzt</td><td>zu Hause</td></tr>
+      <tr><td>Wohin? — куда</td><td>in die Klinik</td><td>zum Arzt</td><td>nach Hause</td></tr>
+      <tr><td>Woher? — откуда</td><td>aus der Klinik</td><td>vom Arzt</td><td>von zu Hause</td></tr>
+    </table></div>
+    <div class="card-list" id="woher"></div>
   </section>
 
   <section class="block" id="s10">
-    <h2><span class="num">10</span> Домашка</h2>
+    <h2><span class="num">10</span> Как пройти: направления</h2>
+    <div class="grammar-box">
+      В огромной немецкой клинике тебя будут спрашивать дорогу с первого дня. Здесь <b>nach</b> значит «в сторону»: <i>nach links, nach rechts, nach oben</i>. А этаж — это «куда», значит Akkusativ: <i>in <b>den</b> dritten Stock</i> (и помни сдвиг этажей из урока 15).
+    </div>
+    <div class="grid2" id="richtung"></div>
+    <div class="card-list" id="weg" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ich gehe in der Klinik.</span><span class="good">Ich gehe in die Klinik.</span><span class="why">движение → Akkusativ</span></div>
+      <div class="err-row"><span class="bad">Ich lege das Buch auf dem Tisch.</span><span class="good">Ich lege das Buch auf den Tisch.</span><span class="why">legen = куда → Akkusativ</span></div>
+      <div class="err-row"><span class="bad">Das Buch legt auf dem Tisch.</span><span class="good">Das Buch liegt auf dem Tisch.</span><span class="why">лежит = liegen, кладу = legen</span></div>
+      <div class="err-row"><span class="bad">Ich gehe zu Hause.</span><span class="good">Ich gehe nach Hause.</span><span class="why">домой = nach Hause</span></div>
+      <div class="err-row"><span class="bad">Ich gehe zu die Apotheke.</span><span class="good">Ich gehe zur Apotheke.</span><span class="why">zu — всегда Dativ: zu der = zur</span></div>
+      <div class="err-row"><span class="bad">Ich bin ins Zimmer.</span><span class="good">Ich bin im Zimmer.</span><span class="why">где → im, куда → ins</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Диалоги</h2>
+    <div class="desc">Весь разговор — сплошное «куда». Пациента и Григория озвучивает Yannick.</div>
+    <h3 class="dlg-title">Маршрут пациента по клинике</h3>
+    <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Как пройти в лабораторию</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <h3 class="dlg-title">После переезда: расставляем мебель</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Домашка</h2>
     <div class="hw">
       <ol>
         <li>Девять предлогов-переключателей вслух по памяти. Не подглядывая в урок 11.</li>
         <li>Сделай из «где» — «куда»: <i>Ich bin in der Praxis</i> → ? · <i>Das Glas steht auf dem Tisch</i> → ? · <i>Der Patient sitzt auf dem Stuhl</i> → ?</li>
         <li>Выбери глагол: «Я кладу книгу на стол» — <i>lege</i> или <i>liege</i>? «Книга лежит на столе» — ? Объясни почему.</li>
+        <li>Заполни тройку для «аптеки»: где / куда / откуда.</li>
         <li>Проведи пациента по клинике вслух: заходите в кабинет → садитесь на стул → ложитесь на кушетку → положите ногу на подушку → идите на УЗИ.</li>
+        <li>Объясни дорогу в лабораторию: на лифте в <i>dritten Stock</i>, налево, последняя дверь.</li>
         <li>Скажи про себя два предложения: где ты сейчас и куда пойдёшь после работы. Следи за падежом.</li>
       </ol>
     </div>
@@ -987,11 +1051,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · первый урок уровня A2 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · первый урок уровня A2 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
 </div>
 
 <script>
-const AUDIO = {"pa1": "../zvuk/urok17/pa1.mp3", "pa2": "../zvuk/urok17/pa2.mp3", "pb1": "../zvuk/urok17/pb1.mp3", "pb2": "../zvuk/urok17/pb2.mp3", "pc1": "../zvuk/urok17/pc1.mp3", "pc2": "../zvuk/urok17/pc2.mp3", "pd1": "../zvuk/urok17/pd1.mp3", "pd2": "../zvuk/urok17/pd2.mp3", "pr_in": "../zvuk/urok17/pr_in.mp3", "pr_auf": "../zvuk/urok17/pr_auf.mp3", "pr_an": "../zvuk/urok17/pr_an.mp3", "pr_ueber": "../zvuk/urok17/pr_ueber.mp3", "pr_unter": "../zvuk/urok17/pr_unter.mp3", "pr_vor": "../zvuk/urok17/pr_vor.mp3", "pr_hinter": "../zvuk/urok17/pr_hinter.mp3", "pr_neben": "../zvuk/urok17/pr_neben.mp3", "pr_zwischen": "../zvuk/urok17/pr_zwischen.mp3", "ak_m": "../zvuk/urok17/ak_m.mp3", "ak_f": "../zvuk/urok17/ak_f.mp3", "ak_n": "../zvuk/urok17/ak_n.mp3", "ak_pl": "../zvuk/urok17/ak_pl.mp3", "v1": "../zvuk/urok17/v1.mp3", "v2": "../zvuk/urok17/v2.mp3", "v3": "../zvuk/urok17/v3.mp3", "v4": "../zvuk/urok17/v4.mp3", "v5": "../zvuk/urok17/v5.mp3", "g1": "../zvuk/urok17/g1.mp3", "g2": "../zvuk/urok17/g2.mp3", "g3": "../zvuk/urok17/g3.mp3", "g4": "../zvuk/urok17/g4.mp3", "g5": "../zvuk/urok17/g5.mp3", "g6": "../zvuk/urok17/g6.mp3", "gp1": "../zvuk/urok17/gp1.mp3", "gp2": "../zvuk/urok17/gp2.mp3", "gp3": "../zvuk/urok17/gp3.mp3", "gp4": "../zvuk/urok17/gp4.mp3", "m1": "../zvuk/urok17/m1.mp3", "m2": "../zvuk/urok17/m2.mp3", "m3": "../zvuk/urok17/m3.mp3", "m4": "../zvuk/urok17/m4.mp3", "m5": "../zvuk/urok17/m5.mp3", "m6": "../zvuk/urok17/m6.mp3", "m7": "../zvuk/urok17/m7.mp3", "m8": "../zvuk/urok17/m8.mp3", "m9": "../zvuk/urok17/m9.mp3", "m10": "../zvuk/urok17/m10.mp3", "f1": "../zvuk/urok17/f1.mp3", "f2": "../zvuk/urok17/f2.mp3", "f3": "../zvuk/urok17/f3.mp3", "f4": "../zvuk/urok17/f4.mp3", "f5": "../zvuk/urok17/f5.mp3", "f6": "../zvuk/urok17/f6.mp3", "nh1": "../zvuk/urok17/nh1.mp3", "nh2": "../zvuk/urok17/nh2.mp3", "dl1": "../zvuk/urok17/dl1.mp3", "dl2": "../zvuk/urok17/dl2.mp3", "dl3": "../zvuk/urok17/dl3.mp3", "dl4": "../zvuk/urok17/dl4.mp3", "dl5": "../zvuk/urok17/dl5.mp3", "dl6": "../zvuk/urok17/dl6.mp3", "dl7": "../zvuk/urok17/dl7.mp3", "dl8": "../zvuk/urok17/dl8.mp3", "dl9": "../zvuk/urok17/dl9.mp3", "dl10": "../zvuk/urok17/dl10.mp3", "dl11": "../zvuk/urok17/dl11.mp3"};
+const AUDIO = {"pa1": "../zvuk/urok17/pa1.mp3", "pa2": "../zvuk/urok17/pa2.mp3", "pb1": "../zvuk/urok17/pb1.mp3", "pb2": "../zvuk/urok17/pb2.mp3", "pc1": "../zvuk/urok17/pc1.mp3", "pc2": "../zvuk/urok17/pc2.mp3", "pd1": "../zvuk/urok17/pd1.mp3", "pd2": "../zvuk/urok17/pd2.mp3", "pr_in": "../zvuk/urok17/pr_in.mp3", "pr_auf": "../zvuk/urok17/pr_auf.mp3", "pr_an": "../zvuk/urok17/pr_an.mp3", "pr_ueber": "../zvuk/urok17/pr_ueber.mp3", "pr_unter": "../zvuk/urok17/pr_unter.mp3", "pr_vor": "../zvuk/urok17/pr_vor.mp3", "pr_hinter": "../zvuk/urok17/pr_hinter.mp3", "pr_neben": "../zvuk/urok17/pr_neben.mp3", "pr_zwischen": "../zvuk/urok17/pr_zwischen.mp3", "ak_m": "../zvuk/urok17/ak_m.mp3", "ak_f": "../zvuk/urok17/ak_f.mp3", "ak_n": "../zvuk/urok17/ak_n.mp3", "ak_pl": "../zvuk/urok17/ak_pl.mp3", "v1": "../zvuk/urok17/v1.mp3", "v2": "../zvuk/urok17/v2.mp3", "v3": "../zvuk/urok17/v3.mp3", "v4": "../zvuk/urok17/v4.mp3", "v5": "../zvuk/urok17/v5.mp3", "g1": "../zvuk/urok17/g1.mp3", "g2": "../zvuk/urok17/g2.mp3", "g3": "../zvuk/urok17/g3.mp3", "g4": "../zvuk/urok17/g4.mp3", "g5": "../zvuk/urok17/g5.mp3", "g6": "../zvuk/urok17/g6.mp3", "gp1": "../zvuk/urok17/gp1.mp3", "gp2": "../zvuk/urok17/gp2.mp3", "gp3": "../zvuk/urok17/gp3.mp3", "gp4": "../zvuk/urok17/gp4.mp3", "m1": "../zvuk/urok17/m1.mp3", "m2": "../zvuk/urok17/m2.mp3", "m3": "../zvuk/urok17/m3.mp3", "m4": "../zvuk/urok17/m4.mp3", "m5": "../zvuk/urok17/m5.mp3", "m6": "../zvuk/urok17/m6.mp3", "m7": "../zvuk/urok17/m7.mp3", "m8": "../zvuk/urok17/m8.mp3", "m9": "../zvuk/urok17/m9.mp3", "m10": "../zvuk/urok17/m10.mp3", "f1": "../zvuk/urok17/f1.mp3", "f2": "../zvuk/urok17/f2.mp3", "f3": "../zvuk/urok17/f3.mp3", "f4": "../zvuk/urok17/f4.mp3", "f5": "../zvuk/urok17/f5.mp3", "f6": "../zvuk/urok17/f6.mp3", "nh1": "../zvuk/urok17/nh1.mp3", "nh2": "../zvuk/urok17/nh2.mp3", "dl1": "../zvuk/urok17/dl1.mp3", "dl2": "../zvuk/urok17/dl2.mp3", "dl3": "../zvuk/urok17/dl3.mp3", "dl4": "../zvuk/urok17/dl4.mp3", "dl5": "../zvuk/urok17/dl5.mp3", "dl6": "../zvuk/urok17/dl6.mp3", "dl7": "../zvuk/urok17/dl7.mp3", "dl8": "../zvuk/urok17/dl8.mp3", "dl9": "../zvuk/urok17/dl9.mp3", "dl10": "../zvuk/urok17/dl10.mp3", "dl11": "../zvuk/urok17/dl11.mp3", "ak1": "../zvuk/urok17/ak1.mp3", "ak2": "../zvuk/urok17/ak2.mp3", "ak3": "../zvuk/urok17/ak3.mp3", "ak4": "../zvuk/urok17/ak4.mp3", "ak5": "../zvuk/urok17/ak5.mp3", "wf1": "../zvuk/urok17/wf1.mp3", "wf2": "../zvuk/urok17/wf2.mp3", "wf3": "../zvuk/urok17/wf3.mp3", "ri_links": "../zvuk/urok17/ri_links.mp3", "ri_rechts": "../zvuk/urok17/ri_rechts.mp3", "ri_gerade": "../zvuk/urok17/ri_gerade.mp3", "ri_oben": "../zvuk/urok17/ri_oben.mp3", "ri_unten": "../zvuk/urok17/ri_unten.mp3", "ri_zurueck": "../zvuk/urok17/ri_zurueck.mp3", "rw1": "../zvuk/urok17/rw1.mp3", "rw2": "../zvuk/urok17/rw2.mp3", "rw3": "../zvuk/urok17/rw3.mp3", "rw4": "../zvuk/urok17/rw4.mp3", "wg1": "../zvuk/urok17/wg1.mp3", "wg2": "../zvuk/urok17/wg2.mp3", "wg3": "../zvuk/urok17/wg3.mp3", "wg4": "../zvuk/urok17/wg4.mp3", "wg5": "../zvuk/urok17/wg5.mp3", "wg6": "../zvuk/urok17/wg6.mp3", "wg7": "../zvuk/urok17/wg7.mp3", "mb1": "../zvuk/urok17/mb1.mp3", "mb2": "../zvuk/urok17/mb2.mp3", "mb3": "../zvuk/urok17/mb3.mp3", "mb4": "../zvuk/urok17/mb4.mp3", "mb5": "../zvuk/urok17/mb5.mp3", "mb6": "../zvuk/urok17/mb6.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1012,6 +1076,7 @@ function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Au
   if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
 function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
 
+// слова и фразы: [id, немецкое, транскрипция, перевод]
 function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
   <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
 function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
@@ -1022,6 +1087,11 @@ function pairs(el, arr){ document.getElementById(el).innerHTML = arr.map(([a,b])
     <div class="prow wo"><span class="tag">WO? · Dativ</span><div class="txt"><div class="de">${a[1]}</div><div class="tr">[${a[2]}]</div><div class="ru">${a[3]}</div></div>${playBtn(a[0])}</div>
     <div class="prow wohin"><span class="tag">WOHIN? · Akk.</span><div class="txt"><div class="de">${b[1]}</div><div class="tr">[${b[2]}]</div><div class="ru">${b[3]}</div></div>${playBtn(b[0])}</div>
   </div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
 
 pairs('pairIntro',[
   [["pa1","Ich bin <b>in der</b> Klinik.","ихь бин ин дэа клиник","Я в клинике. (нахожусь)"],
@@ -1078,7 +1148,7 @@ words('verbs',[
 ]);
 
 pairs('verbPairs',[
-  [["gp1","Das Glas <b>steht</b> auf <b>dem</b> Tisch.","дас глас штэйт ауф дэм тиш","Стакан стоит на столе."],
+  [["gp1","Das Glas <b>steht</b> auf <b>dem</b> Tisch.","дас глас штээт ауф дэм тиш","Стакан стоит на столе."],
    ["gp2","Ich <b>stelle</b> das Glas auf <b>den</b> Tisch.","ихь штэле дас глас ауф дэн тиш","Я ставлю стакан на стол."]],
 ]);
 
@@ -1093,6 +1163,13 @@ phrases('med',[
   ["m7","Wir bringen Sie <b>in den</b> Operationssaal.","виа брингэн зи ин дэн опэрацьонсзаль","Мы отвезём Вас в операционную."],
   ["m8","Gehen Sie bitte <b>zum</b> Ultraschall.","гээн зи биттэ цум ультрашаль","Пройдите, пожалуйста, на УЗИ. (zu — всегда Dativ!)"],
   ["m10","Der Patient kommt <b>in die</b> Klinik.","дэа пациэнт коммт ин ди клиник","Пациент приходит в клинику."],
+]);
+phrases('med2',[
+  ["ak1","Hängen Sie Ihre Kleidung <b>an den</b> Haken.","хэнгэн зи ирэ кляйдунг ан дэн хакэн","Повесьте одежду на крючок."],
+  ["ak2","Stellen Sie sich bitte <b>auf die</b> Stufe.","штэлен зи зихь биттэ ауф ди штуфэ","Встаньте, пожалуйста, на ступеньку. (УЗИ вен стоя)"],
+  ["ak3","Drehen Sie sich bitte <b>zur</b> Wand.","дрээн зи зихь биттэ цуа ванд","Повернитесь, пожалуйста, к стене. (zu — Dativ!)"],
+  ["ak4","Legen Sie sich <b>auf den</b> Bauch.","легэн зи зихь ауф дэн баух","Лягте на живот."],
+  ["ak5","Legen Sie sich <b>auf die</b> linke Seite.","легэн зи зихь ауф ди линкэ зайтэ","Лягте на левый бок."],
 ]);
 
 words('fixed',[
@@ -1109,7 +1186,28 @@ phrases('hause',[
   ["nh2","Ich bin <b>zu</b> Hause.","ихь бин цу хаузэ","Я дома. (нахождение)"],
 ], 'wn');
 
-const dialog = [
+phrases('woher',[
+  ["wf1","<b>Woher</b> kommen Sie?","вохэа коммэн зи","Откуда Вы (пришли)?"],
+  ["wf2","Ich komme <b>aus dem</b> Labor.","ихь коммэ аус дэм лабоа","Я из лаборатории."],
+  ["wf3","Ich komme <b>vom</b> Arzt.","ихь коммэ фом арцт","Я от врача. (von dem = vom)"],
+], 'hb');
+
+words('richtung',[
+  ["ri_links","nach <b>links</b>","нах линкс","налево"],
+  ["ri_rechts","nach <b>rechts</b>","нах рэхьтс","направо"],
+  ["ri_gerade","<b>geradeaus</b>","гэрадэаус","прямо"],
+  ["ri_oben","nach <b>oben</b>","нах обэн","наверх"],
+  ["ri_unten","nach <b>unten</b>","нах унтэн","вниз"],
+  ["ri_zurueck","<b>zurück</b>","цурюк","назад"],
+]);
+phrases('weg',[
+  ["rw1","Gehen Sie <b>geradeaus</b> und dann <b>nach links</b>.","гээн зи гэрадэаус унт дан нах линкс","Идите прямо, а потом налево."],
+  ["rw2","Fahren Sie mit dem Aufzug <b>in den</b> dritten Stock.","фарэн зи мит дэм ауфцук ин дэн дриттэн шток","Поднимитесь на лифте на третий этаж (наш четвёртый)."],
+  ["rw3","Das Labor ist ganz hinten rechts.","дас лабоа ист ганц хинтэн рэхьтс","Лаборатория в самом конце справа. (где — без движения)"],
+  ["rw4","Gehen Sie die Treppe <b>hinunter</b>.","гээн зи ди трэппэ хинунтэа","Спуститесь по лестнице."],
+]);
+
+dlg('dialog',[
   ["dl1","left","врач","Guten Tag! Kommen Sie bitte in mein Zimmer.","гутэн так! коммэн зи биттэ ин майн циммэр","Здравствуйте! Пройдите в мой кабинет."],
   ["dl2","right","пац.","Danke. Wohin soll ich mich setzen?","данкэ. вохин золь ихь михь зэцэн","Спасибо. Куда мне сесть?"],
   ["dl3","left","врач","Setzen Sie sich auf den Stuhl am Fenster.","зэцэн зи зихь ауф дэн штуль ам фэнстэр","Садитесь на стул у окна."],
@@ -1121,13 +1219,25 @@ const dialog = [
   ["dl9","left","врач","Danach schicke ich Sie zum Ultraschall im ersten Stock.","данах шикэ ихь зи цум ультрашаль им эрстэн шток","Потом направлю Вас на УЗИ на втором этаже."],
   ["dl10","right","пац.","Wie komme ich dahin?","ви коммэ ихь дахин","Как мне туда пройти?"],
   ["dl11","left","врач","Gehen Sie aus dem Zimmer nach rechts, dann die Treppe hinauf.","гээн зи аус дэм циммэр нах рэхьтс, дан ди трэппэ хинауф","Выйдите из кабинета направо, потом вверх по лестнице."],
-];
-document.getElementById('dialog').innerHTML = dialog.map(([id,side,ini,de,tr,ru])=>`
-  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
-    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
-  </div>${playBtn(id)}</div></div>`).join('');
+]);
+dlg('dialog2',[
+  ["wg1","left","пац.","Entschuldigung, wo ist das Labor?","энтшульдигунг, во ист дас лабоа","Извините, где лаборатория?"],
+  ["wg2","right","Гр","Fahren Sie mit dem Aufzug in den dritten Stock.","фарэн зи мит дэм ауфцук ин дэн дриттэн шток","Поднимитесь на лифте на третий этаж."],
+  ["wg3","left","пац.","Und dann?","унт дан","А потом?"],
+  ["wg4","right","Гр","Dann gehen Sie nach links. Das Labor ist die letzte Tür.","дан гээн зи нах линкс. дас лабоа ист ди лецтэ тюа","Потом налево. Лаборатория — последняя дверь."],
+  ["wg5","left","пац.","Und wohin gebe ich die Überweisung?","унт вохин гэбэ ихь ди юбэрвайзунг","А куда отдать направление?"],
+  ["wg6","right","Гр","Legen Sie sie in den Kasten an der Tür.","легэн зи зи ин дэн кастэн ан дэа тюа","Положите его в ящик у двери."],
+  ["wg7","left","пац.","Vielen Dank!","филен данк","Большое спасибо!"],
+]);
+dlg('dialog3',[
+  ["mb1","left","Пол","Wohin stellen wir das Sofa?","вохин штэлен виа дас зофа","Куда поставим диван?"],
+  ["mb2","right","Гр","Stell es an die Wand, neben das Fenster.","штэль эс ан ди ванд, нэбэн дас фэнстэа","Поставь к стене, рядом с окном."],
+  ["mb3","left","Пол","Und den Tisch?","унт дэн тиш","А стол?"],
+  ["mb4","right","Гр","Den Tisch stellen wir in die Mitte.","дэн тиш штэлен виа ин ди миттэ","Стол поставим в середину."],
+  ["mb5","left","Пол","Wohin hängen wir das Bild?","вохин хэнгэн виа дас бильт","Куда повесим картину?"],
+  ["mb6","right","Гр","Über das Sofa. Dann hängt es über dem Sofa. Perfekt!","юбэа дас зофа. дан хэнгт эс юбэа дэм зофа. пэрфэкт","Над диваном. Тогда она будет висеть над диваном. Идеально!"],
+]);
 </script>
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
