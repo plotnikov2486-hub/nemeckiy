@@ -224,6 +224,7 @@
     padding:7px 14px; font-size:13px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
   .lv { font-size:13px; color:var(--ink-muted); margin:6px 0 2px; }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1305,6 +1306,36 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
+<!--ИГРЫ-START-->
+<section class="игры" id="игры"></section>
+<script src="../igry.js?v=202609161408"></script>
+<script>
+/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
+   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
+(function () {
+  var корень = document.getElementById('игры');
+  if (!корень) return;
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
+  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
+
+  fetch('../words/' + файл + '.json?v=' + Date.now())
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (д) {
+      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
+      var вышло = ИГРЫ.старт({ корень: корень, слова: д, урок: файл, база: '../' });
+      if (!вышло) return;
+      var toc = document.querySelector('.toc ol');
+      if (toc) {
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#игры">🎮 Поиграем</a>';
+        toc.appendChild(li);
+      }
+    })
+    .catch(function () { корень.style.display = 'none'; });
+})();
+</script>
+<!--ИГРЫ-END-->
+
   <footer class="lp-foot">Конспект занятия Полины с Дашей · 10.09.2026 · собран из записи занятия и домашки от 11.09 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
 </div>
 

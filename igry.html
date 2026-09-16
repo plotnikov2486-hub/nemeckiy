@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Поиграем — игры по словам уроков</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5f5b">
+<style>
+
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+  .lp { min-height:100vh; }
+  .выбор { display:flex; flex-wrap:wrap; gap:8px; margin:14px 0 6px; }
+  .выбор button { font:inherit; font-size:13.5px; font-weight:600; padding:9px 15px; min-height:42px;
+    border-radius:999px; cursor:pointer; background:var(--surface); color:var(--ink);
+    border:1px solid var(--line); }
+  .выбор button.вкл { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .подзаг { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-muted);
+    font-weight:700; margin:18px 0 0; }
+</style>
+</head>
+<body>
+<div class="lp">
+  <div class="eyebrow">Немецкий</div>
+  <h1>Поиграем</h1>
+  <p class="lede">Слова из уроков, только играть, а не читать: собрать фразу, разложить по родам,
+    вставить пропущенное слово, подписать картинку. Результат сохраняется — видно, где просел.</p>
+
+  <p class="подзаг">Откуда брать слова</p>
+  <div class="выбор" id="выборРаздел"></div>
+  <div class="выбор" id="выборУрок"></div>
+
+  <section class="игры" id="игры"></section>
+
+  <footer style="margin-top:34px;color:var(--ink-faint);font-size:12.5px;line-height:1.5">
+    Игры строятся из словарей уроков сами: где слов мало, игра не появится.
+    Звук — записи из урока, а если записи нет, слово читает системный немецкий голос.
+  </footer>
+</div>
+
+<a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+
+<script src="tema.js"></script>
+<script src="igry.js?v=202609161408"></script>
+<script>
+(function () {
+  var РАЗДЕЛЫ = [
+    { код: 'claude', имя: 'Мои уроки', префикс: 'urok', подпись: 'Урок ' },
+    { код: 'dasha',  имя: 'Гриша с Дашей', префикс: 'dasha', подпись: 'Занятие ' },
+    { код: 'polya',  имя: 'Полина с Дашей', префикс: 'polya', подпись: 'Занятие ' },
+    { код: 'сцены',  имя: 'Картинки' }
+  ];
+  var СЦЕНЫ = [{ код: 'кухня', имя: 'Кухня' }, { код: 'комната', имя: 'Комната' }];
+
+  var индекс = {}, раздел = localStorage.getItem('nemeckiy_igry_раздел') || 'claude';
+  var поле = document.getElementById('игры');
+
+  function кнопки(куда, список, текущий, клик) {
+    куда.innerHTML = список.map(function (э) {
+      return '<button data-к="' + э.код + '"' + (э.код === текущий ? ' class="вкл"' : '') + '>' +
+        э.имя + '</button>';
+    }).join('');
+    Array.prototype.forEach.call(куда.querySelectorAll('button'), function (к) {
+      к.onclick = function () { клик(к.getAttribute('data-к')); };
+    });
+  }
+
+  function показатьРазделы() {
+    кнопки(document.getElementById('выборРаздел'), РАЗДЕЛЫ, раздел, function (к) {
+      раздел = к;
+      try { localStorage.setItem('nemeckiy_igry_раздел', к); } catch (e) {}
+      показатьРазделы(); показатьУроки();
+    });
+  }
+
+  function показатьУроки() {
+    var куда = document.getElementById('выборУрок');
+    if (раздел === 'сцены') {
+      var сцена = localStorage.getItem('nemeckiy_igry_сцена') || 'кухня';
+      кнопки(куда, СЦЕНЫ, сцена, function (к) {
+        try { localStorage.setItem('nemeckiy_igry_сцена', к); } catch (e) {}
+        показатьУроки();
+      });
+      ИГРЫ.старт({ корень: поле, слова: [], урок: '', база: '', сцена: сцена });
+      return;
+    }
+    var р = null;
+    for (var i = 0; i < РАЗДЕЛЫ.length; i++) if (РАЗДЕЛЫ[i].код === раздел) р = РАЗДЕЛЫ[i];
+    var номера = индекс[раздел] || [];
+    var текущий = localStorage.getItem('nemeckiy_igry_урок_' + раздел) || String(номера[номера.length - 1]);
+    if (номера.indexOf(+текущий) < 0) текущий = String(номера[номера.length - 1]);
+    кнопки(куда, номера.map(function (н) {
+      return { код: String(н), имя: р.подпись + н };
+    }), текущий, function (к) {
+      try { localStorage.setItem('nemeckiy_igry_урок_' + раздел, к); } catch (e) {}
+      показатьУроки();
+    });
+    грузить(р.префикс + текущий);
+  }
+
+  function грузить(файл) {
+    очистить();
+    fetch('words/' + файл + '.json?v=' + Date.now())
+      .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+      .then(function (д) {
+        var вышло = ИГРЫ.старт({ корень: поле, слова: д, урок: файл, база: '' });
+        if (!вышло) поле.innerHTML = '<p class="lede">В этом уроке слишком мало слов для игр.</p>';
+        поле.style.display = '';
+      })
+      .catch(function () {
+        поле.style.display = '';
+        поле.innerHTML = '<p class="lede">Не получилось загрузить слова этого урока.</p>';
+      });
+  }
+  function очистить() { поле.innerHTML = ''; поле.style.display = ''; }
+
+  fetch('words/индекс.json?v=' + Date.now())
+    .then(function (r) { return r.json(); })
+    .then(function (д) { индекс = д; показатьРазделы(); показатьУроки(); })
+    .catch(function () {
+      document.getElementById('выборРаздел').innerHTML =
+        '<p class="lede">Не получилось загрузить список уроков.</p>';
+    });
+})();
+</script>
+</body>
+</html>
