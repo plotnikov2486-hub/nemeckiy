@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Спряжения — особые и модальные глаголы</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5f5b">
+<style>
+
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+  .lp { min-height:100vh; }
+  .вкладки { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px; }
+  .вкладки button { font:inherit; font-size:13.5px; font-weight:600; padding:9px 15px; min-height:42px;
+    border-radius:999px; cursor:pointer; background:var(--surface); color:var(--ink); border:1px solid var(--line); }
+  .вкладки button.вкл { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .режимы { display:grid; grid-template-columns:repeat(4,1fr); gap:7px; margin:14px 0 18px; }
+  .режимы button { font:inherit; font-size:12.5px; font-weight:700; padding:11px 4px; min-height:62px;
+    border-radius:14px; cursor:pointer; background:var(--surface); color:var(--ink); border:1px solid var(--line);
+    display:flex; flex-direction:column; align-items:center; gap:5px; line-height:1.15; }
+  .режимы button b { font-size:19px; font-weight:400; }
+  .режимы button.вкл { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .карта { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 14px;
+    box-shadow:var(--shadow); margin-bottom:14px; }
+  .карта h2 { font-size:18px; margin:0 0 8px; font-family:Georgia,"Iowan Old Style",serif; }
+  .правило { font-size:14px; line-height:1.55; margin:0 0 6px; padding-left:20px; }
+  .правило li { margin-bottom:7px; }
+  .обёртка { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:0 -14px; padding:0 14px; }
+  table.спр { border-collapse:collapse; width:100%; min-width:520px; font-size:14.5px; }
+  table.спр th, table.спр td { border-bottom:1px solid var(--line); padding:9px 8px; text-align:left; }
+  table.спр th { font-weight:700; font-size:13px; color:var(--ink-muted); white-space:nowrap; }
+  table.спр td.лицо { font-weight:700; white-space:nowrap; color:var(--ink-muted); }
+  table.спр td.форма { font-family:Georgia,"Iowan Old Style",serif; cursor:pointer; }
+  table.спр td.форма:active { background:var(--surface-2); }
+  table.спр td.форма .хв { color:var(--accent); font-weight:700; }
+  table.спр tr.особая td { background:rgba(201,122,43,.10); }
+  .пояс { font-size:13px; color:var(--ink-muted); margin:10px 0 0; line-height:1.5; }
+  .чипсы { display:flex; flex-wrap:wrap; gap:7px; margin-bottom:14px; }
+  .чипсы button { font:inherit; font-size:14px; font-weight:700; padding:9px 14px; min-height:42px; border-radius:999px;
+    cursor:pointer; background:var(--surface); color:var(--ink); border:1px solid var(--line);
+    font-family:Georgia,"Iowan Old Style",serif; }
+  .чипсы button.вкл { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .чипсы button i { font-style:normal; font-size:11.5px; font-family:inherit; opacity:.75; margin-left:5px; }
+  .кн { font:inherit; font-size:15px; font-weight:700; padding:13px 20px; border-radius:13px; cursor:pointer;
+    border:none; background:var(--accent); color:var(--accent-ink); min-height:48px; }
+  .кн.тихая { background:transparent; color:var(--ink); border:1px solid var(--line); font-weight:600; }
+  .низ { display:flex; gap:9px; flex-wrap:wrap; margin-top:12px; }
+  .поле { font:inherit; font-size:16px; font-family:Georgia,"Iowan Old Style",serif; padding:9px 11px; min-height:44px;
+    width:100%; border-radius:11px; border:1.5px solid var(--line); background:var(--surface-2); color:var(--ink); }
+  .поле.верно { border-color:var(--accent); background:rgba(31,95,91,.10); }
+  .поле.мимо { border-color:var(--warn); background:var(--warn-bg); color:var(--warn); }
+  .умляуты { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 2px; }
+  .умляуты button { font:inherit; font-size:15px; font-weight:700; width:44px; height:42px; border-radius:11px;
+    cursor:pointer; background:var(--surface-2); color:var(--ink); border:1px solid var(--line); }
+  .итог { text-align:center; padding:8px 0 4px; }
+  .итог .число { font-size:40px; font-weight:900; color:var(--accent); line-height:1.1; }
+  .итог .строка { font-size:14px; color:var(--ink-muted); }
+  .варианты { display:grid; gap:9px; margin:12px 0; }
+  .варианты button { font:inherit; font-size:16px; font-weight:600; padding:13px 15px; border-radius:13px; cursor:pointer;
+    text-align:left; min-height:50px; background:var(--surface-2); color:var(--ink); border:1px solid var(--line);
+    font-family:Georgia,"Iowan Old Style",serif; }
+  .варианты button.верно { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .варианты button.мимо { background:var(--warn-bg); border-color:var(--warn); color:var(--warn); }
+  .формы-показ { font-family:Georgia,"Iowan Old Style",serif; font-size:21px; font-weight:700; line-height:1.5;
+    text-align:center; padding:10px 0 4px; }
+  .шкала { height:8px; border-radius:99px; background:var(--surface-2); overflow:hidden; margin:2px 0 12px; }
+  .шкала i { display:block; height:100%; background:var(--accent); transition:width .25s ease; }
+</style>
+</head>
+<body>
+<div class="lp">
+  <div class="eyebrow">Немецкий</div>
+  <h1>Спряжения</h1>
+  <p class="lede">Те глаголы, которые «спрягаются как хотят»: особые (sein, haben, werden, wissen, tun)
+    и модальные. Сначала таблица целиком, потом каждый по отдельности, потом вписать формы самому.</p>
+
+  <div class="вкладки" id="группы"></div>
+  <div class="режимы" id="режимы"></div>
+  <div id="поле"></div>
+
+  <footer style="margin-top:34px;color:var(--ink-faint);font-size:12.5px;line-height:1.5">
+    Нажми на любую форму в таблице — она прозвучит голосом Anna, тем же, что в уроках.
+    Результат «Впиши форму» сохраняется по каждому глаголу.
+  </footer>
+</div>
+
+<a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+
+<script src="tema.js"></script>
+<script>
+var ДАННЫЕ = {"лица": ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Sie"], "местоимения": ["ich", "du", "er", "wir", "ihr", "sie"], "группы": [{"ключ": "особые", "имя": "Особые глаголы", "знак": "⚡", "под": "sein, haben, werden, wissen, tun — те самые, что ни на что не похожи", "правило": ["<b>sein</b> — самый неправильный глагол немецкого: формы вообще не напоминают инфинитив. Их только заучивают.", "<b>haben</b> ломается лишь у <i>du</i> и <i>er</i>: hab<b>st</b> → <b>hast</b>, hab<b>t</b> → <b>hat</b> (выпадает b).", "<b>werden</b>: du wir<b>st</b> (без d), er wir<b>d</b>. Прошедшее — wurde.", "<b>wissen</b> спрягается как модальный: ich wei<b>ß</b> и er wei<b>ß</b> — одинаково и без окончания.", "<b>tun</b> — единственный на -un: wir tun, ihr tut. Прошедшее — tat."], "глаголы": [{"инф": "sein", "ру": "быть", "наст": ["bin", "bist", "ist", "sind", "seid", "sind"], "прош": ["war", "warst", "war", "waren", "wart", "waren"], "перфект": "ist gewesen", "заметка": "Ни одна форма не похожа на инфинитив. Учить как стихотворение."}, {"инф": "haben", "ру": "иметь", "наст": ["habe", "hast", "hat", "haben", "habt", "haben"], "прош": ["hatte", "hattest", "hatte", "hatten", "hattet", "hatten"], "перфект": "hat gehabt", "заметка": "Ломается только у du и er: hast, hat — b выпадает."}, {"инф": "werden", "ру": "становиться", "наст": ["werde", "wirst", "wird", "werden", "werdet", "werden"], "прош": ["wurde", "wurdest", "wurde", "wurden", "wurdet", "wurden"], "перфект": "ist geworden", "заметка": "du wirst — без d, er wird — без -t. В прошедшем e→u: wurde."}, {"инф": "wissen", "ру": "знать", "наст": ["weiß", "weißt", "weiß", "wissen", "wisst", "wissen"], "прош": ["wusste", "wusstest", "wusste", "wussten", "wusstet", "wussten"], "перфект": "hat gewusst", "заметка": "Ведёт себя как модальный: ich weiß и er weiß — одинаково, без окончания."}, {"инф": "tun", "ру": "делать", "наст": ["tue", "tust", "tut", "tun", "tut", "tun"], "прош": ["tat", "tatst", "tat", "taten", "tatet", "taten"], "перфект": "hat getan", "заметка": "Инфинитив на -un, поэтому wir tun, sie tun — без -en."}]}, {"ключ": "модальные", "имя": "Модальные глаголы", "знак": "🔑", "под": "können, müssen, dürfen, sollen, wollen, mögen, möchten", "правило": ["<b>Главное правило:</b> у модальных <i>ich</i> и <i>er/sie/es</i> — <b>одна и та же форма и БЕЗ окончания</b>: ich kann, er kann.", "В единственном числе гласная меняется (können → <b>ka</b>nn), во множественном возвращается инфинитив: wir können, sie können.", "У <b>sollen</b> гласная не меняется вовсе: ich soll, wir sollen.", "Прошедшее — без умляута плюс -te: konnte, musste, durfte, wollte, sollte, mochte.", "Второй глагол в предложении уходит в конец и стоит в инфинитиве: <i>Ich muss heute arbeiten.</i>"], "глаголы": [{"инф": "können", "ру": "мочь, уметь", "наст": ["kann", "kannst", "kann", "können", "könnt", "können"], "прош": ["konnte", "konntest", "konnte", "konnten", "konntet", "konnten"], "перфект": "hat gekonnt", "заметка": "ö → a в единственном числе: ich kann, du kannst, er kann."}, {"инф": "müssen", "ру": "быть должным", "наст": ["muss", "musst", "muss", "müssen", "müsst", "müssen"], "прош": ["musste", "musstest", "musste", "mussten", "musstet", "mussten"], "перфект": "hat gemusst", "заметка": "ü → u: ich muss, du musst, er muss. Отрицание «не должен» — nicht müssen значит «не обязан»."}, {"инф": "dürfen", "ру": "иметь право, можно", "наст": ["darf", "darfst", "darf", "dürfen", "dürft", "dürfen"], "прош": ["durfte", "durftest", "durfte", "durften", "durftet", "durften"], "перфект": "hat gedurft", "заметка": "ü → a: ich darf. «Darf ich?» — «Можно мне?»"}, {"инф": "sollen", "ру": "следует, должен по чужому указанию", "наст": ["soll", "sollst", "soll", "sollen", "sollt", "sollen"], "прош": ["sollte", "solltest", "sollte", "sollten", "solltet", "sollten"], "перфект": "hat gesollt", "заметка": "Единственный модальный без смены гласной: ich soll, wir sollen."}, {"инф": "wollen", "ру": "хотеть", "наст": ["will", "willst", "will", "wollen", "wollt", "wollen"], "прош": ["wollte", "wolltest", "wollte", "wollten", "wolltet", "wollten"], "перфект": "hat gewollt", "заметка": "o → i: ich will. Не путать с английским will — это «хочу», а не будущее."}, {"инф": "mögen", "ру": "нравиться, любить", "наст": ["mag", "magst", "mag", "mögen", "mögt", "mögen"], "прош": ["mochte", "mochtest", "mochte", "mochten", "mochtet", "mochten"], "перфект": "hat gemocht", "заметка": "ö → a: ich mag. Чаще всего без второго глагола: Ich mag Kaffee."}, {"инф": "möchten", "ру": "хотелось бы (вежливо)", "наст": ["möchte", "möchtest", "möchte", "möchten", "möchtet", "möchten"], "прош": null, "перфект": "—", "заметка": "Это вежливая форма от mögen, своего прошедшего у неё нет — вместо него берут wollte."}]}]};
+</script>
+<script>
+(function(){
+  "use strict";
+  var ЛИЦА = ДАННЫЕ.лица, МЕСТ = ДАННЫЕ.местоимения, ГРУППЫ = ДАННЫЕ.группы;
+  var группа = 0, режим = 'таблица', глагол = 0, время = 'наст';
+  var поле = document.getElementById('поле');
+
+  function экр(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function перемешать(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;} return a; }
+  function профиль(){ try{ return localStorage.getItem('nemeckiy_profile')||'grigoriy'; }catch(e){ return 'grigoriy'; } }
+  function норм(s){ return String(s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+      .replace(/ß/g,'ss').replace(/[^a-z]/g,''); }
+
+  function звук(инф, врем, i){
+    try{
+      if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+      new Audio('zvuk/glagoly/' + инф.replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ä/g,'ae')
+        + '_' + врем + i + '.mp3').play().catch(function(){});
+    }catch(e){}
+  }
+  function звукОтвета(верно){
+    try{
+      if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+      var имя = верно ? (localStorage.getItem('nemeckiy_zvuk_верно')||'верно2')
+                      : (localStorage.getItem('nemeckiy_zvuk_мимо')||'мимо2');
+      new Audio('zvuk/otvet/' + имя + '.mp3').play().catch(function(){});
+    }catch(e){}
+  }
+
+  function рекордКлюч(инф){ return 'nemeckiy_spr_' + профиль() + '_' + инф; }
+  function рекорд(инф){ try{ return JSON.parse(localStorage.getItem(рекордКлюч(инф))||'null'); }catch(e){ return null; } }
+  function записать(инф, процент){
+    var б = рекорд(инф);
+    if (б && б.процент >= процент) return;
+    try{ localStorage.setItem(рекордКлюч(инф), JSON.stringify({процент:процент, когда:Date.now()})); }catch(e){}
+  }
+
+  /* окончание подсвечиваем: так видно, что меняется, а что нет */
+  function сФормой(инф, форма){
+    if (!форма) return '—';
+    var корень = инф.replace(/e?n$/, '');
+    var общая = 0;
+    while (общая < корень.length && общая < форма.length &&
+           корень[общая].toLowerCase() === форма[общая].toLowerCase()) общая++;
+    if (общая < 2) return экр(форма);
+    return экр(форма.slice(0, общая)) + '<span class="хв">' + экр(форма.slice(общая)) + '</span>';
+  }
+
+  /* ─────────── шапки ─────────── */
+  function рисоватьГруппы(){
+    document.getElementById('группы').innerHTML = ГРУППЫ.map(function(г,i){
+      return '<button data-г="'+i+'"'+(i===группа?' class="вкл"':'')+'>'+г.знак+' '+экр(г.имя)+'</button>';
+    }).join('');
+    document.querySelectorAll('#группы button').forEach(function(к){
+      к.onclick = function(){ группа = +к.dataset.г; глагол = 0; рисоватьГруппы(); рисоватьРежимы(); рисовать(); };
+    });
+  }
+  var РЕЖИМЫ = [
+    {к:'таблица', знак:'📋', имя:'Таблица'},
+    {к:'глагол',  знак:'📖', имя:'По одному'},
+    {к:'вписать', знак:'✍️', имя:'Впиши форму'},
+    {к:'угадать', знак:'🎯', имя:'Что за глагол'}
+  ];
+  function рисоватьРежимы(){
+    document.getElementById('режимы').innerHTML = РЕЖИМЫ.map(function(р){
+      return '<button data-р="'+р.к+'"'+(р.к===режим?' class="вкл"':'')+'><b>'+р.знак+'</b>'+р.имя+'</button>';
+    }).join('');
+    document.querySelectorAll('#режимы button').forEach(function(к){
+      к.onclick = function(){ режим = к.dataset.р; рисоватьРежимы(); рисовать(); };
+    });
+  }
+
+  function чипсыГлаголов(сПрогрессом){
+    var г = ГРУППЫ[группа];
+    return '<div class="чипсы" id="чипсы">' + г.глаголы.map(function(в,i){
+      var р = сПрогрессом ? рекорд(в.инф) : null;
+      return '<button data-в="'+i+'"'+(i===глагол?' class="вкл"':'')+'>'+экр(в.инф)+
+             (р?'<i>'+р.процент+'%</i>':'')+'</button>';
+    }).join('') + '</div>';
+  }
+  function обновитьЧипсы(){
+    var узел = document.getElementById('чипсы');
+    if (!узел) return;
+    var г = ГРУППЫ[группа];
+    узел.innerHTML = г.глаголы.map(function(в,i){
+      var р = рекорд(в.инф);
+      return '<button data-в="'+i+'"'+(i===глагол?' class="вкл"':'')+'>'+экр(в.инф)+
+             (р?'<i>'+р.процент+'%</i>':'')+'</button>';
+    }).join('');
+    подключитьЧипсы();
+  }
+
+  function подключитьЧипсы(){
+    document.querySelectorAll('#чипсы button').forEach(function(к){
+      к.onclick = function(){ глагол = +к.dataset.в; рисовать(); };
+    });
+  }
+
+  /* ─────────── режим 1: таблица ─────────── */
+  function таблица(){
+    var г = ГРУППЫ[группа];
+    var шапка = '<tr><th></th>' + г.глаголы.map(function(в){
+      return '<th>' + экр(в.инф) + '<br><span style="font-weight:400">' + экр(в.ру) + '</span></th>';
+    }).join('') + '</tr>';
+    var строки = ЛИЦА.map(function(л,i){
+      return '<tr><td class="лицо">' + экр(л) + '</td>' + г.глаголы.map(function(в){
+        var ф = (в[время]||[])[i];
+        return '<td class="форма" data-и="'+экр(в.инф)+'" data-в="'+время+'" data-л="'+i+'">' + сФормой(в.инф, ф) + '</td>';
+      }).join('') + '</tr>';
+    }).join('');
+    var перфект = '<tr class="особая"><td class="лицо">Perfekt</td>' + г.глаголы.map(function(в){
+      return '<td>' + экр(в.перфект) + '</td>';
+    }).join('') + '</tr>';
+
+    поле.innerHTML =
+      '<div class="карта"><h2>' + г.знак + ' ' + экр(г.имя) + '</h2>' +
+      '<ul class="правило">' + г.правило.map(function(п){ return '<li>'+п+'</li>'; }).join('') + '</ul></div>' +
+      '<div class="вкладки" id="время">' +
+        '<button data-вр="наст"'+(время==='наст'?' class="вкл"':'')+'>Настоящее</button>' +
+        '<button data-вр="прош"'+(время==='прош'?' class="вкл"':'')+'>Прошедшее (Präteritum)</button>' +
+      '</div>' +
+      '<div class="карта"><div class="обёртка"><table class="спр">' + шапка + строки + перфект + '</table></div>' +
+      '<p class="пояс">Цветом выделено то, что отличается от инфинитива. Нажми на форму — услышишь её.</p></div>';
+
+    document.querySelectorAll('#время button').forEach(function(к){
+      к.onclick = function(){ время = к.dataset.вр; рисовать(); };
+    });
+    document.querySelectorAll('td.форма').forEach(function(я){
+      я.onclick = function(){ звук(я.dataset.и, я.dataset.в, я.dataset.л); };
+    });
+  }
+
+  /* ─────────── режим 2: по одному ─────────── */
+  function поОдному(){
+    var г = ГРУППЫ[группа], в = г.глаголы[глагол];
+    var строки = ЛИЦА.map(function(л,i){
+      return '<tr><td class="лицо">' + экр(л) + '</td>' +
+             '<td class="форма" data-и="'+экр(в.инф)+'" data-в="наст" data-л="'+i+'">' + сФормой(в.инф, в.наст[i]) + '</td>' +
+             '<td class="форма" data-и="'+экр(в.инф)+'" data-в="прош" data-л="'+i+'">' +
+                (в.прош ? сФормой(в.инф, в.прош[i]) : '—') + '</td></tr>';
+    }).join('');
+    поле.innerHTML = чипсыГлаголов(true) +
+      '<div class="карта"><h2>' + экр(в.инф) + ' — ' + экр(в.ру) + '</h2>' +
+      '<p class="пояс" style="margin:0 0 12px">' + экр(в.заметка) + '</p>' +
+      '<div class="обёртка"><table class="спр">' +
+      '<tr><th></th><th>Настоящее</th><th>Прошедшее</th></tr>' + строки +
+      '<tr class="особая"><td class="лицо">Perfekt</td><td colspan="2">' + экр(в.перфект) + '</td></tr>' +
+      '</table></div>' +
+      '<div class="низ"><button class="кн" id="слушать">🔊 Прослушать все формы</button>' +
+      '<button class="кн тихая" id="кВписать">Проверить себя</button></div></div>';
+    подключитьЧипсы();
+    document.querySelectorAll('td.форма').forEach(function(я){
+      я.onclick = function(){ звук(я.dataset.и, я.dataset.в, я.dataset.л); };
+    });
+    document.getElementById('слушать').onclick = function(){
+      var i = 0;
+      (function дальше(){
+        if (i >= 6) return;
+        звук(в.инф, 'наст', i); i++;
+        setTimeout(дальше, 1100);
+      })();
+    };
+    document.getElementById('кВписать').onclick = function(){ режим='вписать'; рисоватьРежимы(); рисовать(); };
+  }
+
+  /* ─────────── режим 3: впиши форму ─────────── */
+  function вписать(){
+    var г = ГРУППЫ[группа], в = г.глаголы[глагол];
+    var поля = ЛИЦА.map(function(л,i){
+      return '<tr><td class="лицо">' + экр(л) + '</td>' +
+             '<td><input class="поле" id="п'+i+'" autocomplete="off" autocorrect="off" ' +
+             'autocapitalize="off" spellcheck="false" placeholder="' + экр(в.инф) + '?"></td></tr>';
+    }).join('');
+    поле.innerHTML = чипсыГлаголов(true) +
+      '<div class="карта"><h2>✍️ ' + экр(в.инф) + ' — ' + экр(в.ру) + '</h2>' +
+      '<p class="пояс" style="margin:0 0 10px">Впиши формы настоящего времени. Умляуты — кнопками ниже.</p>' +
+      '<div class="обёртка"><table class="спр">' + поля + '</table></div>' +
+      '<div class="умляуты">' + ['ä','ö','ü','ß'].map(function(б){
+        return '<button data-б="'+б+'">'+б+'</button>'; }).join('') + '</div>' +
+      '<div class="низ"><button class="кн" id="кПроверить">Проверить</button>' +
+      '<button class="кн тихая" id="кПодсказка">Показать ответы</button></div>' +
+      '<div id="итог"></div></div>';
+    подключитьЧипсы();
+
+    var последнее = null;
+    for (var i = 0; i < 6; i++){
+      (function(п){ п.addEventListener('focus', function(){ последнее = п; }); })(document.getElementById('п'+i));
+    }
+    document.querySelectorAll('.умляуты button').forEach(function(к){
+      к.onclick = function(){
+        var п = последнее || document.getElementById('п0');
+        п.value += к.dataset.б; п.focus();
+      };
+    });
+
+    function проверить(показать){
+      var верных = 0;
+      for (var i = 0; i < 6; i++){
+        var п = document.getElementById('п'+i), надо = в.наст[i];
+        var ок = норм(п.value) === норм(надо);
+        п.classList.remove('верно','мимо');
+        p_класс(п, ок);
+        if (ок) верных++;
+        else if (показать) п.value = надо;
+      }
+      var процент = Math.round(верных/6*100);
+      записать(в.инф, процент);
+      звукОтвета(верных === 6);
+      document.getElementById('итог').innerHTML =
+        '<div class="итог"><div class="число">' + процент + '%</div>' +
+        '<div class="строка">' + верных + ' из 6' +
+        (верных === 6 ? ' — вот это уже выучено.' : ' — красным то, что мимо.') + '</div></div>';
+      обновитьЧипсы();   // чтобы процент появился сразу, а не после перерисовки
+    }
+    function p_класс(п, ок){ п.classList.add(ок ? 'верно' : 'мимо'); }
+
+    document.getElementById('кПроверить').onclick = function(){ проверить(false); };
+    document.getElementById('кПодсказка').onclick = function(){ проверить(true); };
+    document.getElementById('п0').focus();
+  }
+
+  /* ─────────── режим 4: что за глагол ─────────── */
+  var угад = null;
+  function угадать(начать){
+    var г = ГРУППЫ[группа];
+    if (начать || !угад || угад.группа !== группа){
+      угад = { группа: группа, задания: перемешать(г.глаголы).slice(0, Math.min(6, г.глаголы.length)),
+               i: 0, верных: 0 };
+    }
+    if (угад.i >= угад.задания.length){
+      var процент = Math.round(угад.верных/угад.задания.length*100);
+      поле.innerHTML = '<div class="карта"><div class="итог"><div class="число">' + процент + '%</div>' +
+        '<div class="строка">' + угад.верных + ' из ' + угад.задания.length + '</div></div>' +
+        '<div class="низ"><button class="кн" id="ещё">Ещё раз</button>' +
+        '<button class="кн тихая" id="кТаблица">Посмотреть таблицу</button></div></div>';
+      document.getElementById('ещё').onclick = function(){ угадать(true); };
+      document.getElementById('кТаблица').onclick = function(){ режим='таблица'; рисоватьРежимы(); рисовать(); };
+      return;
+    }
+    var в = угад.задания[угад.i];
+    var показ = [в.наст[0], в.наст[1], в.наст[4]];   // ich, du, ihr — самые приметные
+    var чужие = перемешать(г.глаголы.filter(function(д){ return д.инф !== в.инф; })).slice(0,3);
+    var варианты = перемешать([в].concat(чужие));
+    поле.innerHTML =
+      '<div class="карта"><div class="шкала"><i style="width:' + Math.round(угад.i/угад.задания.length*100) + '%"></i></div>' +
+      '<p class="пояс" style="margin:0">' + (угад.i+1) + ' из ' + угад.задания.length + ' · верных: ' + угад.верных + '</p>' +
+      '<div class="формы-показ">' + показ.map(экр).join(' · ') + '</div>' +
+      '<p class="пояс" style="text-align:center;margin:0 0 6px">ich · du · ihr — какой это глагол?</p>' +
+      '<div class="варианты">' + варианты.map(function(д){
+        return '<button data-и="'+экр(д.инф)+'">'+экр(д.инф)+' — '+экр(д.ру)+'</button>';
+      }).join('') + '</div><div id="разбор"></div></div>';
+
+    document.querySelectorAll('.варианты button').forEach(function(к){
+      к.onclick = function(){
+        var ок = к.dataset.и === в.инф;
+        document.querySelectorAll('.варианты button').forEach(function(д){
+          д.onclick = null;
+          if (д.dataset.и === в.инф) д.classList.add('верно');
+          else if (д === к) д.classList.add('мимо');
+        });
+        if (ок) угад.верных++;
+        звукОтвета(ок);
+        звук(в.инф, 'наст', 0);
+        document.getElementById('разбор').innerHTML =
+          '<p class="пояс">' + экр(в.заметка) + '</p>' +
+          '<div class="низ"><button class="кн" id="дальше">Дальше</button></div>';
+        document.getElementById('дальше').onclick = function(){ угад.i++; угадать(false); };
+      };
+    });
+  }
+
+  function рисовать(){
+    if (режим === 'таблица') таблица();
+    else if (режим === 'глагол') поОдному();
+    else if (режим === 'вписать') вписать();
+    else угадать(true);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  рисоватьГруппы(); рисоватьРежимы(); рисовать();
+})();
+</script>
+</body>
+</html>

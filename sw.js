@@ -5,12 +5,13 @@
    из кэша. Звук, словари и картинки, наоборот, из кэша сразу: они
    тяжёлые и почти не меняются.  */
 
-const ВЕРСИЯ = 'nemeckiy-v45';
+const ВЕРСИЯ = 'nemeckiy-v46';
 const ОСНОВА = [
   './',
   './index.html',
   './zubr.html',
   './igry.html',
+  './glagoly.html',
   './igry.js',
   './trenazhyor.html',
   './stat.html',
