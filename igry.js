@@ -141,7 +141,34 @@ var СТИЛЬ = ''
 + '.иг-разбор h3{ font-size:13.5px; margin:0 0 8px; font-family:inherit; }'
 + '.иг-разбор div{ font-size:13.5px; padding:8px 11px; border-radius:11px; margin-bottom:6px;'
 + '  background:var(--warn-bg,#fbeae6); line-height:1.4; }'
-+ '@media (max-width:420px){ .иг-кн{ font-size:14.5px; } .иг-де{ font-size:17px; } }';
++ '.иг-пары{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:10px 0 4px; }'
++ '.иг-пара{ font:inherit; font-size:13.5px; font-weight:600; min-height:66px; padding:8px 6px; cursor:pointer;'
++ '  border-radius:13px; border:1px solid var(--line,#e4e6ef); background:var(--accent,#1f5f5b);'
++ '  color:var(--accent-ink,#fff); line-height:1.25; word-break:break-word; }'
++ '.иг-пара.открыта{ background:var(--surface-2,#f3f4fa); color:var(--ink,#1c2242);'
++ '  font-family:Georgia,"Iowan Old Style",serif; }'
++ '.иг-пара.нашлась{ background:rgba(31,95,91,.14); color:var(--ink,#1c2242); border-color:var(--accent,#1f5f5b);'
++ '  font-family:Georgia,"Iowan Old Style",serif; cursor:default; }'
++ '.иг-колесо{ min-height:104px; display:flex; align-items:center; justify-content:center; text-align:center;'
++ '  font-family:Georgia,"Iowan Old Style",serif; font-size:24px; font-weight:700; padding:14px 12px;'
++ '  border-radius:16px; background:var(--surface-2,#f3f4fa); border:2px dashed var(--line,#dde0d9);'
++ '  margin:8px 0 12px; transition:opacity .2s ease; }'
++ '.иг-колесо.крутится{ opacity:.25; }'
++ '.иг-вдомашке{ margin-top:18px; padding:14px 15px; border-radius:14px; border:1px dashed var(--accent,#1f5f5b);'
++ '  background:rgba(31,95,91,.06); }'
++ '.иг-вдомашке b{ font-size:15px; }'
++ '.иг-вдомашке p{ font-size:13px; color:var(--ink-muted,#5b615c); margin:4px 0 10px; line-height:1.45; }'
++ '.иг-вдомашке-кн{ display:flex; flex-wrap:wrap; gap:8px; }'
++ '.иг-вдомашке-кн button{ font:inherit; font-size:13.5px; font-weight:600; padding:9px 14px; min-height:42px;'
++ '  cursor:pointer; border-radius:11px; border:1px solid var(--line,#e4e6ef);'
++ '  background:var(--surface,#fff); color:var(--ink,#1c2242); }'
++ '.иг-вдомашке-кн button:active{ transform:scale(.98); }'
++ '.иг-вкладки{ display:flex; gap:7px; margin-bottom:10px; }'
++ '.иг-мини{ font:inherit; font-size:12.5px; font-weight:600; padding:7px 13px; min-height:36px; cursor:pointer;'
++ '  border-radius:999px; border:1px solid var(--line,#e4e6ef); background:var(--surface-2,#f3f4fa); color:inherit; }'
++ '.иг-мини.вкл{ background:var(--accent,#1f5f5b); border-color:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); }'
++ '@media (max-width:420px){ .иг-кн{ font-size:14.5px; } .иг-де{ font-size:17px; }'
++ '  .иг-пара{ font-size:12.5px; min-height:60px; } .иг-колесо{ font-size:21px; } }';
 
 function стиль() {
   if (document.getElementById('иг-стиль')) return;
@@ -390,7 +417,35 @@ var ИГРЫ = {
 
     /* ---------- каркас раунда ---------- */
 
+    function итогПростой(игра, процент, подпись) {
+      записатьРекорд(игра.код, процент, 0, 0);
+      карта.innerHTML =
+        '<div class="иг-верх"><div class="иг-знак">' + игра.значок + '</div><div><h2>' + экр(игра.имя) + '</h2></div></div>' +
+        '<div class="иг-итог"><div class="число">' + процент + '%</div>' +
+        '<div class="строка">' + экр(подпись || '') + '</div></div>' +
+        '<div class="иг-низ"><button class="иг-главная" id="игЕщё">Ещё раз</button>' +
+        '<button class="иг-тихая" id="игДругая">Другая игра</button></div>';
+      карта.querySelector('#игЕщё').onclick = function () { запустить(игра); };
+      карта.querySelector('#игДругая').onclick = меню;
+    }
+
     function запустить(игра) {
+      // игры вроде «парочек» и «колеса» живут не раундами, а одним полем —
+      // им ядро даёт холст и кнопку «назад», остальное они делают сами
+      if (игра.сама) {
+        return игра.экран({
+          игра: игра, голос: голос, данные: д,
+          рисовать: function (нутро) {
+            карта.innerHTML =
+              '<div class="иг-шапка"><button class="иг-назад" id="игНазад">‹ Игры</button>' +
+              '<div class="иг-счёт">' + экр(игра.имя) + '</div></div>' + нутро;
+            var н = карта.querySelector('#игНазад');
+            if (н) н.onclick = меню;
+          },
+          звукОтвета: звук,
+          конец: function (процент, подпись) { итогПростой(игра, процент, подпись); }
+        });
+      }
       var задания = игра.задания(д, сцены);
       if (!задания.length) { меню(); return; }
       var i = 0, верных = 0, ошибки = [];
@@ -446,6 +501,21 @@ var ИГРЫ = {
 
       игра.раунд(ход);
     }
+
+    // домашка и другие блоки страницы могут позвать игру напрямую:
+    // ИГРЫ.запустить('анаграмма') — прокрутит сюда и сразу начнёт
+    ИГРЫ.запустить = function (код) {
+      for (var i = 0; i < список.length; i++) {
+        if (список[i].код === код) {
+          корень.scrollIntoView({ block: 'start' });
+          запустить(список[i]);
+          return true;
+        }
+      }
+      корень.scrollIntoView({ block: 'start' });
+      return false;
+    };
+    ИГРЫ.какиеЕсть = function () { return список.map(function (и) { return и.код; }); };
 
     меню();
     return true;
@@ -700,7 +770,285 @@ var КАРТИНКА = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КАРТИНКА];
+/* 5. Анаграмма — собрать слово из букв */
+var АНАГРАММА = {
+  код: 'анаграмма', имя: 'Собери слово', значок: '🔤',
+  под: 'Буквы перепутались — верни слово на место',
+  слова: function (д) {
+    return д.все.filter(function (к) {
+      var г = к.de.replace(/^(der|die|das)\s+/i, '');
+      return к.ru && /^[A-Za-zÄÖÜäöüß-]{4,12}$/.test(г);
+    });
+  },
+  хватает: function (д) { return АНАГРАММА.слова(д).length >= 4; },
+  задания: function (д) { return перемешать(АНАГРАММА.слова(д)).slice(0, 8); },
+  раунд: function (ход) {
+    var з = ход.задание();
+    var слово = з.de.replace(/^(der|die|das)\s+/i, '');
+    var артикль = (з.de.match(/^(der|die|das)\s+/i) || [''])[0].trim();
+    var буквы = перемешать(слово.split(''));
+    // если случайно вышло исходное слово — мешаем ещё раз
+    if (буквы.join('') === слово) буквы = перемешать(буквы);
+    var взятые = [];
+
+    ход.рисовать(
+      '<p class="иг-ру">' + экр(з.ru) + '</p>' +
+      (артикль ? '<p class="иг-подсказ">артикль: <b>' + экр(артикль) + '</b> · букв: ' + слово.length + '</p>'
+               : '<p class="иг-подсказ">букв: ' + слово.length + '</p>') +
+      '<div class="иг-строка" id="игСлово"></div>' +
+      '<div class="иг-плитки" id="игБуквы"></div>' +
+      '<div class="иг-низ"><button class="иг-главная" id="игПроверить">Проверить</button>' +
+      '<button class="иг-тихая" id="игСдаюсь">Не знаю</button></div>' +
+      '<div id="игОтвет"></div>');
+
+    var поле = document.getElementById('игБуквы'), строка = document.getElementById('игСлово');
+    function рисовать() {
+      поле.innerHTML = буквы.map(function (б, i) {
+        return '<button class="иг-плитка' + (взятые.indexOf(i) >= 0 ? ' взята' : '') +
+               '" data-i="' + i + '">' + экр(б) + '</button>';
+      }).join('');
+      Array.prototype.forEach.call(поле.querySelectorAll('.иг-плитка'), function (к) {
+        к.onclick = function () { взятые.push(+к.getAttribute('data-i')); рисовать(); };
+      });
+      строка.innerHTML = взятые.map(function (i, поз) {
+        return '<button class="иг-плитка" data-поз="' + поз + '">' + экр(буквы[i]) + '</button>';
+      }).join('');
+      Array.prototype.forEach.call(строка.querySelectorAll('.иг-плитка'), function (к) {
+        к.onclick = function () { взятые.splice(+к.getAttribute('data-поз'), 1); рисовать(); };
+      });
+    }
+    рисовать();
+
+    function показать(верно) {
+      ход.ответ(верно, верно ? null : з);
+      document.getElementById('игОтвет').innerHTML =
+        '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' +
+        (верно ? '✓ ' : 'Правильно: ') + '<span class="де">' + экр(з.de) + '</span>' +
+        (з.тр ? ' · ' + экр(з.тр) : '') + '</div>' +
+        '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше</button></div>';
+      document.getElementById('игДальше').onclick = ход.дальше;
+      ход.голос(з.ид, з.de);
+    }
+    document.getElementById('игПроверить').onclick = function () {
+      if (взятые.length !== слово.length) return;
+      показать(взятые.map(function (i) { return буквы[i]; }).join('').toLowerCase() === слово.toLowerCase());
+    };
+    document.getElementById('игСдаюсь').onclick = function () { показать(false); };
+  }
+};
+
+/* 6. Парочки — память: немецкое к русскому */
+var ПАРОЧКИ = {
+  код: 'парочки', имя: 'Парочки', значок: '🃏', сама: true,
+  под: 'Открывай плитки парами: слово и перевод',
+  слова: function (д) {
+    return д.все.filter(function (к) { return к.ru && к.н <= 3 && к.de.length <= 24 && к.ru.length <= 28; });
+  },
+  хватает: function (д) { return ПАРОЧКИ.слова(д).length >= 6; },
+  экран: function (х) {
+    var пары = перемешать(ПАРОЧКИ.слова(х.данные)).slice(0, 6);
+    var плитки = [];
+    пары.forEach(function (к, i) {
+      плитки.push({ пара: i, текст: к.de, сторона: 'de', к: к });
+      плитки.push({ пара: i, текст: к.ru, сторона: 'ru', к: к });
+    });
+    плитки = перемешать(плитки);
+    var открыто = [], найдено = 0, ошибок = 0, занято = false;
+
+    function рисовать() {
+      х.рисовать(
+        '<p class="иг-подсказ">Найди пару: немецкое слово и его перевод. Пар: 6 · ошибок: ' + ошибок + '</p>' +
+        '<div class="иг-пары" id="игПоле">' + плитки.map(function (п, i) {
+          var видно = п.открыта || п.нашлась;
+          return '<button class="иг-пара' + (п.нашлась ? ' нашлась' : видно ? ' открыта' : '') +
+                 '" data-i="' + i + '">' + (видно ? экр(п.текст) : '?') + '</button>';
+        }).join('') + '</div>');
+      Array.prototype.forEach.call(document.querySelectorAll('#игПоле .иг-пара'), function (к) {
+        к.onclick = function () { нажали(+к.getAttribute('data-i')); };
+      });
+    }
+
+    function нажали(i) {
+      var п = плитки[i];
+      if (занято || п.нашлась || п.открыта) return;
+      п.открыта = true;
+      открыто.push(i);
+      рисовать();
+      if (открыто.length < 2) return;
+      занято = true;
+      var a = плитки[открыто[0]], b = плитки[открыто[1]];
+      if (a.пара === b.пара && a.сторона !== b.сторона) {
+        a.нашлась = b.нашлась = true;
+        найдено++;
+        х.звукОтвета(true);
+        х.голос(a.к.ид, a.к.de);
+        открыто = []; занято = false;
+        рисовать();
+        if (найдено === пары.length) {
+          var процент = Math.max(0, Math.round(пары.length / (пары.length + ошибок) * 100));
+          setTimeout(function () {
+            х.конец(процент, 'Все пары найдены, ошибок: ' + ошибок);
+          }, 500);
+        }
+      } else {
+        ошибок++;
+        х.звукОтвета(false);
+        setTimeout(function () {
+          a.открыта = b.открыта = false;
+          открыто = []; занято = false;
+          рисовать();
+        }, 800);
+      }
+    }
+    рисовать();
+  }
+};
+
+/* 7. Колесо — устная практика: крутанул и назвал */
+var КОЛЕСО = {
+  код: 'колесо', имя: 'Колесо слов', значок: '🎡', сама: true,
+  под: 'Крутишь — называешь вслух, потом проверяешь себя',
+  хватает: function (д) { return д.все.filter(function (к) { return к.ru; }).length >= 8; },
+  экран: function (х) {
+    var слова = перемешать(х.данные.все.filter(function (к) { return к.ru; }));
+    var i = -1, знал = 0, всего = 0, сНемецкого = true;
+
+    function рисовать(состояние) {
+      var к = слова[i] || null;
+      var лицо = !к ? '' : (сНемецкого ? к.de : к.ru);
+      var изнанка = !к ? '' : (сНемецкого ? к.ru : к.de);
+      х.рисовать(
+        '<div class="иг-вкладки"><button class="иг-мини' + (сНемецкого ? ' вкл' : '') + '" id="игСторонаDe">с немецкого</button>' +
+        '<button class="иг-мини' + (сНемецкого ? '' : ' вкл') + '" id="игСторонаRu">с русского</button></div>' +
+        '<p class="иг-подсказ">Слов пройдено: ' + всего + ' · знал: ' + знал + '</p>' +
+        '<div class="иг-колесо' + (состояние === 'крутится' ? ' крутится' : '') + '" id="игКолесо">' +
+        (к ? экр(лицо) : 'Крути!') + '</div>' +
+        (состояние === 'ответ'
+          ? '<div class="иг-ответ верно"><span class="де">' + экр(изнанка) + '</span>' +
+            (к && к.тр && сНемецкого ? ' · ' + экр(к.тр) : '') + '</div>' +
+            '<div class="иг-низ"><button class="иг-главная" id="игЗнал">Знал</button>' +
+            '<button class="иг-тихая" id="игНеЗнал">Не знал</button></div>'
+          : '<div class="иг-низ"><button class="иг-главная" id="игКрутить">' +
+            (к ? 'Показать ответ' : 'Крутить') + '</button>' +
+            (к ? '<button class="иг-тихая" id="игЗвук">🔊</button>' : '') +
+            '<button class="иг-тихая" id="игХватит">Хватит</button></div>'));
+
+      var dE = document.getElementById('игСторонаDe'), dR = document.getElementById('игСторонаRu');
+      if (dE) dE.onclick = function () { сНемецкого = true; рисовать(состояние); };
+      if (dR) dR.onclick = function () { сНемецкого = false; рисовать(состояние); };
+      var кр = document.getElementById('игКрутить');
+      if (кр) кр.onclick = function () {
+        if (!к) { крутить(); } else { рисовать('ответ'); if (сНемецкого) х.голос(к.ид, к.de); }
+      };
+      var зв = document.getElementById('игЗвук');
+      if (зв && к) зв.onclick = function () { х.голос(к.ид, к.de); };
+      var хв = document.getElementById('игХватит');
+      if (хв) хв.onclick = закончить;
+      var зн = document.getElementById('игЗнал');
+      if (зн) зн.onclick = function () { знал++; всего++; х.звукОтвета(true); крутить(); };
+      var нз = document.getElementById('игНеЗнал');
+      if (нз) нз.onclick = function () { всего++; х.звукОтвета(false); крутить(); };
+    }
+
+    function крутить() {
+      if (i + 1 >= слова.length) { закончить(); return; }
+      рисовать('крутится');
+      setTimeout(function () { i++; рисовать(''); }, 420);
+    }
+    function закончить() {
+      if (!всего) { х.конец(0, 'Ни одного слова не пройдено'); return; }
+      х.конец(Math.round(знал / всего * 100), 'Знал ' + знал + ' из ' + всего);
+    }
+    рисовать('');
+  }
+};
+
+/* 8. Расставь по порядку — готовые последовательности */
+var СПИСКИ = [
+  { имя: 'Дни недели', ряд: ['Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag', 'Sonntag'] },
+  { имя: 'Месяцы', ряд: ['Januar', 'Februar', 'März', 'April', 'Mai', 'Juni', 'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'] },
+  { имя: 'Числа', ряд: ['eins', 'zwei', 'drei', 'vier', 'fünf', 'sechs', 'sieben', 'acht', 'neun', 'zehn'] },
+  { имя: 'Времена года', ряд: ['Frühling', 'Sommer', 'Herbst', 'Winter'] },
+  { имя: 'Время суток', ряд: ['der Morgen', 'der Vormittag', 'der Mittag', 'der Nachmittag', 'der Abend', 'die Nacht'] }
+];
+
+function подходящиеСписки(д) {
+  var есть = {};
+  д.все.forEach(function (к) {
+    есть[норм(к.de)] = к;
+    есть[норм(к.de.replace(/^(der|die|das)\s+/i, ''))] = к;
+  });
+  return СПИСКИ.filter(function (с) {
+    var совпало = 0;
+    с.ряд.forEach(function (э) { if (есть[норм(э)]) совпало++; });
+    return совпало >= Math.max(3, Math.ceil(с.ряд.length * 0.6));
+  }).map(function (с) { return { с: с, есть: есть }; });
+}
+
+var ПОСЛЕДОВАТЕЛЬНОСТЬ = {
+  код: 'порядоксписка', имя: 'Расставь по порядку', значок: '🔢',
+  под: 'Дни, месяцы, числа — в правильном порядке',
+  хватает: function (д) { return подходящиеСписки(д).length > 0; },
+  задания: function (д) {
+    return подходящиеСписки(д).map(function (п) {
+      var ряд = п.с.ряд.slice();
+      // длинные ряды режем на кусок из семи — иначе на телефоне не влезает
+      if (ряд.length > 7) {
+        var старт = Math.floor(Math.random() * (ряд.length - 7 + 1));
+        ряд = ряд.slice(старт, старт + 7);
+      }
+      return { имя: п.с.имя, ряд: ряд, есть: п.есть };
+    });
+  },
+  раунд: function (ход) {
+    var з = ход.задание();
+    var плитки = перемешать(з.ряд.map(function (э, к) { return { э: э, к: к }; }));
+    var взятые = [];
+    ход.рисовать(
+      '<p class="иг-ру">' + экр(з.имя) + '</p>' +
+      '<p class="иг-подсказ">Нажимай по порядку. Нажми в строке — вернётся назад.</p>' +
+      '<div class="иг-строка" id="игСтрока"></div>' +
+      '<div class="иг-плитки" id="игПлитки"></div>' +
+      '<div class="иг-низ"><button class="иг-главная" id="игПроверить">Проверить</button>' +
+      '<button class="иг-тихая" id="игСдаюсь">Не знаю</button></div>' +
+      '<div id="игОтвет"></div>');
+    var поле = document.getElementById('игПлитки'), строка = document.getElementById('игСтрока');
+    function рисовать() {
+      поле.innerHTML = плитки.map(function (п, i) {
+        return '<button class="иг-плитка' + (взятые.indexOf(i) >= 0 ? ' взята' : '') +
+               '" data-i="' + i + '">' + экр(п.э) + '</button>';
+      }).join('');
+      Array.prototype.forEach.call(поле.querySelectorAll('.иг-плитка'), function (к) {
+        к.onclick = function () { взятые.push(+к.getAttribute('data-i')); рисовать(); };
+      });
+      строка.innerHTML = взятые.map(function (i, поз) {
+        return '<button class="иг-плитка" data-поз="' + поз + '">' + экр(плитки[i].э) + '</button>';
+      }).join('');
+      Array.prototype.forEach.call(строка.querySelectorAll('.иг-плитка'), function (к) {
+        к.onclick = function () { взятые.splice(+к.getAttribute('data-поз'), 1); рисовать(); };
+      });
+    }
+    рисовать();
+    function показать(верно) {
+      ход.ответ(верно, верно ? null : { de: з.ряд.join(' · '), ru: з.имя });
+      document.getElementById('игОтвет').innerHTML =
+        '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' +
+        (верно ? '✓ ' : 'Правильный порядок: ') + '<span class="де">' + экр(з.ряд.join(' · ')) + '</span></div>' +
+        '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше</button></div>';
+      document.getElementById('игДальше').onclick = ход.дальше;
+      var первое = з.есть[норм(з.ряд[0])];
+      if (первое) ход.голос(первое.ид, первое.de);
+    }
+    document.getElementById('игПроверить').onclick = function () {
+      if (взятые.length !== з.ряд.length) return;
+      var собрано = взятые.map(function (i) { return плитки[i].э; }).join('|');
+      показать(собрано === з.ряд.join('|'));
+    };
+    document.getElementById('игСдаюсь').onclick = function () { показать(false); };
+  }
+};
+
+var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });
