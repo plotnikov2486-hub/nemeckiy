@@ -187,7 +187,8 @@ var ДАННЫЕ = {"лица": ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Si
     {к:'глагол',  знак:'📖', имя:'По одному'},
     {к:'вписать', знак:'✍️', имя:'Впиши форму'},
     {к:'угадать', знак:'🎯', имя:'Что за глагол'},
-    {к:'фразы',   знак:'📝', имя:'Фразы'}
+    {к:'фразы',   знак:'📝', имя:'Фразы'},
+    {к:'память',  знак:'🧠', имя:'По памяти'}
   ];
   function рисоватьРежимы(){
     document.getElementById('режимы').innerHTML = РЕЖИМЫ.map(function(р){
@@ -530,11 +531,208 @@ var ДАННЫЕ = {"лица": ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Si
     }
   }
 
+  /* ─────────── режим 6: таблица по памяти ─────────── */
+  /* Врач 18.09: «посмотрел таблицу → по одному глаголу вписал все формы →
+     ошибся, значит эта же строка заново → все прошёл → пустая таблица целиком →
+     ошибки красным и списком → остались пустыми только ошибки → добил».
+     Здесь это ровно так и сделано, этапами.                                  */
+  var пам = null;
+
+  function память(этап, данные){
+    var г = ГРУППЫ[группа];
+    if (!пам || пам.группа !== группа) пам = { группа: группа, номер: 0, промахи: [], сПервого: 0, всего: 0, ошибся: {} };
+
+    if (этап === 'смотрим') return памСмотрим(г);
+    if (этап === 'поодному') return памГлагол(г, данные || 0);
+    if (этап === 'вся') return памВся(г, данные || null);
+    if (этап === 'готово') return памГотово(г);
+  }
+
+  function строкаПолей(префикс, значения, ошибки){
+    return ЛИЦА.map(function(л, i){
+      var кл = 'поле' + (ошибки && ошибки[i] === false ? ' верно' : ошибки && ошибки[i] === true ? ' мимо' : '');
+      var зн = значения && значения[i] != null ? ' value="' + экр(значения[i]) + '"' : '';
+      return '<tr><td class="лицо">' + экр(л) + '</td><td><input class="' + кл + '" id="' + префикс + i +
+             '" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"' + зн + '></td></tr>';
+    }).join('');
+  }
+
+  function умляутыПод(поля){
+    var последнее = null;
+    поля.forEach(function(п){ if (п) п.addEventListener('focus', function(){ последнее = п; }); });
+    document.querySelectorAll('.умляуты button').forEach(function(к){
+      к.onclick = function(){
+        var п = последнее || поля[0];
+        if (!п) return;
+        п.value += к.dataset.б; п.focus();
+      };
+    });
+  }
+
+  /* этап 1: просто смотрим таблицу */
+  function памСмотрим(г){
+    var шапка = '<tr><th></th>' + г.глаголы.map(function(в){ return '<th>' + экр(в.инф) + '</th>'; }).join('') + '</tr>';
+    var строки = ЛИЦА.map(function(л,i){
+      return '<tr><td class="лицо">' + экр(л) + '</td>' + г.глаголы.map(function(в){
+        return '<td class="форма" data-и="'+экр(в.инф)+'" data-в="наст" data-л="'+i+'">' + сФормой(в.инф, в.наст[i]) + '</td>';
+      }).join('') + '</tr>';
+    }).join('');
+    поле.innerHTML =
+      '<div class="карта"><h2>🧠 Сначала посмотри и запомни</h2>' +
+      '<p class="пояс" style="margin:0 0 12px">Вся таблица целиком. Когда решишь, что запомнил, — жми «Начинаю». ' +
+      'Дальше будем вписывать по одному глаголу, и пока строка не сойдётся полностью, к следующему не пустит.</p>' +
+      '<div class="обёртка"><table class="спр">' + шапка + строки + '</table></div>' +
+      '<div class="низ"><button class="кн" id="памСтарт">Начинаю</button></div></div>';
+    document.querySelectorAll('td.форма').forEach(function(я){
+      я.onclick = function(){ звук(я.dataset.и, я.dataset.в, я.dataset.л); };
+    });
+    document.getElementById('памСтарт').onclick = function(){
+      пам = { группа: группа, номер: 0, промахи: [], сПервого: 0, всего: 0, ошибся: {} };
+      память('поодному', 0);
+    };
+  }
+
+  /* этап 2: по одному глаголу, пока не сойдётся */
+  function памГлагол(г, номер, значения, ошибки, было){
+    if (номер >= г.глаголы.length) return память('вся');
+    var в = г.глаголы[номер];
+    поле.innerHTML =
+      '<div class="карта">' +
+      '<div class="шкала"><i style="width:' + Math.round(номер / г.глаголы.length * 100) + '%"></i></div>' +
+      '<p class="пояс" style="margin:0 0 4px">Глагол ' + (номер+1) + ' из ' + г.глаголы.length + '</p>' +
+      '<h2>' + экр(в.инф) + ' — ' + экр(в.ру) + '</h2>' +
+      '<p class="пояс" style="margin:0 0 10px">Впиши все формы настоящего времени.</p>' +
+      '<div class="обёртка"><table class="спр">' + строкаПолей('пм', значения, ошибки) + '</table></div>' +
+      '<div class="умляуты">' + ['ä','ö','ü','ß'].map(function(б){
+        return '<button data-б="'+б+'">'+б+'</button>'; }).join('') + '</div>' +
+      (было ? '<div class="иг-подсказ" style="color:var(--warn);font-size:13.5px;margin-top:10px">' + было + '</div>' : '') +
+      '<div class="низ"><button class="кн" id="памПроверить">Проверить</button>' +
+      '<button class="кн тихая" id="памПодсказка">Показать строку</button></div></div>';
+
+    var поля = [0,1,2,3,4,5].map(function(i){ return document.getElementById('пм'+i); });
+    умляутыПод(поля);
+    if (поля[0]) поля[0].focus();
+
+    document.getElementById('памПроверить').onclick = function(){
+      var знач = поля.map(function(п){ return п.value; });
+      var ош = знач.map(function(з, i){ return норм(з) !== норм(в.наст[i]); });
+      var верных = ош.filter(function(о){ return !о; }).length;
+      пам.всего++;
+      звукОтвета(верных === 6);
+      if (верных === 6){
+        // «с первой попытки» — только если по этому глаголу ещё не промахивались:
+        // после ошибки строка перерисовывается пустой, и признак ошибки в ней теряется
+        if (!пам.ошибся[номер]) пам.сПервого++;
+        записать(в.инф, 100);
+        setTimeout(function(){ память('поодному', номер + 1); }, 350);
+        памГлагол(г, номер, знач, ош, '✅ Всё верно. Дальше…');
+      } else {
+        // ошибся — строка заново, пустая, но с подсказкой, где было мимо
+        пам.ошибся[номер] = true;
+        var мимо = ЛИЦА.filter(function(_, i){ return ош[i]; }).map(function(л, к){
+          var и = ЛИЦА.indexOf(л);
+          return л + ' → ' + в.наст[и];
+        }).join(' · ');
+        памГлагол(г, номер, null, null, '❌ Мимо: ' + мимо + '. Пробуем эту же строку заново.');
+      }
+    };
+    document.getElementById('памПодсказка').onclick = function(){
+      пам.ошибся[номер] = true;
+      памГлагол(г, номер, в.наст.slice(), [false,false,false,false,false,false],
+                'Подсмотрел — строка засчитана не будет, впиши её заново.');
+      setTimeout(function(){ памГлагол(г, номер, null, null, 'Теперь по памяти.'); }, 2500);
+    };
+  }
+
+  /* этап 3: вся таблица пустая */
+  function памВся(г, только){
+    // у больших групп (сильные глаголы) берём шесть — иначе это лист на 126 клеток
+    if (!пам.выбор){
+      пам.выбор = г.глаголы.length > 8 ? перемешать(г.глаголы).slice(0, 6) : г.глаголы.slice();
+    }
+    var глаголы = пам.выбор;
+    var шапка = '<tr><th></th>' + глаголы.map(function(в){
+      return '<th>' + экр(в.инф) + '<br><span style="font-weight:400;font-size:11.5px">' + экр(в.ру) + '</span></th>'; }).join('') + '</tr>';
+    var строки = ЛИЦА.map(function(л, i){
+      return '<tr><td class="лицо">' + экр(л) + '</td>' + глаголы.map(function(в, j){
+        var ключ = j + '_' + i;
+        var нужно = !только || только.indexOf(ключ) >= 0;
+        return '<td>' + (нужно
+          ? '<input class="поле" id="пв' + ключ + '" autocomplete="off" autocapitalize="off" spellcheck="false">'
+          : '<span style="opacity:.55">' + экр(в.наст[i]) + '</span>') + '</td>';
+      }).join('') + '</tr>';
+    }).join('');
+
+    поле.innerHTML =
+      '<div class="карта"><h2>🧠 Теперь вся таблица</h2>' +
+      '<p class="пояс" style="margin:0 0 10px">' +
+      (только ? 'Остались только те клетки, где ты ошибся. Добей их.'
+              : 'Голая таблица' + (г.глаголы.length > 8 ? ' (шесть глаголов из группы)' : '') + '. Впиши все формы.') +
+      '</p>' +
+      '<div class="обёртка"><table class="спр">' + шапка + строки + '</table></div>' +
+      '<div class="умляуты">' + ['ä','ö','ü','ß'].map(function(б){
+        return '<button data-б="'+б+'">'+б+'</button>'; }).join('') + '</div>' +
+      '<div class="низ"><button class="кн" id="памВсеПроверить">Проверить</button></div>' +
+      '<div id="памИтог"></div></div>';
+
+    var поля = [];
+    глаголы.forEach(function(_, j){ ЛИЦА.forEach(function(_, i){
+      var э = document.getElementById('пв' + j + '_' + i); if (э) поля.push(э);
+    }); });
+    умляутыПод(поля);
+    if (поля[0]) поля[0].focus();
+
+    document.getElementById('памВсеПроверить').onclick = function(){
+      var промахи = [], всего = 0;
+      глаголы.forEach(function(в, j){ ЛИЦА.forEach(function(л, i){
+        var э = document.getElementById('пв' + j + '_' + i);
+        if (!э) return;
+        всего++;
+        var верно = норм(э.value) === норм(в.наст[i]);
+        э.classList.remove('верно','мимо');
+        э.classList.add(верно ? 'верно' : 'мимо');
+        if (!верно) промахи.push({ ключ: j + '_' + i, инф: в.инф, лицо: л, надо: в.наст[i] });
+      }); });
+      звукОтвета(!промахи.length);
+      if (!промахи.length){
+        document.getElementById('памИтог').innerHTML =
+          '<div class="итог"><div class="число">100%</div><div class="строка">Таблица закрыта без ошибок.</div></div>' +
+          '<div class="низ"><button class="кн" id="памДальше">Дальше</button></div>';
+        document.getElementById('памДальше').onclick = function(){ память('готово'); };
+        return;
+      }
+      пам.промахи = промахи;
+      document.getElementById('памИтог').innerHTML =
+        '<div class="иг-разбор" style="margin-top:14px"><h3>Что нужно запомнить:</h3>' +
+        промахи.map(function(о){
+          return '<div><b>' + экр(о.инф) + '</b> · ' + экр(о.лицо) + ' → <span class="де">' + экр(о.надо) + '</span></div>';
+        }).join('') + '</div>' +
+        '<div class="низ"><button class="кн" id="памДобить">Добить ошибки (' + промахи.length + ')</button></div>';
+      document.getElementById('памДобить').onclick = function(){
+        память('вся', промахи.map(function(о){ return о.ключ; }));
+      };
+    };
+  }
+
+  function памГотово(г){
+    var процент = пам.всего ? Math.round(пам.сПервого / г.глаголы.length * 100) : 0;
+    записать('память_' + г.ключ, процент);
+    поле.innerHTML =
+      '<div class="карта"><div class="итог"><div class="число">' + процент + '%</div>' +
+      '<div class="строка">Группа пройдена. С первой попытки сошлось глаголов: ' +
+      пам.сПервого + ' из ' + г.глаголы.length + '</div></div>' +
+      '<div class="низ"><button class="кн" id="памЕщё">Пройти заново</button>' +
+      '<button class="кн тихая" id="памФразы">Погонять во фразах</button></div></div>';
+    document.getElementById('памЕщё').onclick = function(){ пам = null; память('смотрим'); };
+    document.getElementById('памФразы').onclick = function(){ режим='фразы'; рисоватьРежимы(); рисовать(); };
+  }
+
   function рисовать(){
     if (режим === 'таблица') таблица();
     else if (режим === 'глагол') поОдному();
     else if (режим === 'вписать') вписать();
     else if (режим === 'фразы') фразы(true);
+    else if (режим === 'память') память('смотрим');
     else угадать(true);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
