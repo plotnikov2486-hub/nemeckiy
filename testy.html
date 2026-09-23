@@ -89,6 +89,23 @@
     border-radius:10px; font-size:13.5px; color:var(--ink-muted); }
   .dalshe{ margin-top:14px; width:100%; padding:13px; border:none; border-radius:10px; background:var(--accent);
     color:var(--accent-ink); font-family:inherit; font-size:15px; font-weight:600; cursor:pointer; }
+  .kursy{ display:flex; gap:8px; overflow-x:auto; margin:0 0 14px; padding-bottom:3px; }
+  .kursy button{ flex:0 0 auto; text-align:left; background:var(--surface-2); border:1px solid var(--line);
+    border-radius:var(--radius); padding:10px 13px; cursor:pointer; font-family:inherit; color:inherit; min-width:156px; }
+  .kursy button.on{ border-color:var(--accent); box-shadow:inset 0 0 0 1px var(--accent); }
+  .kursy .nm{ display:block; font-weight:600; font-size:13.5px; }
+  .kursy .po{ display:block; font-size:11px; color:var(--ink-muted); margin-top:2px; }
+  .kart{ display:block; width:100%; max-width:520px; margin:10px auto 2px; border-radius:10px;
+    border:1px solid var(--line); background:var(--surface); cursor:zoom-in; }
+  .kart.bol{ max-width:none; cursor:zoom-out; }
+  .kogda{ font-size:11.5px; color:var(--ink-faint); margin-top:9px; }
+  .otvet-tekst{ margin-top:12px; padding:12px 14px; background:var(--ok-bg); border:1px solid var(--ok);
+    border-radius:10px; color:var(--ok); font-weight:600; font-size:15px; white-space:pre-wrap; }
+  .znal{ display:flex; gap:8px; margin-top:12px; }
+  .znal button{ flex:1; padding:12px; border-radius:10px; font-family:inherit; font-size:14.5px;
+    font-weight:600; cursor:pointer; border:1px solid var(--line); background:var(--surface); color:var(--ink); }
+  .znal button.da{ border-color:var(--ok); color:var(--ok); }
+  .znal button.net{ border-color:var(--bad); color:var(--bad); }
   .pusto{ text-align:center; color:var(--ink-muted); font-size:14px; padding:40px 10px; }
   .itog{ text-align:center; background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius); padding:26px 18px; }
   .itog .bal{ font-size:40px; font-weight:600; font-variant-numeric:tabular-nums; }
@@ -117,74 +134,103 @@
 <script>
 (function(){
 "use strict";
-var ПУТЬ = 'testy/';
-var огл = null, блокКэш = {}, экран = 'Блоки', сеанс = null;
+
+/* ---------- курсы ---------- */
+var КУРСЫ = [
+  { к:'общий', имя:'Медицина вообще',      под:'из 98 колод Anki',        папка:'testy/' },
+  { к:'sip4a', имя:'FRAMKO · SIP4a',       под:'Block 21–27',             папка:'testy/framko/sip4a/' },
+  { к:'sip5a', имя:'FRAMKO · SIP5a',       под:'Tertial 1–7',             папка:'testy/framko/sip5a/' },
+  { к:'derma', имя:'FRAMKO · Дерматология',под:'Test Yourself, с фото',   папка:'testy/framko/derma/' }
+];
+var огл = {}, блокКэш = {}, экран = 'Блоки', сеанс = null, текКурс = 'общий';
 
 /* ---------- память ---------- */
 function взять(ключ, поум){ try{ var с = localStorage.getItem(ключ); return с ? JSON.parse(с) : поум; }catch(e){ return поум; } }
 function класть(ключ, зн){ try{ localStorage.setItem(ключ, JSON.stringify(зн)); }catch(e){} }
-var прогресс = взять('mt_прогресс', {});      // {"3": {"7": 1, "8": 0}}  1 — верно, 0 — мимо
-var избранное = взять('mt_избранное', []);    // массив вопросов целиком
-var ошибки = взять('mt_ошибки', []);          // массив вопросов целиком
+var прогресс = взять('mt_прогресс2', {});      // {"sip4a:3": {"7": 1}}  1 — верно, 0 — мимо
+var избранное = взять('mt_избранное', []);
+var ошибки = взять('mt_ошибки', []);
 var дни = взять('mt_дни', {последний:'', подряд:0});
 
 function сегодня(){ var д = new Date(); return д.getFullYear()+'-'+(д.getMonth()+1)+'-'+д.getDate(); }
 function отметитьДень(){
   var с = сегодня(); if (дни.последний === с) return;
-  var вчера = new Date(Date.now() - 864e5);
-  var вч = вчера.getFullYear()+'-'+(вчера.getMonth()+1)+'-'+вчера.getDate();
+  var в = new Date(Date.now() - 864e5);
+  var вч = в.getFullYear()+'-'+(в.getMonth()+1)+'-'+в.getDate();
   дни.подряд = (дни.последний === вч) ? (дни.подряд||0)+1 : 1;
   дни.последний = с; класть('mt_дни', дни); рисоватьОгонь();
 }
 function рисоватьОгонь(){ document.getElementById('ogon').textContent = '🔥 ' + (дни.подряд||0); }
 
 /* ---------- загрузка ---------- */
+function курс(){ for (var i=0;i<КУРСЫ.length;i++) if (КУРСЫ[i].к===текКурс) return КУРСЫ[i]; return КУРСЫ[0]; }
+function взятьОгл(к){
+  if (огл[к]) return Promise.resolve(огл[к]);
+  var п = КУРСЫ.filter(function(x){ return x.к===к; })[0].папка;
+  return fetch(п + 'оглавление.json').then(function(о){ return о.json(); }).then(function(д){ огл[к] = д; return д; });
+}
 function взятьБлок(н){
-  if (блокКэш[н]) return Promise.resolve(блокКэш[н]);
-  var имя = ПУТЬ + 'b' + String(н).padStart(3,'0') + '.json';
-  return fetch(имя).then(function(о){ return о.json(); }).then(function(д){ блокКэш[н] = д; return д; });
+  var кл = текКурс + ':' + н;
+  if (блокКэш[кл]) return Promise.resolve(блокКэш[кл]);
+  return fetch(курс().папка + 'b' + String(н).padStart(3,'0') + '.json')
+    .then(function(о){ return о.json(); }).then(function(д){ блокКэш[кл] = д; return д; });
 }
 
-/* ---------- общее ---------- */
-function эк(с){ return String(с).replace(/[&<>"]/g, function(з){
+/* ---------- мелочи ---------- */
+function эк(с){ return String(с==null?'':с).replace(/[&<>"]/g, function(з){
   return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[з]; }); }
+function многострочно(с){ return эк(с).replace(/\n/g, '<br>'); }
 var корн = document.getElementById('korn');
 var кнНазад = document.getElementById('knNazad');
 кнНазад.addEventListener('click', function(){ сеанс = null; кнНазад.hidden = true; рисовать(); });
 
 function кольцо(доля, подпись){
-  var r = 17, длина = 2*Math.PI*r, залито = длина*доля;
+  var r = 17, длина = 2*Math.PI*r, залито = длина*Math.min(1, доля);
   return '<div class="krug"><svg width="42" height="42">'+
     '<circle cx="21" cy="21" r="'+r+'" fill="none" stroke="var(--line)" stroke-width="4"/>'+
-    (доля > 0 ? '<circle cx="21" cy="21" r="'+r+'" fill="none" stroke="'+(доля>=1?'var(--ok)':'var(--accent)')+'" stroke-width="4"'+
-      ' stroke-dasharray="'+залито.toFixed(1)+' '+длина.toFixed(1)+'" stroke-linecap="round"/>' : '')+'</svg>'+
-    '<span>'+подпись+'</span></div>';
+    (доля > 0 ? '<circle cx="21" cy="21" r="'+r+'" fill="none" stroke="'+(доля>=1?'var(--ok)':'var(--accent)')+
+      '" stroke-width="4" stroke-dasharray="'+залито.toFixed(1)+' '+длина.toFixed(1)+'" stroke-linecap="round"/>' : '')+
+    '</svg><span>'+подпись+'</span></div>';
 }
-function решеноВБлоке(н){ var п = прогресс[н]||{}; return Object.keys(п).length; }
-function верноВБлоке(н){ var п = прогресс[н]||{}, к=0; for (var i in п) if (п[i]===1) к++; return к; }
+function ключБлока(н){ return текКурс + ':' + н; }
+function решеноВБлоке(н){ var п = прогресс[ключБлока(н)]||{}; return Object.keys(п).length; }
+function верноВБлоке(н){ var п = прогресс[ключБлока(н)]||{}, к=0; for (var i in п) if (п[i]===1) к++; return к; }
+function картинки(список){
+  if (!список || !список.length) return '';
+  var база = (огл[текКурс] && огл[текКурс].картинки) || '';
+  return список.map(function(и){ return '<img class="kart" src="'+эк(база+и)+'" alt="" loading="lazy">'; }).join('');
+}
+function окончание(н){ var х = н%10, с = н%100;
+  if (х===1 && с!==11) return ''; if (х>=2 && х<=4 && (с<12||с>14)) return 'а'; return 'ов'; }
 
-/* ---------- экраны списка ---------- */
+/* ---------- списки ---------- */
 function рисовать(){
   кнНазад.hidden = !сеанс;
   if (сеанс) return рисоватьСеанс();
-  var ч = '<h1>Тесты</h1><p class="lede">Медицинский немецкий из '+огл.всего.toLocaleString('ru')+
-    ' вопросов · '+огл.блоков+' блоков по '+огл.в_блоке+'</p>';
+  var о = огл[текКурс];
+  var ч = '<h1>Тесты</h1><p class="lede">Медицинский немецкий · '+
+    о.всего.toLocaleString('ru')+' вопрос'+окончание(о.всего)+' в '+о.блоков+' блоках по '+о.в_блоке+'</p>';
+  ч += '<div class="kursy">' + КУРСЫ.map(function(к){
+      return '<button data-курс="'+к.к+'"'+(текКурс===к.к?' class="on"':'')+
+        '><span class="nm">'+эк(к.имя)+'</span><span class="po">'+эк(к.под)+'</span></button>'; }).join('') + '</div>';
   ч += '<div class="tabs">' + ['Блоки','Темы','Избранное','Ошибки','Режимы'].map(function(н){
         return '<button data-эк="'+н+'"'+(экран===н?' class="on"':'')+'>'+н+'</button>'; }).join('') + '</div>';
 
   var готовых = 0, решено = 0, верных = 0;
-  огл.блоки.forEach(function(б){ var р = решеноВБлоке(б.н); решено += р; верных += верноВБлоке(б.н); if (р >= б.n) готовых++; });
-  ч += '<div class="svodka"><div><b>'+готовых+' из '+огл.блоков+'</b><span>блоков пройдено</span></div>'+
+  о.блоки.forEach(function(б){ var р = решеноВБлоке(б.н); решено += р; верных += верноВБлоке(б.н); if (р >= б.n) готовых++; });
+  ч += '<div class="svodka"><div><b>'+готовых+' из '+о.блоков+'</b><span>блоков пройдено</span></div>'+
        '<div><b>'+решено+'</b><span>вопросов решено</span></div>'+
        '<div><b>'+(решено ? Math.round(верных/решено*100) : 0)+'%</b><span>верных ответов</span></div></div>';
 
-  if (экран === 'Блоки')      ч += списокБлоков();
-  else if (экран === 'Темы')  ч += списокТем();
+  if (экран === 'Блоки')          ч += списокБлоков();
+  else if (экран === 'Темы')      ч += списокТем();
   else if (экран === 'Избранное') ч += списокПодборки(избранное, 'Звёздочкой отмечайте вопросы, к которым хотите вернуться.');
   else if (экран === 'Ошибки')    ч += списокПодборки(ошибки, 'Сюда сами падают вопросы, где вы ошиблись.');
-  else                        ч += списокРежимов();
+  else                            ч += списокРежимов();
   корн.innerHTML = ч;
 
+  корн.querySelectorAll('[data-курс]').forEach(function(к){
+    к.addEventListener('click', function(){ сменитьКурс(к.dataset.курс); }); });
   корн.querySelectorAll('.tabs button').forEach(function(к){
     к.addEventListener('click', function(){ экран = к.dataset.эк; рисовать(); window.scrollTo(0,0); }); });
   корн.querySelectorAll('[data-блок]').forEach(function(к){
@@ -195,10 +241,17 @@ function рисовать(){
   if (п) п.addEventListener('input', function(){ фильтрБлоков(п.value.trim().toLowerCase()); });
 }
 
+function сменитьКурс(к){
+  if (к === текКурс) return;
+  корн.innerHTML = '<p class="pusto">Загружаю…</p>';
+  взятьОгл(к).then(function(){ текКурс = к; try{ localStorage.setItem('mt_курс', к); }catch(e){}
+    рисовать(); window.scrollTo(0,0); })
+   .catch(function(){ корн.innerHTML = '<p class="pusto">Этот курс пока не выложен.</p>'; });
+}
+
 function списокБлоков(){
-  var ч = '<input class="poisk" id="poisk" placeholder="Найти блок или тему…">';
-  ч += '<div id="спБлоков">';
-  огл.блоки.forEach(function(б){
+  var ч = '<input class="poisk" id="poisk" placeholder="Найти блок или тему…"><div id="спБлоков">';
+  огл[текКурс].блоки.forEach(function(б){
     var р = решеноВБлоке(б.н), доля = р / б.n;
     ч += '<button class="blok" data-блок="'+б.н+'" data-искать="'+эк((б.тема+' блок '+б.н).toLowerCase())+'">'+
          кольцо(доля, р ? Math.round(доля*100)+'%' : '')+
@@ -212,62 +265,54 @@ function фильтрБлоков(что){
     к.style.display = (!что || к.dataset.искать.indexOf(что) >= 0) ? '' : 'none'; });
 }
 function списокТем(){
-  var ч = '';
-  огл.разделы.forEach(function(р){
-    var первый = Math.floor((р.от-1)/огл.в_блоке)+1, последний = Math.floor((р.до-1)/огл.в_блоке)+1;
-    var решено = 0, всего = 0;
-    for (var н = первый; н <= последний; н++){ решено += решеноВБлоке(н); всего += огл.в_блоке; }
-    ч += '<button class="blok" data-блок="'+первый+'">'+кольцо(Math.min(1, решено/Math.max(1,р.n)), '')+
-         '<span class="tx"><span class="nm">'+эк(р.имя)+'</span>'+
-         '<span class="po">'+р.n+' вопрос'+окончание(р.n)+' · блоки '+первый+'–'+последний+'</span></span></button>';
-  });
-  return ч;
+  var о = огл[текКурс];
+  return о.разделы.map(function(р){
+    var первый = Math.floor((р.от-1)/о.в_блоке)+1, последний = Math.floor((р.до-1)/о.в_блоке)+1;
+    var решено = 0;
+    for (var н = первый; н <= последний; н++) решено += решеноВБлоке(н);
+    return '<button class="blok" data-блок="'+первый+'">'+кольцо(решено/Math.max(1,р.n), '')+
+      '<span class="tx"><span class="nm">'+эк(р.имя)+'</span>'+
+      '<span class="po">'+р.n+' вопрос'+окончание(р.n)+' · блоки '+первый+'–'+последний+'</span></span></button>';
+  }).join('');
 }
 function списокПодборки(массив, подсказка){
   if (!массив.length) return '<p class="pusto">'+подсказка+'</p>';
   return '<button class="blok" data-режим="'+(массив===избранное?'избранное':'ошибки')+'">'+
     кольцо(0, массив.length)+'<span class="tx"><span class="nm">Прорешать '+массив.length+' вопрос'+окончание(массив.length)+'</span>'+
-    '<span class="po">подряд, вперемешку</span></span></button>';
+    '<span class="po">со всех курсов, вперемешку</span></span></button>';
 }
-function окончание(н){ var х = н%10, с = н%100;
-  if (х===1 && с!==11) return ''; if (х>=2 && х<=4 && (с<12||с>14)) return 'а'; return 'ов'; }
-
 function списокРежимов(){
-  var р = [['экзамен','🎓','Экзамен','60 вопросов вперемешку, час времени, в конце оценка'],
-           ['спринт','⚡','Спринт','20 вопросов подряд — быстрая проверка'],
-           ['марафон','🏃','Марафон','без конца и без счёта, пока не надоест'],
-           ['ошибки','🔁','Работа над ошибками','только то, где вы ошиблись ('+ошибки.length+')'],
-           ['редкие','💎','Что давно не встречалось','вопросы из блоков, куда вы ещё не заходили']];
-  return р.map(function(м){
-    return '<button class="rezhim" data-режим="'+м[0]+'"><span class="zn">'+м[1]+'</span>'+
-      '<span class="tx"><span class="nm">'+м[2]+'</span><span class="po">'+м[3]+'</span></span></button>';
-  }).join('');
+  return [['экзамен','🎓','Экзамен','60 вопросов вперемешку, час времени, в конце оценка'],
+          ['спринт','⚡','Спринт','20 вопросов подряд — быстрая проверка'],
+          ['марафон','🏃','Марафон','без конца и без счёта, пока не надоест'],
+          ['ошибки','🔁','Работа над ошибками','только то, где вы ошиблись ('+ошибки.length+')'],
+          ['редкие','💎','Что давно не встречалось','вопросы из блоков, куда вы ещё не заходили']]
+    .map(function(м){
+      return '<button class="rezhim" data-режим="'+м[0]+'"><span class="zn">'+м[1]+'</span>'+
+        '<span class="tx"><span class="nm">'+м[2]+'</span><span class="po">'+м[3]+'</span></span></button>';
+    }).join('');
 }
 
-/* ---------- сеанс решения ---------- */
+/* ---------- сеанс ---------- */
 function открытьБлок(н){
   корн.innerHTML = '<p class="pusto">Загружаю блок '+н+'…</p>';
   взятьБлок(н).then(function(вопросы){
-    var п = прогресс[н]||{};
-    var первый = 0;
+    var п = прогресс[ключБлока(н)]||{}, первый = 0;
     for (var i = 0; i < вопросы.length; i++){ if (п[i] === undefined){ первый = i; break; } }
-    сеанс = { вид:'блок', блок:н, вопросы:вопросы, номер:первый, имя:'Блок '+н,
+    сеанс = { вид:'блок', блок:н, курс:текКурс, вопросы:вопросы, номер:первый, имя:'Блок '+н,
               ответы:Object.assign({}, п), верно:0, всего:0 };
     рисовать(); window.scrollTo(0,0);
   }).catch(function(){ корн.innerHTML = '<p class="pusto">Не получилось загрузить блок. Проверьте связь.</p>'; });
 }
-
+function перемешать(м){ for (var i = м.length-1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)); var т = м[i]; м[i] = м[j]; м[j] = т; } return м; }
 function собратьСлучайные(сколько, толькоНовые){
-  var номера = огл.блоки.map(function(б){ return б.н; });
+  var номера = огл[текКурс].блоки.map(function(б){ return б.н; });
   if (толькоНовые){ var н2 = номера.filter(function(н){ return !решеноВБлоке(н); }); if (н2.length) номера = н2; }
   перемешать(номера);
-  var надо = Math.ceil(сколько / 12) + 1;
-  return Promise.all(номера.slice(0, надо).map(взятьБлок)).then(function(куски){
+  return Promise.all(номера.slice(0, Math.ceil(сколько/12)+1).map(взятьБлок)).then(function(куски){
     var все = [].concat.apply([], куски); перемешать(все); return все.slice(0, сколько);
   });
 }
-function перемешать(м){ for (var i = м.length-1; i > 0; i--){ var j = Math.floor(Math.random()*(i+1)); var т = м[i]; м[i] = м[j]; м[j] = т; } return м; }
-
 function запуститьРежим(режим){
   if (режим === 'избранное' || режим === 'ошибки'){
     var список = (режим === 'избранное' ? избранное : ошибки).slice();
@@ -302,7 +347,7 @@ function рисоватьСеанс(){
   if (с.номер >= с.вопросы.length) return рисоватьИтог();
   var в = с.вопросы[с.номер];
   var ч = '<div class="vopros"><div class="verh"><span class="tema">'+эк(в.т||'')+'</span>'+
-    '<span>'+с.имя+' · вопрос '+(с.номер+1)+' из '+с.вопросы.length+'</span>'+
+    '<span>'+эк(с.имя)+' · вопрос '+(с.номер+1)+' из '+с.вопросы.length+'</span>'+
     (с.конец ? '<span class="chasy" id="chasy">60:00</span>' : '')+
     '<button class="zvezda'+(вИзбранном(в)?' on':'')+'" id="zv" title="в избранное">★</button></div>';
   if (с.вид === 'блок'){
@@ -313,37 +358,87 @@ function рисоватьСеанс(){
     }
     ч += '</div>';
   }
-  ч += '<h2>'+эк(в.в)+'</h2><div class="otvety">';
-  в.вар.forEach(function(т, i){ ч += '<button data-вар="'+i+'">'+эк(т)+'</button>'; });
-  ч += '</div><div id="posle"></div></div>';
+  ч += '<h2>'+многострочно(в.в)+'</h2>' + картинки(в.кв);
+  if (в.вар){
+    ч += '<div class="otvety">';
+    в.вар.forEach(function(т, i){ ч += '<button data-вар="'+i+'">'+многострочно(т)+'</button>'; });
+    ч += '</div>';
+  } else {
+    ч += '<button class="dalshe" id="pokazat">Показать ответ</button>';
+  }
+  ч += '<div id="posle"></div></div>';
   корн.innerHTML = ч;
 
   корн.querySelectorAll('[data-вар]').forEach(function(к){
     к.addEventListener('click', function(){ ответить(+к.dataset.вар); }); });
   корн.querySelectorAll('[data-иди]').forEach(function(к){
     к.addEventListener('click', function(){ с.номер = +к.dataset.иди; рисовать(); }); });
+  корн.querySelectorAll('.kart').forEach(function(и){
+    и.addEventListener('click', function(){ и.classList.toggle('bol'); }); });
   document.getElementById('zv').addEventListener('click', function(){ переключитьЗвезду(в, this); });
+  var пк = document.getElementById('pokazat');
+  if (пк) пк.addEventListener('click', function(){ пк.remove(); показатьОткрытый(в); });
   if (с.конец) тикать();
-  // если на вопрос уже отвечали — сразу показать, что было
-  if (с.ответы[с.номер] !== undefined && с.вид === 'блок') показатьРазбор(в, -1, true);
+  if (с.ответы[с.номер] !== undefined && с.вид === 'блок' && в.вар) показатьРазбор(в, -1, true);
+}
+
+function разборHTML(в){
+  var ч = '';
+  if (в.отв) ч += '<div class="otvet-tekst">'+многострочно(в.отв)+'</div>';
+  if (в.п) ч += '<div class="poyasn">'+многострочно(в.п)+'</div>';
+  ч += картинки(в.кр);
+  if (в.к) ч += '<div class="kogda">На экзамене встречался: '+эк(в.к)+'</div>';
+  return ч;
+}
+function кнопкаДальше(){
+  return '<button class="dalshe" id="dalshe">'+
+    (сеанс.номер+1 >= сеанс.вопросы.length ? 'Показать итог' : 'Дальше →')+'</button>';
+}
+function повеситьДальше(){
+  var д = document.getElementById('dalshe');
+  if (д) д.addEventListener('click', function(){ сеанс.номер++; рисовать(); window.scrollTo(0,0); });
+  корн.querySelectorAll('#posle .kart').forEach(function(и){
+    и.addEventListener('click', function(){ и.classList.toggle('bol'); }); });
+}
+
+function показатьОткрытый(в){
+  var п = document.getElementById('posle');
+  п.innerHTML = разборHTML(в) + '<div class="znal"><button class="da" id="знал">Знал</button>'+
+    '<button class="net" id="незнал">Не знал</button></div>';
+  корн.querySelectorAll('#posle .kart').forEach(function(и){
+    и.addEventListener('click', function(){ и.classList.toggle('bol'); }); });
+  document.getElementById('знал').addEventListener('click', function(){ засчитать(в, true); });
+  document.getElementById('незнал').addEventListener('click', function(){ засчитать(в, false); });
+}
+function засчитать(в, верно){
+  записатьОтвет(в, верно);
+  var п = document.getElementById('posle');
+  п.innerHTML = разборHTML(в) + кнопкаДальше();
+  повеситьДальше();
+  var кр = корн.querySelector('[data-иди="'+сеанс.номер+'"]');
+  if (кр) кр.className = (верно ? 'verno' : 'mimo') + ' tut';
+}
+
+function записатьОтвет(в, верно){
+  var с = сеанс;
+  с.ответы[с.номер] = верно ? 1 : 0;
+  с.всего++; if (верно) с.верно++;
+  if (с.вид === 'блок'){
+    var кл = с.курс + ':' + с.блок;
+    прогресс[кл] = прогресс[кл] || {};
+    прогресс[кл][с.номер] = верно ? 1 : 0;
+    класть('mt_прогресс2', прогресс);
+  }
+  if (!верно) добавитьВОшибки(в); else убратьИзОшибок(в);
+  отметитьДень();
 }
 
 function ответить(выбор){
   var с = сеанс, в = с.вопросы[с.номер];
   if (с.ответы[с.номер] !== undefined && с.вид === 'блок') return;
-  var верно = выбор === в.о;
-  с.ответы[с.номер] = верно ? 1 : 0;
-  с.всего++; if (верно) с.верно++;
-  if (с.вид === 'блок'){
-    прогресс[с.блок] = прогресс[с.блок] || {};
-    прогресс[с.блок][с.номер] = верно ? 1 : 0;
-    класть('mt_прогресс', прогресс);
-  }
-  if (!верно) добавитьВОшибки(в); else убратьИзОшибок(в);
-  отметитьДень();
+  записатьОтвет(в, выбор === в.о);
   показатьРазбор(в, выбор, false);
 }
-
 function показатьРазбор(в, выбор, тихо){
   корн.querySelectorAll('[data-вар]').forEach(function(к){
     var i = +к.dataset.вар; к.disabled = true;
@@ -352,11 +447,11 @@ function показатьРазбор(в, выбор, тихо){
   });
   var п = document.getElementById('posle'); if (!п) return;
   var ч = '';
-  if (в.п) ч += '<div class="poyasn">'+эк(в.п)+'</div>';
-  ч += '<button class="dalshe" id="dalshe">'+(сеанс.номер+1 >= сеанс.вопросы.length ? 'Показать итог' : 'Дальше →')+'</button>';
-  п.innerHTML = ч;
-  document.getElementById('dalshe').addEventListener('click', function(){
-    сеанс.номер++; рисовать(); window.scrollTo(0,0); });
+  if (в.п) ч += '<div class="poyasn">'+многострочно(в.п)+'</div>';
+  ч += картинки(в.кр);
+  if (в.к) ч += '<div class="kogda">На экзамене встречался: '+эк(в.к)+'</div>';
+  п.innerHTML = ч + кнопкаДальше();
+  повеситьДальше();
   if (!тихо){
     var кр = корн.querySelector('[data-иди="'+сеанс.номер+'"]');
     if (кр) кр.className = (сеанс.ответы[сеанс.номер] === 1 ? 'verno' : 'mimo') + ' tut';
@@ -372,13 +467,13 @@ function рисоватьИтог(){
     '<button id="кСписку">К списку</button></div></div>';
   document.getElementById('кСписку').addEventListener('click', function(){ сеанс = null; рисовать(); });
   document.getElementById('ещё').addEventListener('click', function(){
-    if (с.вид === 'блок'){ delete прогресс[с.блок]; класть('mt_прогресс', прогресс); открытьБлок(с.блок); }
+    if (с.вид === 'блок'){ delete прогресс[с.курс+':'+с.блок]; класть('mt_прогресс2', прогресс); открытьБлок(с.блок); }
     else запуститьРежим(с.вид);
   });
 }
 
 /* ---------- избранное и ошибки ---------- */
-function ключВопроса(в){ return в.в + '|' + в.вар[в.о]; }
+function ключВопроса(в){ return (в.в||'').slice(0,90) + '|' + (в.вар ? в.вар[в.о] : в.отв||''); }
 function вИзбранном(в){ return избранное.some(function(x){ return ключВопроса(x) === ключВопроса(в); }); }
 function переключитьЗвезду(в, кн){
   if (вИзбранном(в)) избранное = избранное.filter(function(x){ return ключВопроса(x) !== ключВопроса(в); });
@@ -398,9 +493,13 @@ function убратьИзОшибок(в){
 
 /* ---------- старт ---------- */
 рисоватьОгонь();
-fetch(ПУТЬ + 'оглавление.json').then(function(о){ return о.json(); }).then(function(д){
-  огл = д; рисовать();
-}).catch(function(){ корн.innerHTML = '<p class="pusto">Не нашёл банк вопросов. Похоже, страница ещё не выложена целиком.</p>'; });
+try{ var сохр = localStorage.getItem('mt_курс');
+     if (сохр && КУРСЫ.some(function(к){ return к.к === сохр; })) текКурс = сохр; }catch(e){}
+взятьОгл(текКурс).then(рисовать).catch(function(){
+  текКурс = 'общий';
+  взятьОгл('общий').then(рисовать).catch(function(){
+    корн.innerHTML = '<p class="pusto">Не нашёл банк вопросов. Похоже, страница ещё не выложена целиком.</p>'; });
+});
 })();
 </script>
 </body>
