@@ -159,6 +159,14 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
 .кн:disabled{ opacity:.5; cursor:not-allowed; }
 .кн.лёгкая{ background:transparent; box-shadow:none; color:var(--текст2); font-weight:600; }
 
+/* Кнопка «✕ убрать из словарика» — на любом экране, где решаешь именно
+   «Мой словарик» / «Словарик Полины» (просьба 23.09.2026). Специально
+   бледная и внизу: не спорит с основной кнопкой ответа, но всегда под рукой. */
+.убратьСлКн{ display:block; width:100%; margin-top:14px; padding:10px; border:1px dashed var(--линия);
+  border-radius:12px; background:transparent; color:var(--текст2); font:inherit; font-size:13px;
+  font-weight:600; cursor:pointer; text-align:center; }
+.убратьСлКн:active{ background:var(--красныйФон); color:var(--красный); border-color:var(--красный); }
+
 /* ---------- карточка со смахиванием ---------- */
 .сцена{ position:relative; height:calc(100dvh - 300px); min-height:320px; max-height:540px;
   display:flex; align-items:center; justify-content:center; perspective:1400px;
@@ -508,7 +516,7 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202609231939';</script>
+<script>window.ЗУБР_ВЕРСИЯ = '202609240933';</script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -932,6 +940,26 @@ function безУбранных(карточки){
   return карточки.filter(function(c){ return с.indexOf(c.k) < 0; });
 }
 
+/* Кнопка «✕ убрать из словарика» — везде, где решаешь именно словарик,
+   а не произвольную колоду. Просьба Григория 23.09.2026: «где бы я его
+   ни решал — в карточках, не карточках — везде, чтобы была кнопочка
+   удалить слово из словарика». Кнопка живёт только у наб.свой===true
+   («Мой словарик» / «Словарик Полины»), в остальных колодах слов не трогаем. */
+function кнопкаСловарика(набор){
+  if (!набор || !набор.свой) return '';
+  return '<button class="убратьСлКн" data-убрать-тек title="убрать из словарика">✕ убрать из словарика</button>';
+}
+function оживитьКнопкуСловарика(набор, c, послеУдаления){
+  var b = document.querySelector('[data-убрать-тек]');
+  if (!b) return;
+  b.onclick = function(e){
+    e.stopPropagation(); e.preventDefault();
+    убрать(c.k);
+    набор.карточки = набор.карточки.filter(function(д){ return д.k !== c.k; });
+    послеУдаления();
+  };
+}
+
 function свои(){
   var сырое = [];
   try{ сырое = JSON.parse(localStorage.getItem('nemeckiy_zubr_' + ПРОФИЛЬ) || '[]'); }catch(e){}
@@ -1037,18 +1065,17 @@ function загрузить(готово){
       НАБОРЫ = [];
 
       var личные = [];
-      if (ПРОФИЛЬ !== 'polina'){
-        var по = {}, порядок = [];
-        (д.словарик||[]).forEach(function(c){
-          if(!по[c.de]){ по[c.de]={c:c,н:[]}; порядок.push(c.de); }
-          по[c.de].н.push(c.n);
-        });
-        личные = порядок.map(function(де){
-          var з = по[де];
-          return карточка(з.c.de, з.c.ru, з.c.k, з.н, з.c.было, з.c.источник || null,
-                          з.c.f, з.c.тр, з.c.мн);
-        });
-      }
+      var источникСловарика = ПРОФИЛЬ === 'polina' ? (д.словарикПолины || []) : (д.словарик || []);
+      var по = {}, порядок = [];
+      источникСловарика.forEach(function(c){
+        if(!по[c.de]){ по[c.de]={c:c,н:[]}; порядок.push(c.de); }
+        по[c.de].н.push(c.n);
+      });
+      личные = порядок.map(function(де){
+        var з = по[де];
+        return карточка(з.c.de, з.c.ru, з.c.k, з.н, з.c.было, з.c.источник || null,
+                        з.c.f, з.c.тр, з.c.мн);
+      });
       НАБОРЫ.push({ ключ:'мой', имя: ПРОФИЛЬ==='polina'?'Словарик Полины':'Мой словарик',
                     под:'из тетради и с занятий', знак:'📓', свой:true,
                     раздел:'Моё', разделЗнак:'📓', карточки: безУбранных(личные.concat(свои())) });
@@ -1895,9 +1922,14 @@ function экранНаправления(где, заголовок, поясн
         '</div>' +
         '<button class="звезда' + (звезда(c)?' горит':'') + '" id="звёздочка">' + (звезда(c)?'★':'☆') + '</button>' +
         '<div class="окраска" id="окраска"></div>' +
-      '</div>';
+      '</div>' + кнопкаСловарика(набор);
 
     карта = $('карта'); флип = $('флип'); окраска = $('окраска');
+    оживитьКнопкуСловарика(набор, c, function(){
+      очередь.shift();
+      тройки.forEach(function(т,i){ тройки[i] = т.filter(function(x){ return x.k !== c.k; }); });
+      нарисовать();
+    });
     $('звёздочка').onclick = function(e){
       e.stopPropagation();
       var стало = !звезда(c); звезда(c, стало);
@@ -2229,7 +2261,12 @@ function печатьТеста(набор, н){
       '<div class="счёт"><span><b>' + (i+1) + '</b> / ' + колода.length + '</span>' +
       (н.мгновенно ? '<span class="кучка з"><i></i><b>' + верных + '</b></span>' : '') + '</div>' +
       лентаВопросов() +
-      '<div id="телоВопроса"></div>';
+      '<div id="телоВопроса"></div>' + кнопкаСловарика(набор);
+    оживитьКнопкуСловарика(набор, c, function(){
+      колода.splice(i, 1);
+      источник = источник.filter(function(x){ return x.k !== c.k; });
+      вопрос();
+    });
 
     if (тип === 'выбор') сВыбором(c, нем);
     else if (тип === 'вн') верноНеверно(c, нем);
@@ -2567,7 +2604,12 @@ function очередь(набор){
           '<div class="слово">' + c.deHtml + '</div>' +
           '<div class="перевод" id="ответТут" style="margin-top:16px;color:var(--текст2);display:none">' + экр(c.ru) + '</div>' +
         '</div></div></div>' +
-      '<div id="подКартой"><button class="кн главная широкая" id="кПоказать">Показать ответ</button></div>';
+      '<div id="подКартой"><button class="кн главная широкая" id="кПоказать">Показать ответ</button></div>' +
+      кнопкаСловарика(набор);
+    оживитьКнопкуСловарика(набор, c, function(){
+      очер.shift();
+      шаг();
+    });
     сказать(c);
     $('кПоказать').onclick = раскрыть;
 
@@ -2844,7 +2886,12 @@ function очередь(набор){
       '<div class="ступени">' + маршрут.map(function(ш){
         return '<i class="' + (ш < э.ступень ? 'взята' : ш === э.ступень ? 'идёт' : '') + '"></i>';
       }).join('') + '</div>' +
-      '<div id="тело"></div>';
+      '<div id="тело"></div>' + кнопкаСловарика(набор);
+    оживитьКнопкуСловарика(набор, c, function(){
+      очередь = очередь.filter(function(x){ return x.c.k !== c.k; });
+      фазы.forEach(function(ф){ ф.слова = ф.слова.filter(function(x){ return x.k !== c.k; }); });
+      шаг();
+    });
 
     if (э.ступень === 0) выбор(э, c, сРус);
     else if (э.ступень === 1) верноНет(э, c, сРус);
@@ -3386,7 +3433,12 @@ function таблицаГлаголов(набор){
       '<input class="поле" id="ввод" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="что слышишь">' +
       умляутыHTML() + '<div style="height:12px"></div>' +
       '<div style="display:flex;gap:10px"><button class="кн" id="кПодсказка">Подсказка</button>' +
-      '<button class="кн главная" id="кПроверить" style="flex:1">Проверить</button></div><div id="откл"></div>';
+      '<button class="кн главная" id="кПроверить" style="flex:1">Проверить</button></div><div id="откл"></div>' +
+      кнопкаСловарика(набор);
+    оживитьКнопкуСловарика(набор, c, function(){
+      колода.splice(i, 1);
+      шаг();
+    });
     var поле = $('ввод'); поле.focus(); подключитьУмляуты(поле);
     сказать(c);
     $('кСлушать').onclick = function(){ сказать(c); };
