@@ -31,6 +31,16 @@
     border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+  /* Панель «назад» — её не было совсем (жалоба Григория 23.09.2026:
+     «вверху кнопочки назад нету, её надо сделать»), теперь она такая же,
+     как на остальных страницах сайта. */
+  .backbar{ position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; font-family:inherit; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar a.bb-link:active{ transform:scale(0.97); }
   .lp { min-height:100vh; }
   .вкладки { display:flex; flex-wrap:wrap; gap:8px; margin:16px 0 4px; }
   .вкладки button { font:inherit; font-size:13.5px; font-weight:600; padding:9px 15px; min-height:42px;
@@ -90,6 +100,9 @@
 </style>
 </head>
 <body>
+<div class="backbar">
+  <a class="bb-link" href="index.html">&#8592; Все уроки</a>
+</div>
 <div class="lp">
   <div class="eyebrow">Немецкий</div>
   <h1>Спряжения</h1>
@@ -131,6 +144,22 @@ var ДАННЫЕ = {"лица": ["ich", "du", "er/sie/es", "wir", "ihr", "sie/Si
   var ФРАЗЫ = ДАННЫЕ.предложения || [];
   var группа = 0, режим = 'таблица', глагол = 0, время = 'наст';
   var поле = document.getElementById('поле');
+
+  /* Заход по ссылке — со страницы «Правила»: клик по таблице там открывает
+     сразу нужную группу в режиме «По памяти» (просьба 23.09.2026).
+     ?группа=особые&режим=память */
+  (function(){
+    try{
+      var п = new URLSearchParams(location.search);
+      var ключГруппы = п.get('группа');
+      if (ключГруппы){
+        var i = ГРУППЫ.findIndex(function(г){ return г.ключ === ключГруппы; });
+        if (i >= 0) группа = i;
+      }
+      var режимИзСсылки = п.get('режим');
+      if (режимИзСсылки) режим = режимИзСсылки;
+    }catch(e){}
+  })();
 
   function экр(s){ return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
   function перемешать(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;} return a; }
