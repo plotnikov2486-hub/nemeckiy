@@ -1,0 +1,1436 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Занятие 15 Полины с Дашей — склонение личных местоимений</title>
+
+<style id="backbar-css">
+  .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    padding:7px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar a.bb-link:active{ transform:scale(0.97); }
+  .backbar .bb-title{ color:rgba(255,255,255,0.72); font-size:12.5px; margin-left:auto;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52%; }
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+</style>
+
+<style>
+  /* кнопка «перевод» у предложения домашки */
+  .hw-tr-btn { display:inline-flex; align-items:center; margin-left:6px; padding:2px 9px;
+    border:1px solid var(--line); border-radius:999px; background:transparent;
+    color:var(--ink-muted); font-size:11.5px; font-family:inherit; cursor:pointer;
+    vertical-align:middle; }
+  .hw-tr-btn.on { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .hw-tr { display:block; margin-top:4px; font-size:13px; color:var(--ink-muted); font-style:italic; }
+  /* Спрятанное — всегда спрятано. Без этой строки display:block выше
+     перебивал встроенное у браузера [hidden]{display:none}, и перевод с
+     «моим вариантом» были видны сразу, без нажатия (поймано на снимке 10.09;
+     проверка через код говорила «спрятано» — а на экране было видно). */
+  .hw-tr[hidden] { display:none !important; }
+  /* ответ с пояснением */
+  .hw-ans { padding:6px 0; border-bottom:1px dashed var(--line); }
+  .hw-ans:last-child { border-bottom:none; }
+  .hw-ans b { color:var(--ink); }
+  .hw-why { font-size:12.5px; color:var(--ink-muted); margin-top:2px; line-height:1.45; }
+  .hw-why i { color:var(--ink); font-style:normal; font-weight:600; }
+</style>
+
+<style>
+  .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
+    padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+</style>
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --pk:#b0407a; --pk-bg:#fbeaf2; --tr:#8a2be2;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --pk:#e88fb8; --pk-bg:#2b1620; --tr:#c9a4f0;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --pk:#e88fb8; --pk-bg:#2b1620; --tr:#c9a4f0;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--pk); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(23px,5vw,31px); font-weight:600; }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:64ch; }
+  .meta { display:flex; gap:8px; flex-wrap:wrap; margin-top:14px; }
+  .chip-meta { font-size:12.5px; background:var(--surface); border:1px solid var(--line); padding:6px 12px; border-radius:999px; color:var(--ink-muted); }
+  .chip-meta b { color:var(--ink); }
+  .hint { display:inline-flex; align-items:center; gap:6px; margin-top:10px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  .toc { background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:22px; }
+  .toc b { font-size:13px; color:var(--ink-muted); display:block; margin-bottom:8px; }
+  .toc ol { margin:0; padding-left:20px; columns:2; column-gap:24px; font-size:13.5px; }
+  .toc li { margin:3px 0; break-inside:avoid; }
+  .toc a { color:var(--accent); text-decoration:none; } .toc a:hover { text-decoration:underline; }
+  section.block { margin-top:36px; scroll-margin-top:62px; }
+  .block h2 { font-size:19px; font-weight:600; display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--pk); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:64ch; }
+  button.play { flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .warn-box { background:var(--warn-bg); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .warn-box b { color:var(--warn); } .warn-box .big { font-size:15px; color:var(--ink); font-weight:700; display:block; margin-bottom:4px; }
+  .dasha-box { background:var(--pk-bg); border:1px solid var(--line); border-left:4px solid var(--pk); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .dasha-box b { color:var(--pk); }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fill,minmax(168px,1fr)); gap:8px; }
+  .grid3 { display:grid; grid-template-columns:repeat(auto-fill,minmax(124px,1fr)); gap:8px; }
+  .wcard { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 12px; box-shadow:var(--shadow); }
+  .wcard.der { border-left:4px solid var(--der); } .wcard.die { border-left:4px solid var(--die); } .wcard.das { border-left:4px solid var(--das); }
+  .wcard .txt { flex:1; min-width:0; }
+  .wcard .de { font-family:Georgia,serif; font-weight:700; font-size:15px; overflow-wrap:anywhere; }
+  .wcard .de .art-der { color:var(--der); } .wcard .de .art-die { color:var(--die); } .wcard .de .art-das { color:var(--das); }
+  .wcard .de b { color:var(--play); }
+  .wcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:1px; }
+  .wcard .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .wcard button.play { width:30px; height:30px; font-size:13px; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .pcard { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 15px; box-shadow:var(--shadow); }
+  .pcard .txt { flex:1; min-width:0; }
+  .pcard .de { font-family:Georgia,serif; font-size:15.5px; font-weight:600; }
+  .pcard .de b { color:var(--play); }
+  .pcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pcard .ru { font-size:12.5px; color:var(--ink-muted); margin-top:1px; }
+  .conj { display:flex; flex-direction:column; gap:6px; }
+  .conj-row { display:flex; align-items:center; gap:11px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:8px 10px 8px 13px; box-shadow:var(--shadow); }
+  .conj-row.odd { background:var(--surface-2); }
+  .conj-row .pron { flex:0 0 112px; font-size:12.5px; color:var(--ink-muted); }
+  .conj-row .form { flex:1; min-width:0; }
+  .conj-row .form .de { font-family:Georgia,serif; font-size:16px; font-weight:700; }
+  .conj-row .form .de em { font-style:normal; color:var(--play); }
+  .conj-row .form .tr { font-size:11.5px; color:var(--tr); font-weight:600; }
+  .conj-row button.play { width:30px; height:30px; font-size:13px; }
+  /* сравнение пар */
+  .vs { display:grid; grid-template-columns:1fr; gap:10px; }
+  @media(min-width:600px){ .vs { grid-template-columns:1fr 1fr; } }
+  .vs-card { background:var(--surface); border:1px solid var(--line); border-radius:12px; padding:12px 14px; box-shadow:var(--shadow); }
+  .vs-card .head { font-family:Georgia,serif; font-weight:700; font-size:17px; color:var(--accent); margin-bottom:3px; }
+  .vs-card .sub { font-size:12px; color:var(--ink-muted); margin-bottom:9px; }
+  .vs-card .ex { display:flex; align-items:center; gap:9px; }
+  .vs-card .ex .txt { flex:1; min-width:0; }
+  .vs-card .ex .de { font-family:Georgia,serif; font-size:14px; font-weight:600; }
+  .vs-card .ex .tr { font-size:11px; color:var(--tr); font-weight:600; }
+  .vs-card .ex .ru { font-size:11.5px; color:var(--ink-muted); }
+  .vs-card .ex button.play { width:30px; height:30px; font-size:13px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:82%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .bubble .txt .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw-box { background:var(--pk-bg); border:1px solid var(--line); border-left:4px solid var(--pk); border-radius:10px; padding:16px 18px; }
+  .hw-item { display:flex; gap:10px; align-items:flex-start; padding:9px 0; border-bottom:1px solid var(--line); font-size:14px; }
+  .hw-item:last-child { border-bottom:none; }
+  .hw-item input { width:18px; height:18px; margin-top:2px; accent-color:var(--pk); flex-shrink:0; cursor:pointer; }
+  .hw-item label { cursor:pointer; flex:1; }
+  .hw-item.done label { text-decoration:line-through; color:var(--ink-faint); }
+  .hw-progress { font-size:13px; color:var(--ink-muted); margin-bottom:12px; }
+  .ex-box { background:var(--surface-2); border:1px solid var(--line); border-radius:10px; padding:14px 16px;
+    margin-top:10px; font-family:Georgia,serif; font-size:14.5px; line-height:2.15; }
+  .ex-box .n { font-family:-apple-system,sans-serif; font-size:12px; color:var(--ink-faint); margin-right:2px; }
+  .ex-box .hint-ru { font-family:-apple-system,sans-serif; font-size:12px; color:var(--ink-muted); }
+  .ex-box .blank { display:inline-block; min-width:92px; border-bottom:1.5px solid var(--play); }
+  .ex-box .blank2 { display:inline-block; min-width:180px; border-bottom:1.5px solid var(--play); }
+  .src-note { font-size:11.5px; color:var(--ink-faint); margin-top:7px; line-height:1.45; }
+  .mat-link { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); padding:12px 14px; text-decoration:none; color:var(--ink);
+    box-shadow:var(--shadow); margin-top:8px; font-size:14px; }
+  .mat-link .ico { font-size:21px; }
+  .mat-link .sub { font-size:12px; color:var(--ink-muted); }
+  .mat-link:hover { border-color:var(--pk); }
+  .postab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface-2);
+    border-radius:10px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:6px; }
+  .postab th, .postab td { padding:9px 11px; border:1px solid var(--line); text-align:center; }
+  .postab th { background:var(--accent); color:var(--accent-ink); font-weight:600; font-size:12.5px;
+    letter-spacing:.03em; text-transform:uppercase; }
+  .postab td { font-family:Georgia,serif; font-size:15px; }
+  .postab td b { color:var(--play); }
+  .hwbox { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play);
+    border-radius:10px; padding:14px 16px; margin-bottom:12px; }
+  .hwbox .hwnum { display:inline-block; background:var(--play); color:var(--play-ink); font-weight:700;
+    font-size:12px; padding:2px 9px; border-radius:999px; margin-bottom:8px; }
+  .hwbox h3 { margin:0 0 8px; font-size:15.5px; font-family:Georgia,serif; }
+  .hwtext { background:var(--surface); border:1px solid var(--line); border-radius:8px; padding:12px 14px;
+    margin:10px 0; font-family:Georgia,serif; font-size:14.5px; line-height:1.65; }
+  .hwtext p { margin:0 0 10px; } .hwtext p:last-child { margin-bottom:0; }
+  .hwtext b { color:var(--play); }
+  .para { display:flex; gap:11px; align-items:flex-start; background:var(--surface); border:1px solid var(--line);
+    border-left:4px solid var(--accent); border-radius:9px; padding:12px 13px; margin-bottom:9px; box-shadow:var(--shadow); }
+  .para .ptxt { flex:1; min-width:0; }
+  .para .pde { font-family:Georgia,serif; font-size:14.5px; line-height:1.6; }
+  .para .pde b { color:var(--play); }
+  .para .pru { font-size:12.5px; color:var(--ink-muted); margin-top:7px; padding-top:7px; border-top:1px dashed var(--line); line-height:1.5; }
+  .para button.play { flex-shrink:0; width:32px; height:32px; font-size:13px; margin-top:2px; }
+  .hwrow { display:flex; align-items:flex-start; gap:10px; margin:8px 0; }
+  .hwrow .n { flex-shrink:0; font-weight:700; color:var(--accent); font-size:13px; min-width:26px; padding-top:7px; }
+  .hwrow .q { flex:1; min-width:0; }
+  .fld { width:100%; box-sizing:border-box; font:inherit; font-size:14px; padding:7px 10px;
+    border:1px solid var(--line); border-radius:7px; background:var(--surface); color:var(--ink); }
+  .fld:focus { outline:2px solid var(--accent); outline-offset:1px; }
+  .fld.short { max-width:190px; }
+  textarea.fld { min-height:62px; resize:vertical; line-height:1.5; }
+  .opt { display:flex; align-items:flex-start; gap:8px; margin:5px 0; font-size:13.5px; cursor:pointer; }
+  .opt input { margin-top:3px; flex-shrink:0; width:17px; height:17px; accent-color:var(--accent); }
+  .mv { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin:9px 0; font-size:14px; line-height:1.7; }
+  .mv .num { font-weight:700; color:var(--accent); font-size:12.5px; }
+  .mv .fld { width:130px; }
+  .hint-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn);
+    border-radius:8px; padding:11px 13px; font-size:13px; color:var(--ink-muted); margin:10px 0; }
+  .origlink { display:inline-flex; align-items:center; gap:6px; font-size:12.5px; color:var(--accent);
+    text-decoration:none; border:1px solid var(--line); border-radius:999px; padding:5px 12px; margin-top:8px; }
+  .saveinfo { font-size:12px; color:var(--ink-faint); margin-top:10px; }
+  footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+</style>
+<style>
+  .kas-wrap { overflow-x:auto; -webkit-overflow-scrolling:touch; margin:12px 0; }
+  table.kas { border-collapse:collapse; width:100%; min-width:420px; font-size:14px; background:var(--surface); border-radius:12px; overflow:hidden; }
+  table.kas th, table.kas td { border:1px solid var(--line); padding:8px 10px; text-align:center; }
+  table.kas th { background:var(--surface-2); color:var(--ink); font-weight:700; }
+  table.kas td.pad { text-align:left; font-weight:700; color:var(--accent); white-space:nowrap; }
+  table.kas td b { color:var(--play); }
+  table.kas input.fld { width:78px; text-align:center; }
+  img.hw-photo { display:block; max-width:100%; border-radius:12px; margin:10px 0; }
+  .спрятано[hidden] { display:none !important; }
+  .кн-показать { margin-top:8px; background:transparent; border:1px dashed var(--line); border-radius:8px;
+    padding:7px 14px; font-size:13px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
+  .lv { font-size:13px; color:var(--ink-muted); margin:6px 0 2px; }
+  .hwline { margin:10px 0; }
+  .hwline input.fld { width:100%; max-width:520px; }
+</style>
+<!--ТЕМА-ЗУБРА-START-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Вид ЗУБРа для страниц уроков. Переопределяем только переменные —
+   разметка и классы остаются прежними, поэтому ничего не разъезжается. */
+:root{
+  --bg:#E9EBF6; --surface:#FFFFFF; --surface-2:#F3F4FA;
+  --ink:#1C2242; --ink-muted:#6C7291; --ink-faint:#9AA0BE;
+  --accent:#4A63D6; --accent-ink:#FFFFFF;
+  --play:#EC6A86; --play-ink:#FFFFFF;
+  --line:#DCE0F0;
+  --warn:#E0455E; --warn-bg:#FBE6EA;
+  --hb:#4A63D6; --hb-bg:#EAEDFA;
+  --sn:#8E6AD6; --sn-bg:#F0EBFA;
+  --tr:#8E6AD6;
+  --der:#4A63D6; --die:#EC6A86; --das:#E8A33D;
+  --bubble-a:#F3F4FA; --bubble-m:#FBF1DE;
+  --shadow:0 12px 30px rgba(40,50,110,.12);
+  --radius:18px;
+}
+:root[data-theme="dark"]{
+  --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+  --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
+  --accent:#8798EC; --accent-ink:#0D1020;
+  --play:#EC6A86; --play-ink:#FFFFFF;
+  --line:#2A2E52;
+  --warn:#F08098; --warn-bg:#3A1620;
+  --hb:#8798EC; --hb-bg:#1F2445;
+  --sn:#B08CE8; --sn-bg:#2A2145;
+  --tr:#B08CE8;
+  --bubble-a:#232748; --bubble-m:#2E2718;
+  --shadow:0 12px 30px rgba(0,0,0,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+    --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
+    --accent:#8798EC; --accent-ink:#0D1020;
+    --play:#EC6A86; --play-ink:#FFFFFF;
+    --line:#2A2E52;
+    --warn:#F08098; --warn-bg:#3A1620;
+    --hb:#8798EC; --hb-bg:#1F2445;
+    --sn:#B08CE8; --sn-bg:#2A2145;
+    --tr:#B08CE8;
+    --bubble-a:#232748; --bubble-m:#2E2718;
+    --shadow:0 12px 30px rgba(0,0,0,.35);
+  }
+}
+
+/* Фон в уроках задан на .lp, а он не шире 800px — на большом экране
+   по бокам оставался белый фон браузера, и в тёмной теме это резало глаз.
+   Красим сам body тем же цветом. */
+body{ background:var(--bg); color:var(--ink); }
+
+/* Шрифт интерфейса — как в ЗУБРе. Немецкие слова намеренно оставляем
+   Georgia: так иностранное слово видно с первого взгляда и не сливается
+   с русским пояснением. */
+body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
+  font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+}
+
+/* Профиль: у Гриши синий, у Полины розовый. Атрибут data-кто ставит
+   tema.js — здесь только меняем акцент под него. Градиенты трогаем
+   тоже, иначе розовая страница осталась бы с синими кнопками. */
+:root[data-кто="polina"]{
+  --accent:#EC6A86; --hb:#EC6A86; --hb-bg:#FBE9EE;
+}
+:root[data-кто="polina"] .block h2 .num,
+:root[data-кто="polina"] .play,
+:root[data-кто="polina"] .bb-top{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C) !important;
+  box-shadow:0 6px 16px rgba(236,106,134,.32);
+}
+:root[data-кто="polina"] .lp h1{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C);
+  -webkit-background-clip:text; background-clip:text;
+}
+:root[data-кто="polina"][data-theme="dark"]{ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
+@media (prefers-color-scheme: dark){
+  :root[data-кто="polina"]:not([data-theme="light"]){ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
+}
+
+/* ── Главное отличие от прошлой попытки ──
+   Раньше я поменял только цвета, и врач справедливо сказал, что разницы
+   не видно: блоки уроков прозрачные и без отступов, так что ни тень,
+   ни скругление на них не читались. Теперь каждый раздел урока —
+   настоящая белая плитка, как карточки на сайте-визитке. */
+.block{
+  background:var(--surface);
+  border-radius:22px;
+  padding:20px 18px;
+  margin-bottom:16px;
+  box-shadow:0 12px 30px rgba(40,50,110,.12);
+  border:none;
+}
+:root[data-theme="dark"] .block{ box-shadow:0 12px 30px rgba(0,0,0,.35); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .block{
+  box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+
+/* Номер раздела — кружок с фирменным градиентом, как иконки на визитке */
+.block h2 .num{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:12px; margin-right:9px;
+  background:linear-gradient(135deg,#4A63D6,#EC6A86);
+  color:#fff; font-size:16px; font-weight:800;
+  box-shadow:0 6px 14px rgba(74,99,214,.3);
+}
+.block h2{ display:flex; align-items:center; gap:2px; flex-wrap:wrap; }
+
+/* Оглавление и врезки — тоже плитки, с мягкой тенью */
+.toc, .grammar-box, .warn-box, .link-box{
+  border-radius:18px; box-shadow:0 6px 18px rgba(40,50,110,.08);
+}
+:root[data-theme="dark"] .toc,
+:root[data-theme="dark"] .grammar-box,
+:root[data-theme="dark"] .warn-box{ box-shadow:0 6px 18px rgba(0,0,0,.3); }
+
+/* Карточки слов — приподнимаются, как плитки в приложении */
+.wcard, .pcard{
+  border-radius:16px;
+  box-shadow:0 6px 16px rgba(40,50,110,.10);
+  transition:transform .14s ease, box-shadow .14s ease;
+}
+.wcard:active, .pcard:active{ transform:scale(.99); }
+
+/* Кнопка звука — круглая, с градиентом и объёмной тенью */
+.play{
+  background:linear-gradient(135deg,#4A63D6,#EC6A86) !important;
+  color:#fff !important; border:none !important;
+  box-shadow:0 6px 16px rgba(74,99,214,.32);
+}
+
+/* Шапка — «стекло» как в айфоне: полупрозрачная, с размытием */
+.backbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--surface) 72%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  box-shadow:0 1px 0 rgba(255,255,255,.35) inset;
+}
+.bb-link{ color:var(--accent); font-weight:700; }
+
+/* Нижняя ссылка возврата — кнопка-таблетка, как призыв к действию на визитке */
+.bb-top{
+  display:block; text-align:center; margin:22px auto 30px; max-width:520px;
+  padding:15px 22px; border-radius:999px; text-decoration:none;
+  background:linear-gradient(135deg,#4A63D6,#EC6A86); color:#fff !important;
+  font-weight:700; box-shadow:0 12px 26px rgba(74,99,214,.3);
+}
+
+/* Заголовок страницы — фирменный градиент */
+.lp h1{
+  background:linear-gradient(135deg,#4A63D6,#EC6A86);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  letter-spacing:-.02em;
+}
+.eyebrow{ letter-spacing:.1em; }
+
+</style>
+<!--ТЕМА-ЗУБРА-END-->
+</head>
+<body>
+
+<div class="backbar">
+  <a class="bb-link" href="../index.html">&#8592; Все уроки</a>
+  <span class="bb-title">Занятие 15 Полины · 24.09.2026</span>
+</div>
+
+<div class="lp">
+  <div class="eyebrow">Занятия с Дашей · Полина · занятие 15</div>
+  <h1>Склоняем местоимения: mir, mich, ihm, ihn</h1>
+  <p class="lede">Сорок минут: сначала <b>повтор неопределённого артикля</b> — короткие фразы со слайда и текст, где нужно решить, какой артикль ставить. Потом новая тема — <b>склонение личных местоимений</b>: «мне / меня», «ему / его», «нам / нас». Таблица небольшая, но в ней есть ловушки: <i>sie</i> и <i>es</i> в Akkusativ не меняются, у <i>wir</i> и <i>ihr</i> одна форма на оба падежа, а <b>anrufen</b> требует Akkusativ, хотя по-русски «звонить <b>ему</b>». Всё с озвучкой и <span style="color:var(--tr);font-weight:600">[транскрипцией]</span>.</p>
+  <div class="hint">🔊 = нажми и слушай — звук встроен в страницу, интернет не нужен</div>
+
+  <div class="warn-box">
+    <span class="big">Что важно знать про эту запись</span>
+    • Связь в начале подвисала: в разминке несколько фраз разобрать трудно, они отмечены как смазанные. Правильный вариант я везде даю по грамматике.<br>
+    • Текст на артикли Даша показывала на экране, на записи его читает вслух Полина. Я восстановила его по чтению и по переводу Полины в конце — почти наверняка он совпадает со слайдом, но не дословно.<br>
+    • Занятие было короче обычного: 40 минут. Даша сказала, что 10 минут добавит в понедельник.
+  </div>
+
+  <div class="toc">
+    <b>Что в занятии</b>
+    <ol>
+      <li><a href="#s1">🔁 Разминка: неопределённый артикль</a></li>
+      <li><a href="#s2">📝 Текст: какой артикль поставить</a></li>
+      <li><a href="#s3">🧩 Отступление про приставки</a></li>
+      <li><a href="#s4">⭐⭐ Личные местоимения: таблица</a></li>
+      <li><a href="#s5">⭐ Четыре правила, которые запомнить</a></li>
+      <li><a href="#s6">🗣 Фразы со слайда</a></li>
+      <li><a href="#s7">⚠️ Ловушки: anrufen, gefallen, danken</a></li>
+      <li><a href="#s8">⚠️ Что поправила Даша</a></li>
+      <li><a href="#s9">📚 Домашка от Даши</a></li>
+      <li><a href="#s10">💬 Мелочи занятия</a></li>
+    </ol>
+  </div>
+
+  <section class="block" id="s1">
+    <h2><span class="num">1</span> 🔁 Разминка: неопределённый артикль</h2>
+    <div class="grammar-box">
+      Повтор занятия 13: <b>ein / eine</b> меняется по падежам. Сначала решаем, какой нужен падеж (кто? — Nominativ, кого? — Akkusativ, кому? — Dativ), потом берём форму:<br>
+      Akkusativ: <b>einen</b> (муж.) · <b>eine</b> · <b>ein</b>. Dativ: <b>einem</b> (муж. и ср.) · <b>einer</b> (жен.).<br>
+      Глаголы с Dativ из разминки: <b>helfen</b> (помогать кому), <b>glauben</b> (верить кому). А <b>brauchen</b> — всегда Akkusativ, хотя по-русски «нуждаться <b>в ком</b>».
+    </div>
+    <div id="razminka" class="grid2" style="margin-top:12px"></div>
+    <p class="desc" style="margin-top:14px">Слова, которые всплыли по ходу:</p>
+    <div id="slova" class="grid2"></div>
+    <div class="link-box" style="margin-top:12px">
+      ✏️ Про <b>Stift</b>: <i>der Stift</i> — это вообще «то, чем пишут». Карандаш — <b>der Bleistift</b>, шариковая ручка — <b>der Kugelschreiber</b>, в разговоре коротко <b>der Kuli</b>. Даша объясняла это быстро, запись тут смазана, так что раскладка по словам — моя.
+    </div>
+  </section>
+
+  <section class="block" id="s2">
+    <h2><span class="num">2</span> 📝 Текст: какой артикль поставить</h2>
+    <div class="grammar-box">
+      Даша: «здесь может стоять определённый, неопределённый или нулевой артикль». Правило простое:<br>
+      • предмет упоминается <b>впервые</b>, «какой-то» — <b>ein / eine</b>: <i>Ich habe <b>eine</b> Katze</i>;<br>
+      • о нём <b>уже говорили</b>, он конкретный — <b>der / die / das</b>: <i><b>Die</b> Katze ist schwarz</i>;<br>
+      • вещество, «вообще», множественное без уточнения — <b>без артикля</b>: <i>Ich esse gern Obst</i>, <i>wir lesen Bücher</i>.<br>
+      <b>Город:</b> слово <i>die Stadt</i> — с артиклем; конкретный город по названию (Berlin, Wien) — без артикля.
+    </div>
+    <div id="tekst" class="grid2" style="margin-top:12px"></div>
+  </section>
+
+  <section class="block" id="s3">
+    <h2><span class="num">3</span> 🧩 Отступление про приставки</h2>
+    <div class="grammar-box">
+      Слово <b>verspielt</b> («игривый») в тексте запутало: Полина знает <i>spielen</i> — «играть», а с приставкой <i>ver-</i> получилось прилагательное. Даша согласилась, что это одна из самых сложных тем: приставка иногда меняет смысл глагола совсем, а иногда почти не меняет. Её примеры: <i>sehen</i> и <i>ansehen</i> — оба про «смотреть», <i>bieten</i> и <i>anbieten</i> — оба про «предлагать». Пока просто учить слова целиком, не пытаясь угадать по корню.
+    </div>
+    <div id="pristavki" class="grid2" style="margin-top:12px"></div>
+  </section>
+
+  <section class="block" id="s4">
+    <h2><span class="num">4</span> ⭐⭐ Личные местоимения: таблица</h2>
+    <div class="grammar-box">
+      Что такое склонение местоимений: как в русском «я → мне → меня», так и в немецком <b>ich → mir → mich</b>. Исходная форма (ich, du, er…) — это <b>Nominativ</b>. Нам нужны ещё две: <b>Dativ</b> (кому?) и <b>Akkusativ</b> (кого?). Строку Genitiv Даша на слайде зачеркнула: из неё вырастут притяжательные «мой, твой» — это отдельная тема.
+    </div>
+    <div class="kas-wrap">
+      <table class="kas">
+        <tr><th></th><th>ich</th><th>du</th><th>er</th><th>sie</th><th>es</th><th>wir</th><th>ihr</th><th>sie</th><th>Sie</th></tr>
+        <tr><td class="pad">Dativ<br><small>кому?</small></td><td>mir</td><td>dir</td><td><b>ihm</b></td><td><b>ihr</b></td><td><b>ihm</b></td><td><b>uns</b></td><td><b>euch</b></td><td><b>ihnen</b></td><td><b>Ihnen</b></td></tr>
+        <tr><td class="pad">Akkusativ<br><small>кого?</small></td><td>mich</td><td>dich</td><td>ihn</td><td><b>sie</b></td><td><b>es</b></td><td><b>uns</b></td><td><b>euch</b></td><td><b>sie</b></td><td><b>Sie</b></td></tr>
+      </table>
+    </div>
+    <p class="desc">Каждая строка вслух — «кто → кому → кого»:</p>
+    <div id="tabelle" class="grid2"></div>
+  </section>
+
+  <section class="block" id="s5">
+    <h2><span class="num">5</span> ⭐ Четыре правила, которые запомнить</h2>
+    <div class="grammar-box">
+      <b>1. sie и es в Akkusativ не меняются.</b> «Я понимаю её» — <i>Ich verstehe <b>sie</b></i>. Даша: «по-немецки мы, по сути, говорим „я понимаю она“».<br><br>
+      <b>2. wir и ihr — одна форма на два падежа:</b> <i>uns</i> и <i>euch</i> и в Dativ, и в Akkusativ.<br><br>
+      <b>3. es склоняется как er:</b> в Dativ у обоих <i>ihm</i>. Как в русском: «оно → ему», как «он → ему».<br><br>
+      <b>4. sie «она» и sie «они» в Dativ расходятся:</b> она → <b>ihr</b>, они → <b>ihnen</b>, вежливое Вы → <b>Ihnen</b>. Отсюда два вопроса: <i>Wie geht es <b>dir</b>?</i> (тебе) и <i>Wie geht es <b>Ihnen</b>?</i> (Вам).<br><br>
+      Главное выучить три пары: <b>mir – mich, dir – dich, ihm – ihn</b>. Остальное, как сказала Даша, «в принципе, легко».
+    </div>
+    <div id="pravila" class="grid2" style="margin-top:12px"></div>
+  </section>
+
+  <section class="block" id="s6">
+    <h2><span class="num">6</span> 🗣 Фразы со слайда</h2>
+    <p class="desc">Сначала упражнение «поменяй местоимения», потом примеры, которые Полина читала и переводила.</p>
+    <div id="zamena" class="grid2"></div>
+    <div id="primery" class="grid2" style="margin-top:12px"></div>
+    <div class="link-box" style="margin-top:12px">
+      📝 Во фразе <i>Ich sage euch, sie hilft ihm</i> Даша уточнила: «вы» здесь — <b>много людей</b>, поэтому <i>ihr</i> и <i>euch</i>. Если бы это было вежливое «Вы» одному человеку — было бы <i>Sie</i> и <i>Ihnen</i>.<br>
+      Была ещё одна фраза («я показываю…»), но на записи её не разобрать — пропускаю.
+    </div>
+  </section>
+
+  <section class="block" id="s7">
+    <h2><span class="num">7</span> ⚠️ Ловушки: anrufen, gefallen, danken</h2>
+    <div class="warn-box">
+      <span class="big">anrufen — с Akkusativ</span>
+      По-русски «звонить <b>ему</b>» (кому? — дательный). По-немецки <b>anrufen + Akkusativ</b>: <i>Ich rufe <b>ihn</b> an</i>, а не «ihm». Даша объяснила логику: глагол образован от <i>rufen</i> — «звать», а звать — <b>кого</b>. Полина на занятии сказала «им» — это как раз эта ловушка.
+    </div>
+    <div class="grammar-box" style="margin-top:14px">
+      Глаголы с <b>Dativ</b> из занятия — тут совпадает с русским «кому»:<br>
+      • <b>helfen</b> — помогать: <i>Er hilft <b>mir</b></i>;<br>
+      • <b>danken</b> — благодарить: <i>Wir danken <b>ihm</b></i> (по-русски «благодарим <b>его</b>», а по-немецки — кому!);<br>
+      • <b>gefallen</b> — нравиться: <i>Das gefällt <b>uns</b></i> — «это нравится нам». Не путать с <i>fallen</i> — «падать».<br>
+      Новое слово: <b>die Unterstützung</b> — поддержка, от глагола <b>unterstützen</b> — поддерживать. Даша: «очень хорошее слово, запишите».
+    </div>
+  </section>
+
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> ⚠️ Что поправила Даша</h2>
+    <div class="warn-box">
+      <span class="big">Ошибки и поправки занятия</span>
+      • <s>Du brauchst einem Arzt</s> (Полина рассуждала: «нуждаться в ком — дательный») → <b>Du brauchst einen Arzt</b>: после brauchen всегда Akkusativ.<br>
+      • <s>Sie helfen eine Frau</s> → <b>Sie helfen einer Frau</b>: Даша переспросила «какой ещё раз?» — helfen требует Dativ, die Frau → einer.<br>
+      • <s>Ihr helft einen Kind</s> → <b>einem Kind</b>: helfen требует Dativ, das Kind — средний род. На записи тут неразборчиво, даю правильную форму.<br>
+      • <s>heute kaufe ich den Apfel und die Banane</s> → <b>einen Apfel und eine Banane</b>: «покупаем какие-то, не конкретные».<br>
+      • <s>ein Stadt</s> → <b>eine Stadt</b>: die Stadt — женский род.<br>
+      • <s>Ich rufe ihm an</s> → <b>Ich rufe ihn an</b>: anrufen + Akkusativ.<br>
+      • <i>Wir treffen sie morgen</i> Полина перевела «встречаем её утром». <b>Моя поправка:</b> <i>morgen</i> (с маленькой) — «завтра», а «утром» — <i>am Morgen</i>.
+    </div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> 📚 Домашка от Даши</h2>
+    <p class="desc">Пришла вечером 24 сентября, шестью пунктами. Всё перепечатано текстом, фото — внизу.</p>
+
+    <div class="grammar-box">
+      <b>📝 deine Hausaufgabe:</b><br>
+      1️⃣ учить таблицу склонения личных местоимений<br>
+      2️⃣ взять три падежа — Akkusativ, Dativ, Genitiv — и с каждым составить по предложению с неопределённым артиклем для каждого рода (12 предложений)<br>
+      3️⃣ перевести текст на немецкий<br>
+      4️⃣ учить дальше Essen / Getränke<br>
+      5️⃣ посмотреть видео и ответить на два вопроса<br>
+      6️⃣ перевести предложения на местоимения
+    </div>
+
+    <h3 style="margin-top:22px">1. Таблица по памяти</h3>
+    <p class="desc">Заполни Dativ и Akkusativ, потом открой ответы.</p>
+    <div class="kas-wrap">
+      <table class="kas" id="hwTabelle"></table>
+    </div>
+    <button class="кн-ответы" id="кОтветыТаб">Показать ответы и пояснения</button>
+    <div id="otvetyТаб" class="спрятано" hidden></div>
+
+    <h3 style="margin-top:22px">2. Двенадцать предложений: три падежа × четыре столбца</h3>
+    <p class="desc">Даша пишет «с каждым родом — 12 предложений», то есть три падежа на четыре столбца таблицы: мужской, женский, средний и множественное. У множественного числа неопределённого артикля нет — там существительное идёт без артикля, а в Genitiv его обычно заменяют на <i>von</i> или добавляют слово вроде <i>vieler</i>. Впиши свои предложения, потом сравни. ⚠️ <b>Мой вариант, не эталон Даши.</b></p>
+    <div id="hwFormen"></div>
+
+    <h3 style="margin-top:22px">3. Перевести текст на немецкий</h3>
+    <p class="desc">Семь абзацев про еду. Напиши перевод абзаца, потом открой мой. Обрати внимание на «я не люблю лимоны» — тут пригодится <i>kein</i> из занятия 14. ⚠️ <b>Мой вариант, не эталон Даши.</b></p>
+    <div id="hwText"></div>
+
+    <h3 style="margin-top:22px">4. Essen und Getränke</h3>
+    <p class="desc">Слова еды и напитков из занятий 13 и 14 уже в ЗУБРе — колоды «Занятие 13 Полины» и «Занятие 14 Полины». <a href="../zubr.html?урок=polya14">Открыть тренажёр →</a></p>
+
+    <h3 style="margin-top:22px">5. Видео и два вопроса</h3>
+    <p class="desc">Видео по ссылке Даши я не смотрела — ссылки в скриншоте нет. Поэтому ответы ниже — <b>общие</b>, о типичном немецком завтраке, и второй — из того, что Полина рассказывала на занятии 14 (блины и кофе с молоком без сахара).</p>
+    <div id="hwVideo"></div>
+
+    <h3 style="margin-top:22px">6. Перевести предложения</h3>
+    <p class="desc">В листе Даши пункты пронумерованы 1–4 и 6–9 (пятого нет), здесь — просто по порядку. Сначала напиши свой перевод, потом открой ответы.</p>
+    <div id="hwSaetze"></div>
+    <button class="кн-ответы" id="кОтветыSaetze">Показать ответы и пояснения</button>
+    <div id="otvetySaetze" class="спрятано" hidden></div>
+
+    <h3 style="margin-top:22px">📄 Листы целиком</h3>
+    <p class="desc">
+      <a href="polya15_hw_tabelle.jpg" target="_blank">Таблица местоимений</a> ·
+      <a href="polya15_hw_text.jpg" target="_blank">Текст для перевода</a> ·
+      <a href="polya15_hw_aufgabe.png" target="_blank">Список заданий</a>
+    </p>
+
+    <div class="link-box" style="margin-top:16px">
+      📓 Все слова занятия уже в ЗУБРе — колода «Занятие 15 Полины».
+      <a href="../zubr.html?урок=polya15">Открыть тренажёр →</a>
+    </div>
+  </section>
+
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> 💬 Мелочи занятия</h2>
+    <p class="desc">Перед уроком — рассказ про свадьбу двоюродного брата Гриши: пара семь лет не женилась, а весной пришла в гости, посмотрела на дочку Полины и Гриши — и подала заявление в ЗАГС. До торта не досидели: «ребёнок устал, а у меня ещё немецкий. Приоритеты».</p>
+    <p class="desc">Полина заметила: текст про семью с прошлой домашки был трудный. Даша: это уровень A2–B1, «мы всегда должны понимать уровень выше, чем можем сказать».</p>
+    <p class="desc">Расписание: у Даши с понедельника 5 октября начинается учёба, 4-го она возвращается в Австрию. Полина в начале октября едет к родителям в Татарстан — занятие, если что, передвинут. Следующее занятие — <b>в понедельник</b>.</p>
+  </section>
+
+  <p class="foot">Занятие 15 Полины с Дашей · 24.09.2026 · собрано из записи 38 минут и домашки от 24.09</p>
+</div>
+
+<script>
+const AUDIO = {"wu1": "../zvuk/polya15/wu1.mp3", "wu2": "../zvuk/polya15/wu2.mp3", "wu3": "../zvuk/polya15/wu3.mp3", "wu4": "../zvuk/polya15/wu4.mp3", "wu5": "../zvuk/polya15/wu5.mp3", "wu6": "../zvuk/polya15/wu6.mp3", "wu7": "../zvuk/polya15/wu7.mp3", "wu8": "../zvuk/polya15/wu8.mp3", "wu9": "../zvuk/polya15/wu9.mp3", "wu10": "../zvuk/polya15/wu10.mp3", "wu11": "../zvuk/polya15/wu11.mp3", "wu12": "../zvuk/polya15/wu12.mp3", "wu13": "../zvuk/polya15/wu13.mp3", "wu14": "../zvuk/polya15/wu14.mp3", "wu15": "../zvuk/polya15/wu15.mp3", "wu16": "../zvuk/polya15/wu16.mp3", "wu17": "../zvuk/polya15/wu17.mp3", "vk1": "../zvuk/polya15/vk1.mp3", "vk2": "../zvuk/polya15/vk2.mp3", "vk3": "../zvuk/polya15/vk3.mp3", "vk4": "../zvuk/polya15/vk4.mp3", "vk5": "../zvuk/polya15/vk5.mp3", "vk6": "../zvuk/polya15/vk6.mp3", "vk7": "../zvuk/polya15/vk7.mp3", "vk8": "../zvuk/polya15/vk8.mp3", "vk9": "../zvuk/polya15/vk9.mp3", "vk10": "../zvuk/polya15/vk10.mp3", "vk11": "../zvuk/polya15/vk11.mp3", "vk12": "../zvuk/polya15/vk12.mp3", "vk13": "../zvuk/polya15/vk13.mp3", "vk14": "../zvuk/polya15/vk14.mp3", "vk15": "../zvuk/polya15/vk15.mp3", "vk16": "../zvuk/polya15/vk16.mp3", "vk17": "../zvuk/polya15/vk17.mp3", "tx1": "../zvuk/polya15/tx1.mp3", "tx2": "../zvuk/polya15/tx2.mp3", "tx3": "../zvuk/polya15/tx3.mp3", "tx4": "../zvuk/polya15/tx4.mp3", "tx5": "../zvuk/polya15/tx5.mp3", "tx6": "../zvuk/polya15/tx6.mp3", "tx7": "../zvuk/polya15/tx7.mp3", "tx8": "../zvuk/polya15/tx8.mp3", "tx9": "../zvuk/polya15/tx9.mp3", "pr1": "../zvuk/polya15/pr1.mp3", "pr2": "../zvuk/polya15/pr2.mp3", "pr3": "../zvuk/polya15/pr3.mp3", "pp1": "../zvuk/polya15/pp1.mp3", "pp2": "../zvuk/polya15/pp2.mp3", "pp3": "../zvuk/polya15/pp3.mp3", "pp4": "../zvuk/polya15/pp4.mp3", "pp5": "../zvuk/polya15/pp5.mp3", "pp6": "../zvuk/polya15/pp6.mp3", "pp7": "../zvuk/polya15/pp7.mp3", "pp8": "../zvuk/polya15/pp8.mp3", "pp9": "../zvuk/polya15/pp9.mp3", "pb1": "../zvuk/polya15/pb1.mp3", "pb2": "../zvuk/polya15/pb2.mp3", "pb3": "../zvuk/polya15/pb3.mp3", "pb4": "../zvuk/polya15/pb4.mp3", "pb5": "../zvuk/polya15/pb5.mp3", "pb6": "../zvuk/polya15/pb6.mp3", "pb7": "../zvuk/polya15/pb7.mp3", "pb8": "../zvuk/polya15/pb8.mp3", "pb9": "../zvuk/polya15/pb9.mp3", "pb10": "../zvuk/polya15/pb10.mp3", "pb11": "../zvuk/polya15/pb11.mp3", "pb12": "../zvuk/polya15/pb12.mp3", "pb13": "../zvuk/polya15/pb13.mp3", "pb14": "../zvuk/polya15/pb14.mp3", "pb15": "../zvuk/polya15/pb15.mp3", "pb16": "../zvuk/polya15/pb16.mp3", "pb17": "../zvuk/polya15/pb17.mp3", "hf1": "../zvuk/polya15/hf1.mp3", "hf2": "../zvuk/polya15/hf2.mp3", "hf3": "../zvuk/polya15/hf3.mp3", "hf4": "../zvuk/polya15/hf4.mp3", "hf5": "../zvuk/polya15/hf5.mp3", "hf6": "../zvuk/polya15/hf6.mp3", "hf7": "../zvuk/polya15/hf7.mp3", "hf8": "../zvuk/polya15/hf8.mp3", "hf9": "../zvuk/polya15/hf9.mp3", "hf10": "../zvuk/polya15/hf10.mp3", "hf11": "../zvuk/polya15/hf11.mp3", "hf12": "../zvuk/polya15/hf12.mp3", "hu1": "../zvuk/polya15/hu1.mp3", "hu2": "../zvuk/polya15/hu2.mp3", "hu3": "../zvuk/polya15/hu3.mp3", "hu4": "../zvuk/polya15/hu4.mp3", "hu5": "../zvuk/polya15/hu5.mp3", "hu6": "../zvuk/polya15/hu6.mp3", "hq1": "../zvuk/polya15/hq1.mp3", "hq2": "../zvuk/polya15/hq2.mp3", "hq3": "../zvuk/polya15/hq3.mp3", "hq4": "../zvuk/polya15/hq4.mp3", "hs1": "../zvuk/polya15/hs1.mp3", "hs2": "../zvuk/polya15/hs2.mp3", "hs3": "../zvuk/polya15/hs3.mp3", "hs4": "../zvuk/polya15/hs4.mp3", "hs5": "../zvuk/polya15/hs5.mp3", "hs6": "../zvuk/polya15/hs6.mp3", "hs7": "../zvuk/polya15/hs7.mp3", "hs8": "../zvuk/polya15/hs8.mp3", "hs9": "../zvuk/polya15/hs9.mp3"};
+
+/* звук вынесен в zvuk/ */
+// Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
+window.addEventListener('load', function () {
+  if (!navigator.onLine) return;
+  setTimeout(function () {
+    var список = Object.values(AUDIO), i = 0;
+    (function дальше() {
+      if (i >= список.length) return;
+      fetch(список[i++]).catch(function () {}).then(function () {
+        setTimeout(дальше, 60);
+      });
+    })();
+  }, 2500);
+});
+
+function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
+  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
+function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
+function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+function показать(btn){ const d = btn.nextElementSibling; d.hidden = !d.hidden; btn.classList.toggle('on'); }
+/* Домашка с самопроверкой — общий помощник (домашка.py, правило 10.09). */
+
+/* Кнопка «перевод»: нажал — под предложением появился русский перевод. */
+function кнопкаПеревода(ru){
+  if (!ru) return '';
+  return '<button type="button" class="hw-tr-btn" onclick="' +
+    "var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');" +
+    '">перевод</button><span class="hw-tr" hidden>' + ru + '</span>';
+}
+
+/* Упражнение с пропусками ___ : поле ввода на месте пропуска,
+   кнопка звука и кнопка перевода у каждого предложения. */
+function blanksBlock(el, items, keyPrefix){
+  document.getElementById(el).innerHTML = items.map(function(п, i){
+    var текст = п[0], clipId = п[2], ru = п[3];
+    var части = текст.split('___'), строка = '';
+    части.forEach(function(часть, j){
+      строка += часть;
+      if (j < части.length - 1)
+        строка += '<input class="fld" data-save="' + keyPrefix + (i+1) + '_' + (j+1) + '" style="width:90px">';
+    });
+    var звук = (clipId && typeof playBtn === 'function') ? ' ' + playBtn(clipId) : '';
+    return '<div class="hwrow"><span class="n">' + (i+1) + '.</span><span class="q">' +
+           строка + звук + кнопкаПеревода(ru) + '</span></div>';
+  }).join('');
+}
+
+/* «Показать ответы»: номер, ответ и — если есть — почему он такой. */
+function showAnswers(btn, box, items){
+  box.hidden = !box.hidden;
+  btn.textContent = box.hidden ? btn.dataset.showText : btn.dataset.hideText;
+  if (!box.innerHTML){
+    box.innerHTML = '<div class="grammar-box">' + items.map(function(п, i){
+      var ответ = п[1], почему = п[4];
+      return '<div class="hw-ans"><b>' + (i+1) + '. ' + ответ + '</b>' +
+             (почему ? '<div class="hw-why">' + почему + '</div>' : '') + '</div>';
+    }).join('') + '</div>';
+  }
+}
+function примерКнопка(de, ru, почему, clip){
+  return `<button type="button" class="hw-tr-btn" onclick="var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');">мой вариант</button><span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">${de}</span> ${clip ? playBtn(clip) : ''} — ${ru}${почему ? `<span class="hw-why" style="display:block">${почему}</span>` : ''}</span>`;
+}
+function кнопкаОтветов(кнопкаId, блокId, данные){
+  const к = document.getElementById(кнопкаId);
+  к.dataset.showText = 'Показать ответы и пояснения';
+  к.dataset.hideText = 'Скрыть ответы';
+  к.onclick = function(){ showAnswers(this, document.getElementById(блокId), данные()); };
+}
+
+function вариантКнопка(de, почему, clip){
+  return `<button type="button" class="hw-tr-btn" onclick="var t=this.nextElementSibling; t.hidden=!t.hidden; this.classList.toggle('on');">мой вариант</button><span class="hw-tr" hidden style="font-style:normal"><span style="font-family:Georgia,serif;color:var(--ink)">${de}</span> ${clip ? playBtn(clip) : ''}${почему ? `<span class="hw-why" style="display:block">${почему}</span>` : ''}</span>`;
+}
+
+// ── 1. Разминка ──
+phrases('razminka',[
+  ["wu1","Ich esse <b>eine</b> Suppe.","ихь эсэ айнэ зупэ","Я ем суп. Что ем? — Akkusativ, die Suppe → eine."],
+  ["wu2","Er glaubt <b>einem</b> Doktor.","эа глаупт айнэм доктор","Он верит врачу. glauben — кому? → Dativ, der Doktor → einem."],
+  ["wu3","Du hörst <b>eine</b> CD.","ду хёрст айнэ цэдэ","Ты слушаешь диск. die CD — женский род."],
+  ["wu4","Wir helfen <b>einem</b> Mann.","виа хэльфэн айнэм ман","Мы помогаем мужчине. helfen → Dativ."],
+  ["wu5","Hier ist <b>eine</b> Blume.","хиа ист айнэ блумэ","Вот цветок. После sein — Nominativ. Эта фраза на записи смазана."],
+  ["wu6","Du liest <b>ein</b> Buch.","ду лист айн бух","Ты читаешь книгу. das Buch — средний, в Akkusativ не меняется."],
+  ["wu7","Hier steht <b>ein</b> Haus.","хиа штэт айн хаус","Здесь стоит дом. Кто стоит? — Nominativ."],
+  ["wu8","Du brauchst <b>einen</b> Arzt.","ду браухст айнэн арцт","Тебе нужен врач. brauchen → всегда Akkusativ."],
+  ["wu9","Wir trinken <b>ein</b> Glas Milch.","виа тринкэн айн глас мильхь","Мы пьём стакан молока."],
+  ["wu10","Hier ist <b>eine</b> Schule.","хиа ист айнэ шулэ","Вот школа."],
+  ["wu11","Ich sehe <b>ein</b> Kind.","ихь зээ айн кинт","Я вижу ребёнка."],
+  ["wu12","Sie kocht <b>eine</b> Pizza.","зи кохт айнэ пица","Она готовит пиццу."],
+  ["wu13","Sie helfen <b>einer</b> Frau.","зи хэльфэн айнэ фрау","Они помогают женщине. helfen → Dativ, женский → einer."],
+  ["wu14","Er schreibt <b>einen</b> Brief.","эа шрайпт айнэн бриф","Он пишет письмо. der Brief → einen."],
+  ["wu15","Hier liegt <b>ein</b> Stift.","хиа ликт айн штифт","Здесь лежит ручка."],
+  ["wu16","Ihr helft <b>einem</b> Kind.","иа хэльфт айнэм кинт","Вы помогаете ребёнку. helfen → Dativ, das Kind → einem."],
+  ["wu17","Hier ist <b>eine</b> Küche.","хиа ист айнэ кюхэ","Вот кухня."],
+]);
+words('slova',[
+  ["vk1","der Stift","дэа штифт","ручка, карандаш — «чем пишут»"],
+  ["vk2","der Bleistift","дэа блайштифт","карандаш"],
+  ["vk3","der Kugelschreiber","дэа кугэльшрайба","шариковая ручка"],
+  ["vk4","der Kuli","дэа кули","ручка (разговорное)"],
+  ["vk5","die CD","ди цэдэ","компакт-диск"],
+  ["vk6","das Haustier","дас хаустиа","домашнее животное"],
+  ["vk7","verspielt","фэршпильт","игривый"],
+  ["vk8","der Baum","дэа баум","дерево"],
+  ["vk9","dort","дорт","там"],
+  ["vk10","unter","унта","под"],
+  ["vk11","besuchen","бэзухэн","посещать, навещать"],
+  ["vk12","das Geschäft → die Geschäfte","дас гэшэфт","магазин → магазины"],
+  ["vk13","die Unterstützung","ди унтэрштюцунг","поддержка"],
+  ["vk14","unterstützen","унтэрштюцэн","поддерживать"],
+  ["vk15","gefallen","гэфалэн","нравиться (+ Dativ)"],
+  ["vk16","danken","данкэн","благодарить (+ Dativ)"],
+  ["vk17","anrufen","анруфэн","звонить (+ Akkusativ!)"],
+]);
+
+// ── 2. Текст ──
+phrases('tekst',[
+  ["tx1","Ich habe <b>eine</b> Katze. <b>Die</b> Katze ist schwarz und sehr lieb.","ихь хабэ айнэ кацэ. ди кацэ ист шварц унт зэа либ","У меня есть кошка. Кошка чёрная и очень милая. Первый раз — eine, потом уже знакомая — die."],
+  ["tx2","Mein Bruder hat auch <b>ein</b> Haustier. Er hat <b>einen</b> Hund. <b>Der</b> Hund ist groß und verspielt.","майн брудэа хат аух айн хаустиа. эа хат айнэн хунт. дэа хунт ист грос унт фэршпильт","У моего брата тоже есть питомец. У него собака. Собака большая и игривая. das Tier → das Haustier → ein."],
+  ["tx3","Wir wohnen in <b>einem</b> Haus mit Garten. <b>Der</b> Garten ist schön, und dort steht <b>ein</b> Baum.","виа вонэн ин айнэм хаус мит гартэн. дэа гартэн ист шён, унт дорт штэт айн баум","Мы живём в доме с садом. Сад красивый, и там растёт дерево. Даша: можно и mit einem Garten — оба варианта нормальные."],
+  ["tx4","Im Sommer sitzen wir oft unter <b>dem</b> Baum und lesen Bücher.","им зома зицэн виа офт унта дэм баум унт лэзэн бюха","Летом мы часто сидим под деревом и читаем книги. unter + где? → Dativ; Bücher — без артикля."],
+  ["tx5","Heute kaufe ich <b>einen</b> Apfel und <b>eine</b> Banane. <b>Der</b> Apfel ist rot, <b>die</b> Banane ist gelb.","хойтэ кауфэ ихь айнэн апфэль унт айнэ бананэ. дэа апфэль ист рот, ди бананэ ист гэльп","Сегодня я покупаю яблоко и банан. Яблоко красное, банан жёлтый."],
+  ["tx6","Ich esse gern Obst, weil es gesund ist.","ихь эсэ гэрн опст, вайль эс гэзунт ист","Я люблю фрукты, потому что это полезно. Obst — вообще, без артикля."],
+  ["tx7","Mein Freund hat <b>ein</b> Auto. <b>Das</b> Auto ist alt, aber es fährt gut. Er fährt oft mit <b>dem</b> Auto zur Arbeit.","майн фройнт хат айн ауто. дас ауто ист альт, аба эс фэрт гут. эа фэрт офт мит дэм ауто цуа арбайт","У моего друга есть машина. Машина старая, но ездит хорошо. Он часто ездит на ней на работу. mit → Dativ."],
+  ["tx8","Am Wochenende besuchen wir <b>eine</b> Stadt. <b>Die</b> Stadt hat viele Geschäfte und <b>ein</b> schönes Café.","ам вохэнэндэ бэзухэн виа айнэ штат. ди штат хат филе гэшэфтэ унт айн шёнэс кафэ","На выходных мы едем в какой-то город. В городе много магазинов и красивое кафе."],
+  ["tx9","In <b>dem</b> Café trinken wir <b>einen</b> Kaffee und essen <b>einen</b> Kuchen.","ин дэм кафэ тринкэн виа айнэн кафэ унт эсэн айнэн кухэн","В кафе мы пьём кофе и едим пирог."],
+]);
+
+// ── 3. Приставки ──
+words('pristavki',[
+  ["pr1","spielen → verspielt","шпилен → фэршпильт","играть → игривый"],
+  ["pr2","sehen → ansehen","зээн → анзээн","видеть → смотреть на, рассматривать"],
+  ["pr3","bieten → anbieten","битэн → анбитэн","предлагать → предлагать (угостить)"],
+]);
+
+// ── 4. Таблица вслух ──
+words('tabelle',[
+  ["pp1","ich → mir → mich","ихь → миа → михь","я → мне → меня"],
+  ["pp2","du → dir → dich","ду → диа → дихь","ты → тебе → тебя"],
+  ["pp3","er → ihm → ihn","эа → им → ин","он → ему → его"],
+  ["pp4","sie → ihr → sie","зи → иа → зи","она → ей → её"],
+  ["pp5","es → ihm → es","эс → им → эс","оно → ему → его"],
+  ["pp6","wir → uns → uns","виа → унс → унс","мы → нам → нас"],
+  ["pp7","ihr → euch → euch","иа → ойхь → ойхь","вы → вам → вас"],
+  ["pp8","sie → ihnen → sie","зи → инэн → зи","они → им → их"],
+  ["pp9","Sie → Ihnen → Sie","зи → инэн → зи","Вы → Вам → Вас (вежливо)"],
+]);
+
+// ── 5. Правила ──
+phrases('pravila',[
+  ["pb1","Ich verstehe <b>sie</b>.","ихь фэрштээ зи","Я понимаю её. sie в Akkusativ не меняется."],
+  ["pb2","Wie geht es <b>dir</b>?","ви гэйт эс диа","Как у тебя дела? — Dativ."],
+  ["pb3","Wie geht es <b>Ihnen</b>?","ви гэйт эс инэн","Как у Вас дела? — Dativ от вежливого Sie."],
+]);
+
+// ── 6. Фразы со слайда ──
+phrases('zamena',[
+  ["pb4","Du sollst <b>mir</b> morgen ein Buch bringen.","ду зольст миа моргэн айн бух брингэн","Ты должен завтра принести мне книгу."],
+  ["pb5","Ich soll <b>dir</b> morgen ein Buch bringen.","ихь золь диа моргэн айн бух брингэн","Я должен завтра принести тебе книгу. Так ответила Полина."],
+  ["pb6","Ich sage <b>euch</b>, sie hilft <b>ihm</b>.","ихь загэ ойхь, зи хильфт им","Я говорю вам, она ему поможет."],
+  ["pb7","Ihr sagt <b>mir</b>, er hilft <b>ihr</b>.","иа загт миа, эа хильфт иа","Вы говорите мне, он поможет ей. Так ответила Полина — верно."],
+]);
+phrases('primery',[
+  ["pb8","Ich sehe <b>dich</b>.","ихь зээ дихь","Я вижу тебя. — Akkusativ"],
+  ["pb9","Er hört <b>mich</b>.","эа хёрт михь","Он слышит меня. — Akkusativ"],
+  ["pb10","Wir treffen <b>sie</b> morgen.","виа трэфэн зи моргэн","Мы встречаемся с ней завтра. morgen — завтра, не «утром»."],
+  ["pb11","Sie kennt <b>uns</b> gut.","зи кэнт унс гут","Она хорошо нас знает."],
+  ["pb12","Ich rufe <b>ihn</b> an.","ихь руфэ ин ан","Я звоню ему. anrufen — Akkusativ!"],
+  ["pb13","Ich gebe <b>dir</b> das Buch.","ихь гэбэ диа дас бух","Я даю тебе книгу. — Dativ"],
+  ["pb14","Er hilft <b>mir</b> bei der Arbeit.","эа хильфт миа бай дэа арбайт","Он помогает мне с работой. — Dativ"],
+  ["pb15","Wir danken <b>ihm</b> für die Unterstützung.","виа данкэн им фюа ди унтэрштюцунг","Мы благодарим его за поддержку. danken — Dativ."],
+  ["pb16","Ich erzähle <b>ihr</b> eine Geschichte.","ихь эрцэлэ иа айнэ гэшихьтэ","Я рассказываю ей историю."],
+  ["pb17","Das gefällt <b>uns</b> sehr.","дас гэфэльт унс зэа","Это нам очень нравится. gefallen — Dativ."],
+]);
+
+// ── ДОМАШКА 1: таблица ──
+const ТАБ = [
+  ["ich","mir","mich"],["du","dir","dich"],["er","ihm","ihn"],["sie (она)","ihr","sie"],["es","ihm","es"],
+  ["wir","uns","uns"],["ihr","euch","euch"],["sie (они)","ihnen","sie"],["Sie (Вы)","Ihnen","Sie"],
+];
+const ПОЯС = [
+  "Пара, которую учат первой: mir — кому, mich — кого.",
+  "Так же, как у ich: dir — кому, dich — кого.",
+  "ihm — кому, ihn — кого. Одна буква разницы: m — Dativ, n — Akkusativ, как у артиклей dem / den.",
+  "Dativ ihr (ей). Akkusativ — sie не меняется.",
+  "Dativ как у er — ihm. Akkusativ — es не меняется.",
+  "Одна форма на оба падежа — uns.",
+  "Одна форма на оба падежа — euch.",
+  "Dativ ihnen (им). Akkusativ — sie не меняется.",
+  "Как «они», только с большой буквы: Ihnen, Sie.",
+];
+document.getElementById('hwTabelle').innerHTML =
+  '<tr><th></th><th>Dativ (кому?)</th><th>Akkusativ (кого?)</th></tr>' +
+  ТАБ.map(([n], r)=>'<tr><td class="pad">' + n + '</td>' +
+    [0,1].map(c=>`<td><input class="fld" data-save="polya15_hw_t_${r}_${c}" autocomplete="off" autocapitalize="off" spellcheck="false"></td>`).join('') + '</tr>').join('');
+кнопкаОтветов('кОтветыТаб', 'otvetyТаб', () => ТАБ.map(([n,d,a], r) => [n, n + ' → ' + d + ' · ' + a, null, null, ПОЯС[r]]));
+
+// ── ДОМАШКА 2: 12 предложений ──
+const ФОРМЫ = [
+  ["Akkusativ · мужской", "hf1", "Ich brauche einen Termin.", "Мне нужна запись (на приём).", "brauchen → Akkusativ, der Termin → einen."],
+  ["Akkusativ · женский", "hf2", "Ich kaufe eine Tasche.", "Я покупаю сумку.", "die Tasche → eine, в Akkusativ не меняется."],
+  ["Akkusativ · средний", "hf3", "Wir haben ein Auto.", "У нас есть машина.", "das Auto → ein, не меняется."],
+  ["Akkusativ · множественное", "hf4", "Ich esse gern Äpfel.", "Я люблю яблоки.", "Во множественном ein нет — просто без артикля."],
+  ["Dativ · мужской", "hf5", "Ich helfe einem Freund.", "Я помогаю другу.", "helfen → Dativ, der Freund → einem."],
+  ["Dativ · женский", "hf6", "Er spricht mit einer Ärztin.", "Он разговаривает с врачом (женщиной).", "mit → Dativ, die Ärztin → einer."],
+  ["Dativ · средний", "hf7", "Wir wohnen in einem Haus.", "Мы живём в доме.", "in + где? → Dativ, das Haus → einem."],
+  ["Dativ · множественное", "hf8", "Sie spielt mit Kindern.", "Она играет с детьми.", "Без артикля, но в Dativ множественного к слову добавляется -n: Kinder → Kindern."],
+  ["Genitiv · мужской", "hf9", "Das ist das Auto eines Arztes.", "Это машина (какого-то) врача.", "Чья? → Genitiv, der Arzt → eines Arztes, с -es у слова."],
+  ["Genitiv · женский", "hf10", "Das ist die Tasche einer Frau.", "Это сумка (какой-то) женщины.", "die Frau → einer, слово не меняется."],
+  ["Genitiv · средний", "hf11", "Das ist das Zimmer eines Kindes.", "Это комната (какого-то) ребёнка.", "das Kind → eines Kindes, с -es."],
+  ["Genitiv · множественное", "hf12", "Das ist die Meinung vieler Menschen.", "Это мнение многих людей.", "Артикля нет, поэтому Genitiv показывает слово viele → vieler. Проще сказать через von: die Meinung von vielen Menschen."],
+];
+document.getElementById('hwFormen').innerHTML = ФОРМЫ.map(([подпись, clip, de, ru, почему], i)=>`
+  <div class="hwline"><b>${i+1}. ${подпись}</b><br>
+  <input class="fld" data-save="polya15_hw_fm${i+1}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="твоё предложение">
+  <div style="margin-top:4px">${примерКнопка(de, ru, почему, clip)}</div></div>`).join('');
+
+// ── ДОМАШКА 3: перевод текста ──
+const ТЕКСТ = [
+  ["Я люблю фрукты и овощи. Каждый день я ем яблоко или банан. Яблоко красное и сладкое. Банан жёлтый и мягкий.", "hu1",
+   "Ich liebe Obst und Gemüse. Jeden Tag esse ich einen Apfel oder eine Banane. Der Apfel ist rot und süß. Die Banane ist gelb und weich.",
+   "Obst и Gemüse — собирательные, без артикля и в единственном числе. «Каждый день» впереди → глагол вторым: <i>Jeden Tag <b>esse</b> ich</i>. Сначала «какое-то» яблоко — einen, потом уже знакомое — der."],
+  ["Я также люблю помидоры и огурцы. Помидоры красные, а огурцы зелёные. Я делаю салат с помидорами, огурцами и луком. Салат очень вкусный.", "hu2",
+   "Ich mag auch Tomaten und Gurken. Die Tomaten sind rot, und die Gurken sind grün. Ich mache einen Salat mit Tomaten, Gurken und Zwiebeln. Der Salat ist sehr lecker.",
+   "Второй раз «люблю» — для разнообразия <i>mag</i>. mit + Dativ множественного: Zwiebel → Zwiebel<b>n</b>. lecker — «вкусный»."],
+  ["Моя мама покупает ягоды: клубнику и малину. Клубника красная и сладкая. Малина маленькая и вкусная.", "hu3",
+   "Meine Mutter kauft Beeren: Erdbeeren und Himbeeren. Die Erdbeeren sind rot und süß. Die Himbeeren sind klein und lecker.",
+   "По-русски клубника — одно слово на всю ягоду, по-немецки удобнее множественное: <i>Erdbeeren, Himbeeren</i>, и тогда <i>sind</i>."],
+  ["Я не люблю лимоны. Лимоны кислые. Но я люблю апельсины. Апельсины оранжевые и сладкие.", "hu4",
+   "Ich mag keine Zitronen. Zitronen sind sauer. Aber ich mag Orangen. Orangen sind orange und süß.",
+   "Отрицаем существительное → <b>keine</b>, а не nicht (занятие 14). Цвет <i>orange</i> не меняется."],
+  ["На завтрак я ем хлеб с маслом и овощи. На обед я ем суп или салат. На ужин я ем фрукты.", "hu5",
+   "Zum Frühstück esse ich Brot mit Butter und Gemüse. Zum Mittagessen esse ich eine Suppe oder einen Salat. Zum Abendessen esse ich Obst.",
+   "«На завтрак» — <b>zum</b> Frühstück (zu + dem). Обстоятельство впереди → глагол вторым."],
+  ["Я хочу купить виноград и арбуз. Виноград зелёный, а арбуз большой и красный внутри.", "hu6",
+   "Ich möchte Weintrauben und eine Wassermelone kaufen. Die Weintrauben sind grün, und die Wassermelone ist groß und innen rot.",
+   "möchte + инфинитив в конце. Виноград по-немецки обычно во множественном: <i>Weintrauben</i>. «Внутри» — <i>innen</i>."],
+];
+document.getElementById('hwText').innerHTML = ТЕКСТ.map(([ru, clip, de, почему], i)=>`
+  <div class="hwline"><b>${i+1}.</b> ${ru}<br>
+  <textarea class="fld" data-save="polya15_hw_tx${i+1}" rows="3" style="width:100%;max-width:520px" placeholder="твой перевод"></textarea>
+  <div style="margin-top:4px">${вариантКнопка(de, почему, clip)}</div></div>`).join('');
+
+// ── ДОМАШКА 5: видео ──
+const ВИДЕО = [
+  ["hq1", "Wie frühstücken Menschen in Deutschland?", "hq2",
+   "Viele Menschen in Deutschland essen zum Frühstück Brötchen mit Butter, Käse, Wurst oder Marmelade. Dazu trinken sie Kaffee oder Tee. Am Wochenende frühstücken sie oft lange mit der Familie.",
+   "Общий ответ, видео я не видела. Полезные слова: <i>das Brötchen</i> — булочка, <i>die Wurst</i> — колбаса, <i>die Marmelade</i> — варенье, <i>dazu</i> — к этому."],
+  ["hq3", "Wie sieht Ihr perfektes Frühstück aus?", "hq4",
+   "Mein perfektes Frühstück: Ich esse Pfannkuchen mit Beeren und trinke einen Kaffee mit Milch, aber ohne Zucker.",
+   "По рассказу Полины на занятии 14. <i>aussehen</i> — «выглядеть»: <i>Wie sieht … aus?</i> — «Как выглядит…?»."],
+];
+document.getElementById('hwVideo').innerHTML = ВИДЕО.map(([qclip, q, clip, de, почему], i)=>`
+  <div class="hwline"><b>${i+1}.</b> ${q} ${playBtn(qclip)}<br>
+  <textarea class="fld" data-save="polya15_hw_v${i+1}" rows="3" style="width:100%;max-width:520px" placeholder="твой ответ"></textarea>
+  <div style="margin-top:4px">${вариантКнопка(de, почему, clip)}</div></div>`).join('');
+
+// ── ДОМАШКА 6: предложения ──
+const SAETZE = [
+  ["Я люблю её.", "Ich liebe sie. " + playBtn('hs1'), null, "",
+   "Кого люблю? → Akkusativ. <b>sie</b> в Akkusativ не меняется."],
+  ["Она спрашивает меня.", "Sie fragt mich. " + playBtn('hs2'), null, "",
+   "fragen — кого? → Akkusativ: <b>mich</b>."],
+  ["Они покупают мне подарок.", "Sie kaufen mir ein Geschenk. " + playBtn('hs3'), null, "",
+   "Кому? → <b>mir</b> (Dativ), что? → ein Geschenk (Akkusativ)."],
+  ["Он рассказывает нам историю.", "Er erzählt uns eine Geschichte. " + playBtn('hs4'), null, "",
+   "Кому? → <b>uns</b>; что? → eine Geschichte."],
+  ["Ты можешь ему позвонить.", "Du kannst ihn anrufen. " + playBtn('hs5'), null, "",
+   "⚠️ Ловушка занятия: <b>anrufen + Akkusativ</b> — <i>ihn</i>, а не «ihm». Модальный глагол → anrufen целиком в конце."],
+  ["Вы хотите мне помочь?", "Wollt ihr mir helfen? " + playBtn('hs6') + " / Wollen Sie mir helfen? " + playBtn('hs7'), null, "",
+   "helfen → Dativ: <b>mir</b>. «Вы» — если несколько человек, <i>ihr … wollt</i>; если вежливо одному — <i>Sie … wollen</i>."],
+  ["Я хочу Вам это сказать.", "Ich will Ihnen das sagen. " + playBtn('hs8'), null, "",
+   "«Вам» с большой → вежливое <b>Ihnen</b> (Dativ). Мягче звучит <i>Ich möchte Ihnen das sagen</i>."],
+  ["Когда ты им ответишь?", "Wann antwortest du ihnen? " + playBtn('hs9'), null, "",
+   "antworten — кому? → Dativ, «им» → <b>ihnen</b> (с маленькой — это «они», не «Вы»)."],
+];
+document.getElementById('hwSaetze').innerHTML = SAETZE.map(([ru], i)=>`
+  <div class="hwline"><b>${i+1}.</b> ${ru}<br>
+  <input class="fld" data-save="polya15_hw_s${i+1}" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="твой перевод" style="width:100%;max-width:520px"></div>`).join('');
+кнопкаОтветов('кОтветыSaetze', 'otvetySaetze', () => SAETZE);
+</script>
+
+<!--QUIZ-START-->
+<!--UPR-START-->
+<style>
+  .упр{ margin:30px 0 0; }
+  .упр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .упр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+
+  .упр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .упр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(46,158,107,.3); }
+  .упр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .упр-карта .упр-лид{ font-size:14px; color:#6C7291; margin:2px 0 16px; line-height:1.45; }
+  :root[data-theme="dark"] .упр-карта .упр-лид{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-карта .упр-лид{ color:#9AA0BE; } }
+
+  .упр-старт{ display:flex; align-items:center; gap:12px; text-decoration:none; width:100%;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700; border:none;
+    color:#fff; background:linear-gradient(135deg,#2E9E6B,#7FC55F); cursor:pointer;
+    box-shadow:0 10px 24px rgba(46,158,107,.3); font-family:inherit; }
+  .упр-старт:active{ transform:scale(.98); }
+  .упр-старт small{ display:block; font-weight:500; font-size:12.5px; opacity:.85; margin-top:1px; }
+  .упр-старт span{ flex:1; text-align:left; }
+  .упр-старт i{ font-style:normal; font-size:20px; }
+
+  .упр-шкала{ height:7px; border-radius:99px; background:#EDEFF6; overflow:hidden; margin-bottom:14px; }
+  :root[data-theme="dark"] .упр-шкала{ background:#2A2E52; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-шкала{ background:#2A2E52; } }
+  .упр-шкала i{ display:block; height:100%; background:linear-gradient(90deg,#2E9E6B,#7FC55F);
+    border-radius:99px; transition:width .25s ease; }
+
+  .упр-счёт{ font-size:12.5px; color:#6C7291; margin-bottom:10px; display:flex; justify-content:space-between; }
+  :root[data-theme="dark"] .упр-счёт{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-счёт{ color:#9AA0BE; } }
+
+  .упр-тип{ font-size:12px; letter-spacing:.06em; text-transform:uppercase; font-weight:700;
+    color:#2E9E6B; margin-bottom:7px; }
+  .упр-вопрос{ font-family:Georgia,serif; font-size:21px; font-weight:700; line-height:1.35;
+    margin-bottom:4px; overflow-wrap:anywhere; }
+  .упр-подпись{ font-size:13px; color:#6C7291; margin-bottom:15px; }
+  :root[data-theme="dark"] .упр-подпись{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-подпись{ color:#9AA0BE; } }
+
+  .упр-вар{ display:flex; flex-direction:column; gap:9px; }
+  .упр-вар button{ text-align:left; padding:14px 15px; border-radius:14px; font-size:15px;
+    border:1.5px solid #E4E7F2; background:#F8F9FD; color:inherit; cursor:pointer;
+    font-family:inherit; line-height:1.35; transition:border-color .12s, background .12s; }
+  :root[data-theme="dark"] .упр-вар button{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-вар button{
+    background:#242848; border-color:#333961; } }
+  .упр-вар button:active{ transform:scale(.99); }
+  .упр-вар button.верно{ border-color:#2E9E6B; background:rgba(46,158,107,.13); font-weight:700; }
+  .упр-вар button.мимо{ border-color:#D9534F; background:rgba(217,83,79,.12); }
+  .упр-вар button:disabled{ cursor:default; }
+  .упр-вар button .разбор{ display:block; font-size:13px; font-weight:500; opacity:.85; margin-top:5px; }
+
+  .упр-поле{ width:100%; padding:14px 15px; border-radius:14px; font-size:16px; font-family:inherit;
+    border:1.5px solid #E4E7F2; background:#F8F9FD; color:inherit; box-sizing:border-box; }
+  :root[data-theme="dark"] .упр-поле{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-поле{
+    background:#242848; border-color:#333961; } }
+  .упр-поле.верно{ border-color:#2E9E6B; }
+  .упр-поле.мимо{ border-color:#D9534F; }
+  .упр-умл{ display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+  .упр-умл button{ width:42px; height:40px; border-radius:11px; border:1.5px solid #E4E7F2;
+    background:#F8F9FD; color:inherit; font-size:16px; cursor:pointer; font-family:inherit; }
+  :root[data-theme="dark"] .упр-умл button{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-умл button{
+    background:#242848; border-color:#333961; } }
+
+  .упр-низ{ margin-top:14px; display:flex; gap:9px; }
+  .упр-низ button{ flex:1; padding:14px; border-radius:14px; border:none; font-size:15px;
+    font-weight:700; font-family:inherit; cursor:pointer;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); color:#fff; }
+  .упр-низ button.тихая{ background:#F3F4FA; color:#1C2242; }
+  :root[data-theme="dark"] .упр-низ button.тихая{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-низ button.тихая{
+    background:#252949; color:#EDEFF8; } }
+  .упр-низ button:disabled{ opacity:.45; cursor:default; }
+
+  .упр-отклик{ margin-top:12px; font-size:14.5px; line-height:1.45; min-height:22px; }
+  .упр-отклик b{ font-weight:800; }
+  .упр-отклик .ок{ color:#2E9E6B; }
+  .упр-отклик .нет{ color:#D9534F; }
+
+  .упр-итог{ text-align:center; padding:8px 0 4px; }
+  .упр-итог .число{ font-size:44px; font-weight:900; line-height:1.1;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); -webkit-background-clip:text;
+    background-clip:text; color:transparent; }
+  .упр-итог .слово{ font-size:15px; margin:4px 0 14px; }
+  .упр-ошибки{ text-align:left; margin-top:6px; }
+  .упр-ошибки h3{ font-size:14px; margin:0 0 8px; font-family:inherit; }
+  .упр-ошибки div{ font-size:14px; padding:9px 12px; border-radius:12px; margin-bottom:7px;
+    background:rgba(217,83,79,.1); line-height:1.4; }
+  .упр-ошибки .де{ font-family:Georgia,serif; font-weight:700; }
+</style>
+
+<section class="упр" id="упр">
+  <div class="упр-карта" id="упрКарта"></div>
+</section>
+
+<script>
+/* Задания в конце урока — часть 11 плана.
+   Строятся из того же словаря, что кормит ЗУБР (words/<урок>.json),
+   поэтому блок один на все уроки и не требует ручной работы к каждому.
+
+   Проверка ОДИН В ОДИН как в ЗУБРе: прощаем регистр, знаки и запись
+   ae/oe/ue/ss вместо умляутов — и больше ничего. Полуправильных ответов нет.  */
+(function(){
+  var корень = document.getElementById('упр');
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  if (!/^[a-z]+\d+$/.test(файл)){ корень.style.display='none'; return; }
+
+  var ПРОФИЛЬ = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+  var КЛЮЧ = 'nemeckiy_upr_' + ПРОФИЛЬ + '_' + файл;
+  var ВСЕГО = 10;
+
+  /* ---- проверка ответа: та же строгость, что в ЗУБРе ---- */
+  function норм(s){
+    return (s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+      .replace(/ß/g,'ss').replace(/ё/g,'е').replace(/[.,!?;:()«»"'’\-–—/]/g,' ')
+      .replace(/\s+/g,' ').trim();
+  }
+  function чисто(s){
+    return (s||'').split(/\s+[—–→]\s+/)[0].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();
+  }
+  function сверить(ответ, правильно){
+    var u = норм(ответ); if (!u) return false;
+    var вар = String(правильно||'').split(/\s*[,/]\s*|\s+или\s+/).map(норм).filter(Boolean);
+    if (!вар.length) вар = [норм(правильно)];
+    for (var i=0;i<вар.length;i++) if (u === вар[i]) return true;
+    return false;
+  }
+  function безТегов(s){ return (s||'').replace(/<[^>]+>/g,''); }
+  function перемешать(a){
+    a = a.slice();
+    for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function звук(верно){
+    try{
+      var имя = верно ? (localStorage.getItem('nemeckiy_zvuk_верно')||'верно2')
+                      : (localStorage.getItem('nemeckiy_zvuk_мимо')||'мимо2');
+      if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+      new Audio('../zvuk/otvet/'+имя+'.mp3').play().catch(function(){});
+    }catch(e){}
+  }
+  function сказатьНемецкое(текст){
+    try{
+      if (!window.speechSynthesis) return;
+      var г = speechSynthesis.getVoices().filter(function(v){ return /^de/i.test(v.lang); })[0];
+      if (!г) return;                       // чужим языком не читаем
+      var р = new SpeechSynthesisUtterance(текст); р.voice = г; р.lang = г.lang; р.rate = .9;
+      speechSynthesis.speak(р);
+    }catch(e){}
+  }
+
+  /* ---- сборка заданий из словаря урока ---- */
+  function собрать(строки){
+    // [0]=id [1]=немецкое [2]=транскрипция [3]=перевод [4]=это фраза [5]=немецкое с выделением
+    var слова = [], фразы = [];
+    строки.forEach(function(с){
+      var карта = { id:с[0], de:безТегов(с[1]), тр:с[2], ru:чисто(с[3]), полн:с[3], html:с[5]||с[1] };
+      if (!карта.de || !карта.ru) return;
+      if (с[4]) фразы.push(карта); else слова.push(карта);
+    });
+    if (слова.length < 4) return [];
+
+    var задания = [];
+    var артикльные = слова.filter(function(к){ return /^(der|die|das)\s+\S/i.test(к.de); });
+    // во фразе должно быть жирное выделение — иначе прятать нечего
+    var спропуском = фразы.filter(function(к){ return /<b>[^<]{2,}<\/b>/.test(к.html); });
+
+    function варианты(верный, из, поле){
+      var чужие = перемешать(из.filter(function(к){ return к.id !== верный.id
+                    && норм(к[поле]) !== норм(верный[поле]); })).slice(0,3);
+      if (чужие.length < 3) return null;
+      return перемешать(чужие.concat([верный]));
+    }
+
+    perem: for (var i=0, с=перемешать(слова); i<с.length; i++){
+      var к = с[i];
+      var в = варианты(к, слова, 'ru');
+      if (в) задания.push({ тип:'выбор-ru', к:к, вар:в });
+      if (задания.length >= 3) break perem;
+    }
+    перемешать(слова).slice(0,3).forEach(function(к){
+      var в = варианты(к, слова, 'de');
+      if (в) задания.push({ тип:'выбор-de', к:к, вар:в });
+    });
+    перемешать(слова).slice(0,2).forEach(function(к){
+      задания.push({ тип:'вписать', к:к });
+    });
+    перемешать(артикльные).slice(0,2).forEach(function(к){
+      задания.push({ тип:'артикль', к:к });
+    });
+    перемешать(спропуском).slice(0,3).forEach(function(к){
+      задания.push({ тип:'пропуск', к:к });
+    });
+
+    // убираем повторы одного и того же слова подряд и режем до нужного числа
+    var видели = {}, итог = [];
+    перемешать(задания).forEach(function(з){
+      var кл = з.тип + '|' + з.к.id;
+      if (видели[кл]) return; видели[кл] = 1; итог.push(з);
+    });
+    return итог.slice(0, ВСЕГО);
+  }
+
+  /* ---- экраны ---- */
+  var карта = document.getElementById('упрКарта');
+  var задания = [], шаг = 0, верных = 0, ошибки = [], словарь = null;
+
+  function шапка(заголовок, лид){
+    return '<div class="упр-верх"><div class="упр-знак">✅</div>' +
+           '<h2>' + заголовок + '</h2></div>' +
+           (лид ? '<p class="упр-лид">' + лид + '</p>' : '');
+  }
+
+  function приглашение(){
+    var лучший = null;
+    try{ лучший = JSON.parse(localStorage.getItem(КЛЮЧ) || 'null'); }catch(e){}
+    var хвост = лучший
+      ? '<p class="упр-лид">Лучший результат: <b>' + лучший.процент + '%</b>' +
+        ' (' + лучший.верных + ' из ' + лучший.всего + ')</p>'
+      : '';
+    карта.innerHTML =
+      шапка('Проверь себя', 'Десять заданий по словам и фразам именно этого урока. ' +
+            'Проверка строгая: артикль и умляуты считаются. Каждый раз задания новые.') +
+      хвост +
+      '<button class="упр-старт" id="упрСтарт"><i>✅</i><span>Начать проверку' +
+      '<small>10 заданий · около 3 минут</small></span></button>';
+    document.getElementById('упрСтарт').onclick = начать;
+  }
+
+  function начать(){
+    задания = собрать(словарь);
+    if (!задания.length){
+      карта.innerHTML = шапка('Проверь себя') +
+        '<p class="упр-лид">Для этого урока заданий пока не собрать — слишком мало слов в словаре.</p>';
+      return;
+    }
+    шаг = 0; верных = 0; ошибки = [];
+    показать();
+  }
+
+  function показать(){
+    if (шаг >= задания.length) return итог();
+    var з = задания[шаг];
+    var процент = Math.round(шаг / задания.length * 100);
+
+    var верх =
+      '<div class="упр-шкала"><i style="width:' + процент + '%"></i></div>' +
+      '<div class="упр-счёт"><span>Задание ' + (шаг+1) + ' из ' + задания.length + '</span>' +
+      '<span>верно: ' + верных + '</span></div>';
+
+    var тело = '';
+    if (з.тип === 'выбор-ru'){
+      тело = '<div class="упр-тип">Что это значит?</div>' +
+             '<div class="упр-вопрос">' + з.к.de + '</div>' +
+             '<div class="упр-подпись">[' + (з.к.тр||'') + ']</div>' +
+             '<div class="упр-вар">' + з.вар.map(function(в){
+               return '<button data-id="' + в.id + '">' + в.ru + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'выбор-de'){
+      тело = '<div class="упр-тип">Как это по-немецки?</div>' +
+             '<div class="упр-вопрос">' + з.к.ru + '</div>' +
+             '<div class="упр-вар">' + з.вар.map(function(в){
+               return '<button data-id="' + в.id + '">' + в.de + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'артикль'){
+      тело = '<div class="упр-тип">Какой артикль?</div>' +
+             '<div class="упр-вопрос">… ' + з.к.de.replace(/^(der|die|das)\s+/i,'') + '</div>' +
+             '<div class="упр-подпись">' + з.к.ru + '</div>' +
+             '<div class="упр-вар">' + ['der','die','das'].map(function(а){
+               return '<button data-арт="' + а + '">' + а + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'вписать'){
+      тело = '<div class="упр-тип">Напиши по-немецки</div>' +
+             '<div class="упр-вопрос">' + з.к.ru + '</div>' +
+             '<div class="упр-подпись">артикль тоже нужен, если он есть</div>' +
+             '<input class="упр-поле" id="упрПоле" autocomplete="off" autocorrect="off" ' +
+             'autocapitalize="off" spellcheck="false" placeholder="по-немецки">' +
+             умляуты();
+    } else if (з.тип === 'пропуск'){
+      var спрятано = з.к.html.match(/<b>([^<]+)<\/b>/)[1];
+      var сдыркой = з.к.html.replace(/<b>[^<]+<\/b>/, '<b>____</b>');
+      тело = '<div class="упр-тип">Вставь пропущенное</div>' +
+             '<div class="упр-вопрос">' + сдыркой + '</div>' +
+             '<div class="упр-подпись">' + з.к.ru + '</div>' +
+             '<input class="упр-поле" id="упрПоле" autocomplete="off" autocorrect="off" ' +
+             'autocapitalize="off" spellcheck="false" placeholder="одно слово">' +
+             умляуты();
+      з.ответ = спрятано;
+    }
+
+    карта.innerHTML = верх + тело +
+      '<div class="упр-отклик" id="упрОтклик"></div>' +
+      '<div class="упр-низ" id="упрНиз"></div>';
+
+    if (з.тип === 'выбор-ru' || з.тип === 'выбор-de'){
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        b.onclick = function(){ ответВыбором(b, b.dataset.id === з.к.id); };
+      });
+    } else if (з.тип === 'артикль'){
+      var верный = (з.к.de.match(/^(der|die|das)/i)||[])[0].toLowerCase();
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        b.onclick = function(){ ответВыбором(b, b.dataset.арт === верный, верный); };
+      });
+    } else {
+      var поле = document.getElementById('упрПоле');
+      подключитьУмляуты(поле);
+      поле.onkeydown = function(e){ if (e.key === 'Enter') проверитьПоле(з); };
+      document.getElementById('упрНиз').innerHTML =
+        '<button id="упрОК">Проверить</button>';
+      document.getElementById('упрОК').onclick = function(){ проверитьПоле(з); };
+      поле.focus();
+    }
+  }
+
+  function умляуты(){
+    return '<div class="упр-умл">' + ['ä','ö','ü','ß'].map(function(ч){
+      return '<button type="button" data-ч="' + ч + '">' + ч + '</button>'; }).join('') + '</div>';
+  }
+  function подключитьУмляуты(поле){
+    карта.querySelectorAll('.упр-умл button').forEach(function(b){
+      b.onclick = function(){
+        var s = поле.selectionStart == null ? поле.value.length : поле.selectionStart;
+        var e = поле.selectionEnd == null ? s : поле.selectionEnd;
+        поле.value = поле.value.slice(0,s) + b.dataset.ч + поле.value.slice(e);
+        поле.focus(); поле.selectionStart = поле.selectionEnd = s + 1;
+      };
+    });
+  }
+
+  function ответВыбором(кнопка, верно, верныйАртикль){
+    var з = задания[шаг];
+    карта.querySelectorAll('.упр-вар button').forEach(function(b){ b.disabled = true; });
+    кнопка.classList.add(верно ? 'верно' : 'мимо');
+    if (!верно){
+      // показываем правильный
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        var это = верныйАртикль ? b.dataset.арт === верныйАртикль : b.dataset.id === з.к.id;
+        if (это) b.classList.add('верно');
+      });
+    }
+    засчитать(верно, верныйАртикль ? верныйАртикль + ' ' + з.к.de.replace(/^(der|die|das)\s+/i,'') : з.к.de);
+  }
+
+  function проверитьПоле(з){
+    var поле = document.getElementById('упрПоле');
+    if (!поле || поле.disabled) return;
+    var правильно = з.тип === 'пропуск' ? з.ответ : з.к.de;
+    var верно = сверить(поле.value, правильно);
+    поле.disabled = true;
+    поле.classList.add(верно ? 'верно' : 'мимо');
+    карта.querySelectorAll('.упр-умл button').forEach(function(b){ b.disabled = true; });
+    document.getElementById('упрОК').disabled = true;
+    засчитать(верно, правильно);
+  }
+
+  function засчитать(верно, правильный){
+    var з = задания[шаг];
+    if (верно) верных++;
+    else ошибки.push({ de: з.к.de, ru: з.к.ru, надо: правильный });
+    звук(верно);
+    document.getElementById('упрОтклик').innerHTML = верно
+      ? '<span class="ок">✓ Верно.</span> ' + (з.к.тр ? '[' + з.к.тр + ']' : '')
+      : '<span class="нет">✗ Мимо.</span> Правильно: <b>' + правильный + '</b>' +
+        (з.к.тр ? ' [' + з.к.тр + ']' : '');
+    сказатьНемецкое(з.тип === 'пропуск' ? безТегов(з.к.html) : з.к.de);
+    document.getElementById('упрНиз').innerHTML =
+      '<button id="упрДальше">' + (шаг + 1 >= задания.length ? 'Итог' : 'Дальше') + '</button>';
+    document.getElementById('упрДальше').onclick = function(){ шаг++; показать(); };
+  }
+
+  function итог(){
+    var процент = Math.round(верных / задания.length * 100);
+    var слово = процент === 100 ? 'Всё верно. Идеально.'
+              : процент >= 80 ? 'Хорошо — урок усвоен.'
+              : процент >= 50 ? 'Половина есть. Стоит пройти урок ещё раз.'
+              : 'Пока тяжело. Вернись к уроку и попробуй снова.';
+
+    var лучший = null;
+    try{ лучший = JSON.parse(localStorage.getItem(КЛЮЧ) || 'null'); }catch(e){}
+    if (!лучший || процент > лучший.процент){
+      try{ localStorage.setItem(КЛЮЧ, JSON.stringify(
+        { процент: процент, верных: верных, всего: задания.length, когда: Date.now() })); }catch(e){}
+    }
+
+    var разбор = ошибки.length
+      ? '<div class="упр-ошибки"><h3>Над чем поработать:</h3>' + ошибки.map(function(о){
+          return '<div><span class="де">' + о.надо + '</span> — ' + о.ru + '</div>'; }).join('') + '</div>'
+      : '';
+
+    карта.innerHTML =
+      шапка('Готово') +
+      '<div class="упр-итог"><div class="число">' + процент + '%</div>' +
+      '<div class="слово">' + верных + ' из ' + задания.length + ' · ' + слово + '</div></div>' +
+      разбор +
+      '<div class="упр-низ"><button id="упрЕщё">Пройти ещё раз</button>' +
+      '<button class="тихая" id="упрСлова">Учить слова</button></div>';
+    document.getElementById('упрЕщё').onclick = начать;
+    document.getElementById('упрСлова').onclick = function(){
+      location.href = '../zubr.html?урок=' + файл;
+    };
+  }
+
+  /* ---- запуск: тянем словарь урока ---- */
+  fetch('../words/' + файл + '.json?v=' + Date.now())
+    .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(д){
+      словарь = д;
+      if (!д || д.length < 4){ корень.style.display = 'none'; return; }
+      приглашение();
+      var toc = document.querySelector('.toc ol');
+      if (toc){
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#упр">✅ Проверить себя</a>';
+        toc.appendChild(li);
+      }
+    })
+    .catch(function(){ корень.style.display = 'none'; });
+})();
+</script>
+<!--UPR-END-->
+
+<style>
+  .взубр{ margin:44px 0 0; }
+  .взубр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .взубр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+  .взубр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .взубр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#4A63D6,#EC6A86); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(74,99,214,.3); }
+  .взубр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .взубр-карта p{ font-size:14px; color:#6C7291; margin:2px 0 18px; line-height:1.45; }
+  :root[data-theme="dark"] .взубр-карта p{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта p{ color:#9AA0BE; } }
+  .взубр-кн{ display:flex; flex-direction:column; gap:10px; }
+  .взубр-кн a{
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700;
+    color:#fff; background:linear-gradient(135deg,#4A63D6,#EC6A86);
+    box-shadow:0 10px 24px rgba(74,99,214,.32); transition:transform .12s ease;
+  }
+  .взубр-кн a.второй{ background:#F3F4FA; color:#1C2242; box-shadow:0 6px 16px rgba(40,50,110,.12); }
+  :root[data-theme="dark"] .взубр-кн a.второй{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-кн a.второй{ background:#252949; color:#EDEFF8; } }
+  .взубр-кн a:active{ transform:scale(.98); }
+  .взубр-кн a small{ display:block; font-weight:500; font-size:12.5px; opacity:.8; margin-top:1px; }
+  .взубр-кн a span{ flex:1; }
+  .взубр-кн a i{ font-style:normal; font-size:20px; }
+</style>
+
+<section class="взубр" id="взубр">
+  <div class="взубр-карта">
+    <div class="взубр-верх">
+      <div class="взубр-знак">🐃</div>
+      <h2>Учить слова этого урока</h2>
+    </div>
+    <p>Все слова и фразы урока уже собраны в колоду ЗУБРа — с карточками, тестом, диктантом и расписанием повторений. Прогресс общий с остальными уроками.</p>
+    <div class="взубр-кн" id="взубрКнопки"></div>
+  </div>
+</section>
+
+<script>
+/* Ссылки собираем на месте: имя урока берём из адреса страницы,
+   чтобы один и тот же блок годился для всех двадцати шести. */
+(function(){
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  var м = файл.match(/^([a-z]+)(\d+)$/);
+  if (!м){ document.getElementById('взубр').style.display = 'none'; return; }
+
+  var семья = м[1], номер = +м[2];
+  var первый = семья === 'polya' ? 5 : семья === 'dasha' ? 1 : 0;
+  var корень = '../zubr.html?урок=' + файл;
+
+  var html = '<a href="' + корень + '"><i>📖</i><span>Слова этого урока' +
+             '<small>только то, что разбирали здесь</small></span></a>';
+
+  if (номер > первый){
+    var подпись = семья === 'urok' ? 'уроки с 0 по ' + номер
+                : 'занятия с ' + первый + ' по ' + номер;
+    html += '<a class="второй" href="' + корень + '&повтор=1"><i>🔁</i>' +
+            '<span>Этот урок и все предыдущие<small>' + подпись + '</small></span></a>';
+  }
+  document.getElementById('взубрКнопки').innerHTML = html;
+
+  // ссылка в оглавление урока, чтобы не мотать страницу
+  var toc = document.querySelector('.toc ol');
+  if (toc){
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#взубр">🐃 Учить слова урока</a>';
+    toc.appendChild(li);
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+
+  /* Поворот экрана. 10.09 Григорий: на планшете (ASUS) сайт не крутится
+     горизонтально, как его ни верти. До 07.09 в manifest стояло «только
+     вертикально», и Android запомнил это, когда сайт ставили значком, —
+     поправленный manifest он подхватывает неохотно. Здесь прямая просьба
+     к системе: крутись как хочешь. Действует только в установленном
+     приложении (в браузере поворот и так свободный); где не умеет —
+     молча ничего не делает. */
+  var приложение = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (приложение && screen.orientation && screen.orientation.lock)
+    screen.orientation.lock('any').catch(function(){});
+})();
+</script>
+<!--QUIZ-END-->
+</body>
+</html>
