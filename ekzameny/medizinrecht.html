@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Медицинское право — нострификация</title>
+<script src="../tema.js"></script>
+<link rel="stylesheet" href="stil.css">
+</head>
+<body>
+<div class="backbar">
+  <a href="../ekzameny.html">← Экзамены</a>
+  <span class="bb-title">Medizinrecht / Gerichtsmedizin</span>
+</div>
+
+<div class="wrap">
+  <h1>Медицинское право</h1>
+  <p class="lede">Единственный устный экзамен нострификации. 15 минут: около 10 минут — разговор о вас, около 5 — вопросы по билетам. Никакой клиники, только право. Сдают оба.</p>
+
+  <div class="fakty">
+    <div><b>15 мин</b><span>весь экзамен, устно</span></div>
+    <div><b>≈10 мин</b><span>о себе: откуда, где работали, кем хотите стать</span></div>
+    <div><b>≈5 мин</b><span>вопросы по билетам</span></div>
+    <div><b>18</b><span>билетов в выжимке Ирины</span></div>
+  </div>
+
+  <div class="karta">
+    <p><b>Откуда материал.</b> С Google-диска Ирины: «краткая выжимка» (4 стр., 18 билетов) и «полная версия» (11 стр., 22 вопроса) — конспект по учебнику Hochmeister «Forensische Medizin». Ирина: «чтобы сдать, достаточно и 4 страниц».</p>
+    <p><b>Что сделано.</b> У каждого из 18 билетов — исправленный немецкий текст для заучивания со звуком, смысл по-русски и оригинал конспекта. Конспект писал студент, в нём много грамматических ошибок («Selbststimmung», «aufbauen» вместо «aufbewahren») — учите исправленный вариант. Факты не менялись, кроме мест, где закон с тех пор изменился: они помечены ⚠️ со ссылкой на официальный источник.</p>
+  </div>
+
+  <div class="vybor" id="vkladki" style="margin:18px 0 12px">
+    <button data-v="bilety" class="on">18 билетов</button>
+    <button data-v="ekzamen">Тренировка как на экзамене</button>
+    <button data-v="osebe">О себе (10 минут)</button>
+    <button data-v="polno">Полная версия</button>
+  </div>
+
+  <section id="v-bilety"><div id="bilety"></div></section>
+
+  <section id="v-ekzamen" hidden>
+    <div class="karta">
+      <p>Выпадает случайный билет. Говорите ответ вслух, пока идёт минута, — потом откройте правильный текст и послушайте его.</p>
+      <div class="knopki"><button class="knopka" id="e-start">Вытянуть билет</button></div>
+    </div>
+    <div id="ekz"></div>
+  </section>
+
+  <section id="v-osebe" hidden>
+    <div class="karta">
+      <p>Первые ~10 минут экзамена — «автобиографический опросник»: откуда вы, где учились и работали, кем хотите стать. Ниже вопросы и образцы ответов для каждого. <b>Места в квадратных скобках заполните сами</b> — я не знаю название вашего университета и годы, выдумывать не стал; у таких ответов пока нет звука.</p>
+      <div class="vybor" id="kto"><button data-k="григорий" class="on">Григорий</button><button data-k="полина">Полина</button></div>
+    </div>
+    <div id="osebe"></div>
+  </section>
+
+  <section id="v-polno" hidden>
+    <p class="melko">Полная версия конспекта (22 вопроса) — как в файле Ирины, без правок. Если на экзамене спросят глубже, чем в выжимке.</p>
+    <div id="polno"></div>
+  </section>
+</div>
+
+<script>
+"use strict";
+var Д = null, звук = null;
+function эк(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function кнопкаЗвука(ид){ return '<button class="play" data-z="'+ид+'" aria-label="Слушать">▶</button>'; }
+document.addEventListener('click', function(e){
+  var b = e.target.closest('[data-z]'); if (!b) return;
+  if (звук){ звук.pause(); document.querySelectorAll('.play.igraet').forEach(function(x){ x.classList.remove('igraet'); x.textContent='▶'; }); }
+  if (b.dataset.igraet === '1'){ b.dataset.igraet = ''; return; }
+  звук = new Audio('zvuk/'+b.dataset.z+'.mp3'); b.classList.add('igraet'); b.textContent = '■'; b.dataset.igraet = '1';
+  звук.onended = function(){ b.classList.remove('igraet'); b.textContent = '▶'; b.dataset.igraet = ''; };
+  звук.play().catch(function(){});
+});
+fetch('data/medrecht.json').then(function(r){ return r.json(); }).then(function(д){ Д = д; билеты(); оСебе('григорий'); полно(); });
+document.getElementById('vkladki').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return;
+  this.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); });
+  ['bilety','ekzamen','osebe','polno'].forEach(function(v){ document.getElementById('v-'+v).hidden = v !== b.dataset.v; }); });
+
+function билетHTML(т, открыт){
+  return '<details'+(открыт?' open':'')+'><summary>Билет '+т.н+'. '+эк(т.в)+'</summary>'+
+    '<div style="display:flex;gap:10px;align-items:flex-start;margin-top:10px">'+кнопкаЗвука('mr_k'+т.н)+'<p style="margin:0;font-family:Georgia,serif;font-size:15px">'+эк(т.де)+'</p></div>'+
+    '<div class="poyasn"><b>Смысл:</b> '+эк(т.ру)+'</div>'+
+    (т.акт||[]).map(function(a){ return '<div class="chestno" style="margin:8px 0">'+эк(a)+'</div>'; }).join('')+
+    '<details style="margin-top:8px"><summary class="melko">как в конспекте</summary><p class="melko">'+эк(т.о)+'</p></details></details>';
+}
+function билеты(){ document.getElementById('bilety').innerHTML = Д.кратко.map(function(т){ return билетHTML(т, false); }).join(''); }
+function полно(){
+  document.getElementById('polno').innerHTML = Д.полно.map(function(т){
+    return '<details><summary>'+т.н+'. '+эк(т.в)+'</summary><p style="white-space:pre-wrap">'+эк(т.о)+'</p>'+
+      (т.акт||[]).map(function(a){ return '<div class="chestno">'+эк(a)+'</div>'; }).join('')+'</details>'; }).join('');
+}
+var таймер = null;
+document.getElementById('e-start').onclick = function(){
+  clearInterval(таймер);
+  var т = Д.кратко[Math.floor(Math.random()*Д.кратко.length)], ост = 60, el = document.getElementById('ekz');
+  el.innerHTML = '<div class="vopros"><div class="verh"><span class="metka">Билет '+т.н+'</span><span class="chasy" id="e-ch" style="margin-left:auto">1:00</span></div>'+
+    '<div class="tekst">'+эк(т.в)+'</div><p class="melko">Отвечайте вслух.</p>'+
+    '<div class="knopki"><button class="knopka" id="e-otv">Показать ответ</button></div><div id="e-o"></div></div>';
+  таймер = setInterval(function(){ ост--; var c = document.getElementById('e-ch'); if (c) c.textContent = '0:'+(ост<10?'0':'')+Math.max(ост,0); if (ост<=0){ clearInterval(таймер); } }, 1000);
+  document.getElementById('e-otv').onclick = function(){ clearInterval(таймер); this.parentNode.remove(); document.getElementById('e-o').innerHTML = билетHTML(т, true); };
+};
+document.getElementById('kto').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return;
+  this.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); }); оСебе(b.dataset.k); });
+function оСебе(кто){
+  var о = Д.о_себе, пр = кто === 'григорий' ? 'g' : 'p';
+  document.getElementById('osebe').innerHTML = о.вопросы.map(function(в){
+    var ответ = о[кто][в.к], пусто = ответ.indexOf('[') !== -1;
+    return '<div class="karta"><div style="display:flex;gap:10px;align-items:center">'+кнопкаЗвука('mr_q_'+в.к)+'<b>'+эк(в.в)+'</b><span class="melko">— '+эк(в.ру)+'</span></div>'+
+      '<div style="display:flex;gap:10px;align-items:flex-start;margin-top:10px">'+(пусто?'':кнопкаЗвука('mr_'+пр+'_'+в.к))+'<p style="margin:0;font-family:Georgia,serif">'+эк(ответ).replace(/\[([^\]]+)\]/g,'<mark>[$1]</mark>')+'</p></div></div>';
+  }).join('');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Фармакология — нострификация</title>
+<script src="../tema.js"></script>
+<link rel="stylesheet" href="stil.css">
+</head>
+<body>
+<div class="backbar">
+  <a href="../ekzameny.html">← Экзамены</a>
+  <span class="bb-title">Pharmakologie · MedUni Wien</span>
+</div>
+
+<div class="wrap">
+  <h1>Фармакология</h1>
+  <p class="lede">Второй экзамен нострификации. Письменный тест, один правильный ответ из четырёх (A–D). Сдают оба.</p>
+
+  <div class="fakty">
+    <div><b id="f-vsego">—</b><span>разных вопросов</span></div>
+    <div><b id="f-chasto">—</b><span>встречались 3+ раза</span></div>
+    <div><b>8</b><span>датированных сессий 2019–2022 + старые сборники</span></div>
+    <div><b>≈30</b><span>вопросов в одной сессии</span></div>
+  </div>
+
+  <div class="karta">
+    <p><b>Откуда вопросы.</b> Из файла Ирины «Билеты по фармакологии» (42 стр.): это записи по памяти после экзаменов для нострификантов — Mai 2022, Jänner 2022, November и Oktober 2021, 30.06.2021, 30.04.2021, 08.06.2020, 17.01.2019, «Alte Fragen vor 05.2020» и отдельный раздел про рецепты. Ирина: «вопросы повторяются, их нужно выучить, дополнительно ничего не нужно».</p>
+    <p><b>Как мы их обработали.</b> 703 записи из всех сессий склеены в 431 разный вопрос. У каждого видно, сколько раз и в каких сессиях он был, — начинайте с частых. Исходная запись из PDF всегда рядом, под кнопкой «как в записи».</p>
+  </div>
+  <div class="chestno"><b>Что проверить самому.</b> Это конспекты студентов, а не официальный ключ: автор сессии 30.04.2021 пишет «ответы — только моё мнение». У 30 вопросов сессии 30.06.2021 сохранились настоящие варианты A–D, но правильный там не отмечен — где ответа не было нигде в материалах, его выбрал я, и такой вопрос помечен «ответ мой». Где я не уверен, стоит «проверить». Три вопроса без ответа честно оставлены без ответа. Проходной балл по фармакологии в материалах не указан.</div>
+
+  <div class="vybor" id="vkladki" style="margin:18px 0 12px">
+    <button data-v="spisok" class="on">Все вопросы</button>
+    <button data-v="kartochki">Карточки</button>
+    <button data-v="test">Тест как на экзамене</button>
+  </div>
+
+  <section id="v-spisok">
+    <input class="pole" id="poisk" placeholder="Поиск: Metformin, Rezept, Schwangerschaft…" style="margin-bottom:8px">
+    <div class="vybor" id="filtr" style="margin-bottom:10px">
+      <button data-f="vse" class="on">Все</button><button data-f="chasto">Частые (3+)</button><button data-f="abcd">С вариантами A–D</button><button data-f="moy">Ответ мой / проверить</button><button data-f="recept">Рецепты</button>
+    </div>
+    <p class="melko" id="skolko"></p>
+    <div id="spisok"></div>
+  </section>
+
+  <section id="v-kartochki" hidden>
+    <p class="melko">Вопросы идут от самых частых. Отметка «знал» сохраняется в этом браузере. <span id="k-schet"></span></p>
+    <div id="kartochka"></div>
+  </section>
+
+  <section id="v-test" hidden>
+    <div class="karta">
+      <p>30 вопросов с вариантами A–D, как в одной сессии. Сначала частые вопросы, остальные — случайно. Где на экзамене варианты не записаны, отвлекающие подобраны из ответов других вопросов.</p>
+      <div class="knopki"><button class="knopka" id="t-start">Начать тест</button></div>
+    </div>
+    <div id="test"></div>
+  </section>
+</div>
+
+<script>
+"use strict";
+var Б = [], фильтр = 'vse';
+function эк(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function взять(к, d){ try{ var v = localStorage.getItem(к); return v ? JSON.parse(v) : d; }catch(e){ return d; } }
+function класть(к, v){ try{ localStorage.setItem(к, JSON.stringify(v)); }catch(e){} }
+function перемешать(a){ for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
+function метки(x){
+  var m = '<span class="metka">'+x.раз+' '+(x.раз===1?'раз':(x.раз<5?'раза':'раз'))+'</span>';
+  if (x.вар && x.вар.length) m += '<span class="metka">A–D с экзамена</span>';
+  if (x.мой) m += '<span class="metka" style="color:var(--warn)">ответ мой</span>';
+  if (x.неуверенно) m += '<span class="metka" style="color:var(--bad)">проверить</span>';
+  if (x.без_ответа) m += '<span class="metka" style="color:var(--bad)">без ответа</span>';
+  return m;
+}
+function ответHTML(x){
+  var ч = x.без_ответа ? '<p class="bad">Ответа в материалах нет.</p>' : '<div class="var verno"><span class="bk">✓</span><span>'+эк(x.о)+'</span></div>';
+  if (x.прим) ч += '<div class="poyasn">'+эк(x.прим)+'</div>';
+  if (x.ещё && x.ещё.length) ч += '<p class="melko">В других записях ответ звучал так: '+x.ещё.map(эк).join(' · ')+'</p>';
+  ч += '<p class="kogda">Сессии: '+x.сессии.map(эк).join(', ')+'</p>';
+  ч += '<details><summary>как в записи</summary><p class="melko" style="white-space:pre-wrap">'+эк(x.сырой)+'</p></details>';
+  return ч;
+}
+fetch('data/pharma.json').then(function(r){ return r.json(); }).then(function(д){
+  Б = д;
+  document.getElementById('f-vsego').textContent = Б.length;
+  document.getElementById('f-chasto').textContent = Б.filter(function(x){ return x.раз >= 3; }).length;
+  список(); карточка();
+});
+document.getElementById('vkladki').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return;
+  this.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); });
+  ['spisok','kartochki','test'].forEach(function(v){ document.getElementById('v-'+v).hidden = v !== b.dataset.v; }); });
+document.getElementById('filtr').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return;
+  фильтр = b.dataset.f; this.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); }); список(); });
+document.getElementById('poisk').addEventListener('input', список);
+
+function список(){
+  var q = document.getElementById('poisk').value.trim().toLowerCase();
+  var отбор = Б.filter(function(x){
+    if (фильтр === 'chasto' && x.раз < 3) return false;
+    if (фильтр === 'abcd' && !(x.вар && x.вар.length)) return false;
+    if (фильтр === 'moy' && !(x.мой || x.неуверенно || x.без_ответа)) return false;
+    if (фильтр === 'recept' && !/rezept|suchtgift|signatur|subskript|ordinatio|inscriptio|invocatio|codex|vignette/i.test(x.в + ' ' + x.о)) return false;
+    return !q || (x.в + ' ' + x.о + ' ' + (x.прим||'')).toLowerCase().indexOf(q) !== -1;
+  });
+  document.getElementById('skolko').textContent = 'Показано: ' + отбор.length;
+  document.getElementById('spisok').innerHTML = отбор.map(function(x, i){
+    return '<details><summary><span style="font-weight:600">'+эк(x.в)+'</span><div class="verh" style="display:flex;gap:6px;flex-wrap:wrap;margin-top:6px">'+метки(x)+'</div></summary>'+
+      (x.вар && x.вар.length ? '<p class="melko">Варианты на экзамене: '+x.вар.map(function(v,j){ return 'ABCD'[j]+') '+эк(v); }).join(' · ')+'</p>' : '')+
+      ответHTML(x)+'</details>';
+  }).join('');
+}
+
+var знал = взять('pharma_знал', {}), номерК = 0;
+function очередь(){ return Б.filter(function(x){ return !x.без_ответа && !знал[x.ids[0]]; }); }
+function карточка(){
+  var оч = очередь(); var el = document.getElementById('kartochka');
+  document.getElementById('k-schet').textContent = 'Выучено: '+Object.keys(знал).length+' из '+Б.length+'.';
+  if (!оч.length){ el.innerHTML = '<p class="ok">Всё выучено! <button class="knopka vtor" id="k-sbros">Начать заново</button></p>';
+    document.getElementById('k-sbros').onclick = function(){ знал = {}; класть('pharma_знал', знал); карточка(); }; return; }
+  if (номерК >= оч.length) номерК = 0;
+  var x = оч[номерК];
+  el.innerHTML = '<div class="vopros"><div class="verh">'+метки(x)+'</div><div class="tekst">'+эк(x.в)+'</div>'+
+    '<div id="k-otv" hidden>'+ответHTML(x)+'</div>'+
+    '<div class="knopki"><button class="knopka" id="k-pokaz">Показать ответ</button></div></div>';
+  document.getElementById('k-pokaz').onclick = function(){
+    document.getElementById('k-otv').hidden = false;
+    this.parentNode.innerHTML = '<button class="knopka" id="k-da">Знал ✓</button><button class="knopka vtor" id="k-net">Не знал — повторить</button>';
+    document.getElementById('k-da').onclick = function(){ знал[x.ids[0]] = 1; класть('pharma_знал', знал); карточка(); window.scrollTo(0, document.getElementById('v-kartochki').offsetTop-60); };
+    document.getElementById('k-net').onclick = function(){ номерК++; карточка(); };
+  };
+}
+
+var тест = null;
+document.getElementById('t-start').onclick = function(){
+  var годные = Б.filter(function(x){ return !x.без_ответа && x.о && x.о.length <= 90; });
+  var короткие = годные.filter(function(x){ return !(x.вар && x.вар.length); }).map(function(x){ return x.о; });
+  var частые = перемешать(годные.filter(function(x){ return x.раз >= 3; })).slice(0, 18);
+  var прочие = перемешать(годные.filter(function(x){ return частые.indexOf(x) === -1; })).slice(0, 30 - частые.length);
+  var вопросы = перемешать(частые.concat(прочие)).map(function(x){
+    var вар, верный, настоящие = !!(x.вар && x.вар.length);
+    if (настоящие){ вар = x.вар.slice(0, 4); верный = вар.findIndex(function(v){ return v.indexOf(x.о) !== -1 || x.о.indexOf(v) !== -1; }); }
+    if (!настоящие || верный < 0){
+      var длина = x.о.length, чужие = перемешать(короткие.filter(function(o){ return o !== x.о && Math.abs(o.length - длина) < Math.max(12, длина); })).slice(0, 3);
+      вар = перемешать([x.о].concat(чужие)); верный = вар.indexOf(x.о); настоящие = false;
+    }
+    return { x:x, вар:вар, верный:верный, настоящие:настоящие, выбор:null };
+  });
+  тест = { вопросы:вопросы, номер:0 }; рисоватьТест();
+};
+function рисоватьТест(){
+  var el = document.getElementById('test'), т = тест, в = т.вопросы[т.номер];
+  var ч = '<div class="nomera">'+т.вопросы.map(function(q, i){ return '<button data-n="'+i+'" class="'+(q.выбор!==null?'otv':'')+(i===т.номер?' tut':'')+'">'+(i+1)+'</button>'; }).join('')+'</div>';
+  ч += '<div class="vopros"><div class="verh"><b>Вопрос '+(т.номер+1)+' из 30</b>'+(в.настоящие?'<span class="metka">варианты с экзамена</span>':'')+'</div><div class="tekst">'+эк(в.x.в)+'</div>'+
+    в.вар.map(function(v, j){ return '<button class="var'+(в.выбор===j?' vybr':'')+'" data-v="'+j+'"><span class="bk">'+'ABCD'[j]+'</span><span>'+эк(v)+'</span></button>'; }).join('')+'</div>'+
+    '<div class="knopki"><button class="knopka vtor" id="t-nazad">← Назад</button><button class="knopka vtor" id="t-dalee">Далее →</button><button class="knopka" id="t-konec" style="margin-left:auto">Завершить</button></div>';
+  el.innerHTML = ч;
+  el.querySelectorAll('[data-v]').forEach(function(b){ b.onclick = function(){ в.выбор = +b.dataset.v; if (т.номер < 29) т.номер++; рисоватьТест(); }; });
+  el.querySelectorAll('[data-n]').forEach(function(b){ b.onclick = function(){ т.номер = +b.dataset.n; рисоватьТест(); }; });
+  document.getElementById('t-nazad').onclick = function(){ if (т.номер>0){ т.номер--; рисоватьТест(); } };
+  document.getElementById('t-dalee').onclick = function(){ if (т.номер<29){ т.номер++; рисоватьТест(); } };
+  document.getElementById('t-konec').onclick = итогТеста;
+}
+function итогТеста(){
+  var т = тест, верно = т.вопросы.filter(function(q){ return q.выбор === q.верный; }).length;
+  var ч = '<h2>Верно '+верно+' из 30 ('+Math.round(100*верно/30)+' %)</h2><p class="melko">Проходной балл по фармакологии в материалах не указан. Ориентир — как на Stichprobentest, 60 %.</p>';
+  ч += т.вопросы.map(function(q, i){
+    var ок = q.выбор === q.верный;
+    return '<div class="vopros" style="margin-bottom:10px"><div class="verh"><b>'+(i+1)+'.</b> <span class="'+(ок?'ok':'bad')+'">'+(ок?'верно':'ошибка')+'</span></div><div class="tekst">'+эк(q.x.в)+'</div>'+
+      (!ок && q.выбор!==null ? '<div class="var mimo"><span class="bk">✗</span><span>'+эк(q.вар[q.выбор])+'</span></div>' : '')+ответHTML(q.x)+'</div>';
+  }).join('');
+  ч += '<div class="knopki"><button class="knopka" onclick="document.getElementById(\'t-start\').click()">Ещё один тест</button></div>';
+  document.getElementById('test').innerHTML = ч; window.scrollTo(0, document.getElementById('v-test').offsetTop - 60);
+}
+</script>
+</body>
+</html>

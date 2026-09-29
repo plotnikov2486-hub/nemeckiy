@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ÖSD — языковые сертификаты A1, A2, B1, C1</title>
+<script src="../tema.js"></script>
+<link rel="stylesheet" href="stil.css">
+</head>
+<body>
+<div class="backbar">
+  <a href="../ekzameny.html">← Экзамены</a>
+  <span class="bb-title">ÖSD Zertifikat</span>
+</div>
+
+<div class="wrap">
+  <h1>ÖSD: языковые сертификаты</h1>
+  <p class="lede">Österreichisches Sprachdiplom — главный вариант сдачи в Москве. Даты на 2027 год ÖSD выложит примерно в ноябре 2026, места уходят за минуты. Все цифры ниже — из официальных документов ÖSD (Durchführungsbestimmungen и бланки оценивания 2026 года).</p>
+
+  <div class="vybor" id="urovni" style="margin:14px 0">
+    <button data-u="a1" class="on">A1 · Григорий</button>
+    <button data-u="a2">A2 · Полина</button>
+    <button data-u="b1">B1 · Полина (лучше)</button>
+    <button data-u="c1">C1 · оба</button>
+  </div>
+  <div id="uroven"></div>
+
+  <h2>Официальные пробные экзамены</h2>
+  <div class="karta">
+    <p>Самый точный способ увидеть экзамен «один в один» — официальный <b>Modellsatz</b> ÖSD: задания, аудио, ответы и примеры письма. Он бесплатный. На наш сайт я его не копирую — это материалы ÖSD, — скачивайте с их сайта:</p>
+    <p>• <a href="https://osd.at/wp-content/uploads/2026/08/ZA1_Modellsatz.zip">Modellsatz A1 (zip)</a> · <a href="https://osd.at/wp-content/uploads/2026/08/ZA2_Modellsatz.zip">A2</a> · <a href="https://osd.at/wp-content/uploads/2026/08/ZB1_Modellsatz.zip">B1</a> · <a href="https://osd.at/wp-content/uploads/2026/08/ZC1_Modellsatz.zip">C1</a></p>
+  </div>
+
+  <h2>Тренажёр письма</h2>
+  <div class="karta">
+    <p class="melko">Засеките время, как на экзамене вашего уровня, и пишите. Темы тренировочные, мои, — не из экзамена; тип задания смотрите в Modellsatz.</p>
+    <select class="pole" id="w-tema"></select>
+    <div class="knopki"><button class="knopka" id="w-start">Старт</button><span class="chasy" id="w-chasy" style="align-self:center"></span></div>
+    <textarea class="pole" id="w-tekst"></textarea>
+    <p class="melko" id="w-slov">0 слов</p>
+  </div>
+</div>
+
+<script>
+"use strict";
+function эк(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+var У = {
+  a1: { имя:'ÖSD Zertifikat A1', кто:'Григорий', зачем:'Обязателен для семейного ВНЖ (воссоединение семьи). Срок — до подачи на ВНЖ, осень 2027.',
+    модули:'Два модуля: письменный (Lesen, Hören, Schreiben — группой) и устный (Sprechen — индивидуально). Модули можно сдавать и засчитывать отдельно.',
+    ряды:[['Lesen','25 мин','3 задания, 16 вопросов','30 / мин. 6'],['Hören','≈10 мин','3 задания, 15 вопросов','30 / мин. 6'],['Schreiben','20 мин','2 задания (5 + 10 баллов)','15 / мин. 4'],['Письменный модуль','≈55 мин без перерыва','','75 / мин. 38'],['Sprechen','≈10 мин + 10 мин подготовки','3 задания, индивидуально','25 / мин. 12']],
+    итог:'Всего 100 баллов, сдан — от 50 при условии, что в каждой части набран минимум. Оценки: 100–88 sehr gut, 87–75 gut, 74–50 bestanden.',
+    словарь:'Словари запрещены.', уроки:[1,16], минуты:20 },
+  a2: { имя:'ÖSD Zertifikat A2', кто:'Полина', зачем:'Нужен для поступления в Uni Graz и направления на языковые курсы → студенческий ВНЖ. Срок — май 2027 (край — июнь).',
+    модули:'Два модуля: письменный (группой) и устный (в паре или индивидуально). Можно сдавать отдельно.',
+    ряды:[['Lesen','30 мин','2 задания, 10 вопросов','25 / мин. 5'],['Hören','≈15 мин','3 задания, 14 вопросов','30 / мин. 6'],['Schreiben','30 мин','1 задание','15 / мин. 3'],['Письменный модуль','≈75 мин без перерыва','','70 / мин. 35'],['Sprechen','≈10 мин + 10 мин подготовки','2 задания, в паре','20 / мин. 10']],
+    итог:'Всего 90 баллов, сдан — от 45 при минимуме в каждой части.',
+    словарь:'Словари запрещены.', уроки:[17,31], минуты:30 },
+  b1: { имя:'ÖSD Zertifikat B1', кто:'Полина (если успеет — лучше A2)', зачем:'Тот же пропуск в университет, но с запасом.',
+    модули:'Четыре отдельных модуля — Lesen, Hören, Schreiben, Sprechen. Каждый сдаётся и засчитывается отдельно; полный сертификат — если все четыре сданы в течение года в одном центре.',
+    ряды:[['Lesen','65 мин','5 частей, 30 вопросов','100 / мин. 60'],['Hören','≈40 мин','4 части, 30 вопросов','100 / мин. 60'],['Schreiben','60 мин','3 части (40 + 40 + 20 баллов)','100 / мин. 60'],['Sprechen','≈15 мин в паре + 15 мин подготовки','3 части, во 2-й — выбор из двух тем','100 / мин. 60']],
+    итог:'Каждый модуль сдан при 60 баллах из 100. Оценки: 100–90, 89–80, 79–70, 69–60.',
+    словарь:'Словари запрещены.', уроки:[32,43], минуты:60 },
+  c1: { имя:'ÖSD Zertifikat C1', кто:'Григорий и Полина', зачем:'Нужен для подачи документов на нострификацию — до ~середины марта 2028. Ирина: готовиться именно под формат, на проходной балл. Стоит ≈250–300 €.',
+    модули:'Два модуля: письменный (Lesen, Hören, Schreiben) и устный (Sprechen — индивидуально).',
+    ряды:[['Lesen','90 мин','4 задания, 30 вопросов','20 / мин. 10'],['Hören','≈40 мин','2 задания, 20 вопросов','20 / мин. 10'],['Schreiben','90 мин','2 текста: формальное письмо; реферат, мнение или комментарий (3 темы на выбор)','15 + 15 / мин. 7 + 7'],['Письменный модуль','≈220 мин','','70 / мин. 42'],['Sprechen','индивидуально, 20 мин подготовки','3 задания','30 / мин. 18']],
+    итог:'Всего 100 баллов, сдан — от 60 при минимуме в каждой части.',
+    словарь:'Разрешён только одноязычный словарь (не специальный).', уроки:null, минуты:90 }
+};
+function показать(к){
+  var у = У[к];
+  document.getElementById('uroven').innerHTML = '<div class="karta"><h2 style="margin-top:0">'+эк(у.имя)+'</h2>'+
+    '<p><span class="kto">'+эк(у.кто)+'</span></p><p>'+эк(у.зачем)+'</p><p>'+эк(у.модули)+'</p>'+
+    '<div class="tabl"><table><tr><th>Часть</th><th>Время</th><th>Задания</th><th>Баллы / минимум</th></tr>'+
+    у.ряды.map(function(р){ return '<tr><td><b>'+эк(р[0])+'</b></td><td>'+эк(р[1])+'</td><td>'+эк(р[2])+'</td><td class="ch">'+эк(р[3])+'</td></tr>'; }).join('')+'</table></div>'+
+    '<p>'+эк(у.итог)+'</p><p class="melko">'+эк(у.словарь)+'</p>'+
+    '<p><b>Чем готовиться у нас:</b> '+(у.уроки ? 'уроки '+у.уроки[0]+'–'+у.уроки[1]+' на главной, ЗУБР, «Слушать», игры.' : 'уроки уровня B2–C1 ещё впереди; пока — все уроки B1, чтение и Stichprobentest как тренировка медицинского языка.')+
+    ' Для Lesen и Hören — официальный Modellsatz ниже.</p></div>';
+  document.querySelectorAll('#urovni button').forEach(function(b){ b.classList.toggle('on', b.dataset.u===к); });
+}
+document.getElementById('urovni').addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) показать(b.dataset.u); });
+показать('a1');
+
+var ТЕМЫ = [
+  ['A1 · 20 мин','Schreiben Sie eine kurze Nachricht an Ihre Nachbarin: Sie sind am Wochenende nicht zu Hause. Bitten Sie sie, Ihre Blumen zu gießen. (ca. 30 Wörter)',20],
+  ['A1 · 20 мин','Sie ziehen um. Schreiben Sie einer Freundin: wann, wohin, und laden Sie sie zum Kaffee ein. (ca. 30 Wörter)',20],
+  ['A2 · 30 мин','Schreiben Sie eine E-Mail an Ihre Deutschlehrerin: Sie sind krank und können nicht zum Kurs kommen. Fragen Sie nach den Hausaufgaben. (ca. 50 Wörter)',30],
+  ['A2 · 30 мин','Sie suchen eine Wohnung in Graz. Schreiben Sie an einen Vermieter: Wer sind Sie, was suchen Sie, wann können Sie die Wohnung besichtigen? (ca. 50 Wörter)',30],
+  ['B1 · 60 мин','Sie haben im Internet einen Artikel über Ärztemangel auf dem Land gelesen. Schreiben Sie Ihre Meinung dazu (ca. 80 Wörter).',30],
+  ['B1 · 60 мин','Eine Kollegin hat Sie zu ihrer Feier eingeladen, aber Sie haben Dienst. Schreiben Sie eine höfliche Absage und schlagen Sie einen anderen Termin vor (ca. 40 Wörter).',20],
+  ['C1 · 90 мин','Formelle E-Mail: Sie haben einen Deutschkurs gebucht, der nicht der Beschreibung entsprach. Beschweren Sie sich bei der Sprachschule und fordern Sie eine Lösung.',45],
+  ['C1 · 90 мин','Stellungnahme: „Sollte Telemedizin den Arztbesuch in ländlichen Regionen ersetzen?“ Wägen Sie Vor- und Nachteile ab und begründen Sie Ihre Meinung.',45]
+];
+document.getElementById('w-tema').innerHTML = ТЕМЫ.map(function(т, i){ return '<option value="'+i+'">'+эк(т[0])+' — '+эк(т[1].slice(0,70))+'…</option>'; }).join('');
+var тм = null;
+document.getElementById('w-start').onclick = function(){
+  var т = ТЕМЫ[+document.getElementById('w-tema').value], конец = Date.now() + т[2]*60000, el = document.getElementById('w-chasy');
+  document.getElementById('w-tekst').placeholder = т[1]; clearInterval(тм);
+  тм = setInterval(function(){ var о = Math.max(0, Math.round((конец-Date.now())/1000)); el.textContent = Math.floor(о/60)+':'+String(о%60).padStart(2,'0'); if (!о){ clearInterval(тм); el.textContent='Время вышло'; } }, 500);
+};
+document.getElementById('w-tekst').addEventListener('input', function(){ document.getElementById('w-slov').textContent = ((this.value.match(/[A-Za-zÄÖÜäöüß0-9]+/g)||[]).length) + ' слов'; });
+</script>
+</body>
+</html>
