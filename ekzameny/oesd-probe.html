@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>ÖSD — официальный пробный экзамен</title>
+<script src="../tema.js"></script>
+<link rel="stylesheet" href="stil.css">
+<style>
+  .stranica{ width:100%; border:1px solid var(--line); border-radius:8px; margin:8px 0; background:#fff; display:block; }
+  .zadanie{ background:var(--surface-2); border:1px solid var(--line); border-radius:var(--radius); padding:12px 14px; margin:12px 0; }
+  .zadanie h4{ margin:0 0 8px; font-size:15px; }
+  .punkt{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; padding:6px 0; border-top:1px dashed var(--line); }
+  .punkt:first-of-type{ border-top:none; }
+  .punkt .nm{ min-width:74px; font-weight:600; font-size:13.5px; }
+  .opt{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:8px; padding:5px 10px; font:inherit; font-size:13.5px; cursor:pointer; }
+  .opt.on{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); }
+  .opt.verno{ outline:2px solid var(--ok); }
+  .opt.mimo{ background:var(--bad); color:#fff; border-color:var(--bad); }
+  .punkt input[type=text]{ flex:1; min-width:140px; border:1px solid var(--line); border-radius:8px; padding:6px 9px; font:inherit; background:var(--surface); color:var(--ink); }
+  .punkt.ok input{ border-color:var(--ok); background:var(--ok-bg); }
+  .punkt.nein input{ border-color:var(--bad); background:var(--bad-bg); }
+  .kl{ font-size:12.5px; color:var(--ink-muted); }
+  .itog{ font-weight:600; margin-top:8px; }
+  .itog.ok{ color:var(--ok); } .itog.nein{ color:var(--bad); }
+  audio{ width:100%; margin:6px 0; }
+  .teil-kopf{ display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .teil-kopf h2{ margin:0; }
+  .obrazec{ font-family:Georgia,serif; border-left:3px solid var(--accent); padding-left:10px; }
+  #razbor h3,#texte h3{ margin-top:18px; } #razbor h4,#texte h4{ margin:14px 0 6px; }
+  .selbst input{ width:70px; }
+  .sticky-itog{ position:sticky; bottom:0; background:var(--bg); border-top:1px solid var(--line); padding:8px 0; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="backbar">
+  <a href="oesd.html">← ÖSD</a>
+  <span class="bb-title" id="bb">Modellsatz</span>
+</div>
+
+<div class="wrap">
+  <h1 id="zag">ÖSD — официальный пробный экзамен</h1>
+  <p class="lede">Официальный Modellsatz ÖSD: страницы экзамена, аудио и ответы — как на настоящем экзамене. Ответы проверяются по официальному ключу, баллы — по официальным таблицам. Материалы © ÖSD, публикуются с разрешения ÖSD.</p>
+
+  <div class="vybor" id="urovni" style="margin:12px 0">
+    <button data-u="a1">A1</button><button data-u="a2">A2</button><button data-u="b1">B1</button><button data-u="c1">C1</button>
+  </div>
+  <div class="vybor" id="vkladki" style="margin:0 0 12px">
+    <button data-v="ekz" class="on">Экзамен</button>
+    <button data-v="razbor">Разбор</button>
+    <button data-v="texte">Тексты аудио</button>
+    <button data-v="kluch">Официальный ключ</button>
+  </div>
+
+  <div class="chestno" id="kak">Как проходить: засеките время части кнопкой «Старт», аудио включайте целиком и не останавливайте — паузы для чтения вопросов уже внутри записи. Ответы отмечайте прямо здесь, в конце нажмите «Проверить». Ответы сохраняются в этом браузере.</div>
+
+  <section id="v-ekz"><div id="teile"></div>
+    <div class="sticky-itog" id="gesamt"></div>
+    <div class="knopki"><button class="knopka vtor" id="reset">Начать уровень заново</button></div>
+  </section>
+  <section id="v-razbor" hidden><div id="razbor"></div></section>
+  <section id="v-texte" hidden><div class="chestno">Читать только после прохождения — для проверки. Расшифровано надёжным модулем Виспера, отдельные слова могут быть с ошибками.</div><div id="texte"></div></section>
+  <section id="v-kluch" hidden><p class="melko">Официальные страницы «Lösungen und Bewertung» из пробника.</p><div id="kluch"></div></section>
+</div>
+
+<script>
+"use strict";
+var U = 'a1', D = null, ANT = {}, GEPRUEFT = {}, UHR = {};
+function эк(s){ return String(s==null?'':s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];}); }
+function lies(k, def){ try { var v = localStorage.getItem(k); return v ? JSON.parse(v) : def; } catch(e){ return def; } }
+function schreib(k, v){ try { localStorage.setItem(k, JSON.stringify(v)); } catch(e){} }
+function norm(s){ return String(s||'').toLowerCase().replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss').replace(/[^a-z0-9а-яё]/g,''); }
+function normMuster(p){ return p.replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss'); }
+function seite(n){ return '<img class="stranica" loading="lazy" alt="Seite '+n+'" src="'+D.seiten_pfad+(n<10?'0':'')+n+'.jpg">'; }
+
+var p = new URLSearchParams(location.search); if (/^(a1|a2|b1|c1)$/.test(p.get('u')||'')) U = p.get('u');
+document.getElementById('urovni').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return; U = b.dataset.u; history.replaceState(null,'','?u='+U); laden(); });
+document.getElementById('vkladki').addEventListener('click', function(e){ var b = e.target.closest('button'); if (!b) return;
+  this.querySelectorAll('button').forEach(function(x){ x.classList.toggle('on', x===b); });
+  ['ekz','razbor','texte','kluch'].forEach(function(v){ document.getElementById('v-'+v).hidden = v !== b.dataset.v; });
+  document.getElementById('kak').hidden = b.dataset.v !== 'ekz'; });
+document.getElementById('reset').onclick = function(){ if (!confirm('Стереть все ответы уровня '+U.toUpperCase()+'?')) return; ANT = {}; GEPRUEFT = {}; speichern(); zeigen(); };
+
+function laden(){
+  document.querySelectorAll('#urovni button').forEach(function(b){ b.classList.toggle('on', b.dataset.u===U); });
+  fetch('data/oesd_'+U+'.json').then(function(r){ return r.json(); }).then(function(d){
+    D = d; ANT = lies('oesd_ant_'+U, {}); GEPRUEFT = lies('oesd_gepr_'+U, {});
+    document.getElementById('zag').textContent = D.name + ' — пробный экзамен';
+    document.getElementById('bb').textContent = D.name;
+    document.getElementById('razbor').innerHTML = D.razbor_html;
+    document.getElementById('texte').innerHTML = D.texte_html || '<p>В этом уровне нет аудио.</p>';
+    document.getElementById('kluch').innerHTML = D.loesungen.map(seite).join('');
+    zeigen();
+  });
+}
+function speichern(){ schreib('oesd_ant_'+U, ANT); schreib('oesd_gepr_'+U, GEPRUEFT); }
+
+function zeigen(){
+  var html = '';
+  D.teile.forEach(function(t){
+    html += '<div class="karta" id="t-'+t.id+'"><div class="teil-kopf"><h2>'+эк(t.titel)+'</h2><span class="kto">'+t.min+' мин</span>'+
+      '<span class="kto">макс. '+t.max+', минимум '+t.mindest+'</span><button class="knopka vtor" data-uhr="'+t.id+'">Старт</button><span class="chasy" id="uhr-'+t.id+'"></span></div>';
+    if (t.hinweis) html += '<p class="melko">'+эк(t.hinweis)+'</p>';
+    html += '<details'+(t.selbst?'':' open')+'><summary>Страницы экзамена ('+t.seiten.length+')</summary>'+t.seiten.map(seite).join('')+'</details>';
+    (t.aufgaben||[]).forEach(function(a, ai){ html += aufgabeHTML(t, a, ai); });
+    if (t.selbst){
+      html += '<div class="zadanie selbst"><h4>Ваш текст / оценка</h4>'+
+        (t.id==='schreiben' ? '<textarea class="pole" data-frei="'+t.id+'" placeholder="Пишите здесь…">'+эк(ANT[t.id+'_text']||'')+'</textarea><p class="kl" id="wz-'+t.id+'"></p>' : '')+
+        '<div class="punkt"><span class="nm">Баллы</span><input type="text" inputmode="numeric" data-selbst="'+t.id+'" value="'+эк(ANT[t.id+'_punkte']||'')+'"> <span class="kl">из '+t.max+' — поставьте сами или по оценке Даши</span></div></div>';
+    }
+    html += '<div class="knopki">'+(t.aufgaben?'<button class="knopka" data-pruef="'+t.id+'">Проверить «'+эк(t.titel)+'»</button>':'')+'</div><div id="erg-'+t.id+'"></div></div>';
+  });
+  document.getElementById('teile').innerHTML = html;
+  D.teile.forEach(function(t){ if (GEPRUEFT[t.id]) pruefen(t.id, true); });
+  document.querySelectorAll('[data-frei]').forEach(wortzahl);
+  gesamt();
+}
+
+function aufgabeHTML(t, a, ai){
+  var id = t.id+'_'+ai, h = '<div class="zadanie"><h4>'+эк(a.titel)+'</h4>';
+  if (a.audio) h += '<audio controls preload="none" src="'+D.audio[a.audio]+'"></audio>';
+  if (a.hinweis) h += '<p class="kl">'+эк(a.hinweis)+'</p>';
+  if (a.typ === 'wahl'){
+    a.items.forEach(function(it, ii){ var k = id+'_'+ii, v = ANT[k];
+      h += '<div class="punkt" data-k="'+k+'"><span class="nm">'+эк(it.n)+'</span>'+it.opts.map(function(o){ return '<button class="opt'+(v===o?' on':'')+'" data-k="'+k+'" data-o="'+эк(o)+'">'+эк(o)+'</button>'; }).join('')+'</div>'; });
+  } else if (a.typ === 'text'){
+    a.items.forEach(function(it, ii){ var k = id+'_'+ii;
+      h += '<div class="punkt" data-k="'+k+'"><span class="nm">'+эк(it.n)+'</span><input type="text" data-k="'+k+'" value="'+эк(ANT[k]||'')+'" autocomplete="off" spellcheck="false"><span class="kl" id="kl-'+k+'"></span></div>'; });
+  } else if (a.typ === 'mehrfach_eins'){
+    var k = id+'_0', v = ANT[k]||[];
+    h += '<div class="punkt">'+a.optionen.map(function(o){ return '<button class="opt'+(v.indexOf(o)>=0?' on':'')+'" data-m="'+k+'" data-o="'+эк(o)+'">'+эк(o)+'</button>'; }).join('')+'</div>';
+  } else if (a.typ === 'mehrfach_zeilen'){
+    a.zeilen.forEach(function(z, zi){ var k = id+'_'+zi, v = ANT[k]||[];
+      h += '<div class="punkt" data-k="'+k+'"><span class="nm">'+эк(z[0])+'</span>'+a.optionen.map(function(o){ return '<button class="opt'+(v.indexOf(o)>=0?' on':'')+'" data-m="'+k+'" data-o="'+эк(o)+'">'+эк(o)+'</button>'; }).join('')+'</div>'; });
+  }
+  return h + '<div class="kl" id="ae-'+id+'"></div></div>';
+}
+
+document.addEventListener('click', function(e){
+  var b = e.target.closest('.opt[data-k]');
+  if (b){ var k = b.dataset.k; ANT[k] = ANT[k]===b.dataset.o ? undefined : b.dataset.o;
+    b.parentNode.querySelectorAll('.opt').forEach(function(x){ x.classList.toggle('on', x.dataset.o===ANT[k]); }); speichern(); return; }
+  var m = e.target.closest('.opt[data-m]');
+  if (m){ var km = m.dataset.m, arr = ANT[km]||[], i = arr.indexOf(m.dataset.o); if (i>=0) arr.splice(i,1); else arr.push(m.dataset.o); ANT[km] = arr;
+    m.classList.toggle('on', i<0); speichern(); return; }
+  var pr = e.target.closest('[data-pruef]'); if (pr){ GEPRUEFT[pr.dataset.pruef] = true; speichern(); pruefen(pr.dataset.pruef); return; }
+  var ok = e.target.closest('[data-zaehlen]'); if (ok){ ANT[ok.dataset.zaehlen+'_ok'] = !ANT[ok.dataset.zaehlen+'_ok']; speichern(); var tid = ok.dataset.teil; pruefen(tid, true); return; }
+  var u = e.target.closest('[data-uhr]'); if (u){ uhr(u.dataset.uhr); }
+});
+document.addEventListener('input', function(e){
+  var t = e.target;
+  if (t.matches('input[data-k]')){ ANT[t.dataset.k] = t.value; speichern(); }
+  if (t.matches('[data-selbst]')){ ANT[t.dataset.selbst+'_punkte'] = t.value; speichern(); gesamt(); }
+  if (t.matches('[data-frei]')){ ANT[t.dataset.frei+'_text'] = t.value; speichern(); wortzahl(t); }
+});
+function wortzahl(t){ var n = (t.value.match(/[A-Za-zÄÖÜäöüß0-9]+/g)||[]).length; var el = document.getElementById('wz-'+t.dataset.frei); if (el) el.textContent = n+' слов'; }
+
+function uhr(id){
+  var t = D.teile.filter(function(x){ return x.id===id; })[0]; clearInterval(UHR[id]);
+  var ende = Date.now() + t.min*60000, el = document.getElementById('uhr-'+id);
+  UHR[id] = setInterval(function(){ var s = Math.max(0, Math.round((ende-Date.now())/1000)); el.textContent = Math.floor(s/60)+':'+String(s%60).padStart(2,'0');
+    if (!s){ clearInterval(UHR[id]); el.textContent = 'Время вышло'; } }, 500);
+}
+
+function tabelle(tab, n){ return tab[n] != null ? tab[n] : (tab[String(n)] != null ? tab[String(n)] : 0); }
+
+function aufgabePunkte(t, a, ai, markieren){
+  var id = t.id+'_'+ai, richtig = 0, max = 0;
+  if (a.typ === 'wahl'){
+    a.items.forEach(function(it, ii){ var k = id+'_'+ii, v = ANT[k], zaehlt = !(a.ohne_punkte && a.ohne_punkte.indexOf(it.key)>=0);
+      if (zaehlt) max++;
+      if (v === it.key && zaehlt) richtig++;
+      if (markieren){ document.querySelectorAll('.opt[data-k="'+k+'"]').forEach(function(x){ x.classList.remove('verno','mimo');
+        if (x.dataset.o === it.key) x.classList.add('verno'); if (x.dataset.o === v && v !== it.key) x.classList.add('mimo'); }); }
+    });
+  } else if (a.typ === 'text'){
+    a.items.forEach(function(it, ii){ var k = id+'_'+ii, v = norm(ANT[k]);
+      var ok = !!v && it.muster.some(function(m){ return new RegExp(normMuster(m)).test(v); }) || !!ANT[k+'_ok'];
+      max++; if (ok) richtig++;
+      if (markieren){ var row = document.querySelector('.punkt[data-k="'+k+'"]'); row.classList.toggle('ok', ok); row.classList.toggle('nein', !ok);
+        var kl = document.getElementById('kl-'+k);
+        kl.innerHTML = ok ? (ANT[k+'_ok'] ? '✓ засчитано вами <button class="opt" data-zaehlen="'+k+'" data-teil="'+t.id+'">отменить</button>' : '✓')
+          : 'ключ: '+эк(it.muster.map(function(m){ return m.replace(/[\^$]/g,'').replace(/\(([^)]*)\)\?/g,'').replace(/[()]/g,'').replace(/\|/g,' / '); }).join(' / '))+
+            (ANT[k] ? ' <button class="opt" data-zaehlen="'+k+'" data-teil="'+t.id+'">засчитать мой вариант</button>' : ''); }
+    });
+  } else if (a.typ === 'mehrfach_eins'){
+    var v = ANT[id+'_0']||[]; richtig = v.filter(function(o){ return a.key.indexOf(o)>=0; }).length; max = a.key.length;
+    var pk = tabelle(a.tabelle, richtig); if (v.length === 5) pk = Math.max(0, pk-3); if (v.length > 5) pk = 0;
+    if (markieren) document.querySelectorAll('.opt[data-m="'+id+'_0"]').forEach(function(x){ x.classList.remove('verno','mimo');
+      if (a.key.indexOf(x.dataset.o)>=0) x.classList.add('verno'); else if (v.indexOf(x.dataset.o)>=0) x.classList.add('mimo'); });
+    return {richtig: richtig, max: max, punkte: pk};
+  } else if (a.typ === 'mehrfach_zeilen'){
+    var pz = 0;
+    a.zeilen.forEach(function(z, zi){ var k = id+'_'+zi, v = ANT[k]||[], fehler = 0;
+      a.optionen.forEach(function(o){ if ((v.indexOf(o)>=0) !== (z[1].indexOf(o)>=0)) fehler++; });
+      var p = (v.length===0 || v.length===a.optionen.length) ? 0 : fehler===0 ? 2 : fehler===1 ? 1 : 0; pz += p; if (p===2) richtig++;
+      if (markieren) document.querySelectorAll('.opt[data-m="'+k+'"]').forEach(function(x){ x.classList.remove('verno','mimo');
+        if (z[1].indexOf(x.dataset.o)>=0) x.classList.add('verno'); else if (v.indexOf(x.dataset.o)>=0) x.classList.add('mimo'); });
+    });
+    return {richtig: richtig, max: a.zeilen.length, punkte: pz};
+  }
+  return {richtig: richtig, max: max, punkte: a.tabelle ? tabelle(a.tabelle, richtig) : null};
+}
+
+function teilPunkte(t, markieren){
+  if (t.selbst){ var v = parseFloat(String(ANT[t.id+'_punkte']||'').replace(',','.')); return isNaN(v) ? null : Math.min(v, t.max); }
+  if (!GEPRUEFT[t.id]) return null;
+  var sum = 0, richtig = 0, details = [];
+  t.aufgaben.forEach(function(a, ai){ var r = aufgabePunkte(t, a, ai, markieren); richtig += r.richtig; if (r.punkte != null) sum += r.punkte; details.push(r);
+    if (markieren){ var el = document.getElementById('ae-'+t.id+'_'+ai); if (el) el.innerHTML = 'Верно: '+r.richtig+' из '+r.max+(r.punkte!=null?' → <b>'+r.punkte+' балл.</b>':''); } });
+  if (t.umrechnung) sum = tabelle(t.umrechnung, richtig);
+  return sum;
+}
+
+function pruefen(id, still){
+  var t = D.teile.filter(function(x){ return x.id===id; })[0], p = teilPunkte(t, true);
+  var el = document.getElementById('erg-'+id), ok = p >= t.mindest;
+  el.innerHTML = '<div class="itog '+(ok?'ok':'nein')+'">'+эк(t.titel)+': '+p+' из '+t.max+' — '+(ok?'минимум ('+t.mindest+') набран ✓':'меньше минимума ('+t.mindest+') ✗')+'</div>'+
+    (t.umrechnung ? '<p class="kl">Верных ответов переводятся в баллы по официальной таблице: 18 из 30 = 60 = сдано.</p>' : '')+
+    '<p class="kl">Зелёная рамка — правильный ответ, красный — ваш неверный. Почему так — во вкладке «Разбор».</p>';
+  gesamt();
+}
+
+function gesamt(){
+  var z = [], summe = 0, alle = true, alleOk = true;
+  D.teile.forEach(function(t){ var p = teilPunkte(t, false);
+    if (p == null){ alle = false; z.push(t.titel+': —'); return; }
+    summe += p; if (p < t.mindest) alleOk = false; z.push(t.titel+': '+p+'/'+t.max+(p>=t.mindest?' ✓':' ✗')); });
+  var g = D.gesamt, txt = z.join(' · ');
+  if (g.modular) txt += '<br><span class="kl">B1 — модульный: каждая часть сдаётся отдельно, нужно 60 из 100.</span>';
+  else if (alle){ var ok = alleOk && summe >= g.mindest; txt += '<br><b class="'+(ok?'gotovo':'')+'">Итого '+summe+' из '+g.max+(ok?' — сдано ✓':' — пока не сдано (нужно '+g.mindest+' и минимум в каждой части)')+'</b>'; }
+  else txt += '<br><span class="kl">Итог появится, когда все части проверены (письмо и устную оцените сами).</span>';
+  document.getElementById('gesamt').innerHTML = txt;
+}
+laden();
+</script>
+</body>
+</html>

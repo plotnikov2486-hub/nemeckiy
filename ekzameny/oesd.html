@@ -27,8 +27,9 @@
 
   <h2>Официальные пробные экзамены</h2>
   <div class="karta">
-    <p>Самый точный способ увидеть экзамен «один в один» — официальный <b>Modellsatz</b> ÖSD: задания, аудио, ответы и примеры письма. Он бесплатный. На наш сайт я его не копирую — это материалы ÖSD, — скачивайте с их сайта:</p>
-    <p>• <a href="https://osd.at/wp-content/uploads/2026/08/ZA1_Modellsatz.zip">Modellsatz A1 (zip)</a> · <a href="https://osd.at/wp-content/uploads/2026/08/ZA2_Modellsatz.zip">A2</a> · <a href="https://osd.at/wp-content/uploads/2026/08/ZB1_Modellsatz.zip">B1</a> · <a href="https://osd.at/wp-content/uploads/2026/08/ZC1_Modellsatz.zip">C1</a></p>
+    <p>Официальный <b>Modellsatz</b> ÖSD — задания, аудио и ответы «один в один», как на экзамене. Проходите прямо здесь: таймер, аудио, автопроверка по официальному ключу, баллы по официальным таблицам, мой разбор каждого задания и тексты аудио.</p>
+    <div class="vybor"><a class="knopka" href="oesd-probe.html?u=a1">Пробник A1</a> <a class="knopka" href="oesd-probe.html?u=a2">Пробник A2</a> <a class="knopka" href="oesd-probe.html?u=b1">Пробник B1</a> <a class="knopka" href="oesd-probe.html?u=c1">Пробник C1</a></div>
+    <p class="melko">Материалы © ÖSD, публикуются с разрешения ÖSD. Оригиналы — на osd.at.</p>
   </div>
 
   <h2>Тренажёр письма</h2>
@@ -74,7 +75,7 @@ function показать(к){
     у.ряды.map(function(р){ return '<tr><td><b>'+эк(р[0])+'</b></td><td>'+эк(р[1])+'</td><td>'+эк(р[2])+'</td><td class="ch">'+эк(р[3])+'</td></tr>'; }).join('')+'</table></div>'+
     '<p>'+эк(у.итог)+'</p><p class="melko">'+эк(у.словарь)+'</p>'+
     '<p><b>Чем готовиться у нас:</b> '+(у.уроки ? 'уроки '+у.уроки[0]+'–'+у.уроки[1]+' на главной, ЗУБР, «Слушать», игры.' : 'уроки уровня B2–C1 ещё впереди; пока — все уроки B1, чтение и Stichprobentest как тренировка медицинского языка.')+
-    ' Для Lesen и Hören — официальный Modellsatz ниже.</p></div>';
+    ' Официальный пробник этого уровня — <a href="oesd-probe.html?u='+к+'">здесь</a>.</p></div>';
   document.querySelectorAll('#urovni button').forEach(function(b){ b.classList.toggle('on', b.dataset.u===к); });
 }
 document.getElementById('urovni').addEventListener('click', function(e){ var b = e.target.closest('button'); if (b) показать(b.dataset.u); });
