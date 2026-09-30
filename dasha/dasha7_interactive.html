@@ -200,7 +200,6 @@
   .fam-card .fld { width:100%; max-width:280px; margin-top:4px; }
   .celeb-example { background:var(--surface); border:1px dashed var(--line); border-radius:10px; padding:12px 14px; font-family:Georgia,serif; line-height:1.6; }
 </style>
-
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -511,7 +510,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <div class="hwbox">
       <span class="hwnum">Задание 4</span>
       <h3>Составить примерно такой же рассказ про себя</h3>
-      <p class="desc" style="margin:0 0 8px">По образцу текстов Пако и Николь (раздел 7). Вот те же предложения-заготовки — впиши своё вместо многоточий, задание твоё, я его за тебя не пишу:</p>
+      <p class="desc" style="margin:0 0 8px">По образцу текстов Пако и Николь (раздел 7). Сначала — заготовка, чтобы попробовать самому; ниже — <b>готовый рассказ про тебя</b> (дописан 30.09 по твоей просьбе, с фактами о семье), озвучен мужским голосом.</p>
       <div class="celeb-example">
         Ich heiße … . Ich bin … Jahre alt und komme aus … .<br>
         Ich wohne in … und arbeite als … (или: studiere …).<br>
@@ -519,16 +518,35 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
         Mein Sternzeichen ist … .<br><br>
         Das ist mein Bruder / meine Schwester … . Er/Sie ist … Jahre alt und lebt in … .
       </div>
+      <p class="desc" style="margin:12px 0 6px"><b>Готовый вариант — «Ich heiße Grigorii…»</b> (для устной части экзамена: «Stellen Sie sich vor»):</p>
+      <div id="ichtext"></div>
     </div>
 
     <div class="hwbox">
       <span class="hwnum">Задание 7</span>
       <h3>Взять любую знаменитость и составить про неё такой же текст</h3>
-      <p class="desc" style="margin:0 0 8px">По образцу текста про Хайди Клум (выше). Вот пример — <b>это мой образец</b>, а не готовая домашка, свою знаменитость и текст про неё выбираешь сам:</p>
-      <div class="celeb-example">
-        Albert Einstein ist der Sohn von Hermann und Pauline Einstein und kommt aus Deutschland.
-        Er ist am 14.3.1879 in Ulm geboren. Albert Einstein ist von Beruf Physiker.
-        Er ist mit Elsa Einstein verheiratet. Die Familie hat zwei Kinder, Hans Albert und Eduard.
+      <p class="desc" style="margin:0 0 8px">Готовые тексты по образцу Хайди Клум (дописаны 30.09 по твоей просьбе): про <b>Арнольда Шварценеггера</b> — он родом из-под Граца — и такой же текст <b>про тебя</b>. Те же обороты: <i>ist der Sohn von … und kommt aus …, ist … geboren, … Vater ist …, ist von Beruf …, ist verheiratet mit …, hat … Kinder, wohnt zurzeit in …</i></p>
+      <p class="desc" style="margin:10px 0 6px"><b>Arnold Schwarzenegger</b></p>
+      <div id="arnoldtext"></div>
+      <div class="kas-wrap" style="margin-top:12px"><div id="stammArnold"></div></div>
+      <button id="кОтветыArnold" class="кн-ответы">Показать ответы</button>
+      <div id="otvetyArnold" hidden style="margin-top:10px"></div>
+
+      <p class="desc" style="margin:18px 0 6px"><b>Grigorii Plotnikov</b> — тот же текст про тебя, как про знаменитость</p>
+      <div id="grigoriitext"></div>
+      <div class="kas-wrap" style="margin-top:12px"><div id="stammGrigorii"></div></div>
+      <button id="кОтветыGrigorii" class="кн-ответы">Показать ответы</button>
+      <div id="otvetyGrigorii" hidden style="margin-top:10px"></div>
+
+      <p class="desc" style="margin:18px 0 6px"><b>Новые слова из этих текстов</b></p>
+      <div id="celebw" class="grid2"></div>
+      <div class="grammar-box" style="margin-top:12px">
+        <b>Что заметить.</b><br>
+        • <b>war</b> — прошедшее от <i>sein</i> («был»). У Арнольда родителей уже нет, губернатором и мужем Марии он был — поэтому <i>war Polizist, war Gouverneur, war verheiratet</i>. У Хайди всё в настоящем: <i>ist verheiratet</i>.<br>
+        • <b>seit</b> — до сих пор (<i>Seit 2005 ist Heidi verheiratet</i>), <b>von … bis</b> — было и закончилось (<i>Von 1986 bis 2021 war Arnold verheiratet</i>).<br>
+        • Твой отец — ровно как отец Хайди: <i>… war Meister im Werk. <b>Jetzt arbeitet er aber als</b> CNC-Dreher</i> — «раньше был…, а теперь работает…».<br>
+        • <b>Arnolds Vater, Grigoriis Vater, Polinas Eltern</b> — «чей» через -s, без апострофа (как <i>Heidi Klums Vater</i>).<br>
+        • Профессия после <i>ist / von Beruf</i> — без артикля; у женщин всегда <b>-in</b>: <i>Journalistin, Kinderärztin</i>.
       </div>
     </div>
 
@@ -1119,7 +1137,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </div>
 
 <script>
-const AUDIO = {"vw1": "../zvuk/dasha7/vw1.mp3", "vw2": "../zvuk/dasha7/vw2.mp3", "vw3": "../zvuk/dasha7/vw3.mp3", "vw4": "../zvuk/dasha7/vw4.mp3", "fw1": "../zvuk/dasha7/fw1.mp3", "fw2": "../zvuk/dasha7/fw2.mp3", "fw3": "../zvuk/dasha7/fw3.mp3", "fw4": "../zvuk/dasha7/fw4.mp3", "fw5": "../zvuk/dasha7/fw5.mp3", "fw6": "../zvuk/dasha7/fw6.mp3", "fw7": "../zvuk/dasha7/fw7.mp3", "fw8": "../zvuk/dasha7/fw8.mp3", "fw9": "../zvuk/dasha7/fw9.mp3", "fw10": "../zvuk/dasha7/fw10.mp3", "fw11": "../zvuk/dasha7/fw11.mp3", "fw12": "../zvuk/dasha7/fw12.mp3", "fw13": "../zvuk/dasha7/fw13.mp3", "fq1": "../zvuk/dasha7/fq1.mp3", "fa1": "../zvuk/dasha7/fa1.mp3", "fq2": "../zvuk/dasha7/fq2.mp3", "fa2": "../zvuk/dasha7/fa2.mp3", "fq3": "../zvuk/dasha7/fq3.mp3", "fa3": "../zvuk/dasha7/fa3.mp3", "fq4": "../zvuk/dasha7/fq4.mp3", "fa4": "../zvuk/dasha7/fa4.mp3", "fq5": "../zvuk/dasha7/fq5.mp3", "fa5": "../zvuk/dasha7/fa5.mp3", "fq6": "../zvuk/dasha7/fq6.mp3", "fa6": "../zvuk/dasha7/fa6.mp3", "fq7": "../zvuk/dasha7/fq7.mp3", "fa7": "../zvuk/dasha7/fa7.mp3", "fq8": "../zvuk/dasha7/fq8.mp3", "fa8": "../zvuk/dasha7/fa8.mp3", "fq9": "../zvuk/dasha7/fq9.mp3", "fa9": "../zvuk/dasha7/fa9.mp3", "fq10": "../zvuk/dasha7/fq10.mp3", "fa10": "../zvuk/dasha7/fa10.mp3", "fq11": "../zvuk/dasha7/fq11.mp3", "fa11": "../zvuk/dasha7/fa11.mp3", "fq12": "../zvuk/dasha7/fq12.mp3", "fa12": "../zvuk/dasha7/fa12.mp3", "fq13": "../zvuk/dasha7/fq13.mp3", "fa13": "../zvuk/dasha7/fa13.mp3", "fq14": "../zvuk/dasha7/fq14.mp3", "fa14": "../zvuk/dasha7/fa14.mp3", "wf1": "../zvuk/dasha7/wf1.mp3", "wf2": "../zvuk/dasha7/wf2.mp3", "wf3": "../zvuk/dasha7/wf3.mp3", "mk1": "../zvuk/dasha7/mk1.mp3", "mk2": "../zvuk/dasha7/mk2.mp3", "mk3": "../zvuk/dasha7/mk3.mp3", "mk4": "../zvuk/dasha7/mk4.mp3", "mk5": "../zvuk/dasha7/mk5.mp3", "mk6": "../zvuk/dasha7/mk6.mp3", "mkw1": "../zvuk/dasha7/mkw1.mp3", "mkw2": "../zvuk/dasha7/mkw2.mp3", "mkw3": "../zvuk/dasha7/mkw3.mp3", "mkw4": "../zvuk/dasha7/mkw4.mp3", "mkw5": "../zvuk/dasha7/mkw5.mp3", "mkw6": "../zvuk/dasha7/mkw6.mp3", "mt1": "../zvuk/dasha7/mt1.mp3", "mt2": "../zvuk/dasha7/mt2.mp3", "mt3": "../zvuk/dasha7/mt3.mp3", "mt4": "../zvuk/dasha7/mt4.mp3", "rf1": "../zvuk/dasha7/rf1.mp3", "rf2": "../zvuk/dasha7/rf2.mp3", "rf3": "../zvuk/dasha7/rf3.mp3", "rf4": "../zvuk/dasha7/rf4.mp3", "rw1": "../zvuk/dasha7/rw1.mp3", "rw2": "../zvuk/dasha7/rw2.mp3", "rw3": "../zvuk/dasha7/rw3.mp3", "rw4": "../zvuk/dasha7/rw4.mp3", "pt1": "../zvuk/dasha7/pt1.mp3", "pt2": "../zvuk/dasha7/pt2.mp3", "pt3": "../zvuk/dasha7/pt3.mp3", "pt4": "../zvuk/dasha7/pt4.mp3", "pt5": "../zvuk/dasha7/pt5.mp3", "pt6": "../zvuk/dasha7/pt6.mp3", "pt7": "../zvuk/dasha7/pt7.mp3", "pt8": "../zvuk/dasha7/pt8.mp3", "pt9": "../zvuk/dasha7/pt9.mp3", "pq1": "../zvuk/dasha7/pq1.mp3", "pa1": "../zvuk/dasha7/pa1.mp3", "pq2": "../zvuk/dasha7/pq2.mp3", "pa2": "../zvuk/dasha7/pa2.mp3", "pq3": "../zvuk/dasha7/pq3.mp3", "pa3": "../zvuk/dasha7/pa3.mp3", "pq4": "../zvuk/dasha7/pq4.mp3", "pa4": "../zvuk/dasha7/pa4.mp3", "pq5": "../zvuk/dasha7/pq5.mp3", "pa5": "../zvuk/dasha7/pa5.mp3", "pq6": "../zvuk/dasha7/pq6.mp3", "pa6": "../zvuk/dasha7/pa6.mp3", "pq7": "../zvuk/dasha7/pq7.mp3", "pa7": "../zvuk/dasha7/pa7.mp3", "pq8": "../zvuk/dasha7/pq8.mp3", "pa8": "../zvuk/dasha7/pa8.mp3", "pq9": "../zvuk/dasha7/pq9.mp3", "pa9": "../zvuk/dasha7/pa9.mp3", "pq10": "../zvuk/dasha7/pq10.mp3", "pa10": "../zvuk/dasha7/pa10.mp3", "pw1": "../zvuk/dasha7/pw1.mp3", "pw2": "../zvuk/dasha7/pw2.mp3", "pw3": "../zvuk/dasha7/pw3.mp3", "pw4": "../zvuk/dasha7/pw4.mp3", "pw5": "../zvuk/dasha7/pw5.mp3", "pw6": "../zvuk/dasha7/pw6.mp3", "pw7": "../zvuk/dasha7/pw7.mp3", "pw8": "../zvuk/dasha7/pw8.mp3", "pw9": "../zvuk/dasha7/pw9.mp3", "pw10": "../zvuk/dasha7/pw10.mp3", "nt1": "../zvuk/dasha7/nt1.mp3", "nt2": "../zvuk/dasha7/nt2.mp3", "nt3": "../zvuk/dasha7/nt3.mp3", "nt4": "../zvuk/dasha7/nt4.mp3", "nt5": "../zvuk/dasha7/nt5.mp3", "nt6": "../zvuk/dasha7/nt6.mp3", "nt7": "../zvuk/dasha7/nt7.mp3", "nt8": "../zvuk/dasha7/nt8.mp3", "nq1": "../zvuk/dasha7/nq1.mp3", "na1": "../zvuk/dasha7/na1.mp3", "nq2": "../zvuk/dasha7/nq2.mp3", "na2": "../zvuk/dasha7/na2.mp3", "nq3": "../zvuk/dasha7/nq3.mp3", "na3": "../zvuk/dasha7/na3.mp3", "nq4": "../zvuk/dasha7/nq4.mp3", "na4": "../zvuk/dasha7/na4.mp3", "nq5": "../zvuk/dasha7/nq5.mp3", "na5": "../zvuk/dasha7/na5.mp3", "nq6": "../zvuk/dasha7/nq6.mp3", "na6": "../zvuk/dasha7/na6.mp3", "nq7": "../zvuk/dasha7/nq7.mp3", "na7": "../zvuk/dasha7/na7.mp3", "nw1": "../zvuk/dasha7/nw1.mp3", "nw2": "../zvuk/dasha7/nw2.mp3", "nw3": "../zvuk/dasha7/nw3.mp3", "nw4": "../zvuk/dasha7/nw4.mp3", "nw5": "../zvuk/dasha7/nw5.mp3", "nw6": "../zvuk/dasha7/nw6.mp3", "nw7": "../zvuk/dasha7/nw7.mp3", "nw8": "../zvuk/dasha7/nw8.mp3", "nw9": "../zvuk/dasha7/nw9.mp3", "h1": "../zvuk/dasha7/h1.mp3", "h2": "../zvuk/dasha7/h2.mp3", "h3": "../zvuk/dasha7/h3.mp3", "h4": "../zvuk/dasha7/h4.mp3", "h5": "../zvuk/dasha7/h5.mp3", "h6": "../zvuk/dasha7/h6.mp3", "h7": "../zvuk/dasha7/h7.mp3", "h8": "../zvuk/dasha7/h8.mp3", "h9": "../zvuk/dasha7/h9.mp3", "g1": "../zvuk/dasha7/g1.mp3", "g2": "../zvuk/dasha7/g2.mp3", "g3": "../zvuk/dasha7/g3.mp3", "g4": "../zvuk/dasha7/g4.mp3", "g5": "../zvuk/dasha7/g5.mp3", "g6": "../zvuk/dasha7/g6.mp3", "g7": "../zvuk/dasha7/g7.mp3", "g8": "../zvuk/dasha7/g8.mp3", "g9": "../zvuk/dasha7/g9.mp3", "g10": "../zvuk/dasha7/g10.mp3", "hk1": "../zvuk/dasha7/hk1.mp3", "hk2": "../zvuk/dasha7/hk2.mp3", "hk3": "../zvuk/dasha7/hk3.mp3", "hk4": "../zvuk/dasha7/hk4.mp3", "hk5": "../zvuk/dasha7/hk5.mp3", "hk6": "../zvuk/dasha7/hk6.mp3", "hk7": "../zvuk/dasha7/hk7.mp3", "hw1": "../zvuk/dasha7/hw1.mp3", "hw2": "../zvuk/dasha7/hw2.mp3", "hw3": "../zvuk/dasha7/hw3.mp3", "hw4": "../zvuk/dasha7/hw4.mp3", "hw5": "../zvuk/dasha7/hw5.mp3", "hw6": "../zvuk/dasha7/hw6.mp3"};
+const AUDIO = {"vw1": "../zvuk/dasha7/vw1.mp3", "vw2": "../zvuk/dasha7/vw2.mp3", "vw3": "../zvuk/dasha7/vw3.mp3", "vw4": "../zvuk/dasha7/vw4.mp3", "fw1": "../zvuk/dasha7/fw1.mp3", "fw2": "../zvuk/dasha7/fw2.mp3", "fw3": "../zvuk/dasha7/fw3.mp3", "fw4": "../zvuk/dasha7/fw4.mp3", "fw5": "../zvuk/dasha7/fw5.mp3", "fw6": "../zvuk/dasha7/fw6.mp3", "fw7": "../zvuk/dasha7/fw7.mp3", "fw8": "../zvuk/dasha7/fw8.mp3", "fw9": "../zvuk/dasha7/fw9.mp3", "fw10": "../zvuk/dasha7/fw10.mp3", "fw11": "../zvuk/dasha7/fw11.mp3", "fw12": "../zvuk/dasha7/fw12.mp3", "fw13": "../zvuk/dasha7/fw13.mp3", "fq1": "../zvuk/dasha7/fq1.mp3", "fa1": "../zvuk/dasha7/fa1.mp3", "fq2": "../zvuk/dasha7/fq2.mp3", "fa2": "../zvuk/dasha7/fa2.mp3", "fq3": "../zvuk/dasha7/fq3.mp3", "fa3": "../zvuk/dasha7/fa3.mp3", "fq4": "../zvuk/dasha7/fq4.mp3", "fa4": "../zvuk/dasha7/fa4.mp3", "fq5": "../zvuk/dasha7/fq5.mp3", "fa5": "../zvuk/dasha7/fa5.mp3", "fq6": "../zvuk/dasha7/fq6.mp3", "fa6": "../zvuk/dasha7/fa6.mp3", "fq7": "../zvuk/dasha7/fq7.mp3", "fa7": "../zvuk/dasha7/fa7.mp3", "fq8": "../zvuk/dasha7/fq8.mp3", "fa8": "../zvuk/dasha7/fa8.mp3", "fq9": "../zvuk/dasha7/fq9.mp3", "fa9": "../zvuk/dasha7/fa9.mp3", "fq10": "../zvuk/dasha7/fq10.mp3", "fa10": "../zvuk/dasha7/fa10.mp3", "fq11": "../zvuk/dasha7/fq11.mp3", "fa11": "../zvuk/dasha7/fa11.mp3", "fq12": "../zvuk/dasha7/fq12.mp3", "fa12": "../zvuk/dasha7/fa12.mp3", "fq13": "../zvuk/dasha7/fq13.mp3", "fa13": "../zvuk/dasha7/fa13.mp3", "fq14": "../zvuk/dasha7/fq14.mp3", "fa14": "../zvuk/dasha7/fa14.mp3", "wf1": "../zvuk/dasha7/wf1.mp3", "wf2": "../zvuk/dasha7/wf2.mp3", "wf3": "../zvuk/dasha7/wf3.mp3", "mk1": "../zvuk/dasha7/mk1.mp3", "mk2": "../zvuk/dasha7/mk2.mp3", "mk3": "../zvuk/dasha7/mk3.mp3", "mk4": "../zvuk/dasha7/mk4.mp3", "mk5": "../zvuk/dasha7/mk5.mp3", "mk6": "../zvuk/dasha7/mk6.mp3", "mkw1": "../zvuk/dasha7/mkw1.mp3", "mkw2": "../zvuk/dasha7/mkw2.mp3", "mkw3": "../zvuk/dasha7/mkw3.mp3", "mkw4": "../zvuk/dasha7/mkw4.mp3", "mkw5": "../zvuk/dasha7/mkw5.mp3", "mkw6": "../zvuk/dasha7/mkw6.mp3", "mt1": "../zvuk/dasha7/mt1.mp3", "mt2": "../zvuk/dasha7/mt2.mp3", "mt3": "../zvuk/dasha7/mt3.mp3", "mt4": "../zvuk/dasha7/mt4.mp3", "rf1": "../zvuk/dasha7/rf1.mp3", "rf2": "../zvuk/dasha7/rf2.mp3", "rf3": "../zvuk/dasha7/rf3.mp3", "rf4": "../zvuk/dasha7/rf4.mp3", "rw1": "../zvuk/dasha7/rw1.mp3", "rw2": "../zvuk/dasha7/rw2.mp3", "rw3": "../zvuk/dasha7/rw3.mp3", "rw4": "../zvuk/dasha7/rw4.mp3", "pt1": "../zvuk/dasha7/pt1.mp3", "pt2": "../zvuk/dasha7/pt2.mp3", "pt3": "../zvuk/dasha7/pt3.mp3", "pt4": "../zvuk/dasha7/pt4.mp3", "pt5": "../zvuk/dasha7/pt5.mp3", "pt6": "../zvuk/dasha7/pt6.mp3", "pt7": "../zvuk/dasha7/pt7.mp3", "pt8": "../zvuk/dasha7/pt8.mp3", "pt9": "../zvuk/dasha7/pt9.mp3", "pq1": "../zvuk/dasha7/pq1.mp3", "pa1": "../zvuk/dasha7/pa1.mp3", "pq2": "../zvuk/dasha7/pq2.mp3", "pa2": "../zvuk/dasha7/pa2.mp3", "pq3": "../zvuk/dasha7/pq3.mp3", "pa3": "../zvuk/dasha7/pa3.mp3", "pq4": "../zvuk/dasha7/pq4.mp3", "pa4": "../zvuk/dasha7/pa4.mp3", "pq5": "../zvuk/dasha7/pq5.mp3", "pa5": "../zvuk/dasha7/pa5.mp3", "pq6": "../zvuk/dasha7/pq6.mp3", "pa6": "../zvuk/dasha7/pa6.mp3", "pq7": "../zvuk/dasha7/pq7.mp3", "pa7": "../zvuk/dasha7/pa7.mp3", "pq8": "../zvuk/dasha7/pq8.mp3", "pa8": "../zvuk/dasha7/pa8.mp3", "pq9": "../zvuk/dasha7/pq9.mp3", "pa9": "../zvuk/dasha7/pa9.mp3", "pq10": "../zvuk/dasha7/pq10.mp3", "pa10": "../zvuk/dasha7/pa10.mp3", "pw1": "../zvuk/dasha7/pw1.mp3", "pw2": "../zvuk/dasha7/pw2.mp3", "pw3": "../zvuk/dasha7/pw3.mp3", "pw4": "../zvuk/dasha7/pw4.mp3", "pw5": "../zvuk/dasha7/pw5.mp3", "pw6": "../zvuk/dasha7/pw6.mp3", "pw7": "../zvuk/dasha7/pw7.mp3", "pw8": "../zvuk/dasha7/pw8.mp3", "pw9": "../zvuk/dasha7/pw9.mp3", "pw10": "../zvuk/dasha7/pw10.mp3", "nt1": "../zvuk/dasha7/nt1.mp3", "nt2": "../zvuk/dasha7/nt2.mp3", "nt3": "../zvuk/dasha7/nt3.mp3", "nt4": "../zvuk/dasha7/nt4.mp3", "nt5": "../zvuk/dasha7/nt5.mp3", "nt6": "../zvuk/dasha7/nt6.mp3", "nt7": "../zvuk/dasha7/nt7.mp3", "nt8": "../zvuk/dasha7/nt8.mp3", "nq1": "../zvuk/dasha7/nq1.mp3", "na1": "../zvuk/dasha7/na1.mp3", "nq2": "../zvuk/dasha7/nq2.mp3", "na2": "../zvuk/dasha7/na2.mp3", "nq3": "../zvuk/dasha7/nq3.mp3", "na3": "../zvuk/dasha7/na3.mp3", "nq4": "../zvuk/dasha7/nq4.mp3", "na4": "../zvuk/dasha7/na4.mp3", "nq5": "../zvuk/dasha7/nq5.mp3", "na5": "../zvuk/dasha7/na5.mp3", "nq6": "../zvuk/dasha7/nq6.mp3", "na6": "../zvuk/dasha7/na6.mp3", "nq7": "../zvuk/dasha7/nq7.mp3", "na7": "../zvuk/dasha7/na7.mp3", "nw1": "../zvuk/dasha7/nw1.mp3", "nw2": "../zvuk/dasha7/nw2.mp3", "nw3": "../zvuk/dasha7/nw3.mp3", "nw4": "../zvuk/dasha7/nw4.mp3", "nw5": "../zvuk/dasha7/nw5.mp3", "nw6": "../zvuk/dasha7/nw6.mp3", "nw7": "../zvuk/dasha7/nw7.mp3", "nw8": "../zvuk/dasha7/nw8.mp3", "nw9": "../zvuk/dasha7/nw9.mp3", "h1": "../zvuk/dasha7/h1.mp3", "h2": "../zvuk/dasha7/h2.mp3", "h3": "../zvuk/dasha7/h3.mp3", "h4": "../zvuk/dasha7/h4.mp3", "h5": "../zvuk/dasha7/h5.mp3", "h6": "../zvuk/dasha7/h6.mp3", "h7": "../zvuk/dasha7/h7.mp3", "h8": "../zvuk/dasha7/h8.mp3", "h9": "../zvuk/dasha7/h9.mp3", "g1": "../zvuk/dasha7/g1.mp3", "g2": "../zvuk/dasha7/g2.mp3", "g3": "../zvuk/dasha7/g3.mp3", "g4": "../zvuk/dasha7/g4.mp3", "g5": "../zvuk/dasha7/g5.mp3", "g6": "../zvuk/dasha7/g6.mp3", "g7": "../zvuk/dasha7/g7.mp3", "g8": "../zvuk/dasha7/g8.mp3", "g9": "../zvuk/dasha7/g9.mp3", "g10": "../zvuk/dasha7/g10.mp3", "hk1": "../zvuk/dasha7/hk1.mp3", "hk2": "../zvuk/dasha7/hk2.mp3", "hk3": "../zvuk/dasha7/hk3.mp3", "hk4": "../zvuk/dasha7/hk4.mp3", "hk5": "../zvuk/dasha7/hk5.mp3", "hk6": "../zvuk/dasha7/hk6.mp3", "hk7": "../zvuk/dasha7/hk7.mp3", "hw1": "../zvuk/dasha7/hw1.mp3", "hw2": "../zvuk/dasha7/hw2.mp3", "hw3": "../zvuk/dasha7/hw3.mp3", "hw4": "../zvuk/dasha7/hw4.mp3", "hw5": "../zvuk/dasha7/hw5.mp3", "hw6": "../zvuk/dasha7/hw6.mp3", "at1": "../zvuk/dasha7/at1.mp3", "at2": "../zvuk/dasha7/at2.mp3", "at3": "../zvuk/dasha7/at3.mp3", "at4": "../zvuk/dasha7/at4.mp3", "at5": "../zvuk/dasha7/at5.mp3", "at6": "../zvuk/dasha7/at6.mp3", "at7": "../zvuk/dasha7/at7.mp3", "gt1": "../zvuk/dasha7/gt1.mp3", "gt2": "../zvuk/dasha7/gt2.mp3", "gt3": "../zvuk/dasha7/gt3.mp3", "gt4": "../zvuk/dasha7/gt4.mp3", "gt5": "../zvuk/dasha7/gt5.mp3", "gt6": "../zvuk/dasha7/gt6.mp3", "gt7": "../zvuk/dasha7/gt7.mp3", "gt8": "../zvuk/dasha7/gt8.mp3", "gt9": "../zvuk/dasha7/gt9.mp3", "gt10": "../zvuk/dasha7/gt10.mp3", "ic1": "../zvuk/dasha7/ic1.mp3", "ic2": "../zvuk/dasha7/ic2.mp3", "ic3": "../zvuk/dasha7/ic3.mp3", "ic4": "../zvuk/dasha7/ic4.mp3", "ic5": "../zvuk/dasha7/ic5.mp3", "ic6": "../zvuk/dasha7/ic6.mp3", "ic7": "../zvuk/dasha7/ic7.mp3", "ic8": "../zvuk/dasha7/ic8.mp3", "sw1": "../zvuk/dasha7/sw1.mp3", "sw2": "../zvuk/dasha7/sw2.mp3", "sw3": "../zvuk/dasha7/sw3.mp3", "sw4": "../zvuk/dasha7/sw4.mp3", "sw5": "../zvuk/dasha7/sw5.mp3", "sw6": "../zvuk/dasha7/sw6.mp3", "sw7": "../zvuk/dasha7/sw7.mp3", "sw8": "../zvuk/dasha7/sw8.mp3", "sw9": "../zvuk/dasha7/sw9.mp3", "sw10": "../zvuk/dasha7/sw10.mp3", "sw11": "../zvuk/dasha7/sw11.mp3", "sw12": "../zvuk/dasha7/sw12.mp3", "sw13": "../zvuk/dasha7/sw13.mp3", "sw14": "../zvuk/dasha7/sw14.mp3", "sw15": "../zvuk/dasha7/sw15.mp3"};
 
 /* звук вынесен в zvuk/ */
 // Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
@@ -1456,6 +1474,86 @@ const STAMM = [
 document.getElementById('stammbaum').innerHTML = STAMM.map(([поле],i)=>`
   <div class="fam-card"><b class="who">${поле}</b><br><input class="fld" data-save="stb${i}" placeholder="впиши по тексту"></div>`).join('');
 кнопкаОтветов('кОтветыStamm', 'otvetyStamm', () => STAMM.map(([поле,ответ]) => [поле, ответ, null, null, null]));
+
+// Задания 4 и 7 (дописано 30.09): Арнольд Шварценеггер и Григорий
+phrases('arnoldtext',[
+  ["at1","Arnold Schwarzenegger ist der Sohn von Aurelia und Gustav Schwarzenegger und kommt aus Österreich.","арнольт шварцэнэга ист дэа зон фон аурэлия унт густаф шварцэнэга унт комт аус ёстэрайх","Арнольд Шварценеггер — сын Аурелии и Густава Шварценеггер, он из Австрии."],
+  ["at2","Er ist am 30.7.1947 in Thal bei Graz geboren.","эа ист ам драйсихьстэн юли нойнцейнхундэрт-зибэнунтфирцихь ин таль бай грац гэборэн","Он родился 30 июля 1947 года в Тале под Грацем."],
+  ["at3","Arnolds Vater war Polizist. Seine Mutter war Hausfrau.","арнольтс фата вар полицист. зайнэ мута вар хаусфрау","Отец Арнольда был полицейским. Его мать была домохозяйкой."],
+  ["at4","Arnold Schwarzenegger ist Bodybuilder, Schauspieler und Politiker. Er war siebenmal Mister Olympia.","арнольт шварцэнэга ист бодибилда, шаушпила унт политика. эа вар зибэнмаль мистэр олимпия","Арнольд Шварценеггер — культурист, актёр и политик. Он семь раз был «Мистером Олимпия»."],
+  ["at5","Sein bekanntester Film ist „Terminator“. Von 2003 bis 2011 war er Gouverneur von Kalifornien.","зайн бэкантэста фильм ист тэрминатор. фон цвайтаузэнтдрай бис цвайтаузэнтэльф вар эа гувэрнёр фон калифорниэн","Его самый известный фильм — «Терминатор». С 2003 по 2011 год он был губернатором Калифорнии."],
+  ["at6","Von 1986 bis 2021 war Arnold mit Maria Shriver verheiratet. Maria ist von Beruf Journalistin und kommt aus Chicago.","фон нойнцейнхундэрт-зэксунтахтцихь бис цвайтаузэнт-айнунтцванцихь вар арнольт мит мария шрайвэр фэрхайратэт. мария ист фон бэруф журналистин унт комт аус шикаго","С 1986 по 2021 год Арнольд был женат на Марии Шрайвер. Мария по профессии журналистка, она из Чикаго."],
+  ["at7","Arnold hat fünf Kinder. Sie heißen Katherine, Christina, Patrick, Christopher und Joseph. Arnold wohnt zurzeit in Los Angeles.","арнольт хат фюнф киндэа. зи хайсэн кэтрин, кристина, пэтрик, кристофэр унт джозэф. арнольт вонт цурцайт ин лос-анджелес","У Арнольда пятеро детей: Кэтрин, Кристина, Патрик, Кристофер и Джозеф. Сейчас Арнольд живёт в Лос-Анджелесе."],
+]);
+phrases('grigoriitext',[
+  ["gt1","Grigorii Plotnikov ist der Sohn von Natalja und Andrej Plotnikov und kommt aus Russland.","григорий плотников ист дэа зон фон наталья унт андрэй плотников унт комт аус руслянт","Григорий Плотников — сын Натальи и Андрея Плотниковых, он из России."],
+  ["gt2","Er ist in Nowokusnezk geboren und ist jetzt 32 Jahre alt. Er hat in Tomsk Medizin studiert.","эа ист ин новокузнэцк гэборэн унт ист йэцт цвайунтдрайсихь яарэ альт. эа хат ин томск мэдицин штудирт","Он родился в Новокузнецке, сейчас ему 32 года. Учился на врача в Томске."],
+  ["gt3","Grigoriis Vater war in Nowokusnezk Meister im Werk. Jetzt arbeitet er aber in Moskau als CNC-Dreher.","григорийс фата вар ин новокузнэцк майста им вэрк. йэцт арбайтэт эа аба ин москау альс цэ-эн-цэ-дрэа","Отец Григория был мастером на заводе в Новокузнецке. А сейчас он работает в Москве токарем ЧПУ."],
+  ["gt4","Er ist verheiratet mit Natalja Plotnikova. Natalja ist von Beruf OP-Schwester.","эа ист фэрхайратэт мит наталья плотникова. наталья ист фон бэруф о-пэ-швэста","Он женат на Наталье Плотниковой. Наталья по профессии операционная медсестра."],
+  ["gt5","Grigorii ist Arzt, er ist Phlebologe: Er behandelt Krampfadern. Er arbeitet in einer Venenklinik in Moskau.","григорий ист арцт, эа ист флеболёгэ: эа бэхандэльт крампфадэрн. эа арбайтэт ин айнэр вэнэнклиник ин москау","Григорий — врач, флеболог: он лечит варикоз. Работает во флебологической клинике в Москве."],
+  ["gt6","Er macht auch Ultraschall und jeden Tag Videos über Venen für YouTube und Instagram.","эа махт аух ультрашаль унт йэдэн таак видэос юба вэнэн фюа ютуб унт инстаграм","Ещё он делает УЗИ и каждый день снимает видео о венах для YouTube и Instagram."],
+  ["gt7","Grigorii ist mit Polina verheiratet. Polina ist von Beruf Kinderärztin, aber zurzeit arbeitet sie nicht: Sie ist in Elternzeit.","григорий ист мит полина фэрхайратэт. полина ист фон бэруф киндэрэрцтин, аба цурцайт арбайтэт зи нихьт: зи ист ин эльтэрнцайт","Григорий женат на Полине. Полина по профессии педиатр, но сейчас не работает — она в декрете."],
+  ["gt8","Polinas Eltern wohnen in Nabereschnyje Tschelny.","полинас эльтэрн вонэн ин набэрэжныэ чэлны","Родители Полины живут в Набережных Челнах."],
+  ["gt9","Grigorii und Polina haben eine Tochter. Sie heißt Vika und ist sechs Monate alt.","григорий унт полина хабэн айнэ тохта. зи хайст вика унт ист зэкс монатэ альт","У Григория и Полины есть дочь. Её зовут Вика, ей шесть месяцев."],
+  ["gt10","Die Familie wohnt zurzeit in Moskau, aber 2028 möchte sie nach Österreich ziehen.","ди фамилиэ вонт цурцайт ин москау, аба цвайтаузэнт-ахтунтцванцихь мёхьтэ зи нах ёстэрайх цийэн","Сейчас семья живёт в Москве, но в 2028 году хочет переехать в Австрию."],
+]);
+phrases('ichtext',[
+  ["ic1","Ich heiße Grigorii Plotnikov. Ich bin 32 Jahre alt und komme aus Russland.","ихь хайсэ григорий плотников. ихь бин цвайунтдрайсихь яарэ альт унт комэ аус руслянт","Меня зовут Григорий Плотников. Мне 32 года, я из России."],
+  ["ic2","Ich bin in Nowokusnezk geboren und habe in Tomsk Medizin studiert.","ихь бин ин новокузнэцк гэборэн унт хабэ ин томск мэдицин штудирт","Я родился в Новокузнецке и учился на врача в Томске."],
+  ["ic3","Meine Eltern heißen Natalja und Andrej. Sie wohnen in Moskau.","майнэ эльтэрн хайсэн наталья унт андрэй. зи вонэн ин москау","Моих родителей зовут Наталья и Андрей. Они живут в Москве."],
+  ["ic4","Meine Mutter ist OP-Schwester. Mein Vater war Meister im Werk, jetzt arbeitet er als CNC-Dreher.","майнэ мута ист о-пэ-швэста. майн фата вар майста им вэрк, йэцт арбайтэт эа альс цэ-эн-цэ-дрэа","Мама — операционная медсестра. Папа был мастером на заводе, сейчас работает токарем ЧПУ."],
+  ["ic5","Ich bin Arzt, Phlebologe, und arbeite in einer Venenklinik in Moskau.","ихь бин арцт, флеболёгэ, унт арбайтэ ин айнэр вэнэнклиник ин москау","Я врач-флеболог, работаю во флебологической клинике в Москве."],
+  ["ic6","Ich bin verheiratet. Meine Frau heißt Polina, sie ist Kinderärztin.","ихь бин фэрхайратэт. майнэ фрау хайст полина, зи ист киндэрэрцтин","Я женат. Мою жену зовут Полина, она педиатр."],
+  ["ic7","Wir haben eine Tochter. Sie heißt Vika und ist sechs Monate alt.","вир хабэн айнэ тохта. зи хайст вика унт ист зэкс монатэ альт","У нас есть дочь. Её зовут Вика, ей шесть месяцев."],
+  ["ic8","Zurzeit wohnen wir in Moskau, aber 2028 möchten wir nach Österreich ziehen.","цурцайт вонэн вир ин москау, аба цвайтаузэнт-ахтунтцванцихь мёхьтэн вир нах ёстэрайх цийэн","Сейчас мы живём в Москве, но в 2028 году хотим переехать в Австрию."],
+]);
+words('celebw',[
+  ["sw1","der Polizist","дэа полицист","полицейский"],
+  ["sw2","die Hausfrau","ди хаусфрау","домохозяйка"],
+  ["sw3","der Schauspieler","дэа шаушпила","актёр"],
+  ["sw4","der Politiker","дэа политика","политик"],
+  ["sw5","die Journalistin","ди журналистин","журналистка"],
+  ["sw6","der Meister","дэа майста","мастер (на заводе)"],
+  ["sw7","das Werk","дас вэрк","завод"],
+  ["sw8","der CNC-Dreher","дэа цэ-эн-цэ-дрэа","токарь ЧПУ"],
+  ["sw9","die OP-Schwester","ди о-пэ-швэста","операционная медсестра"],
+  ["sw10","die Kinderärztin","ди киндэрэрцтин","детский врач, педиатр (женщина)"],
+  ["sw11","die Elternzeit","ди эльтэрнцайт","декрет, отпуск по уходу за ребёнком"],
+  ["sw12","die Krampfadern","ди крампфадэрн","варикозные вены"],
+  ["sw13","der Ultraschall","дэа ультрашаль","УЗИ"],
+  ["sw14","nach Österreich ziehen","нах ёстэрайх цийэн","переехать в Австрию"],
+  ["sw15","war","вар","был / была (прошедшее от sein)"],
+], 'wn');
+const STAMM_A = [
+  ["Mutter — имя","Aurelia"],
+  ["Mutter — Beruf","Hausfrau"],
+  ["Vater — имя","Gustav"],
+  ["Vater — Beruf","Polizist"],
+  ["Arnold — Beruf","Bodybuilder, Schauspieler, Politiker"],
+  ["Arnold — Herkunft","Österreich (Thal bei Graz)"],
+  ["Maria Shriver — Beruf","Journalistin"],
+  ["Maria Shriver — Herkunft","USA (Chicago)"],
+  ["Wohnort (Arnold)","Los Angeles"],
+  ["Kinder","Katherine, Christina, Patrick, Christopher, Joseph"],
+];
+const STAMM_G = [
+  ["Mutter — имя","Natalja"],
+  ["Mutter — Beruf","OP-Schwester"],
+  ["Vater — имя","Andrej"],
+  ["Vater — Beruf (früher)","Meister im Werk (Nowokusnezk)"],
+  ["Vater — arbeitet jetzt als","CNC-Dreher (Moskau)"],
+  ["Grigorii — Beruf","Arzt, Phlebologe"],
+  ["Grigorii — Herkunft","Russland (Nowokusnezk)"],
+  ["Polina — Beruf","Kinderärztin (zurzeit in Elternzeit)"],
+  ["Wohnort der Familie","Moskau"],
+  ["Kind","Vika"],
+];
+document.getElementById('stammArnold').innerHTML = STAMM_A.map(([поле],i)=>`
+  <div class="fam-card"><b class="who">${поле}</b><br><input class="fld" data-save="sta${i}" placeholder="впиши по тексту"></div>`).join('');
+document.getElementById('stammGrigorii').innerHTML = STAMM_G.map(([поле],i)=>`
+  <div class="fam-card"><b class="who">${поле}</b><br><input class="fld" data-save="stg${i}" placeholder="впиши по тексту"></div>`).join('');
+кнопкаОтветов('кОтветыArnold', 'otvetyArnold', () => STAMM_A.map(([поле,ответ]) => [поле, ответ, null, null, null]));
+кнопкаОтветов('кОтветыGrigorii', 'otvetyGrigorii', () => STAMM_G.map(([поле,ответ]) => [поле, ответ, null, null, null]));
 
 // Задание 8: общие вопросы
 перевод('hwVoprosy', [
