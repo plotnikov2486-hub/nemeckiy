@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 48 — Осмотр пациента (körperliche Untersuchung)</title>
+
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(23px,5vw,31px); font-weight:600; }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:64ch; }
+  .hint { display:inline-flex; align-items:center; gap:6px; margin-top:12px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  .toc { background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:22px; }
+  .toc b { font-size:13px; color:var(--ink-muted); display:block; margin-bottom:8px; }
+  .toc ol { margin:0; padding-left:20px; columns:2; column-gap:24px; font-size:13.5px; }
+  .toc li { margin:3px 0; break-inside:avoid; }
+  .toc a { color:var(--accent); text-decoration:none; } .toc a:hover { text-decoration:underline; }
+  section.block { margin-top:36px; scroll-margin-top:62px; }
+  .block h2 { font-size:19px; font-weight:600; display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:64ch; }
+  button.play { flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .warn-box { background:var(--warn-bg); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .warn-box b { color:var(--warn); } .warn-box .big { font-size:15px; color:var(--ink); font-weight:700; display:block; margin-bottom:4px; }
+  .link-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .link-box b { color:var(--sn); }
+  .artikel-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; font-size:13px; }
+  .artikel-legend span { display:inline-flex; align-items:center; gap:5px; }
+  .artikel-legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
+  .wcard { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 12px; box-shadow:var(--shadow); }
+  .wcard.hb { border-left-color:var(--hb); } .wcard.sn { border-left-color:var(--sn); }
+  .wcard.der { border-left-color:var(--der); } .wcard.die { border-left-color:var(--die); } .wcard.das { border-left-color:var(--das); }
+  .wcard .de .art-der { color:var(--der); } .wcard .de .art-die { color:var(--die); } .wcard .de .art-das { color:var(--das); }
+  .wcard .txt { flex:1; min-width:0; }
+  .wcard .de { font-family:Georgia,serif; font-weight:700; font-size:15px; overflow-wrap:anywhere; }
+  .wcard .de b { color:var(--play); }
+  .wcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:1px; }
+  .wcard .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .wcard button.play { width:30px; height:30px; font-size:13px; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .pcard { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 15px; box-shadow:var(--shadow); }
+  .pcard.hb { border-left:4px solid var(--hb); } .pcard.sn { border-left:4px solid var(--sn); } .pcard.wn { border-left:4px solid var(--warn); }
+  .pcard .txt { flex:1; min-width:0; }
+  .pcard .de { font-family:Georgia,serif; font-size:15.5px; font-weight:600; }
+  .pcard .de b { color:var(--play); }
+  .pcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pcard .ru { font-size:12.5px; color:var(--ink-muted); margin-top:1px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:82%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .bubble .txt .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
+  footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+
+  .casetab { width:100%; border-collapse:collapse; font-size:13.5px; background:var(--surface-2); border-radius:10px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:14px; }
+  .casetab th, .casetab td { padding:8px 10px; border:1px solid var(--line); text-align:center; }
+  .casetab th { background:var(--accent); color:var(--accent-ink); font-weight:600; font-size:12.5px; }
+  .casetab td.lbl { text-align:left; font-weight:600; color:var(--ink-muted); background:var(--surface); }
+  .casetab .wo { color:var(--hb); font-weight:700; } .casetab .wohin { color:var(--play); font-weight:700; }
+  .pairs { display:flex; flex-direction:column; gap:12px; }
+  .pair { border:1px solid var(--line); border-radius:12px; overflow:hidden; box-shadow:var(--shadow); }
+  .pair .prow { display:flex; align-items:center; gap:10px; padding:10px 12px; background:var(--surface); }
+  .pair .prow + .prow { border-top:1px dashed var(--line); }
+  .pair .prow.wo { border-left:4px solid var(--hb); }
+  .pair .prow.wohin { border-left:4px solid var(--play); }
+  .pair .tag { flex-shrink:0; font-size:10.5px; font-weight:700; letter-spacing:.04em; padding:3px 7px; border-radius:6px; }
+  .pair .prow.wo .tag { background:var(--hb-bg); color:var(--hb); }
+  .pair .prow.wohin .tag { background:var(--bubble-m); color:var(--play); }
+  .pair .txt { flex:1; min-width:0; }
+  .pair .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .pair .de b { color:var(--play); }
+  .pair .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .pair button.play { width:30px; height:30px; font-size:13px; }
+</style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
+
+<style id="backbar-css">
+  .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    padding:7px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar a.bb-link:active{ transform:scale(0.97); }
+  .backbar .bb-title{ color:rgba(255,255,255,0.72); font-size:12.5px; margin-left:auto;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52%; }
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+</style>
+
+<!--ТЕМА-ЗУБРА-START-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* Вид ЗУБРа для страниц уроков. Переопределяем только переменные —
+   разметка и классы остаются прежними, поэтому ничего не разъезжается. */
+:root{
+  --bg:#E9EBF6; --surface:#FFFFFF; --surface-2:#F3F4FA;
+  --ink:#1C2242; --ink-muted:#6C7291; --ink-faint:#9AA0BE;
+  --accent:#4A63D6; --accent-ink:#FFFFFF;
+  --play:#EC6A86; --play-ink:#FFFFFF;
+  --line:#DCE0F0;
+  --warn:#E0455E; --warn-bg:#FBE6EA;
+  --hb:#4A63D6; --hb-bg:#EAEDFA;
+  --sn:#8E6AD6; --sn-bg:#F0EBFA;
+  --tr:#8E6AD6;
+  --der:#4A63D6; --die:#EC6A86; --das:#E8A33D;
+  --bubble-a:#F3F4FA; --bubble-m:#FBF1DE;
+  --shadow:0 12px 30px rgba(40,50,110,.12);
+  --radius:18px;
+}
+:root[data-theme="dark"]{
+  --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+  --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
+  --accent:#8798EC; --accent-ink:#0D1020;
+  --play:#EC6A86; --play-ink:#FFFFFF;
+  --line:#2A2E52;
+  --warn:#F08098; --warn-bg:#3A1620;
+  --hb:#8798EC; --hb-bg:#1F2445;
+  --sn:#B08CE8; --sn-bg:#2A2145;
+  --tr:#B08CE8;
+  --bubble-a:#232748; --bubble-m:#2E2718;
+  --shadow:0 12px 30px rgba(0,0,0,.35);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
+    --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291;
+    --accent:#8798EC; --accent-ink:#0D1020;
+    --play:#EC6A86; --play-ink:#FFFFFF;
+    --line:#2A2E52;
+    --warn:#F08098; --warn-bg:#3A1620;
+    --hb:#8798EC; --hb-bg:#1F2445;
+    --sn:#B08CE8; --sn-bg:#2A2145;
+    --tr:#B08CE8;
+    --bubble-a:#232748; --bubble-m:#2E2718;
+    --shadow:0 12px 30px rgba(0,0,0,.35);
+  }
+}
+
+/* Фон в уроках задан на .lp, а он не шире 800px — на большом экране
+   по бокам оставался белый фон браузера, и в тёмной теме это резало глаз.
+   Красим сам body тем же цветом. */
+body{ background:var(--bg); color:var(--ink); }
+
+/* Шрифт интерфейса — как в ЗУБРе. Немецкие слова намеренно оставляем
+   Georgia: так иностранное слово видно с первого взгляда и не сливается
+   с русским пояснением. */
+body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
+  font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+}
+
+/* Профиль: у Гриши синий, у Полины розовый. Атрибут data-кто ставит
+   tema.js — здесь только меняем акцент под него. Градиенты трогаем
+   тоже, иначе розовая страница осталась бы с синими кнопками. */
+:root[data-кто="polina"]{
+  --accent:#EC6A86; --hb:#EC6A86; --hb-bg:#FBE9EE;
+}
+:root[data-кто="polina"] .block h2 .num,
+:root[data-кто="polina"] .play,
+:root[data-кто="polina"] .bb-top{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C) !important;
+  box-shadow:0 6px 16px rgba(236,106,134,.32);
+}
+:root[data-кто="polina"] .lp h1{
+  background:linear-gradient(135deg,#EC6A86,#F0A03C);
+  -webkit-background-clip:text; background-clip:text;
+}
+:root[data-кто="polina"][data-theme="dark"]{ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
+@media (prefers-color-scheme: dark){
+  :root[data-кто="polina"]:not([data-theme="light"]){ --accent:#F5A0B4; --hb:#F5A0B4; --hb-bg:#3A2029; }
+}
+
+/* ── Главное отличие от прошлой попытки ──
+   Раньше я поменял только цвета, и врач справедливо сказал, что разницы
+   не видно: блоки уроков прозрачные и без отступов, так что ни тень,
+   ни скругление на них не читались. Теперь каждый раздел урока —
+   настоящая белая плитка, как карточки на сайте-визитке. */
+.block{
+  background:var(--surface);
+  border-radius:22px;
+  padding:20px 18px;
+  margin-bottom:16px;
+  box-shadow:0 12px 30px rgba(40,50,110,.12);
+  border:none;
+}
+:root[data-theme="dark"] .block{ box-shadow:0 12px 30px rgba(0,0,0,.35); }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .block{
+  box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+
+/* Номер раздела — кружок с фирменным градиентом, как иконки на визитке */
+.block h2 .num{
+  display:inline-flex; align-items:center; justify-content:center;
+  width:34px; height:34px; border-radius:12px; margin-right:9px;
+  background:linear-gradient(135deg,#4A63D6,#EC6A86);
+  color:#fff; font-size:16px; font-weight:800;
+  box-shadow:0 6px 14px rgba(74,99,214,.3);
+}
+.block h2{ display:flex; align-items:center; gap:2px; flex-wrap:wrap; }
+
+/* Оглавление и врезки — тоже плитки, с мягкой тенью */
+.toc, .grammar-box, .warn-box, .link-box{
+  border-radius:18px; box-shadow:0 6px 18px rgba(40,50,110,.08);
+}
+:root[data-theme="dark"] .toc,
+:root[data-theme="dark"] .grammar-box,
+:root[data-theme="dark"] .warn-box{ box-shadow:0 6px 18px rgba(0,0,0,.3); }
+
+/* Карточки слов — приподнимаются, как плитки в приложении */
+.wcard, .pcard{
+  border-radius:16px;
+  box-shadow:0 6px 16px rgba(40,50,110,.10);
+  transition:transform .14s ease, box-shadow .14s ease;
+}
+.wcard:active, .pcard:active{ transform:scale(.99); }
+
+/* Кнопка звука — круглая, с градиентом и объёмной тенью */
+.play{
+  background:linear-gradient(135deg,#4A63D6,#EC6A86) !important;
+  color:#fff !important; border:none !important;
+  box-shadow:0 6px 16px rgba(74,99,214,.32);
+}
+
+/* Шапка — «стекло» как в айфоне: полупрозрачная, с размытием */
+.backbar{
+  position:sticky; top:0; z-index:50;
+  background:color-mix(in srgb, var(--surface) 72%, transparent);
+  -webkit-backdrop-filter:saturate(180%) blur(18px);
+  backdrop-filter:saturate(180%) blur(18px);
+  border-bottom:1px solid color-mix(in srgb, var(--line) 60%, transparent);
+  box-shadow:0 1px 0 rgba(255,255,255,.35) inset;
+}
+.bb-link{ color:var(--accent); font-weight:700; }
+
+/* Нижняя ссылка возврата — кнопка-таблетка, как призыв к действию на визитке */
+.bb-top{
+  display:block; text-align:center; margin:22px auto 30px; max-width:520px;
+  padding:15px 22px; border-radius:999px; text-decoration:none;
+  background:linear-gradient(135deg,#4A63D6,#EC6A86); color:#fff !important;
+  font-weight:700; box-shadow:0 12px 26px rgba(74,99,214,.3);
+}
+
+/* Заголовок страницы — фирменный градиент */
+.lp h1{
+  background:linear-gradient(135deg,#4A63D6,#EC6A86);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  letter-spacing:-.02em;
+}
+.eyebrow{ letter-spacing:.1em; }
+
+</style>
+<!--ТЕМА-ЗУБРА-END-->
+</head>
+<body>
+<div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Урок 48 — Untersuchung</span></div>
+
+<div class="lp">
+  <div class="eyebrow">Курс немецкого · Григорий · B1 · медицина · интерактивный урок</div>
+  <h1>Урок 48. Осмотр пациента: от «разденьтесь» до «можете одеваться»</h1>
+  <p class="lede">Продолжение урока 47: анамнез собран, теперь — körperliche Untersuchung. На экзамене и в клинике оценивают не только что вы осматриваете, но и <b>как вы просите</b>: немецкий пациент ждёт вежливой просьбы и объявления каждого действия. В уроке — лестница вежливости, команды по системам (голова, сердце и лёгкие, живот, ноги), два языка осмотра — простой для пациента и латинский для выписки — и как записать находку в Befund. Порядок и команды — по учебнику для врачей <i>Deutsch für Ärztinnen und Ärzte</i> (Schrimpf, Bahnemann, Springer, гл. 6), осмотр ног и УЗИ — флебологические. Ваша роль озвучена мужским голосом. У каждой фразы <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
+
+  <div class="toc">
+    <b>Что в уроке</b>
+    <ol>
+      <li><a href="#s1">⭐⭐ Лестница вежливости</a></li>
+      <li><a href="#s2">Начало и конец осмотра</a></li>
+      <li><a href="#s3">Голова и шея</a></li>
+      <li><a href="#s4">Сердце, лёгкие, давление</a></li>
+      <li><a href="#s5">Живот и спина</a></li>
+      <li><a href="#s6">⭐⭐ Осмотр ног и УЗИ</a></li>
+      <li><a href="#s7">⭐ Два языка: с пациентом и в выписке</a></li>
+      <li><a href="#s8">Как записать находку (Befund)</a></li>
+      <li><a href="#s9">Частые ошибки</a></li>
+      <li><a href="#s10">Полный диалог</a></li>
+      <li><a href="#s11">Домашка</a></li>
+    </ol>
+  </div>
+
+  <section class="block" id="s1">
+    <h2><span class="num">1</span> ⭐⭐ Лестница вежливости</h2>
+    <div class="grammar-box">
+      В уроке 13 мы учили команды осмотра в повелительном наклонении. Для экзамена этого мало: учебник прямо пишет, что <b>лучше всего — Konjunktiv II</b> (урок 26). Одну и ту же просьбу можно сказать на пяти ступенях — от грубой до самой вежливой. Ступень 2 годится внутри осмотра, когда пациент уже знает, что происходит. Первую просьбу в разговоре (раздеться, лечь) говорите на ступени 3–5.
+    </div>
+    <div class="tabwrap"><table class="ftab">
+      <tr><th>ступень</th><th>форма</th><th>когда</th></tr>
+      <tr><td>1</td><td>Hinlegen!</td><td>❌ никогда: так командуют, а не просят</td></tr>
+      <tr><td>2</td><td>Legen Sie sich bitte hin.</td><td>внутри осмотра, коротко</td></tr>
+      <tr><td>3</td><td>Würden Sie sich bitte hinlegen?</td><td>обычная вежливая просьба</td></tr>
+      <tr><td>4</td><td>Könnten Sie sich bitte … legen?</td><td>то же, ещё мягче</td></tr>
+      <tr><td>5</td><td>Ich würde Sie bitten, sich … zu legen.</td><td>начало осмотра, деликатные места</td></tr>
+    </table></div>
+    <div class="grammar-box">
+      <b>Три ловушки порядка слов.</b> 1) <b>sich</b> не пропадает: Legen Sie <b>sich</b> hin (урок 18). 2) Отделяемая приставка уходит в конец: Ziehen Sie bitte die Knie <b>an</b>. 3) На ступени 5 — оборот с zu (урок 39), и zu встаёт <b>внутрь</b> отделяемого глагола: hin<b>zu</b>legen, frei<b>zu</b>machen, aus<b>zu</b>ziehen, an<b>zu</b>ziehen.
+    </div>
+    <div class="card-list" id="hoeflich"></div>
+    <div class="grammar-box" style="margin-top:14px">
+      <b>Объявляйте каждое действие</b> до того, как прикоснулись: «сейчас я пропальпирую живот», «будет холодно». Простое настоящее время или werden + gleich (урок 34).
+    </div>
+    <div class="card-list" id="ankuendigen"></div>
+  </section>
+
+  <section class="block" id="s2">
+    <h2><span class="num">2</span> Начало и конец осмотра</h2>
+    <div class="grammar-box">
+      Не «разденьтесь», а «освободите от одежды»: <b>sich freimachen</b>, <b>den Oberkörper freimachen</b>. Бельё оставить — <b>anbehalten</b>. Кушетка — <b>die Untersuchungsliege</b>. В конце — спросить, не хочет ли пациент что-то показать, и разрешить одеться: <b>sich anziehen</b>. Если пациент ещё на анамнезе спрашивает «что у меня?», честный ответ — фраза z3.
+    </div>
+    <div class="card-list" id="anfang"></div>
+  </section>
+
+  <section class="block" id="s3">
+    <h2><span class="num">3</span> Голова и шея</h2>
+    <div class="grammar-box">
+      Зрачки, движения глаз, рот и язык, щитовидная железа. Обратите внимание на дательный: <b>folgen</b> + Dativ — meinem Finger (урок 21), <b>in die Augen leuchten</b> — светить в глаза.
+    </div>
+    <div class="card-list" id="kopf"></div>
+  </section>
+
+  <section class="block" id="s4">
+    <h2><span class="num">4</span> Сердце, лёгкие, давление</h2>
+    <div class="grammar-box">
+      Три пары глаголов дыхания: <b>einatmen</b> — вдохнуть, <b>ausatmen</b> — выдохнуть, <b>die Luft anhalten</b> — задержать дыхание, <b>weiteratmen</b> — дышать дальше. Закатать рукав — <b>den Ärmel hochkrempeln</b>. Слушать сердце — <b>das Herz abhören</b>.
+    </div>
+    <div class="card-list" id="herz"></div>
+  </section>
+
+  <section class="block" id="s5">
+    <h2><span class="num">5</span> Живот и спина</h2>
+    <div class="grammar-box">
+      Для живота пациент лежит на спине, руки вдоль тела, колени согнуты: <b>die Knie anziehen</b>. Симптом раздражения брюшины по-немецки — <b>Loslassschmerz</b>: больнее, когда отпускаешь. Почки — поколачивание: <b>abklopfen</b>.
+    </div>
+    <div class="card-list" id="bauch"></div>
+  </section>
+
+  <section class="block" id="s6">
+    <h2><span class="num">6</span> ⭐⭐ Осмотр ног и УЗИ</h2>
+    <div class="grammar-box">
+      Ваш главный осмотр. Варикоз смотрят <b>стоя</b> — об этом стоит сказать пациенту, иначе он ляжет сам. Отёк с ямкой — <b>eine Delle bleibt</b>, в выписке — <b>Ödem mit Dellenbildung</b>. При подозрении на тромбоз: боль при сдавлении икры (<b>Wadendruckschmerz</b>), разница в окружности голеней (<b>der Umfang</b>), покраснение и жар. Проба Вальсальвы на УЗИ — «потужьтесь, как в туалете»: <b>pressen wie beim Stuhlgang</b>.
+    </div>
+    <div class="card-list" id="beine"></div>
+  </section>
+
+  <section class="block" id="s7">
+    <h2><span class="num">7</span> ⭐ Два языка: с пациентом и в выписке</h2>
+    <div class="grammar-box">
+      С пациентом — только простые немецкие глаголы. Латинские слова — для коллег и для выписки. Сказать пациенту «ich mache jetzt eine Palpation» — ошибка, которую экзаменатор заметит сразу.
+    </div>
+    <div class="tabwrap"><table class="ftab">
+      <tr><th>что делаем</th><th>с пациентом</th><th>в выписке</th><th>существительное</th></tr>
+      <tr><td>смотреть</td><td>ansehen</td><td>inspizieren</td><td>die Inspektion</td></tr>
+      <tr><td>прощупывать</td><td>abtasten</td><td>palpieren</td><td>die Palpation</td></tr>
+      <tr><td>простукивать</td><td>abklopfen</td><td>perkutieren</td><td>die Perkussion</td></tr>
+      <tr><td>выслушивать</td><td>abhören</td><td>auskultieren</td><td>die Auskultation</td></tr>
+    </table></div>
+    <div class="grammar-box">
+      В выписке часто наречие: <b>auskultatorisch</b> unauffällig — «аускультативно без особенностей», <b>palpatorisch</b> kein Druckschmerz. Сокращения из учебника: <b>AZ</b> — Allgemeinzustand (общее состояние), <b>EZ</b> — Ernährungszustand (питание), <b>o. B.</b> — ohne Befund (без патологии), <b>bds.</b> — beidseits (с обеих сторон).
+    </div>
+    <p class="desc">Слова находок — их пишут в выписке и говорят коллеге:</p>
+    <div class="card-list" id="woerter"></div>
+  </section>
+
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> Как записать находку (Befund)</h2>
+    <div class="grammar-box doc">
+      Выписка пишется <b>без глаголов</b>, как телеграмма: существительное + прилагательное. Сначала общее состояние, потом сверху вниз по системам, в конце — локальный статус. Отрицательные находки тоже пишут: <b>kein</b> / <b>keine</b> — врач показывает, что проверил. Это продолжение уроков 35 и 43 про Arztbrief.
+    </div>
+    <div class="card-list" id="befund"></div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Частые ошибки</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Ziehen Sie sich aus!</span><span class="good">Würden Sie bitte den Oberkörper freimachen?</span><span class="why">«Раздевайтесь!» звучит как приказ; вежливо — ступень 3 и точно, что именно открыть</span></div>
+      <div class="err-row"><span class="bad">Legen Sie bitte hin.</span><span class="good">Legen Sie sich bitte hin.</span><span class="why">без sich — «положите (что-то)», а не «лягте»</span></div>
+      <div class="err-row"><span class="bad">Tut weh?</span><span class="good">Tut das weh?</span><span class="why">в немецком нужно подлежащее — das или es</span></div>
+      <div class="err-row"><span class="bad">Atmen Sie nicht!</span><span class="good">Bitte halten Sie kurz die Luft an.</span><span class="why">«не дышите» — пугает; по-немецки «задержите дыхание»</span></div>
+      <div class="err-row"><span class="bad">Machen Sie die Hose aus.</span><span class="good">Ziehen Sie bitte die Hose aus.</span><span class="why">одежду снимают глаголом ausziehen; ausmachen — выключить свет</span></div>
+      <div class="err-row"><span class="bad">Ich mache jetzt eine Palpation.</span><span class="good">Ich taste jetzt Ihren Bauch ab.</span><span class="why">с пациентом — простые слова, латынь — в выписку</span></div>
+    </div>
+    <p class="desc" style="margin-top:12px">Пары на слух — сначала как не надо, сразу следом как надо:</p>
+    <div class="card-list" id="oshibki"></div>
+  </section>
+
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> Полный диалог</h2>
+    <h3 class="dlg-title">Untersuchung: та же пациентка, что в уроке 47</h3>
+    <div class="dialogue" id="dialog"></div>
+    <div class="hint-box" style="margin-top:10px">
+      💡 Проследите: вежливая просьба раздеться (ступень 5) → объяснил, почему стоя → объявляет каждое действие → отвечает на «это страшно?» простыми словами (Ödem — «вода в тканях») → пульс и боль в икре → УЗИ с пробой → можно одеваться → результат без латыни. А в выписку пойдёт то, что в разделе 8.
+    </div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Домашка</h2>
+    <div class="grammar-box">
+      <b>1. Подними по лестнице.</b> Скажи на ступени 3 и на ступени 5: «Setzen Sie sich!» · «Ziehen Sie die Knie an!»<br><br>
+      <b>2. Как в выписке.</b> Живот мягкий, болезненности нет. · Пульс на стопах пальпируется с обеих сторон.<br><br>
+      <b>3. Скажи пациенту простыми словами.</b> Auskultation der Lunge · Palpation des Abdomens.<br><br>
+      <b>4. Своё.</b> Проведи дома полный осмотр ног по-немецки вслух — от «Ich würde Sie bitten, die Hose auszuziehen» до «Sie können sich wieder anziehen». Потом запиши находки одной строкой, как в разделе 8.
+    </div>
+    <p class="desc" style="margin-top:14px">Ответы для самопроверки — нажми и послушай:</p>
+    <div class="card-list" id="domashka"></div>
+    <div class="link-box" style="margin-top:14px">
+      📓 Все фразы урока уже в ЗУБРе — колода «Урок 48». <a href="../zubr.html?урок=urok48">Открыть тренажёр →</a><br>
+      📘 Связано с уроками <a href="urok13_interactive.html">13</a> (Imperativ), <a href="urok18_interactive.html">18</a> (sich), <a href="urok26_interactive.html">26</a> (Konjunktiv II вежливости), <a href="urok39_interactive.html">39</a> (zu внутри: hinzulegen) и <a href="urok47_interactive.html">47</a> (анамнез — что было до осмотра).<br>
+      📚 Источники: Schrimpf, Bahnemann, Lechner. Deutsch für Ärztinnen und Ärzte, Springer, глава 6 «Die körperliche Untersuchung» (команды 6.1, документация 6.3, правила вежливости — решение к упр. 6.1); «Fit für die Fachsprachprüfung» — ответ пациенту до осмотра.
+    </div>
+  </section>
+
+  <p class="foot">Урок 48 · B1 · медицина · 02.10.2026 · осмотр пациента</p>
+</div>
+
+<script>
+const AUDIO = {"ho1": "../zvuk/urok48/ho1.mp3", "ho2": "../zvuk/urok48/ho2.mp3", "ho3": "../zvuk/urok48/ho3.mp3", "ho4": "../zvuk/urok48/ho4.mp3", "ho5": "../zvuk/urok48/ho5.mp3", "an1": "../zvuk/urok48/an1.mp3", "an2": "../zvuk/urok48/an2.mp3", "a1": "../zvuk/urok48/a1.mp3", "a2": "../zvuk/urok48/a2.mp3", "a3": "../zvuk/urok48/a3.mp3", "a4": "../zvuk/urok48/a4.mp3", "a5": "../zvuk/urok48/a5.mp3", "a6": "../zvuk/urok48/a6.mp3", "z1": "../zvuk/urok48/z1.mp3", "z2": "../zvuk/urok48/z2.mp3", "z3": "../zvuk/urok48/z3.mp3", "k1": "../zvuk/urok48/k1.mp3", "k2": "../zvuk/urok48/k2.mp3", "k3": "../zvuk/urok48/k3.mp3", "k4": "../zvuk/urok48/k4.mp3", "h1": "../zvuk/urok48/h1.mp3", "h2": "../zvuk/urok48/h2.mp3", "h3": "../zvuk/urok48/h3.mp3", "h4": "../zvuk/urok48/h4.mp3", "h5": "../zvuk/urok48/h5.mp3", "b1": "../zvuk/urok48/b1.mp3", "b2": "../zvuk/urok48/b2.mp3", "b3": "../zvuk/urok48/b3.mp3", "b4": "../zvuk/urok48/b4.mp3", "f1": "../zvuk/urok48/f1.mp3", "f2": "../zvuk/urok48/f2.mp3", "f3": "../zvuk/urok48/f3.mp3", "f4": "../zvuk/urok48/f4.mp3", "f5": "../zvuk/urok48/f5.mp3", "f6": "../zvuk/urok48/f6.mp3", "f7": "../zvuk/urok48/f7.mp3", "f8": "../zvuk/urok48/f8.mp3", "f9": "../zvuk/urok48/f9.mp3", "w1": "../zvuk/urok48/w1.mp3", "w2": "../zvuk/urok48/w2.mp3", "w3": "../zvuk/urok48/w3.mp3", "w4": "../zvuk/urok48/w4.mp3", "w5": "../zvuk/urok48/w5.mp3", "w6": "../zvuk/urok48/w6.mp3", "w7": "../zvuk/urok48/w7.mp3", "w8": "../zvuk/urok48/w8.mp3", "w9": "../zvuk/urok48/w9.mp3", "w10": "../zvuk/urok48/w10.mp3", "bf1": "../zvuk/urok48/bf1.mp3", "bf2": "../zvuk/urok48/bf2.mp3", "bf3": "../zvuk/urok48/bf3.mp3", "bf4": "../zvuk/urok48/bf4.mp3", "bf5": "../zvuk/urok48/bf5.mp3", "e1": "../zvuk/urok48/e1.mp3", "e2": "../zvuk/urok48/e2.mp3", "e3": "../zvuk/urok48/e3.mp3", "e4": "../zvuk/urok48/e4.mp3", "e5": "../zvuk/urok48/e5.mp3", "e6": "../zvuk/urok48/e6.mp3", "e7": "../zvuk/urok48/e7.mp3", "e8": "../zvuk/urok48/e8.mp3", "dl1": "../zvuk/urok48/dl1.mp3", "dl2": "../zvuk/urok48/dl2.mp3", "dl3": "../zvuk/urok48/dl3.mp3", "dl4": "../zvuk/urok48/dl4.mp3", "dl5": "../zvuk/urok48/dl5.mp3", "dl6": "../zvuk/urok48/dl6.mp3", "dl7": "../zvuk/urok48/dl7.mp3", "dl8": "../zvuk/urok48/dl8.mp3", "dl9": "../zvuk/urok48/dl9.mp3", "dl10": "../zvuk/urok48/dl10.mp3", "dl11": "../zvuk/urok48/dl11.mp3", "dl12": "../zvuk/urok48/dl12.mp3", "dl13": "../zvuk/urok48/dl13.mp3", "dl14": "../zvuk/urok48/dl14.mp3", "x1": "../zvuk/urok48/x1.mp3", "x2": "../zvuk/urok48/x2.mp3", "x3": "../zvuk/urok48/x3.mp3", "x4": "../zvuk/urok48/x4.mp3", "x5": "../zvuk/urok48/x5.mp3", "x6": "../zvuk/urok48/x6.mp3", "x7": "../zvuk/urok48/x7.mp3", "x8": "../zvuk/urok48/x8.mp3"};
+
+/* звук вынесен в zvuk/ */
+// Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
+window.addEventListener('load', function () {
+  if (!navigator.onLine) return;
+  setTimeout(function () {
+    var список = Object.values(AUDIO), i = 0;
+    (function дальше() {
+      if (i >= список.length) return;
+      fetch(список[i++]).catch(function () {}).then(function () {
+        setTimeout(дальше, 60);
+      });
+    })();
+  }, 2500);
+});
+
+function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
+  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
+function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
+
+function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
+phrases('hoeflich',[
+  ["ho1","Hinlegen!","хинлегэн","1. ❌ Лечь! — приказ, так нельзя."],
+  ["ho2","Legen Sie <b>sich</b> bitte <b>hin</b>.","легэн зи зихь битэ хин","2. Лягте, пожалуйста."],
+  ["ho3","<b>Würden</b> Sie sich bitte hinlegen?","вюрдэн зи зихь битэ хинлегэн","3. Вы не могли бы лечь?"],
+  ["ho4","<b>Könnten</b> Sie sich bitte auf den Rücken legen?","кёнтэн зи зихь битэ ауф дэн рюкэн легэн","4. Не могли бы вы лечь на спину?"],
+  ["ho5","<b>Ich würde Sie bitten</b>, sich auf den Rücken <b>zu legen</b>.","ихь вюрдэ зи битэн, зихь ауф дэн рюкэн цу легэн","5. Я попросил бы вас лечь на спину."],
+]);
+
+phrases('ankuendigen',[
+  ["an1","Ich <b>taste</b> jetzt Ihren Bauch <b>ab</b>.","ихь тастэ йэцт ирэн баух ап","Сейчас я прощупаю ваш живот."],
+  ["an2","Ich <b>werde gleich</b> mit dem Stethoskop Ihre Lunge <b>abhören</b>. Das ist etwas kalt.","ихь вэрдэ гляйхь мит дэм штэтоскоп ирэ лунгэ апхёрэн. дас ист этвас кальт","Сейчас я послушаю лёгкие стетоскопом. Будет немного холодно."],
+]);
+
+phrases('anfang',[
+  ["a1","Jetzt würde ich Sie gern <b>körperlich untersuchen</b>.","йэцт вюрдэ ихь зи гэрн кёрпэрлихь унтэрзухэн","Теперь я хотел бы вас осмотреть."],
+  ["a2","Dafür würde ich Sie bitten, sich bis auf die Unterwäsche <b>freizumachen</b>.","дафюр вюрдэ ихь зи битэн, зихь бис ауф ди унтэрвэшэ фрайцумахэн","Для этого попрошу вас раздеться до белья."],
+  ["a3","Bitte machen Sie den <b>Oberkörper frei</b>.","битэ махэн зи дэн обэркёрпэр фрай","Пожалуйста, разденьтесь до пояса."],
+  ["a4","Bitte setzen Sie sich auf die <b>Untersuchungsliege</b>.","битэ зэцэн зи зихь ауф ди унтэрзухунгслигэ","Садитесь, пожалуйста, на кушетку."],
+  ["a5","Bitte legen Sie sich <b>auf den Rücken</b>.","битэ легэн зи зихь ауф дэн рюкэн","Лягте, пожалуйста, на спину."],
+  ["a6","Bitte drehen Sie sich <b>auf den Bauch</b>. Und jetzt <b>auf die linke Seite</b>.","битэ дрээн зи зихь ауф дэн баух. унт йэцт ауф ди линкэ зайтэ","Перевернитесь на живот. А теперь на левый бок."],
+  ["z1","Vielen Dank. Ich bin <b>fertig mit der Untersuchung</b>. Gibt es noch etwas, das Sie mir zeigen möchten?","филен данк. ихь бин фэртихь мит дэа унтэрзухунг. гипт эс нох этвас, дас зи миа цайгэн мёхьтэн","Спасибо. Я закончил осмотр. Хотите ещё что-то показать?"],
+  ["z2","Sie können sich wieder <b>anziehen</b>.","зи кёнэн зихь видэр анцийэн","Можете одеваться."],
+  ["z3","Was Sie genau haben, kann ich Ihnen <b>erst nach der Untersuchung</b> sagen.","вас зи гэнау хабэн, кан ихь инэн эрст нах дэа унтэрзухунг загэн","Что именно у вас, я смогу сказать только после осмотра."],
+]);
+
+phrases('kopf',[
+  ["k1","Schauen Sie bitte auf meine <b>Nasenspitze</b>. Ich leuchte Ihnen kurz in die Augen.","шауэн зи битэ ауф майнэ назэншпицэ. ихь лёйхьтэ инэн курц ин ди аугэн","Смотрите на кончик моего носа. Я коротко посвечу вам в глаза."],
+  ["k2","Bitte <b>folgen</b> Sie <b>meinem Finger</b> mit den Augen, ohne den Kopf zu bewegen.","битэ фольгэн зи майнэм фингэр мит дэн аугэн, оне дэн копф цу бэвегэн","Следите глазами за моим пальцем, не двигая головой."],
+  ["k3","Bitte öffnen Sie den Mund und <b>strecken</b> Sie die Zunge <b>heraus</b>. Sagen Sie bitte: Aaah.","битэ ёфнэн зи дэн мунт унт штрэкэн зи ди цунгэ хэраус. загэн зи битэ: а-а-а","Откройте рот и высуньте язык. Скажите: а-а-а."],
+  ["k4","Ich taste jetzt Ihre <b>Schilddrüse</b> ab. Bitte <b>schlucken</b> Sie einmal.","ихь тастэ йэцт ирэ шильтдрюзэ ап. битэ шлюкэн зи айнмаль","Сейчас прощупаю щитовидную железу. Сглотните, пожалуйста."],
+]);
+
+phrases('herz',[
+  ["h1","Ich würde gern Ihren <b>Blutdruck messen</b>. Krempeln Sie bitte den Ärmel <b>hoch</b>.","ихь вюрдэ гэрн ирэн блутдрук мэсэн. крэмпэльн зи битэ дэн эрмэль хох","Я хотел бы измерить давление. Закатайте, пожалуйста, рукав."],
+  ["h2","Jetzt <b>höre</b> ich Ihr Herz <b>ab</b>. Bitte einen Augenblick nicht sprechen.","йэцт хёрэ ихь иа хэрц ап. битэ айнэн аугэнблик нихьт шпрэхьэн","Сейчас послушаю сердце. Минуточку не разговаривайте."],
+  ["h3","Bitte atmen Sie durch den offenen Mund tief <b>ein</b> und <b>aus</b>.","битэ атмэн зи дурхь дэн офэнэн мунт тиф айн унт аус","Дышите глубоко открытым ртом — вдох и выдох."],
+  ["h4","Bitte tief einatmen und <b>die Luft anhalten</b>. Und jetzt <b>weiteratmen</b>.","битэ тиф айнатмэн унт ди люфт анхальтэн. унт йэцт вайтэратмэн","Глубокий вдох и задержите дыхание. А теперь дышите дальше."],
+  ["h5","Bitte <b>husten</b> Sie einmal kräftig.","битэ хустэн зи айнмаль крэфтихь","Покашляйте, пожалуйста, сильно."],
+]);
+
+phrases('bauch',[
+  ["b1","Bitte legen Sie die Arme neben den Körper und <b>ziehen</b> Sie die Knie <b>an</b>.","битэ легэн зи ди армэ нэбэн дэн кёрпэр унт цийэн зи ди кни ан","Руки вдоль тела, колени согните."],
+  ["b2","Ich taste vorsichtig Ihren Bauch ab. Sagen Sie mir bitte, wenn es irgendwo <b>wehtut</b>.","ихь тастэ форзихьтихь ирэн баух ап. загэн зи миа битэ, вэн эс иргэнтво вэтут","Осторожно прощупаю живот. Скажите, если где-то больно."],
+  ["b3","Tut es mehr weh, wenn ich <b>drücke</b>, oder wenn ich <b>loslasse</b>?","тут эс мэа вэ, вэн ихь дрюкэ, одэр вэн ихь лёслясэ","Больнее, когда я надавливаю или когда отпускаю?"],
+  ["b4","Wenn ich hier auf den Rücken <b>klopfe</b>, tut das weh?","вэн ихь хиа ауф дэн рюкэн клёпфэ, тут дас вэ","Если я здесь постучу по спине — больно?"],
+]);
+
+phrases('beine',[
+  ["f1","Jetzt möchte ich mir Ihre Beine <b>ansehen</b>. Bitte ziehen Sie die Hose <b>aus</b>. Die Unterwäsche können Sie <b>anbehalten</b>.","йэцт мёхьтэ ихь миа ирэ байнэ анзээн. битэ цийэн зи ди хозэ аус. ди унтэрвэшэ кёнэн зи анбэхальтэн","Теперь я хотел бы посмотреть ноги. Снимите брюки, бельё можно оставить."],
+  ["f2","Bitte <b>stellen</b> Sie sich <b>hin</b>. Krampfadern sieht man <b>im Stehen</b> am besten.","битэ штэлен зи зихь хин. крампфадэрн зит ман им штээн ам бэстэн","Встаньте, пожалуйста. Варикоз лучше всего видно стоя."],
+  ["f3","Bitte <b>drehen</b> Sie sich einmal <b>um</b>. Ich möchte mir auch die Rückseite ansehen.","битэ дрээн зи зихь айнмаль ум. ихь мёхьтэ миа аух ди рюкзайтэ анзээн","Повернитесь, пожалуйста. Посмотрю и сзади."],
+  ["f4","Ich drücke jetzt mit dem Finger auf das <b>Schienbein</b>. Sehen Sie, es bleibt eine <b>Delle</b>.","ихь дрюкэ йэцт мит дэм фингэр ауф дас шинбайн. зээн зи, эс блайпт айнэ дэле","Нажму пальцем на голень. Видите — остаётся ямка."],
+  ["f5","Ich taste jetzt die <b>Fußpulse</b>.","ихь тастэ йэцт ди фуспульзэ","Сейчас прощупаю пульс на стопах."],
+  ["f6","Tut es weh, wenn ich auf die <b>Wade</b> drücke?","тут эс вэ, вэн ихь ауф ди вадэ дрюкэ","Больно, когда я давлю на икру?"],
+  ["f7","Ich messe jetzt den <b>Umfang</b> beider Unterschenkel.","ихь мэсэ йэцт дэн умфанг байдэр унтэршэнкэль","Сейчас измерю окружность обеих голеней."],
+  ["f8","Jetzt mache ich einen <b>Ultraschall</b>. Das Gel ist etwas kalt.","йэцт махэ ихь айнэн ультрашаль. дас гель ист этвас кальт","Сейчас сделаю УЗИ. Гель немного холодный."],
+  ["f9","Bitte <b>pressen</b> Sie einmal kräftig, <b>wie beim Stuhlgang</b>. Und jetzt wieder locker lassen.","битэ прэсэн зи айнмаль крэфтихь, ви байм штульганг. унт йэцт видэр локэр лясэн","Потужьтесь сильно, как в туалете. А теперь расслабьтесь."],
+]);
+
+words('woerter',[
+  ["w1","die Inspektion","ди инспэкцион","осмотр глазами = ansehen"],
+  ["w2","die Palpation","ди пальпацион","пальпация = abtasten"],
+  ["w3","die Perkussion","ди пэркусион","перкуссия = abklopfen"],
+  ["w4","die Auskultation","ди аускультацион","аускультация = abhören"],
+  ["w5","geschwollen","гэшволен","отёчный, припухший"],
+  ["w6","gerötet","гэрётэт","покрасневший"],
+  ["w7","überwärmt","юбэрвэрмт","горячий на ощупь"],
+  ["w8","druckschmerzhaft","друкшмэрцхафт","болезненный при надавливании"],
+  ["w9","tastbar","тастбар","пальпируется (пульс, узел)"],
+  ["w10","unauffällig","унауффэлихь","без особенностей"],
+]);
+
+phrases('befund',[
+  ["bf1","Patientin in gutem <b>Allgemeinzustand</b> und normalem <b>Ernährungszustand</b>.","пациентин ин гутэм альгэмайнцуштант унт нормалем эрнэрунгсцуштант","Пациентка в хорошем общем состоянии, нормального питания. (AZ, EZ)"],
+  ["bf2","Herz und Lunge <b>auskultatorisch unauffällig</b>.","хэрц унт лунгэ аускультаторишь унауффэлихь","Сердце и лёгкие аускультативно без особенностей."],
+  ["bf3","Abdomen weich, <b>kein</b> Druckschmerz, <b>keine</b> Abwehrspannung.","апдомэн вайхь, кайн друкшмэрц, кайнэ апвэаршпанунг","Живот мягкий, безболезненный, без защитного напряжения."],
+  ["bf4","<b>Varizen</b> am linken Unterschenkel. <b>Knöchelödem</b> links mit Dellenbildung.","варицэн ам линкэн унтэршэнкэль. кнёхьэльёдэм линкс мит дэленбильдунг","Варикозные вены на левой голени. Отёк лодыжки слева с ямкой."],
+  ["bf5","Fußpulse <b>beidseits</b> gut tastbar. Keine Rötung, keine Überwärmung, kein Wadendruckschmerz.","фуспульзэ байтзайтс гут тастбар. кайнэ рётунг, кайнэ юбэрвэрмунг, кайн вадэндрукшмэрц","Пульс на стопах с обеих сторон хорошо пальпируется. Покраснения, жара и боли в икре нет."],
+]);
+
+phrases('oshibki',[
+  ["e1","Ziehen Sie sich aus!","цийэн зи зихь аус","❌ приказ"],
+  ["e2","Würden Sie bitte den Oberkörper freimachen?","вюрдэн зи битэ дэн обэркёрпэр фраймахэн","✅"],
+  ["e3","Legen Sie bitte hin.","легэн зи битэ хин","❌ без sich"],
+  ["e4","Legen Sie sich bitte hin.","легэн зи зихь битэ хин","✅"],
+  ["e5","Tut weh?","тут вэ","❌ без подлежащего"],
+  ["e6","Tut das weh?","тут дас вэ","✅"],
+  ["e7","Atmen Sie nicht!","атмэн зи нихьт","❌ пугает"],
+  ["e8","Bitte halten Sie kurz die Luft an.","битэ хальтэн зи курц ди люфт ан","✅"],
+]);
+
+dlg('dialog',[
+  ["dl1","right","Y","Gut, Frau Krämer, jetzt würde ich Sie gern untersuchen. Ich würde Sie bitten, die Hose auszuziehen. Die Unterwäsche können Sie anbehalten.","гут, фрау крэмэр, йэцт вюрдэ ихь зи гэрн унтэрзухэн. ихь вюрдэ зи битэн, ди хозэ аусцуцийэн. ди унтэрвэшэ кёнэн зи анбэхальтэн","Хорошо, фрау Крэмер, теперь я хотел бы вас осмотреть. Попрошу снять брюки, бельё можно оставить."],
+  ["dl2","left","A","Muss ich mich hinlegen?","мус ихь михь хинлегэн","Мне лечь?"],
+  ["dl3","right","Y","Nein, zuerst stellen Sie sich bitte hin. Im Stehen sieht man die Krampfadern am besten.","найн, цуэрст штэлен зи зихь битэ хин. им штээн зит ман ди крампфадэрн ам бэстэн","Нет, сначала встаньте, пожалуйста. Стоя вены видно лучше всего."],
+  ["dl4","left","A","So?","зо","Так?"],
+  ["dl5","right","Y","Genau. Bitte drehen Sie sich einmal um. Ich drücke jetzt hier am Knöchel. Sehen Sie, da bleibt eine kleine Delle.","гэнау. битэ дрээн зи зихь айнмаль ум. ихь дрюкэ йэцт хиа ам кнёхьэль. зээн зи, да блайпт айнэ кляйнэ дэле","Точно. Повернитесь. Сейчас нажму на лодыжку. Видите, остаётся маленькая ямка."],
+  ["dl6","left","A","Ist das schlimm?","ист дас шлим","Это плохо?"],
+  ["dl7","right","Y","Das ist ein leichtes Ödem, also Wasser im Gewebe. Das passt zu Ihren Beschwerden. Tut es weh, wenn ich auf die Wade drücke?","дас ист айн ляйхьтэс ёдэм, альзо васэр им гэвебэ. дас паст цу ирэн бэшвэрдэн. тут эс вэ, вэн ихь ауф ди вадэ дрюкэ","Это небольшой отёк, то есть вода в тканях. Это сходится с вашими жалобами. Больно, когда давлю на икру?"],
+  ["dl8","left","A","Nein, gar nicht.","найн, гар нихьт","Нет, совсем нет."],
+  ["dl9","right","Y","Gut. Jetzt taste ich die Fußpulse. Die sind auf beiden Seiten gut tastbar.","гут. йэцт тастэ ихь ди фуспульзэ. ди зинт ауф байдэн зайтэн гут тастбар","Хорошо. Теперь пульс на стопах. С обеих сторон хорошо прощупывается."],
+  ["dl10","right","Y","Jetzt legen Sie sich bitte auf die Liege. Ich mache noch einen Ultraschall. Das Gel ist etwas kalt.","йэцт легэн зи зихь битэ ауф ди лигэ. ихь махэ нох айнэн ультрашаль. дас гель ист этвас кальт","Теперь лягте на кушетку. Сделаю ещё УЗИ. Гель немного холодный."],
+  ["dl11","left","A","Kein Problem.","кайн проблем","Ничего страшного."],
+  ["dl12","right","Y","Bitte pressen Sie einmal kräftig, wie beim Stuhlgang. Und locker lassen. Danke.","битэ прэсэн зи айнмаль крэфтихь, ви байм штульганг. унт локэр лясэн. данкэ","Потужьтесь сильно, как в туалете. И расслабьтесь. Спасибо."],
+  ["dl13","right","Y","So, ich bin fertig mit der Untersuchung. Sie können sich wieder anziehen.","зо, ихь бин фэртихь мит дэа унтэрзухунг. зи кёнэн зихь видэр анцийэн","Всё, я закончил осмотр. Можете одеваться."],
+  ["dl14","right","Y","Am linken Bein schließen die Venenklappen nicht richtig. Das ist eine Varikose, aber keine Thrombose. Über die Behandlung sprechen wir gleich in Ruhe.","ам линкэн байн шлисэн ди вэнэнкляпэн нихьт рихьтихь. дас ист айнэ варикозэ, абэр кайнэ тромбозэ. юба ди бэхандлунг шпрэхьэн виа гляйхь ин руэ","На левой ноге клапаны вен закрываются не полностью. Это варикоз, но не тромбоз. О лечении сейчас спокойно поговорим."],
+]);
+
+phrases('domashka',[
+  ["x1","Würden Sie sich bitte setzen?","вюрдэн зи зихь битэ зэцэн","1. Ступень 3."],
+  ["x2","Ich würde Sie bitten, sich <b>zu setzen</b>.","ихь вюрдэ зи битэн, зихь цу зэцэн","1. Ступень 5."],
+  ["x3","Würden Sie bitte die Knie <b>anziehen</b>?","вюрдэн зи битэ ди кни анцийэн","1. Ступень 3: приставка в конце, вместе с глаголом."],
+  ["x4","Ich würde Sie bitten, die Knie <b>anzuziehen</b>.","ихь вюрдэ зи битэн, ди кни анцуцийэн","1. Ступень 5: zu внутри — an-zu-ziehen."],
+  ["x5","Abdomen weich, kein Druckschmerz.","апдомэн вайхь, кайн друкшмэрц","2. Без глагола, как телеграмма."],
+  ["x6","Fußpulse beidseits tastbar.","фуспульзэ байтзайтс тастбар","2. beidseits — с обеих сторон (bds.)."],
+  ["x7","Ich höre jetzt Ihre Lunge ab.","ихь хёрэ йэцт ирэ лунгэ ап","3. Auskultation → abhören."],
+  ["x8","Ich taste jetzt Ihren Bauch ab.","ихь тастэ йэцт ирэн баух ап","3. Palpation → abtasten."],
+]);
+</script>
+<!--QUIZ-START-->
+<!--UPR-START-->
+<style>
+  .упр{ margin:30px 0 0; }
+  .упр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .упр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+
+  .упр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .упр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(46,158,107,.3); }
+  .упр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .упр-карта .упр-лид{ font-size:14px; color:#6C7291; margin:2px 0 16px; line-height:1.45; }
+  :root[data-theme="dark"] .упр-карта .упр-лид{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-карта .упр-лид{ color:#9AA0BE; } }
+
+  .упр-старт{ display:flex; align-items:center; gap:12px; text-decoration:none; width:100%;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700; border:none;
+    color:#fff; background:linear-gradient(135deg,#2E9E6B,#7FC55F); cursor:pointer;
+    box-shadow:0 10px 24px rgba(46,158,107,.3); font-family:inherit; }
+  .упр-старт:active{ transform:scale(.98); }
+  .упр-старт small{ display:block; font-weight:500; font-size:12.5px; opacity:.85; margin-top:1px; }
+  .упр-старт span{ flex:1; text-align:left; }
+  .упр-старт i{ font-style:normal; font-size:20px; }
+
+  .упр-шкала{ height:7px; border-radius:99px; background:#EDEFF6; overflow:hidden; margin-bottom:14px; }
+  :root[data-theme="dark"] .упр-шкала{ background:#2A2E52; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-шкала{ background:#2A2E52; } }
+  .упр-шкала i{ display:block; height:100%; background:linear-gradient(90deg,#2E9E6B,#7FC55F);
+    border-radius:99px; transition:width .25s ease; }
+
+  .упр-счёт{ font-size:12.5px; color:#6C7291; margin-bottom:10px; display:flex; justify-content:space-between; }
+  :root[data-theme="dark"] .упр-счёт{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-счёт{ color:#9AA0BE; } }
+
+  .упр-тип{ font-size:12px; letter-spacing:.06em; text-transform:uppercase; font-weight:700;
+    color:#2E9E6B; margin-bottom:7px; }
+  .упр-вопрос{ font-family:Georgia,serif; font-size:21px; font-weight:700; line-height:1.35;
+    margin-bottom:4px; overflow-wrap:anywhere; }
+  .упр-подпись{ font-size:13px; color:#6C7291; margin-bottom:15px; }
+  :root[data-theme="dark"] .упр-подпись{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-подпись{ color:#9AA0BE; } }
+
+  .упр-вар{ display:flex; flex-direction:column; gap:9px; }
+  .упр-вар button{ text-align:left; padding:14px 15px; border-radius:14px; font-size:15px;
+    border:1.5px solid #E4E7F2; background:#F8F9FD; color:inherit; cursor:pointer;
+    font-family:inherit; line-height:1.35; transition:border-color .12s, background .12s; }
+  :root[data-theme="dark"] .упр-вар button{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-вар button{
+    background:#242848; border-color:#333961; } }
+  .упр-вар button:active{ transform:scale(.99); }
+  .упр-вар button.верно{ border-color:#2E9E6B; background:rgba(46,158,107,.13); font-weight:700; }
+  .упр-вар button.мимо{ border-color:#D9534F; background:rgba(217,83,79,.12); }
+  .упр-вар button:disabled{ cursor:default; }
+  .упр-вар button .разбор{ display:block; font-size:13px; font-weight:500; opacity:.85; margin-top:5px; }
+
+  .упр-поле{ width:100%; padding:14px 15px; border-radius:14px; font-size:16px; font-family:inherit;
+    border:1.5px solid #E4E7F2; background:#F8F9FD; color:inherit; box-sizing:border-box; }
+  :root[data-theme="dark"] .упр-поле{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-поле{
+    background:#242848; border-color:#333961; } }
+  .упр-поле.верно{ border-color:#2E9E6B; }
+  .упр-поле.мимо{ border-color:#D9534F; }
+  .упр-умл{ display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+  .упр-умл button{ width:42px; height:40px; border-radius:11px; border:1.5px solid #E4E7F2;
+    background:#F8F9FD; color:inherit; font-size:16px; cursor:pointer; font-family:inherit; }
+  :root[data-theme="dark"] .упр-умл button{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-умл button{
+    background:#242848; border-color:#333961; } }
+
+  .упр-низ{ margin-top:14px; display:flex; gap:9px; }
+  .упр-низ button{ flex:1; padding:14px; border-radius:14px; border:none; font-size:15px;
+    font-weight:700; font-family:inherit; cursor:pointer;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); color:#fff; }
+  .упр-низ button.тихая{ background:#F3F4FA; color:#1C2242; }
+  :root[data-theme="dark"] .упр-низ button.тихая{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-низ button.тихая{
+    background:#252949; color:#EDEFF8; } }
+  .упр-низ button:disabled{ opacity:.45; cursor:default; }
+
+  .упр-отклик{ margin-top:12px; font-size:14.5px; line-height:1.45; min-height:22px; }
+  .упр-отклик b{ font-weight:800; }
+  .упр-отклик .ок{ color:#2E9E6B; }
+  .упр-отклик .нет{ color:#D9534F; }
+
+  .упр-итог{ text-align:center; padding:8px 0 4px; }
+  .упр-итог .число{ font-size:44px; font-weight:900; line-height:1.1;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); -webkit-background-clip:text;
+    background-clip:text; color:transparent; }
+  .упр-итог .слово{ font-size:15px; margin:4px 0 14px; }
+  .упр-ошибки{ text-align:left; margin-top:6px; }
+  .упр-ошибки h3{ font-size:14px; margin:0 0 8px; font-family:inherit; }
+  .упр-ошибки div{ font-size:14px; padding:9px 12px; border-radius:12px; margin-bottom:7px;
+    background:rgba(217,83,79,.1); line-height:1.4; }
+  .упр-ошибки .де{ font-family:Georgia,serif; font-weight:700; }
+</style>
+
+<section class="упр" id="упр">
+  <div class="упр-карта" id="упрКарта"></div>
+</section>
+
+<script>
+/* Задания в конце урока — часть 11 плана.
+   Строятся из того же словаря, что кормит ЗУБР (words/<урок>.json),
+   поэтому блок один на все уроки и не требует ручной работы к каждому.
+
+   Проверка ОДИН В ОДИН как в ЗУБРе: прощаем регистр, знаки и запись
+   ae/oe/ue/ss вместо умляутов — и больше ничего. Полуправильных ответов нет.  */
+(function(){
+  var корень = document.getElementById('упр');
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  if (!/^[a-z]+\d+$/.test(файл)){ корень.style.display='none'; return; }
+
+  var ПРОФИЛЬ = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+  var КЛЮЧ = 'nemeckiy_upr_' + ПРОФИЛЬ + '_' + файл;
+  var ВСЕГО = 10;
+
+  /* ---- проверка ответа: та же строгость, что в ЗУБРе ---- */
+  function норм(s){
+    return (s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+      .replace(/ß/g,'ss').replace(/ё/g,'е').replace(/[.,!?;:()«»"'’\-–—/]/g,' ')
+      .replace(/\s+/g,' ').trim();
+  }
+  function чисто(s){
+    return (s||'').split(/\s+[—–→]\s+/)[0].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();
+  }
+  function сверить(ответ, правильно){
+    var u = норм(ответ); if (!u) return false;
+    var вар = String(правильно||'').split(/\s*[,/]\s*|\s+или\s+/).map(норм).filter(Boolean);
+    if (!вар.length) вар = [норм(правильно)];
+    for (var i=0;i<вар.length;i++) if (u === вар[i]) return true;
+    return false;
+  }
+  function безТегов(s){ return (s||'').replace(/<[^>]+>/g,''); }
+  function перемешать(a){
+    a = a.slice();
+    for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function звук(верно){
+    try{
+      var имя = верно ? (localStorage.getItem('nemeckiy_zvuk_верно')||'верно2')
+                      : (localStorage.getItem('nemeckiy_zvuk_мимо')||'мимо2');
+      if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+      new Audio('../zvuk/otvet/'+имя+'.mp3').play().catch(function(){});
+    }catch(e){}
+  }
+  function сказатьНемецкое(текст){
+    try{
+      if (!window.speechSynthesis) return;
+      var г = speechSynthesis.getVoices().filter(function(v){ return /^de/i.test(v.lang); })[0];
+      if (!г) return;                       // чужим языком не читаем
+      var р = new SpeechSynthesisUtterance(текст); р.voice = г; р.lang = г.lang; р.rate = .9;
+      speechSynthesis.speak(р);
+    }catch(e){}
+  }
+
+  /* ---- сборка заданий из словаря урока ---- */
+  function собрать(строки){
+    // [0]=id [1]=немецкое [2]=транскрипция [3]=перевод [4]=это фраза [5]=немецкое с выделением
+    var слова = [], фразы = [];
+    строки.forEach(function(с){
+      var карта = { id:с[0], de:безТегов(с[1]), тр:с[2], ru:чисто(с[3]), полн:с[3], html:с[5]||с[1] };
+      if (!карта.de || !карта.ru) return;
+      if (с[4]) фразы.push(карта); else слова.push(карта);
+    });
+    if (слова.length < 4) return [];
+
+    var задания = [];
+    var артикльные = слова.filter(function(к){ return /^(der|die|das)\s+\S/i.test(к.de); });
+    // во фразе должно быть жирное выделение — иначе прятать нечего
+    var спропуском = фразы.filter(function(к){ return /<b>[^<]{2,}<\/b>/.test(к.html); });
+
+    function варианты(верный, из, поле){
+      var чужие = перемешать(из.filter(function(к){ return к.id !== верный.id
+                    && норм(к[поле]) !== норм(верный[поле]); })).slice(0,3);
+      if (чужие.length < 3) return null;
+      return перемешать(чужие.concat([верный]));
+    }
+
+    perem: for (var i=0, с=перемешать(слова); i<с.length; i++){
+      var к = с[i];
+      var в = варианты(к, слова, 'ru');
+      if (в) задания.push({ тип:'выбор-ru', к:к, вар:в });
+      if (задания.length >= 3) break perem;
+    }
+    перемешать(слова).slice(0,3).forEach(function(к){
+      var в = варианты(к, слова, 'de');
+      if (в) задания.push({ тип:'выбор-de', к:к, вар:в });
+    });
+    перемешать(слова).slice(0,2).forEach(function(к){
+      задания.push({ тип:'вписать', к:к });
+    });
+    перемешать(артикльные).slice(0,2).forEach(function(к){
+      задания.push({ тип:'артикль', к:к });
+    });
+    перемешать(спропуском).slice(0,3).forEach(function(к){
+      задания.push({ тип:'пропуск', к:к });
+    });
+
+    // убираем повторы одного и того же слова подряд и режем до нужного числа
+    var видели = {}, итог = [];
+    перемешать(задания).forEach(function(з){
+      var кл = з.тип + '|' + з.к.id;
+      if (видели[кл]) return; видели[кл] = 1; итог.push(з);
+    });
+    return итог.slice(0, ВСЕГО);
+  }
+
+  /* ---- экраны ---- */
+  var карта = document.getElementById('упрКарта');
+  var задания = [], шаг = 0, верных = 0, ошибки = [], словарь = null;
+
+  function шапка(заголовок, лид){
+    return '<div class="упр-верх"><div class="упр-знак">✅</div>' +
+           '<h2>' + заголовок + '</h2></div>' +
+           (лид ? '<p class="упр-лид">' + лид + '</p>' : '');
+  }
+
+  function приглашение(){
+    var лучший = null;
+    try{ лучший = JSON.parse(localStorage.getItem(КЛЮЧ) || 'null'); }catch(e){}
+    var хвост = лучший
+      ? '<p class="упр-лид">Лучший результат: <b>' + лучший.процент + '%</b>' +
+        ' (' + лучший.верных + ' из ' + лучший.всего + ')</p>'
+      : '';
+    карта.innerHTML =
+      шапка('Проверь себя', 'Десять заданий по словам и фразам именно этого урока. ' +
+            'Проверка строгая: артикль и умляуты считаются. Каждый раз задания новые.') +
+      хвост +
+      '<button class="упр-старт" id="упрСтарт"><i>✅</i><span>Начать проверку' +
+      '<small>10 заданий · около 3 минут</small></span></button>';
+    document.getElementById('упрСтарт').onclick = начать;
+  }
+
+  function начать(){
+    задания = собрать(словарь);
+    if (!задания.length){
+      карта.innerHTML = шапка('Проверь себя') +
+        '<p class="упр-лид">Для этого урока заданий пока не собрать — слишком мало слов в словаре.</p>';
+      return;
+    }
+    шаг = 0; верных = 0; ошибки = [];
+    показать();
+  }
+
+  function показать(){
+    if (шаг >= задания.length) return итог();
+    var з = задания[шаг];
+    var процент = Math.round(шаг / задания.length * 100);
+
+    var верх =
+      '<div class="упр-шкала"><i style="width:' + процент + '%"></i></div>' +
+      '<div class="упр-счёт"><span>Задание ' + (шаг+1) + ' из ' + задания.length + '</span>' +
+      '<span>верно: ' + верных + '</span></div>';
+
+    var тело = '';
+    if (з.тип === 'выбор-ru'){
+      тело = '<div class="упр-тип">Что это значит?</div>' +
+             '<div class="упр-вопрос">' + з.к.de + '</div>' +
+             '<div class="упр-подпись">[' + (з.к.тр||'') + ']</div>' +
+             '<div class="упр-вар">' + з.вар.map(function(в){
+               return '<button data-id="' + в.id + '">' + в.ru + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'выбор-de'){
+      тело = '<div class="упр-тип">Как это по-немецки?</div>' +
+             '<div class="упр-вопрос">' + з.к.ru + '</div>' +
+             '<div class="упр-вар">' + з.вар.map(function(в){
+               return '<button data-id="' + в.id + '">' + в.de + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'артикль'){
+      тело = '<div class="упр-тип">Какой артикль?</div>' +
+             '<div class="упр-вопрос">… ' + з.к.de.replace(/^(der|die|das)\s+/i,'') + '</div>' +
+             '<div class="упр-подпись">' + з.к.ru + '</div>' +
+             '<div class="упр-вар">' + ['der','die','das'].map(function(а){
+               return '<button data-арт="' + а + '">' + а + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'вписать'){
+      тело = '<div class="упр-тип">Напиши по-немецки</div>' +
+             '<div class="упр-вопрос">' + з.к.ru + '</div>' +
+             '<div class="упр-подпись">артикль тоже нужен, если он есть</div>' +
+             '<input class="упр-поле" id="упрПоле" autocomplete="off" autocorrect="off" ' +
+             'autocapitalize="off" spellcheck="false" placeholder="по-немецки">' +
+             умляуты();
+    } else if (з.тип === 'пропуск'){
+      var спрятано = з.к.html.match(/<b>([^<]+)<\/b>/)[1];
+      var сдыркой = з.к.html.replace(/<b>[^<]+<\/b>/, '<b>____</b>');
+      тело = '<div class="упр-тип">Вставь пропущенное</div>' +
+             '<div class="упр-вопрос">' + сдыркой + '</div>' +
+             '<div class="упр-подпись">' + з.к.ru + '</div>' +
+             '<input class="упр-поле" id="упрПоле" autocomplete="off" autocorrect="off" ' +
+             'autocapitalize="off" spellcheck="false" placeholder="одно слово">' +
+             умляуты();
+      з.ответ = спрятано;
+    }
+
+    карта.innerHTML = верх + тело +
+      '<div class="упр-отклик" id="упрОтклик"></div>' +
+      '<div class="упр-низ" id="упрНиз"></div>';
+
+    if (з.тип === 'выбор-ru' || з.тип === 'выбор-de'){
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        b.onclick = function(){ ответВыбором(b, b.dataset.id === з.к.id); };
+      });
+    } else if (з.тип === 'артикль'){
+      var верный = (з.к.de.match(/^(der|die|das)/i)||[])[0].toLowerCase();
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        b.onclick = function(){ ответВыбором(b, b.dataset.арт === верный, верный); };
+      });
+    } else {
+      var поле = document.getElementById('упрПоле');
+      подключитьУмляуты(поле);
+      поле.onkeydown = function(e){ if (e.key === 'Enter') проверитьПоле(з); };
+      document.getElementById('упрНиз').innerHTML =
+        '<button id="упрОК">Проверить</button>';
+      document.getElementById('упрОК').onclick = function(){ проверитьПоле(з); };
+      поле.focus();
+    }
+  }
+
+  function умляуты(){
+    return '<div class="упр-умл">' + ['ä','ö','ü','ß'].map(function(ч){
+      return '<button type="button" data-ч="' + ч + '">' + ч + '</button>'; }).join('') + '</div>';
+  }
+  function подключитьУмляуты(поле){
+    карта.querySelectorAll('.упр-умл button').forEach(function(b){
+      b.onclick = function(){
+        var s = поле.selectionStart == null ? поле.value.length : поле.selectionStart;
+        var e = поле.selectionEnd == null ? s : поле.selectionEnd;
+        поле.value = поле.value.slice(0,s) + b.dataset.ч + поле.value.slice(e);
+        поле.focus(); поле.selectionStart = поле.selectionEnd = s + 1;
+      };
+    });
+  }
+
+  function ответВыбором(кнопка, верно, верныйАртикль){
+    var з = задания[шаг];
+    карта.querySelectorAll('.упр-вар button').forEach(function(b){ b.disabled = true; });
+    кнопка.classList.add(верно ? 'верно' : 'мимо');
+    if (!верно){
+      // показываем правильный
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        var это = верныйАртикль ? b.dataset.арт === верныйАртикль : b.dataset.id === з.к.id;
+        if (это) b.classList.add('верно');
+      });
+    }
+    засчитать(верно, верныйАртикль ? верныйАртикль + ' ' + з.к.de.replace(/^(der|die|das)\s+/i,'') : з.к.de);
+  }
+
+  function проверитьПоле(з){
+    var поле = document.getElementById('упрПоле');
+    if (!поле || поле.disabled) return;
+    var правильно = з.тип === 'пропуск' ? з.ответ : з.к.de;
+    var верно = сверить(поле.value, правильно);
+    поле.disabled = true;
+    поле.classList.add(верно ? 'верно' : 'мимо');
+    карта.querySelectorAll('.упр-умл button').forEach(function(b){ b.disabled = true; });
+    document.getElementById('упрОК').disabled = true;
+    засчитать(верно, правильно);
+  }
+
+  function засчитать(верно, правильный){
+    var з = задания[шаг];
+    if (верно) верных++;
+    else ошибки.push({ de: з.к.de, ru: з.к.ru, надо: правильный });
+    звук(верно);
+    document.getElementById('упрОтклик').innerHTML = верно
+      ? '<span class="ок">✓ Верно.</span> ' + (з.к.тр ? '[' + з.к.тр + ']' : '')
+      : '<span class="нет">✗ Мимо.</span> Правильно: <b>' + правильный + '</b>' +
+        (з.к.тр ? ' [' + з.к.тр + ']' : '');
+    сказатьНемецкое(з.тип === 'пропуск' ? безТегов(з.к.html) : з.к.de);
+    document.getElementById('упрНиз').innerHTML =
+      '<button id="упрДальше">' + (шаг + 1 >= задания.length ? 'Итог' : 'Дальше') + '</button>';
+    document.getElementById('упрДальше').onclick = function(){ шаг++; показать(); };
+  }
+
+  function итог(){
+    var процент = Math.round(верных / задания.length * 100);
+    var слово = процент === 100 ? 'Всё верно. Идеально.'
+              : процент >= 80 ? 'Хорошо — урок усвоен.'
+              : процент >= 50 ? 'Половина есть. Стоит пройти урок ещё раз.'
+              : 'Пока тяжело. Вернись к уроку и попробуй снова.';
+
+    var лучший = null;
+    try{ лучший = JSON.parse(localStorage.getItem(КЛЮЧ) || 'null'); }catch(e){}
+    if (!лучший || процент > лучший.процент){
+      try{ localStorage.setItem(КЛЮЧ, JSON.stringify(
+        { процент: процент, верных: верных, всего: задания.length, когда: Date.now() })); }catch(e){}
+    }
+
+    var разбор = ошибки.length
+      ? '<div class="упр-ошибки"><h3>Над чем поработать:</h3>' + ошибки.map(function(о){
+          return '<div><span class="де">' + о.надо + '</span> — ' + о.ru + '</div>'; }).join('') + '</div>'
+      : '';
+
+    карта.innerHTML =
+      шапка('Готово') +
+      '<div class="упр-итог"><div class="число">' + процент + '%</div>' +
+      '<div class="слово">' + верных + ' из ' + задания.length + ' · ' + слово + '</div></div>' +
+      разбор +
+      '<div class="упр-низ"><button id="упрЕщё">Пройти ещё раз</button>' +
+      '<button class="тихая" id="упрСлова">Учить слова</button></div>';
+    document.getElementById('упрЕщё').onclick = начать;
+    document.getElementById('упрСлова').onclick = function(){
+      location.href = '../zubr.html?урок=' + файл;
+    };
+  }
+
+  /* ---- запуск: тянем словарь урока ---- */
+  fetch('../words/' + файл + '.json?v=' + Date.now())
+    .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(д){
+      словарь = д;
+      if (!д || д.length < 4){ корень.style.display = 'none'; return; }
+      приглашение();
+      var toc = document.querySelector('.toc ol');
+      if (toc){
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#упр">✅ Проверить себя</a>';
+        toc.appendChild(li);
+      }
+    })
+    .catch(function(){ корень.style.display = 'none'; });
+})();
+</script>
+<!--UPR-END-->
+
+<style>
+  .взубр{ margin:44px 0 0; }
+  .взубр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .взубр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+  .взубр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .взубр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#4A63D6,#EC6A86); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(74,99,214,.3); }
+  .взубр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .взубр-карта p{ font-size:14px; color:#6C7291; margin:2px 0 18px; line-height:1.45; }
+  :root[data-theme="dark"] .взубр-карта p{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта p{ color:#9AA0BE; } }
+  .взубр-кн{ display:flex; flex-direction:column; gap:10px; }
+  .взубр-кн a{
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700;
+    color:#fff; background:linear-gradient(135deg,#4A63D6,#EC6A86);
+    box-shadow:0 10px 24px rgba(74,99,214,.32); transition:transform .12s ease;
+  }
+  .взубр-кн a.второй{ background:#F3F4FA; color:#1C2242; box-shadow:0 6px 16px rgba(40,50,110,.12); }
+  :root[data-theme="dark"] .взубр-кн a.второй{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-кн a.второй{ background:#252949; color:#EDEFF8; } }
+  .взубр-кн a:active{ transform:scale(.98); }
+  .взубр-кн a small{ display:block; font-weight:500; font-size:12.5px; opacity:.8; margin-top:1px; }
+  .взубр-кн a span{ flex:1; }
+  .взубр-кн a i{ font-style:normal; font-size:20px; }
+</style>
+
+<section class="взубр" id="взубр">
+  <div class="взубр-карта">
+    <div class="взубр-верх">
+      <div class="взубр-знак">🐃</div>
+      <h2>Учить слова этого урока</h2>
+    </div>
+    <p>Все слова и фразы урока уже собраны в колоду ЗУБРа — с карточками, тестом, диктантом и расписанием повторений. Прогресс общий с остальными уроками.</p>
+    <div class="взубр-кн" id="взубрКнопки"></div>
+  </div>
+</section>
+
+<script>
+/* Ссылки собираем на месте: имя урока берём из адреса страницы,
+   чтобы один и тот же блок годился для всех двадцати шести. */
+(function(){
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  var м = файл.match(/^([a-z]+)(\d+)$/);
+  if (!м){ document.getElementById('взубр').style.display = 'none'; return; }
+
+  var семья = м[1], номер = +м[2];
+  var первый = семья === 'polya' ? 5 : семья === 'dasha' ? 1 : 0;
+  var корень = '../zubr.html?урок=' + файл;
+
+  var html = '<a href="' + корень + '"><i>📖</i><span>Слова этого урока' +
+             '<small>только то, что разбирали здесь</small></span></a>';
+
+  if (номер > первый){
+    var подпись = семья === 'urok' ? 'уроки с 0 по ' + номер
+                : 'занятия с ' + первый + ' по ' + номер;
+    html += '<a class="второй" href="' + корень + '&повтор=1"><i>🔁</i>' +
+            '<span>Этот урок и все предыдущие<small>' + подпись + '</small></span></a>';
+  }
+  document.getElementById('взубрКнопки').innerHTML = html;
+
+  // ссылка в оглавление урока, чтобы не мотать страницу
+  var toc = document.querySelector('.toc ol');
+  if (toc){
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#взубр">🐃 Учить слова урока</a>';
+    toc.appendChild(li);
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+
+  /* Поворот экрана. 10.09 Григорий: на планшете (ASUS) сайт не крутится
+     горизонтально, как его ни верти. До 07.09 в manifest стояло «только
+     вертикально», и Android запомнил это, когда сайт ставили значком, —
+     поправленный manifest он подхватывает неохотно. Здесь прямая просьба
+     к системе: крутись как хочешь. Действует только в установленном
+     приложении (в браузере поворот и так свободный); где не умеет —
+     молча ничего не делает. */
+  var приложение = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (приложение && screen.orientation && screen.orientation.lock)
+    screen.orientation.lock('any').catch(function(){});
+})();
+</script>
+<!--QUIZ-END-->
+
+<a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+</body>
+</html>
