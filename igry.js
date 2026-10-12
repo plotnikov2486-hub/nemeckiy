@@ -167,8 +167,35 @@ var СТИЛЬ = ''
 + '.иг-мини{ font:inherit; font-size:12.5px; font-weight:600; padding:7px 13px; min-height:36px; cursor:pointer;'
 + '  border-radius:999px; border:1px solid var(--line,#e4e6ef); background:var(--surface-2,#f3f4fa); color:inherit; }'
 + '.иг-мини.вкл{ background:var(--accent,#1f5f5b); border-color:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); }'
++ '.иг-стена{ display:grid; grid-template-columns:repeat(auto-fill,minmax(92px,1fr)); gap:7px; margin:8px 0 6px; }'
++ '.иг-плита{ font:inherit; position:relative; min-height:78px; padding:8px 5px 7px; cursor:pointer; border-radius:12px;'
++ '  border:2px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242);'
++ '  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:3px; line-height:1.2;'
++ '  font-size:12.5px; font-weight:600; overflow-wrap:anywhere; hyphens:auto; transition:transform .12s ease; }'
++ '.иг-плита:active{ transform:scale(.96); }'
++ '.иг-плита i{ font-style:normal; font-size:26px; line-height:1; }'
++ '.иг-плита.де{ font-family:Georgia,"Iowan Old Style",serif; }'
++ '.иг-плита.ц0{ border-color:#5aa9e6; } .иг-плита.ц1{ border-color:#7bc47f; } .иг-плита.ц2{ border-color:#f2a541; }'
++ '.иг-плита.ц3{ border-color:#e36f8f; } .иг-плита.ц4{ border-color:#b28dd6; } .иг-плита.ц5{ border-color:#e8c547; }'
++ '.иг-плита.убрана{ visibility:hidden; }'
++ '.иг-панель{ display:flex; flex-wrap:wrap; gap:7px; margin:6px 0 2px; }'
++ '.иг-зум{ display:flex; align-items:center; gap:8px; margin:6px 0 10px; }'
++ '.иг-зум .иг-стрелка{ font:inherit; font-size:24px; width:42px; min-height:120px; border-radius:12px; cursor:pointer;'
++ '  border:1px solid var(--line,#e4e6ef); background:var(--surface-2,#f3f4fa); color:inherit; flex:0 0 auto; }'
++ '.иг-зум .иг-стрелка:disabled{ opacity:.3; cursor:default; }'
++ '.иг-большая{ flex:1; min-height:190px; border-radius:18px; border:3px solid var(--accent,#1f5f5b); cursor:pointer;'
++ '  background:var(--surface,#fff); display:flex; flex-direction:column; align-items:center; justify-content:center;'
++ '  gap:8px; padding:16px 12px; text-align:center; transition:transform .25s ease; user-select:none; touch-action:pan-y; }'
++ '.иг-большая.оборот{ background:var(--surface-2,#f3f4fa); }'
++ '.иг-большая.вертится{ transform:rotateY(90deg); }'
++ '.иг-большая i{ font-style:normal; font-size:54px; line-height:1; }'
++ '.иг-большая b{ font-size:23px; line-height:1.25; }'
++ '.иг-большая b.де{ font-family:Georgia,"Iowan Old Style",serif; }'
++ '.иг-большая small{ font-size:13px; color:var(--ink-muted,#5b615c); }'
++ '.иг-время{ font-variant-numeric:tabular-nums; font-weight:700; }'
 + '@media (max-width:420px){ .иг-кн{ font-size:14.5px; } .иг-де{ font-size:17px; }'
-+ '  .иг-пара{ font-size:12.5px; min-height:60px; } .иг-колесо{ font-size:21px; } }';
++ '  .иг-пара{ font-size:12.5px; min-height:60px; } .иг-колесо{ font-size:21px; }'
++ '  .иг-стена{ grid-template-columns:repeat(3,1fr); } .иг-большая b{ font-size:20px; } }';
 
 function стиль() {
   if (document.getElementById('иг-стиль')) return;
@@ -1050,7 +1077,167 @@ var ПОСЛЕДОВАТЕЛЬНОСТЬ = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, КОЛЕСО];
+/* 9. Плитки — как «Перевернуть плитки» на Wordwall (12.10.2026).
+   Стена из плиток. Нажал — плитка увеличивается, её можно перевернуть
+   (на обороте другая сторона и голос), листать соседние, убрать со стены
+   выученную. «Случайная», «Перетасовать», «Вернуть убранные», таймер.
+   Картинок чужих нет: на лице — перевод и значок профессии, если он есть. */
+var ЗНАЧКИ = {
+  arzt: '🩺', ärztin: '🩺', tierarzt: '🐾', tierärztin: '🐾', krankenschwester: '💉', krankenpfleger: '💉',
+  pfleger: '💉', arzthelfer: '🩹', arzthelferin: '🩹', apotheker: '💊', apothekerin: '💊', psychiater: '🧠',
+  masseur: '💆', lehrer: '👩‍🏫', lehrerin: '👩‍🏫', professor: '🎓', schüler: '🎒', schülerin: '🎒',
+  erzieher: '🧸', erzieherin: '🧸', kindergärtner: '🧸', kindergärtnerin: '🧸', koch: '👨‍🍳', köchin: '👩‍🍳',
+  kellner: '🍽', kellnerin: '🍽', bäcker: '🥐', bäckerin: '🥐', fleischer: '🥩', kassierer: '🛒',
+  kassiererin: '🛒', verkäufer: '🏷', verkäuferin: '🏷', hausmann: '🏠', hausfrau: '🏠', putzhilfe: '🧹',
+  hausmeister: '🔑', friseur: '💇', friseurin: '💇', frisör: '💇', optiker: '👓', optikerin: '👓',
+  schneider: '🧵', schneiderin: '🧵', architekt: '📐', architektin: '📐', ingenieur: '⚙️', informatiker: '💻',
+  informatikerin: '💻', programmierer: '💻', elektriker: '💡', mechaniker: '🔧', automechaniker: '🔧',
+  'kfz-mechaniker': '🔧', mechatroniker: '🤖', handwerker: '🛠', bauarbeiter: '👷', tischler: '🪚',
+  schreiner: '🪚', glaser: '🪟', maler: '🎨', malerin: '🎨', künstler: '🎨', musiker: '🎻', sänger: '🎤',
+  sängerin: '🎤', schauspieler: '🎭', schauspielerin: '🎭', fotograf: '📷', kameramann: '🎥',
+  journalist: '📰', reporter: '🎙', schriftsteller: '✍️', autor: '📚', autorin: '📚', historiker: '🏛',
+  chemiker: '⚗️', sekretär: '📇', sekretärin: '📇', rezeptionist: '🛎', politiker: '🏛', richter: '⚖️',
+  rechtsanwalt: '⚖️', polizist: '👮', detektiv: '🕵️', soldat: '🪖', soldatin: '🪖', feuerwehrmann: '🚒',
+  feuerwehrfrau: '🚒', pilot: '✈️', flugbegleiter: '✈️', zugbegleiter: '🚆', taxifahrer: '🚕',
+  busfahrer: '🚌', postbote: '✉️', briefträger: '✉️', bauer: '🚜', bäuerin: '🚜', landwirt: '🚜',
+  gärtner: '🌷', gärtnerin: '🌷', trainer: '🏅', trainerin: '🏅', fahrlehrer: '🚗', detektivin: '🕵️'
+};
+function значок(de) {
+  var слова = de.replace(/[,;(].*$/, '').trim().split(/\s+/);
+  var слово = (слова.length > 1 && /^(der|die|das)$/i.test(слова[0]) ? слова[1] : слова[0] || '').toLowerCase();
+  return ЗНАЧКИ[слово] || '';
+}
+
+var ПЛИТКИ = {
+  код: 'плитки', имя: 'Плитки', значок: '🎴', сама: true,
+  под: 'Стена плиток: открой, переверни, убери выученные',
+  слова: function (д) {
+    return д.все.filter(function (к) { return к.ru && к.de.length <= 60 && к.ru.length <= 60; });
+  },
+  хватает: function (д) { return ПЛИТКИ.слова(д).length >= 6; },
+  экран: function (х) {
+    var все = перемешать(ПЛИТКИ.слова(х.данные)).slice(0, 30);
+    var плиты = все.map(function (к, i) { return { к: к, цвет: i % 6, убрана: false }; });
+    var лицомRu = true, открыта = -1, перевёрнута = false;
+    var начало = Date.now(), таймер = null;
+
+    function время() {
+      var с = Math.floor((Date.now() - начало) / 1000);
+      return Math.floor(с / 60) + ':' + ('0' + (с % 60)).slice(-2);
+    }
+    function тик() { var э = document.getElementById('игВремя'); if (э) э.textContent = время(); else стоп(); }
+    function стоп() { if (таймер) { clearInterval(таймер); таймер = null; } }
+    function видимые() { var о = []; плиты.forEach(function (п, i) { if (!п.убрана) о.push(i); }); return о; }
+    function убрано() { return плиты.filter(function (п) { return п.убрана; }).length; }
+    function лицо(п) { return лицомRu ? п.к.ru : п.к.de; }
+    function изнанка(п) { return лицомRu ? п.к.de : п.к.ru; }
+
+    function стена() {
+      открыта = -1;
+      var остаток = видимые().length;
+      х.рисовать(
+        '<div class="иг-вкладки"><button class="иг-мини' + (лицомRu ? ' вкл' : '') + '" id="игЛицоRu">лицом по-русски</button>' +
+        '<button class="иг-мини' + (лицомRu ? '' : ' вкл') + '" id="игЛицоDe">лицом по-немецки</button></div>' +
+        '<p class="иг-подсказ"><span class="иг-время" id="игВремя">' + время() + '</span> · на стене ' + остаток +
+        ' · убрано ' + убрано() + ' из ' + плиты.length + '. Нажми плитку — она откроется крупно.</p>' +
+        '<div class="иг-стена" id="игСтена">' + плиты.map(function (п, i) {
+          var з = значок(п.к.de);
+          return '<button class="иг-плита ц' + п.цвет + (лицомRu ? '' : ' де') + (п.убрана ? ' убрана' : '') +
+            '" data-i="' + i + '">' + (з ? '<i>' + з + '</i>' : '') + экр(лицо(п)) + '</button>';
+        }).join('') + '</div>' +
+        '<div class="иг-панель"><button class="иг-мини" id="игСлучайная">🎲 Случайная</button>' +
+        '<button class="иг-мини" id="игТасовать">🔀 Перетасовать</button>' +
+        '<button class="иг-мини" id="игВернуть"' + (убрано() ? '' : ' disabled') + '>↩ Вернуть убранные</button>' +
+        '<button class="иг-мини" id="игГотово">✓ Закончить</button></div>');
+      Array.prototype.forEach.call(document.querySelectorAll('#игСтена .иг-плита'), function (к) {
+        к.onclick = function () { открыть(+к.getAttribute('data-i')); };
+      });
+      document.getElementById('игЛицоRu').onclick = function () { лицомRu = true; стена(); };
+      document.getElementById('игЛицоDe').onclick = function () { лицомRu = false; стена(); };
+      document.getElementById('игСлучайная').onclick = function () {
+        var в = видимые(); if (в.length) открыть(в[Math.floor(Math.random() * в.length)]);
+      };
+      document.getElementById('игТасовать').onclick = function () { плиты = перемешать(плиты); стена(); };
+      document.getElementById('игВернуть').onclick = function () { плиты.forEach(function (п) { п.убрана = false; }); стена(); };
+      document.getElementById('игГотово').onclick = закончить;
+      if (!остаток) закончить();
+    }
+
+    function открыть(i) {
+      открыта = i; перевёрнута = false;
+      зум();
+    }
+
+    function соседняя(шаг) {
+      var в = видимые(), где = в.indexOf(открыта);
+      if (где < 0) return -1;
+      var н = где + шаг;
+      return н >= 0 && н < в.length ? в[н] : -1;
+    }
+
+    function зум() {
+      var п = плиты[открыта];
+      if (!п) { стена(); return; }
+      var з = значок(п.к.de);
+      var текст = перевёрнута ? изнанка(п) : лицо(п);
+      var немецкое = перевёрнута ? лицомRu : !лицомRu;
+      х.рисовать(
+        '<p class="иг-подсказ"><span class="иг-время" id="игВремя">' + время() + '</span> · ' +
+        'нажми на плитку — перевернётся; стрелки или свайп — соседние</p>' +
+        '<div class="иг-зум"><button class="иг-стрелка" id="игПред"' + (соседняя(-1) < 0 ? ' disabled' : '') + '>‹</button>' +
+        '<div class="иг-большая' + (перевёрнута ? ' оборот' : '') + '" id="игБольшая">' +
+        (з ? '<i>' + з + '</i>' : '') +
+        '<b' + (немецкое ? ' class="де"' : '') + '>' + экр(текст) + '</b>' +
+        (перевёрнута && немецкое && п.к.тр ? '<small>[' + экр(п.к.тр) + ']</small>' : '') +
+        '<small>' + (перевёрнута ? 'оборот' : 'лицо') + '</small></div>' +
+        '<button class="иг-стрелка" id="игСлед"' + (соседняя(1) < 0 ? ' disabled' : '') + '>›</button></div>' +
+        '<div class="иг-низ"><button class="иг-главная" id="игПеревернуть">⟲ Перевернуть</button>' +
+        '<button class="иг-тихая" id="игУбрать">✓ Убрать — знаю</button>' +
+        '<button class="иг-тихая" id="игЗвук">🔊</button>' +
+        '<button class="иг-тихая" id="игКСтене">К стене</button></div>');
+      var б = document.getElementById('игБольшая');
+      function перевернуть() {
+        б.classList.add('вертится');
+        setTimeout(function () {
+          перевёрнута = !перевёрнута; зум();
+          if (перевёрнута && лицомRu) х.голос(п.к.ид, п.к.de);
+        }, 180);
+      }
+      б.onclick = перевернуть;
+      document.getElementById('игПеревернуть').onclick = перевернуть;
+      document.getElementById('игЗвук').onclick = function () { х.голос(п.к.ид, п.к.de); };
+      document.getElementById('игКСтене').onclick = стена;
+      document.getElementById('игПред').onclick = function () { var н = соседняя(-1); if (н >= 0) открыть(н); };
+      document.getElementById('игСлед').onclick = function () { var н = соседняя(1); if (н >= 0) открыть(н); };
+      document.getElementById('игУбрать').onclick = function () {
+        var н = соседняя(1); if (н < 0) н = соседняя(-1);
+        п.убрана = true; х.звукОтвета(true);
+        if (н >= 0) открыть(н); else стена();
+      };
+      // свайп: влево — следующая, вправо — предыдущая (короткое касание — переворот)
+      var x0 = null;
+      б.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      б.addEventListener('touchend', function (e) {
+        if (x0 === null) return;
+        var dx = e.changedTouches[0].clientX - x0; x0 = null;
+        if (Math.abs(dx) < 40) return;
+        e.preventDefault();
+        var н = соседняя(dx < 0 ? 1 : -1); if (н >= 0) открыть(н);
+      });
+    }
+
+    function закончить() {
+      стоп();
+      var всего = плиты.length, знал = убрано();
+      х.конец(Math.round(знал / всего * 100), 'Убрано как выученные: ' + знал + ' из ' + всего + ' · время ' + время());
+    }
+
+    таймер = setInterval(тик, 1000);
+    стена();
+  }
+};
+
+var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });
