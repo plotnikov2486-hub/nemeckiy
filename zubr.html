@@ -516,7 +516,7 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202610131223';</script>
+<script>window.ЗУБР_ВЕРСИЯ = '202610131238';</script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -747,7 +747,10 @@ function экр(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').re
 function скл(n,a,b,c){ n=Math.abs(n)%100; var d=n%10;
   if(n>10&&n<20) return c; if(d>1&&d<5) return b; if(d===1) return a; return c; }
 function перемешать(a){ a=a.slice(); for(var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)),t=a[i]; a[i]=a[j]; a[j]=t; } return a; }
-function чисто(s){ return (s||'').split(/\s+[—–→]\s+/)[0].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim(); }
+/* 13.10.2026: сначала убираем пояснения в скобках, потом режем по тире.
+   Было наоборот — «врачом (arbeiten als — кем)» резалось на тире раньше,
+   и в задании висела открытая скобка «(arbeiten als». */
+function чисто(s){ return (s||'').replace(/\([^)]*\)/g,'').split(/\s+[—–→]\s+/)[0].replace(/\s*\([^)]*$/,'').replace(/\s+/g,' ').trim(); }
 function норм(s){
   return (s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
     .replace(/ß/g,'ss').replace(/ё/g,'е').replace(/[.,!?;:()«»"'’\-–—/]/g,' ').replace(/\s+/g,' ').trim();
@@ -913,10 +916,18 @@ function подписьКарточки(c){
     (c.тр ? '<span class="тран">[' + экр(c.тр) + ']</span>' : '');
 }
 
+/* Артикли цветом: der — синий, die — розовый, das — жёлтый.
+   13.10.2026 врач: «везде, где der, die, das встречается» — раньше красился
+   только артикль в начале строки, и в «der Arzt, die Ärztin» die оставался
+   чёрным. Теперь каждый отдельный артикль, но только в тексте, не в тегах. */
+var ЦВЕТ_АРТИКЛЯ = {der:'#4A63D6', die:'#EC6A86', das:'#E8A33D'};
 function подсветить(html){
-  return (html||'').replace(/^(der|die|das)(\s)/i, function(_,а,п){
-    return '<b style="color:'+({der:'#4A63D6',die:'#EC6A86',das:'#E8A33D'}[а.toLowerCase()])+'">'+а+'</b>'+п;
-  });
+  return (html||'').split(/(<[^>]*>)/).map(function(кусок){
+    if (кусок.charAt(0) === '<') return кусок;
+    return кусок.replace(/(^|[^A-Za-zÄÖÜäöüß])(der|die|das)(?=$|[^A-Za-zÄÖÜäöüß])/gi, function(_, до, а){
+      return до + '<b style="color:' + ЦВЕТ_АРТИКЛЯ[а.toLowerCase()] + '">' + а + '</b>';
+    });
+  }).join('');
 }
 
 /* ================= загрузка ================= */
@@ -997,7 +1008,7 @@ function изАдреса(){
 function карточкаУрока(строка, урок){
   var de = строка[1];
   return {
-    de: de, deHtml: строка[5] || подсветить(экр(de)), ru: строка[3], ответ: чисто(строка[3]),
+    de: de, deHtml: подсветить(строка[5] || экр(de)), ru: строка[3], ответ: чисто(строка[3]),
     тр: строка[2], k: строка[0], урок: урок + '_interactive',
     mp3: 'zvuk/' + урок + '/' + строка[0] + '.mp3',
     фраза: !!строка[4]
@@ -3928,7 +3939,7 @@ var ЛИЦА = { ich:'ich (я)', du:'du (ты)', er:'er / sie / es (он, она
   function показатьМои(){
     var с = читать();
     $('мои').innerHTML = с.length ? с.map(function(c,i){
-      return '<div class="термин"><span class="тексты"><span class="де">' + экр(c.de) + '</span>' +
+      return '<div class="термин"><span class="тексты"><span class="де">' + (c.deHtml || подсветить(экр(c.de))) + '</span>' +
              '<span class="ру">' + экр(c.ru) + '</span></span><button data-у="' + i + '">✕</button></div>';
     }).join('') : '<div class="пусто" style="padding:18px">Пока пусто.</div>';
     document.querySelectorAll('[data-у]').forEach(function(b){
