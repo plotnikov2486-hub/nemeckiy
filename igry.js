@@ -193,7 +193,42 @@ var СТИЛЬ = ''
 + '.иг-большая b.де{ font-family:Georgia,"Iowan Old Style",serif; }'
 + '.иг-большая small{ font-size:13px; color:var(--ink-muted,#5b615c); }'
 + '.иг-время{ font-variant-numeric:tabular-nums; font-weight:700; }'
-+ '@media (max-width:420px){ .иг-кн{ font-size:14.5px; } .иг-де{ font-size:17px; }'
++ '.иг-полка{ position:sticky; top:0; z-index:3; display:flex; flex-wrap:wrap; gap:7px; padding:10px;'
++ '  margin:0 0 12px; border-radius:14px; background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:58px; }'
++ '.иг-полка.пусто::after{ content:"все книжки расставлены — жми «Проверить»"; font-size:13px; color:var(--ink-muted,#5b615c); align-self:center; }'
++ '.иг-книга{ font:inherit; font-family:Georgia,"Iowan Old Style",serif; font-size:15.5px; font-weight:700; cursor:grab;'
++ '  padding:8px 12px 8px 14px; min-height:40px; border-radius:6px 10px 10px 6px; border:1px solid var(--line,#e4e6ef);'
++ '  border-left:6px solid #5aa9e6; background:var(--surface,#fff); color:var(--ink,#1c2242); touch-action:none;'
++ '  user-select:none; -webkit-user-select:none; box-shadow:0 2px 0 rgba(0,0,0,.08); }'
++ '.иг-книга.ц1{ border-left-color:#7bc47f; } .иг-книга.ц2{ border-left-color:#f2a541; } .иг-книга.ц3{ border-left-color:#e36f8f; }'
++ '.иг-книга.ц4{ border-left-color:#b28dd6; } .иг-книга.ц5{ border-left-color:#e8c547; }'
++ '.иг-книга.выбрана{ outline:3px solid var(--accent,#1f5f5b); outline-offset:2px; }'
++ '.иг-книга.летит{ position:fixed; z-index:9999; pointer-events:none; opacity:.92; transform:rotate(-3deg) scale(1.05);'
++ '  box-shadow:0 10px 24px rgba(0,0,0,.25); }'
++ '.иг-книга.тень{ opacity:.3; }'
++ '.иг-текст{ display:grid; gap:4px; margin-bottom:14px; }'
++ '.иг-текст .ряд{ font-family:Georgia,"Iowan Old Style",serif; font-size:17px; line-height:2.3; padding:2px 0;'
++ '  border-bottom:1px dashed var(--line,#e4e6ef); }'
++ '.иг-текст .ряд small{ display:block; font-family:-apple-system,"SF Pro Text",Arial,sans-serif; font-size:12.5px;'
++ '  line-height:1.3; color:var(--ink-muted,#5b615c); margin:-4px 0 4px; }'
++ '.иг-дырка{ display:inline-flex; align-items:center; justify-content:center; min-width:84px; min-height:38px;'
++ '  vertical-align:middle; margin:0 3px; border-radius:8px; border:2px dashed var(--line,#c9ccd8);'
++ '  background:var(--surface-2,#f3f4fa); cursor:pointer; padding:0 2px; }'
++ '.иг-дырка.цель{ border-color:var(--accent,#1f5f5b); background:rgba(31,95,91,.10); }'
++ '.иг-дырка .иг-книга{ margin:2px 0; font-size:15px; min-height:32px; padding:4px 10px 4px 12px; }'
++ '.иг-дырка.да{ border:2px solid var(--accent,#1f5f5b); background:rgba(31,95,91,.12); }'
++ '.иг-дырка.нет{ border:2px solid var(--warn,#b3402a); background:var(--warn-bg,#fbeae6); }'
++ '.иг-дырка.нет .иг-книга{ text-decoration:line-through; opacity:.75; }'
++ '.иг-дырка .знак{ font-family:-apple-system,Arial,sans-serif; font-size:15px; font-weight:900; margin:0 4px; }'
++ '.иг-дырка.да .знак{ color:var(--accent,#1f5f5b); } .иг-дырка.нет .знак{ color:var(--warn,#b3402a); }'
++ '.иг-дырка .верн{ font-weight:800; color:var(--accent,#1f5f5b); margin:0 6px; }'
++ '.иг-табличка{ text-align:center; border-radius:16px; border:2px solid var(--accent,#1f5f5b); padding:14px 12px; margin:0 0 14px;'
++ '  background:var(--surface,#fff); }'
++ '.иг-табличка b{ display:block; font-size:13px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-muted,#5b615c); }'
++ '.иг-табличка .два{ display:flex; justify-content:center; gap:32px; margin:6px 0 10px; }'
++ '.иг-табличка .два div{ font-size:30px; font-weight:900; color:var(--accent,#1f5f5b); line-height:1.1; }'
++ '.иг-табличка .два small{ display:block; font-size:12px; font-weight:600; color:var(--ink-muted,#5b615c); }'
++ '@media (max-width:420px){ .иг-кн{ font-size:14.5px; } .иг-де{ font-size:17px; } .иг-текст .ряд{ font-size:16px; }'
 + '  .иг-пара{ font-size:12.5px; min-height:60px; } .иг-колесо{ font-size:21px; }'
 + '  .иг-стена{ grid-template-columns:repeat(3,1fr); } .иг-большая b{ font-size:20px; } }';
 
@@ -472,6 +507,8 @@ var ИГРЫ = {
             if (н) н.onclick = меню;
           },
           звукОтвета: звук,
+          рекорд: function (процент, верных, всего) { записатьРекорд(игра.код, процент, верных, всего); },
+          меню: меню,
           конец: function (процент, подпись) { итогПростой(игра, процент, подпись); }
         });
       }
@@ -1237,7 +1274,195 @@ var ПЛИТКИ = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
+/* 10. Книжки — «вставь в текст» (14.10.2026, копия Wordwall «Vervollständige den Satz»,
+   игра Даши «Haben oder sein?»). Слева полка книжек-слов, в тексте пропуски.
+   Книжку можно ПЕРЕТАЩИТЬ в пропуск или нажать книжку, потом пропуск (на телефоне
+   перетаскивание бывает капризным — оба способа работают). «Проверить» — верные ✓,
+   неверные перечёркнуты; табличка «счёт и время»; «Показать ответы», «Ещё раз».
+   Материал: если страница задала window.ИГРЫ_ТЕКСТЫ — берём его (набор Даши
+   и т. п.), иначе фразы урока: прячем второе слово (в немецком там стоит глагол). */
+var КНИЖКИ = {
+  код: 'книжки', имя: 'Вставь в текст', значок: '📚', сама: true,
+  под: 'Перетащи книжки-слова в пропуски, потом «Проверить»',
+  свои: function () {
+    var н = window.ИГРЫ_ТЕКСТЫ;
+    if (!н || !н.length) return [];
+    var строки = [];
+    н.forEach(function (набор) { (набор.строки || []).forEach(function (с) { if (с[0].indexOf('___') >= 0) строки.push(с); }); });
+    return строки;
+  },
+  изФраз: function (д) {
+    var итог = [];
+    д.фразы.forEach(function (к) {
+      var ч = к.de.split(/\s+/);
+      if (ч.length < 3 || /\?$/.test(к.de)) return;
+      var г = голое(ч[1]);
+      if (!г || г.length < 2 || /^[A-ZÄÖÜ]/.test(г) || /\d/.test(г)) return;
+      ч[1] = ч[1].replace(г, '___');
+      итог.push([ч.join(' '), г, к.ru, к.ид]);
+    });
+    return итог;
+  },
+  хватает: function (д) { return КНИЖКИ.свои().length >= 4 || КНИЖКИ.изФраз(д).length >= 6; },
+  экран: function (х) {
+    var свои = КНИЖКИ.свои();
+    var пул = свои.length >= 4 ? свои : КНИЖКИ.изФраз(х.данные);
+    var строки = пул.length > 12 ? перемешать(пул).slice(0, 10) : (свои.length ? пул.slice() : перемешать(пул).slice(0, 10));
+    var книги, места, начало, таймер, проверено, перевод = false, выбрана = -1;
+
+    function заново() {
+      книги = перемешать(строки.map(function (с, i) { return { т: String(с[1]).split('|')[0], цвет: i % 6 }; }));
+      места = строки.map(function () { return -1; });
+      начало = Date.now(); проверено = false; выбрана = -1;
+      стоп(); таймер = setInterval(тик, 1000);
+      рисовать();
+    }
+    function время() {
+      var с = Math.floor((Date.now() - начало) / 1000);
+      return Math.floor(с / 60) + ':' + ('0' + (с % 60)).slice(-2);
+    }
+    function тик() { var э = document.getElementById('игВремя'); if (э) э.textContent = время(); else стоп(); }
+    function стоп() { if (таймер) { clearInterval(таймер); таймер = null; } }
+    function гдеКнига(к) { return места.indexOf(к); }
+    function книжка(к, доп) {
+      return '<span class="иг-книга ц' + книги[к].цвет + (доп || '') + '" data-к="' + к + '">' + экр(книги[к].т) + '</span>';
+    }
+    function верноЛи(н) {
+      var к = места[н];
+      if (к < 0) return false;
+      return String(строки[н][1]).split('|').some(function (в) { return норм(в) === норм(книги[к].т); });
+    }
+
+    function рисовать(показатьОтветы) {
+      var наПолке = [];
+      книги.forEach(function (_, к) { if (гдеКнига(к) < 0) наПолке.push(к); });
+      var текст = строки.map(function (с, н) {
+        var части = экр(с[0]).split('___');
+        var к = места[н], класс = '', знак = '', верн = '';
+        if (проверено) {
+          var ок = верноЛи(н);
+          класс = ок ? ' да' : ' нет';
+          знак = '<span class="знак">' + (ок ? '✓' : '✗') + '</span>';
+          if (!ок && показатьОтветы) верн = '<span class="верн">' + экр(String(с[1]).split('|')[0]) + '</span>';
+        }
+        var дырка = '<span class="иг-дырка' + класс + '" data-н="' + н + '">' + (к >= 0 ? книжка(к) : '') + знак + верн + '</span>';
+        return '<div class="ряд">' + части[0] + дырка + (части[1] || '') +
+          (перевод && с[2] ? '<small>' + экр(с[2]) + '</small>' : '') + '</div>';
+      }).join('');
+      х.рисовать(
+        (проверено ? табличка() : '<p class="иг-подсказ"><span class="иг-время" id="игВремя">' + время() + '</span> · ' +
+          'перетащи книжку в пропуск — или нажми книжку, потом пропуск. Нажми на поставленную — вернётся на полку.</p>') +
+        (проверено ? '' : '<div class="иг-полка' + (наПолке.length ? '' : ' пусто') + '" id="игПолка">' +
+          наПолке.map(function (к) { return книжка(к, к === выбрана ? ' выбрана' : ''); }).join('') + '</div>') +
+        '<div class="иг-текст" id="игТекст">' + текст + '</div>' +
+        '<div class="иг-низ">' +
+        (проверено
+          ? '<button class="иг-главная" id="игЕщё">↻ Ещё раз</button>' +
+            '<button class="иг-тихая" id="игОтветы">' + (показатьОтветы ? 'Ответы показаны' : '👁 Показать ответы') + '</button>'
+          : '<button class="иг-главная" id="игПроверить">✓ Проверить</button>') +
+        '<button class="иг-тихая" id="игПеревод">' + (перевод ? 'Без перевода' : 'Перевод') + '</button></div>');
+      var пр = document.getElementById('игПроверить'); if (пр) пр.onclick = проверить;
+      var ещё = document.getElementById('игЕщё'); if (ещё) ещё.onclick = заново;
+      var отв = document.getElementById('игОтветы'); if (отв) отв.onclick = function () { рисовать(true); };
+      document.getElementById('игПеревод').onclick = function () { перевод = !перевод; рисовать(показатьОтветы); };
+      if (!проверено) оживить();
+    }
+
+    function табличка() {
+      var верных = строки.filter(function (_, н) { return верноЛи(н); }).length;
+      return '<div class="иг-табличка"><b>' + (верных === строки.length ? 'Идеально!' : 'Готово') + '</b>' +
+        '<div class="два"><div>' + верных + '<small>из ' + строки.length + ' верно</small></div>' +
+        '<div>' + время() + '<small>время</small></div></div></div>';
+    }
+
+    function поставить(к, н) {
+      var было = места[н];
+      var откуда = гдеКнига(к);
+      if (откуда >= 0) места[откуда] = было >= 0 && откуда !== н ? было : -1;  // меняем местами
+      места[н] = к;
+      выбрана = -1;
+      рисовать();
+    }
+    function наПолку(к) { var г = гдеКнига(к); if (г >= 0) места[г] = -1; выбрана = -1; рисовать(); }
+
+    function оживить() {
+      Array.prototype.forEach.call(document.querySelectorAll('#игКарта .иг-книга'), function (э) {
+        э.addEventListener('pointerdown', function (e) { тащить(e, э); });
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('#игТекст .иг-дырка'), function (д) {
+        д.addEventListener('click', function (e) {
+          if (e.target.closest('.иг-книга')) return;      // по книжке — своя обработка
+          var н = +д.getAttribute('data-н');
+          if (выбрана >= 0) поставить(выбрана, н);
+        });
+      });
+    }
+
+    function тащить(e, э) {
+      if (e.button !== undefined && e.button !== 0) return;
+      e.preventDefault();
+      var к = +э.getAttribute('data-к');
+      var x0 = e.clientX, y0 = e.clientY, призрак = null, цель = null, id = e.pointerId;
+      function под(x, y) {
+        var эл = document.elementFromPoint(x, y);
+        return эл && эл.closest ? (эл.closest('#игТекст .иг-дырка') || эл.closest('#игПолка')) : null;
+      }
+      function ход(ev) {
+        if (ev.pointerId !== id) return;
+        if (!призрак && Math.abs(ev.clientX - x0) + Math.abs(ev.clientY - y0) < 7) return;
+        if (!призрак) {
+          призрак = э.cloneNode(true); призрак.classList.add('летит'); призрак.classList.remove('выбрана');
+          document.body.appendChild(призрак); э.classList.add('тень');
+        }
+        призрак.style.left = (ev.clientX - призрак.offsetWidth / 2) + 'px';
+        призрак.style.top = (ev.clientY - призрак.offsetHeight / 2) + 'px';
+        var н = под(ev.clientX, ev.clientY);
+        if (цель && цель !== н) цель.classList.remove('цель');
+        цель = н; if (цель && цель.classList.contains('иг-дырка')) цель.classList.add('цель');
+      }
+      function конец(ev) {
+        if (ev.pointerId !== id) return;
+        document.removeEventListener('pointermove', ход);
+        document.removeEventListener('pointerup', конец);
+        document.removeEventListener('pointercancel', конец);
+        if (призрак) {
+          призрак.remove();
+          var н = под(ev.clientX, ev.clientY);
+          if (н && н.classList.contains('иг-дырка')) поставить(к, +н.getAttribute('data-н'));
+          else if (н && н.id === 'игПолка') наПолку(к);
+          else рисовать();
+          return;
+        }
+        // просто нажатие
+        if (гдеКнига(к) >= 0) {
+          if (выбрана >= 0 && выбрана !== к) поставить(выбрана, гдеКнига(к)); else наПолку(к);
+        } else {
+          выбрана = выбрана === к ? -1 : к; рисовать();
+        }
+      }
+      document.addEventListener('pointermove', ход);
+      document.addEventListener('pointerup', конец);
+      document.addEventListener('pointercancel', конец);
+    }
+
+    function проверить() {
+      стоп(); проверено = true;
+      var верных = 0;
+      строки.forEach(function (_, н) { if (верноЛи(н)) верных++; });
+      var процент = Math.round(верных / строки.length * 100);
+      х.рекорд(процент, верных, строки.length);
+      рисовать();
+      // «чинг-чинг»: по звуку на каждый пропуск по очереди
+      строки.forEach(function (_, н) {
+        setTimeout(function () { х.звукОтвета(верноЛи(н)); }, 260 * н);
+      });
+    }
+
+    заново();
+  }
+};
+
+var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });

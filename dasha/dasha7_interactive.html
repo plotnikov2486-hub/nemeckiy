@@ -1135,7 +1135,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610121333"></script>
+<script src="../igry.js?v=202610141642"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1163,7 +1163,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     if (!коды.length) return;
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
-                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов' };
+                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1196,6 +1197,102 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </script>
 <!--ИГРЫ-END-->
 
+<!--ВИДЕО-START-->
+<style>
+.вид{margin:34px 0 0}
+.вид h2{margin:0 0 6px}
+.вид-шапка{color:var(--ink-muted,#666);margin:0 0 14px}
+.вид-карта{background:var(--surface,#fff);border:1px solid var(--line,#e5e5e5);border-radius:18px;padding:18px 16px;margin:0 0 18px;box-shadow:var(--shadow,none)}
+.вид-ролик{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+.вид-ролик img{width:168px;max-width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:var(--line,#eee)}
+.вид-ролик b{display:block;line-height:1.3}
+.вид-ролик small{color:var(--ink-muted,#666)}
+.вид-смотреть{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);font-size:.85em;font-weight:600}
+.вид-зачем{margin:12px 0 0}
+.вид-тк{margin:8px 0 0;padding-left:18px}
+.вид-тк a{color:var(--accent,#4A63D6);font-weight:600;text-decoration:none}
+.вид-зд{margin:16px 0 0}
+.вид-зд h4{margin:0 0 8px;font-size:1em}
+.вид-зд ol{margin:0;padding-left:22px}
+.вид-зд li{margin:0 0 10px}
+.вид-зд details summary{cursor:pointer;color:var(--accent,#4A63D6);font-size:.9em}
+.вид-зд input[type=text],.вид-зд select,.вид-зд textarea{font:inherit;padding:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;max-width:100%}
+.вид-зд input[type=text]{width:9em}
+.вид-зд textarea{width:100%;min-height:70px;margin:4px 0}
+.вид-кн{font:inherit;font-size:.85em;padding:3px 10px;margin-left:6px;border-radius:999px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit;cursor:pointer}
+.вид-итог{display:block;font-size:.9em;margin-top:4px}
+.вид-да{color:#1f9d55}.вид-нет{color:#d64545}
+.вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
+.вид-слова span:nth-child(odd){font-weight:600}
+@media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
+</style>
+<section class="вид" id="видео">
+  <h2>🎬 Видео к уроку</h2>
+  <p class="вид-шапка">Ещё одна часть домашки: открой ролик, посмотри и сделай задания под ним. Ответы проверяются тут же.</p>
+  
+<div class="вид-карта" id="видео1">
+  <a class="вид-ролик" href="https://youtu.be/0DfJemVIYIk" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/0DfJemVIYIk/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 1 из 3</small><b>Немецкий на слух. Die Familie - Семья.</b><small>Brandt Schule · 13:14</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <p class="вид-зачем">Урок по-русски: вопросы Wer ist das? / Was ist das?, zu Hause sein, слова «семья» (Vater, Eltern, Großmutter, Bruder, Schwester) и спряжение haben. Осторожно: в видео говорят «Ich habe die Schwester» — по-настоящему так нельзя, правильно «Ich habe eine Schwester / einen Bruder».</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/0DfJemVIYIk?t=0" target="_blank" rel="noopener">0:00</a> — тема урока</li><li><a href="https://youtu.be/0DfJemVIYIk?t=50" target="_blank" rel="noopener">0:50</a> — Wer ist das? Was ist das?</li><li><a href="https://youtu.be/0DfJemVIYIk?t=95" target="_blank" rel="noopener">1:35</a> — вопрос без вопросительного слова</li><li><a href="https://youtu.be/0DfJemVIYIk?t=138" target="_blank" rel="noopener">2:18</a> — zu Hause sein</li><li><a href="https://youtu.be/0DfJemVIYIk?t=270" target="_blank" rel="noopener">4:30</a> — Wo bist du? Ich bin zu Hause.</li><li><a href="https://youtu.be/0DfJemVIYIk?t=327" target="_blank" rel="noopener">5:27</a> — die Familie</li><li><a href="https://youtu.be/0DfJemVIYIk?t=493" target="_blank" rel="noopener">8:13</a> — haben</li><li><a href="https://youtu.be/0DfJemVIYIk?t=665" target="_blank" rel="noopener">11:05</a> — вопросы с haben</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Член семьи → перевод.</h4><ol><li>der Vater → <select data-ок="отец"><option value="">—</option><option>брат</option><option>сестра</option><option>дедушка</option><option>родители</option><option>отец</option><option>мать</option><option>бабушка</option></select></li><li>die Mutter → <select data-ок="мать"><option value="">—</option><option>брат</option><option>сестра</option><option>дедушка</option><option>родители</option><option>отец</option><option>мать</option><option>бабушка</option></select></li><li>die Eltern → <select data-ок="родители"><option value="">—</option><option>брат</option><option>сестра</option><option>дедушка</option><option>родители</option><option>отец</option><option>мать</option><option>бабушка</option></select></li><li>die Großmutter → <select data-ок="бабушка"><option value="">—</option><option>брат</option><option>сестра</option><option>дедушка</option><option>родители</option><option>отец</option><option>мать</option><option>бабушка</option></select></li><li>der Großvater → <select data-ок="дедушка"><option value="">—</option><option>брат</option><option>сестра</option><option>дедушка</option><option>родители</option><option>отец</option><option>мать</option><option>бабушка</option></select></li><li>der Bruder → <select data-ок="брат"><option value="">—</option><option>брат</option><option>сестра</option><option>дедушка</option><option>родители</option><option>отец</option><option>мать</option><option>бабушка</option></select></li><li>die Schwester → <select data-ок="сестра"><option value="">—</option><option>брат</option><option>сестра</option><option>дедушка</option><option>родители</option><option>отец</option><option>мать</option><option>бабушка</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь правильную форму (и исправь ошибку видео!).</h4><ol><li data-впиши="bin" data-почему="">Ich <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> zu Hause.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sind" data-почему="">Wir <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> zu Hause.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="eine" data-почему="«У меня есть сестра» — неопределённый артикль: eine.">Ich habe <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Schwester.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="einen" data-почему="der Bruder → einen (Akkusativ).">Hast du <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Bruder?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="hat" data-почему="">Er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> eine Tochter.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Habt" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ihr eine Katze?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Расскажи о своей семье 4 предложениями.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Meine Familie ist klein. Ich habe eine Frau. Meine Eltern wohnen in … Ich habe einen Bruder.</details></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Familie</span><span>семья</span><span>groß / klein</span><span>большой / маленький</span><span>die Eltern</span><span>родители</span><span>die Großmutter</span><span>бабушка</span><span>der Großvater</span><span>дедушка</span><span>die Tochter</span><span>дочь</span><span>der Sohn</span><span>сын</span><span>das Kind</span><span>ребёнок</span><span>die Katze</span><span>кошка</span><span>hoch</span><span>высокий</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео2">
+  <a class="вид-ролик" href="https://youtu.be/tKEY6HDmzAo" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/tKEY6HDmzAo/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 2 из 3</small><b>Deutsch lernen mit Dialogen / Lektion 11 / Das ist meine Familie. / Posssessivartikel / Kleidung</b><small>Hallo Deutschschule · 14:10</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <p class="вид-зачем">«Слушай и повторяй»: девочка показывает семейное фото — папа, мама, брат, бабушка, дядя, тётя: кто как выглядит и что носит. mein/meine, sein/seine, ihr/ihre в каждой фразе плюс одежда.</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/tKEY6HDmzAo?t=0" target="_blank" rel="noopener">0:00</a> — Vater, Mutter</li><li><a href="https://youtu.be/tKEY6HDmzAo?t=90" target="_blank" rel="noopener">1:30</a> — Bruder, Schwester</li><li><a href="https://youtu.be/tKEY6HDmzAo?t=145" target="_blank" rel="noopener">2:25</a> — Großeltern</li><li><a href="https://youtu.be/tKEY6HDmzAo?t=245" target="_blank" rel="noopener">4:05</a> — Onkel, Tante</li><li><a href="https://youtu.be/tKEY6HDmzAo?t=345" target="_blank" rel="noopener">5:45</a> — Ich kaufe … — одежда</li><li><a href="https://youtu.be/tKEY6HDmzAo?t=489" target="_blank" rel="noopener">8:09</a> — описание фото</li><li><a href="https://youtu.be/tKEY6HDmzAo?t=680" target="_blank" rel="noopener">11:20</a> — мн. число одежды</li></ul>
+  <div class="вид-зд"><h4>Задание 1. sein / seine / ihr / ihre?</h4><ol><li data-впиши="Sein" data-почему="er → sein; der Beruf.">Das ist mein Vater. <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Beruf ist Polizist.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Ihr" data-почему="sie → ihr.">Das ist meine Mutter. <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Beruf ist Verkäuferin.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Seine" data-почему="die Jacke → seine.">Das ist mein Bruder. <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Jacke ist blau.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Ihre" data-почему="мн. число → ihre.">Meine Großmutter ist 69. <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Haare sind grau.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Ihr" data-почему="das Kleid → ihr.">Meine Tante: <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Kleid ist schwarz.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Ответь по видео.</h4><ol><li>Кем работает папа?<details><summary>показать ответ</summary>Er ist Polizist.</details></li><li>Сколько лет бабушке?<details><summary>показать ответ</summary>Sie ist 69 Jahre alt.</details></li><li>Как выглядит дядя Фрид?<details><summary>показать ответ</summary>Er hat eine Glatze, sein Hemd ist hellblau.</details></li><li>Сколько лет девочке на фото?<details><summary>показать ответ</summary>Sie wird neun Jahre alt — es ist ihr Geburtstag.</details></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 3. Одежда → мн. число.</h4><ol><li>die Hose → <select data-ок="die Hosen"><option value="">—</option><option>die Röcke</option><option>die Hemden</option><option>die Mäntel</option><option>die Kleider</option><option>die Hosen</option></select></li><li>der Rock → <select data-ок="die Röcke"><option value="">—</option><option>die Röcke</option><option>die Hemden</option><option>die Mäntel</option><option>die Kleider</option><option>die Hosen</option></select></li><li>das Hemd → <select data-ок="die Hemden"><option value="">—</option><option>die Röcke</option><option>die Hemden</option><option>die Mäntel</option><option>die Kleider</option><option>die Hosen</option></select></li><li>der Mantel → <select data-ок="die Mäntel"><option value="">—</option><option>die Röcke</option><option>die Hemden</option><option>die Mäntel</option><option>die Kleider</option><option>die Hosen</option></select></li><li>das Kleid → <select data-ок="die Kleider"><option value="">—</option><option>die Röcke</option><option>die Hemden</option><option>die Mäntel</option><option>die Kleider</option><option>die Hosen</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>der Polizist</span><span>полицейский</span><span>die Verkäuferin</span><span>продавщица</span><span>die Brille</span><span>очки</span><span>die Glatze</span><span>лысина</span><span>das Hemd</span><span>рубашка</span><span>die Hose</span><span>брюки</span><span>das Kleid</span><span>платье</span><span>das Halstuch</span><span>шейный платок</span><span>die Krawatte</span><span>галстук</span><span>der Rock</span><span>юбка</span><span>die Erwachsenen</span><span>взрослые</span><span>kariert / gestreift</span><span>в клетку / в полоску</span><span>der Bart</span><span>борода</span><span>der Onkel / die Tante</span><span>дядя / тётя</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео3">
+  <a class="вид-ролик" href="https://youtu.be/CVf0EyX0uHM" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/CVf0EyX0uHM/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 3 из 3</small><b>1. Тема: Моя семья. Язык: Немецкий. Уровень А1.</b><small>Немецкий Просто · 2:04</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <p class="вид-зачем">2 минуты: короткий рассказ о семье с переводом каждой фразы — готовый образец, чтобы написать свой.</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/CVf0EyX0uHM?t=0" target="_blank" rel="noopener">0:00</a> — рассказ о семье</li></ul>
+  <div class="вид-зд"><h4>Задание 1. Верно или нет?</h4><ol><li data-верно="1" data-почему="Ich habe einen Bruder und eine Schwester.">У рассказчика брат и сестра. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Der Vater arbeitet als Lehrer, die Mutter ist Ärztin.">Его мама — учительница. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Sie haben einen Hund.">У них есть кошка. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="">На выходных они вместе ходят в парк. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Вставь слово.</h4><ol><li data-впиши="als" data-почему="arbeiten als — работать кем-то.">Mein Vater arbeitet <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Lehrer.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Ärztin" data-почему="">Meine Mutter ist <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Haus" data-почему="">Wir wohnen in einem <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="zusammen" data-почему="">Wir essen oft <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Перепиши рассказ про свою семью (6 предложений).</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Meine Familie ist klein. Ich habe einen Bruder. Mein Vater arbeitet als … Meine Mutter ist … Wir wohnen in … Am Wochenende …</details></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>arbeiten als</span><span>работать кем-то</span><span>die Ärztin</span><span>врач (женщина)</span><span>der Hund</span><span>собака</span><span>zusammen</span><span>вместе</span><span>am Wochenende</span><span>на выходных</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+</section>
+<script>
+(function(){
+  function чисто(s){return (s||'').toLowerCase().replace(/[.,!?;:«»"„“]/g,'').replace(/\s+/g,' ').trim();}
+  document.querySelectorAll('.вид [data-впиши]').forEach(function(li){
+    var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
+    function проверить(){
+      var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+    }
+    кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
+  });
+  document.querySelectorAll('.вид [data-верно]').forEach(function(li){
+    li.querySelectorAll('button').forEach(function(кн){
+      кн.onclick=function(){
+        var верно=кн.dataset.да===li.dataset.верно, итог=li.querySelector('.вид-итог');
+        итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+        итог.innerHTML=(верно?'✓ ':'✗ ')+(li.dataset.верно==='1'?'верно':'неверно')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      };
+    });
+  });
+  document.querySelectorAll('.вид [data-соедини]').forEach(function(бл){
+    бл.querySelector('button').onclick=function(){
+      var всего=0,хорошо=0;
+      бл.querySelectorAll('select').forEach(function(с){всего++; var ок=с.value===с.dataset.ок; if(ок)хорошо++; с.style.borderColor=ок?'#1f9d55':'#d64545';});
+      var итог=бл.querySelector('.вид-итог'); итог.className='вид-итог '+(хорошо===всего?'вид-да':'вид-нет');
+      итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
+    };
+  });
+})();
+</script>
+<!--ВИДЕО-END-->
   <footer class="lp-foot">Конспект занятия Гриши с Дашей · 21.09.2026 · собран из записи занятия (83 минуты) и домашки · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
 </div>
 

@@ -1289,7 +1289,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610121333"></script>
+<script src="../igry.js?v=202610141642"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1317,7 +1317,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     if (!коды.length) return;
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
-                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов' };
+                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1350,6 +1351,102 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 </script>
 <!--ИГРЫ-END-->
 
+<!--ВИДЕО-START-->
+<style>
+.вид{margin:34px 0 0}
+.вид h2{margin:0 0 6px}
+.вид-шапка{color:var(--ink-muted,#666);margin:0 0 14px}
+.вид-карта{background:var(--surface,#fff);border:1px solid var(--line,#e5e5e5);border-radius:18px;padding:18px 16px;margin:0 0 18px;box-shadow:var(--shadow,none)}
+.вид-ролик{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+.вид-ролик img{width:168px;max-width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:var(--line,#eee)}
+.вид-ролик b{display:block;line-height:1.3}
+.вид-ролик small{color:var(--ink-muted,#666)}
+.вид-смотреть{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);font-size:.85em;font-weight:600}
+.вид-зачем{margin:12px 0 0}
+.вид-тк{margin:8px 0 0;padding-left:18px}
+.вид-тк a{color:var(--accent,#4A63D6);font-weight:600;text-decoration:none}
+.вид-зд{margin:16px 0 0}
+.вид-зд h4{margin:0 0 8px;font-size:1em}
+.вид-зд ol{margin:0;padding-left:22px}
+.вид-зд li{margin:0 0 10px}
+.вид-зд details summary{cursor:pointer;color:var(--accent,#4A63D6);font-size:.9em}
+.вид-зд input[type=text],.вид-зд select,.вид-зд textarea{font:inherit;padding:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;max-width:100%}
+.вид-зд input[type=text]{width:9em}
+.вид-зд textarea{width:100%;min-height:70px;margin:4px 0}
+.вид-кн{font:inherit;font-size:.85em;padding:3px 10px;margin-left:6px;border-radius:999px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit;cursor:pointer}
+.вид-итог{display:block;font-size:.9em;margin-top:4px}
+.вид-да{color:#1f9d55}.вид-нет{color:#d64545}
+.вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
+.вид-слова span:nth-child(odd){font-weight:600}
+@media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
+</style>
+<section class="вид" id="видео">
+  <h2>🎬 Видео к уроку</h2>
+  <p class="вид-шапка">Ещё одна часть домашки: открой ролик, посмотри и сделай задания под ним. Ответы проверяются тут же.</p>
+  
+<div class="вид-карта" id="видео1">
+  <a class="вид-ролик" href="https://youtu.be/hz0RXTcU3_w" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/hz0RXTcU3_w/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 1 из 3</small><b>Урок немецкого языка #2. Спряжение правильных глаголов в немецком.</b><small>Deutsch mit Yehor · 3:52</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <p class="вид-зачем">3 минуты по-русски: окончания правильных глаголов (-e, -st, -t, -en, -t, -en) и два исключения — основа на -t/-d (arbeiten → du arbeitest) и на -s/-ß/-z (heißen → du heißt).</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/hz0RXTcU3_w?t=0" target="_blank" rel="noopener">0:00</a> — вступление</li><li><a href="https://youtu.be/hz0RXTcU3_w?t=46" target="_blank" rel="noopener">0:46</a> — machen: все окончания</li><li><a href="https://youtu.be/hz0RXTcU3_w?t=96" target="_blank" rel="noopener">1:36</a> — попробуйте сами: gehen, spielen</li><li><a href="https://youtu.be/hz0RXTcU3_w?t=139" target="_blank" rel="noopener">2:19</a> — основа на -t / -d: arbeiten</li><li><a href="https://youtu.be/hz0RXTcU3_w?t=186" target="_blank" rel="noopener">3:06</a> — основа на -s, -ß, -z: heißen, tanzen</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Местоимение → окончание правильного глагола.</h4><ol><li>ich → <select data-ок="-e"><option value="">—</option><option>-e</option><option>-en</option><option>-en</option><option>-st</option><option>-t</option><option>-t</option></select></li><li>du → <select data-ок="-st"><option value="">—</option><option>-e</option><option>-en</option><option>-en</option><option>-st</option><option>-t</option><option>-t</option></select></li><li>er / sie / es → <select data-ок="-t"><option value="">—</option><option>-e</option><option>-en</option><option>-en</option><option>-st</option><option>-t</option><option>-t</option></select></li><li>wir → <select data-ок="-en"><option value="">—</option><option>-e</option><option>-en</option><option>-en</option><option>-st</option><option>-t</option><option>-t</option></select></li><li>ihr → <select data-ок="-t"><option value="">—</option><option>-e</option><option>-en</option><option>-en</option><option>-st</option><option>-t</option><option>-t</option></select></li><li>sie / Sie → <select data-ок="-en"><option value="">—</option><option>-e</option><option>-en</option><option>-en</option><option>-st</option><option>-t</option><option>-t</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Проспрягай.</h4><ol><li data-впиши="machst" data-почему="">du <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> (machen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="spielt" data-почему="">er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> (spielen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="arbeitest" data-почему="Основа на -t → вставляем -e-: arbeit-e-st.">du <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> (arbeiten)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="findet" data-почему="Основа на -d → find-e-t.">er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> (finden)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="heißt" data-почему="Основа на -ß → у du только -t.">du <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> (heißen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="tanzt" data-почему="Основа на -z → du tanzt.">du <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> (tanzen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Проспрягай письменно glauben и warten во всех лицах.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>ich glaube, du glaubst, er glaubt, wir glauben, ihr glaubt, sie glauben; ich warte, du wartest, er wartet, wir warten, ihr wartet, sie warten.</details></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>machen</span><span>делать</span><span>arbeiten</span><span>работать</span><span>heißen</span><span>называться, зваться</span><span>tanzen</span><span>танцевать</span><span>die Endung</span><span>окончание</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео2">
+  <a class="вид-ролик" href="https://youtu.be/kPbIL58nSAM" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/kPbIL58nSAM/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 2 из 3</small><b>Deutsch lernen mit Dialogen / Lektion 10 / trennbare Verben / Aussprache &quot;äu&quot;, &quot;eu&quot; / Hörverstehen</b><small>Hallo Deutschschule · 12:27</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <p class="вид-зачем">«Слушай и повторяй» (швейцарская Hallo Deutschschule): глаголы с отделяемой приставкой — aufstehen, anziehen, einkaufen, abfahren, ankommen — и объявления на вокзале, где они звучат вживую.</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/kPbIL58nSAM?t=0" target="_blank" rel="noopener">0:00</a> — aufstehen</li><li><a href="https://youtu.be/kPbIL58nSAM?t=55" target="_blank" rel="noopener">0:55</a> — anziehen, abwaschen</li><li><a href="https://youtu.be/kPbIL58nSAM?t=150" target="_blank" rel="noopener">2:30</a> — einkaufen</li><li><a href="https://youtu.be/kPbIL58nSAM?t=200" target="_blank" rel="noopener">3:20</a> — abfahren, ankommen</li><li><a href="https://youtu.be/kPbIL58nSAM?t=260" target="_blank" rel="noopener">4:20</a> — anfangen, aufräumen</li><li><a href="https://youtu.be/kPbIL58nSAM?t=359" target="_blank" rel="noopener">5:59</a> — zumachen</li><li><a href="https://youtu.be/kPbIL58nSAM?t=408" target="_blank" rel="noopener">6:48</a> — звук eu/äu: neun, Leute, Bäume</li><li><a href="https://youtu.be/kPbIL58nSAM?t=528" target="_blank" rel="noopener">8:48</a> — объявления на вокзале</li></ul>
+  <div class="вид-зд"><h4>Задание 1. Приставка уходит в конец — вставь её.</h4><ol><li data-впиши="auf" data-почему="">Wann stehst du am Morgen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="an" data-почему="">Ich ziehe ein Kleid <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ab" data-почему="">Wann fährt der Zug <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="an" data-почему="">Wir kommen in zwei Stunden <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="auf" data-почему="">Ich räume nicht gern die Wohnung <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="zumachen" data-почему="С модальным глаголом приставка не отрывается: zumachen в конце целиком.">Kannst du bitte die Tür <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Ответь по объявлениям на вокзале (8:48–11:39).</h4><ol><li>Во сколько уходит скорый поезд в Цюрих?<details><summary>показать ответ</summary>Um 16.15 Uhr (planmäßig).</details></li><li>На сколько опаздывает S9?<details><summary>показать ответ</summary>Um 5 Minuten: statt 12.20 um 12.25 Uhr.</details></li><li>Где герой делает пересадку?<details><summary>показать ответ</summary>In Thalwil (Ich steige dort um).</details></li><li>Почему нельзя садиться в Regionalexpress?<details><summary>показать ответ</summary>Er hat einen Elektronikschaden und muss ins Depot.</details></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 3. Глагол → перевод.</h4><ol><li>aufstehen → <select data-ок="вставать"><option value="">—</option><option>делать пересадку</option><option>забирать, встречать</option><option>вставать</option><option>делать покупки</option><option>отправляться</option><option>прибывать</option></select></li><li>einkaufen → <select data-ок="делать покупки"><option value="">—</option><option>делать пересадку</option><option>забирать, встречать</option><option>вставать</option><option>делать покупки</option><option>отправляться</option><option>прибывать</option></select></li><li>abfahren → <select data-ок="отправляться"><option value="">—</option><option>делать пересадку</option><option>забирать, встречать</option><option>вставать</option><option>делать покупки</option><option>отправляться</option><option>прибывать</option></select></li><li>ankommen → <select data-ок="прибывать"><option value="">—</option><option>делать пересадку</option><option>забирать, встречать</option><option>вставать</option><option>делать покупки</option><option>отправляться</option><option>прибывать</option></select></li><li>umsteigen → <select data-ок="делать пересадку"><option value="">—</option><option>делать пересадку</option><option>забирать, встречать</option><option>вставать</option><option>делать покупки</option><option>отправляться</option><option>прибывать</option></select></li><li>abholen → <select data-ок="забирать, встречать"><option value="">—</option><option>делать пересадку</option><option>забирать, встречать</option><option>вставать</option><option>делать покупки</option><option>отправляться</option><option>прибывать</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>aufstehen</span><span>вставать</span><span>anziehen</span><span>надевать</span><span>abwaschen</span><span>мыть посуду</span><span>das Geschirr</span><span>посуда</span><span>einkaufen</span><span>делать покупки</span><span>die Lebensmittel</span><span>продукты</span><span>abfahren</span><span>отправляться</span><span>ankommen</span><span>прибывать</span><span>anfangen</span><span>начинаться</span><span>aufräumen</span><span>убирать</span><span>zumachen</span><span>закрывать</span><span>umsteigen</span><span>пересаживаться</span><span>abholen</span><span>встречать, забирать</span><span>die Verspätung</span><span>опоздание</span><span>das Gleis</span><span>путь (на вокзале)</span><span>planmäßig</span><span>по расписанию</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео3">
+  <a class="вид-ролик" href="https://youtu.be/p8Uz3cW4ij0" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/p8Uz3cW4ij0/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 3 из 3</small><b>Die 50 wichtigsten Verben für Anfänger! | Deutsch lernen A1</b><small>Hallo Deutschschule · 17:09</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <p class="вид-зачем">50 самых нужных глаголов: каждый в простом предложении (er backt, sie hilft, er nimmt, sie trägt) и три мини-теста «какой глагол подходит».</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/p8Uz3cW4ij0?t=0" target="_blank" rel="noopener">0:00</a> — backen … beginnen</li><li><a href="https://youtu.be/p8Uz3cW4ij0?t=45" target="_blank" rel="noopener">0:45</a> — bleiben … feiern</li><li><a href="https://youtu.be/p8Uz3cW4ij0?t=140" target="_blank" rel="noopener">2:20</a> — finden … helfen</li><li><a href="https://youtu.be/p8Uz3cW4ij0?t=318" target="_blank" rel="noopener">5:18</a> — тест 1</li><li><a href="https://youtu.be/p8Uz3cW4ij0?t=464" target="_blank" rel="noopener">7:44</a> — lesen … rufen</li><li><a href="https://youtu.be/p8Uz3cW4ij0?t=602" target="_blank" rel="noopener">10:02</a> — sagen … ziehen</li><li><a href="https://youtu.be/p8Uz3cW4ij0?t=895" target="_blank" rel="noopener">14:55</a> — тест 2</li></ul>
+  <div class="вид-зд"><h4>Задание 1. Вставь глагол в нужной форме (часть — с изменением гласной!).</h4><ol><li data-впиши="backt" data-почему="">Sarah <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> einen Schokoladenkuchen. (backen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="hilft" data-почему="helfen: e → i.">Max <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> seiner Schwester bei den Hausaufgaben. (helfen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="gibt" data-почему="geben: e → i.">Der Kellner <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> uns die Rechnung. (geben)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="liest" data-почему="lesen: e → ie.">Maria <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein spannendes Buch. (lesen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="nimmt" data-почему="nehmen: er nimmt.">Er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein Ei. (nehmen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="trägt" data-почему="tragen: a → ä.">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> einen schweren Koffer. (tragen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="schläft" data-почему="schlafen: a → ä.">Das Baby <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> in seinem Bettchen. (schlafen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Глагол → перевод.</h4><ol><li>glauben an → <select data-ок="верить в"><option value="">—</option><option>ждать (кого-то/что-то)</option><option>спрашивать о</option><option>верить в</option><option>думать о</option><option>мечтать о</option></select></li><li>warten auf → <select data-ок="ждать (кого-то/что-то)"><option value="">—</option><option>ждать (кого-то/что-то)</option><option>спрашивать о</option><option>верить в</option><option>думать о</option><option>мечтать о</option></select></li><li>denken an → <select data-ок="думать о"><option value="">—</option><option>ждать (кого-то/что-то)</option><option>спрашивать о</option><option>верить в</option><option>думать о</option><option>мечтать о</option></select></li><li>träumen von → <select data-ок="мечтать о"><option value="">—</option><option>ждать (кого-то/что-то)</option><option>спрашивать о</option><option>верить в</option><option>думать о</option><option>мечтать о</option></select></li><li>fragen nach → <select data-ок="спрашивать о"><option value="">—</option><option>ждать (кого-то/что-то)</option><option>спрашивать о</option><option>верить в</option><option>думать о</option><option>мечтать о</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Напиши 5 предложений о своём дне с глаголами из видео (aufstehen не считается!).</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Ich fahre mit dem Bus zur Arbeit. Ich spreche mit Patienten. Ich esse Spaghetti. Ich lerne neue Wörter. Ich schlafe um 23 Uhr.</details></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>backen</span><span>печь</span><span>bauen</span><span>строить</span><span>glauben an</span><span>верить в</span><span>holen</span><span>приносить, сходить за</span><span>lachen über</span><span>смеяться над</span><span>der Witz</span><span>шутка</span><span>rechnen</span><span>считать</span><span>rennen</span><span>бегать</span><span>die Glühbirne</span><span>лампочка</span><span>wechseln</span><span>менять</span><span>zählen</span><span>считать (по порядку)</span><span>die Haltestelle</span><span>остановка</span><span>der Ausflug</span><span>поездка, экскурсия</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+</section>
+<script>
+(function(){
+  function чисто(s){return (s||'').toLowerCase().replace(/[.,!?;:«»"„“]/g,'').replace(/\s+/g,' ').trim();}
+  document.querySelectorAll('.вид [data-впиши]').forEach(function(li){
+    var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
+    function проверить(){
+      var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+    }
+    кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
+  });
+  document.querySelectorAll('.вид [data-верно]').forEach(function(li){
+    li.querySelectorAll('button').forEach(function(кн){
+      кн.onclick=function(){
+        var верно=кн.dataset.да===li.dataset.верно, итог=li.querySelector('.вид-итог');
+        итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+        итог.innerHTML=(верно?'✓ ':'✗ ')+(li.dataset.верно==='1'?'верно':'неверно')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      };
+    });
+  });
+  document.querySelectorAll('.вид [data-соедини]').forEach(function(бл){
+    бл.querySelector('button').onclick=function(){
+      var всего=0,хорошо=0;
+      бл.querySelectorAll('select').forEach(function(с){всего++; var ок=с.value===с.dataset.ок; if(ок)хорошо++; с.style.borderColor=ок?'#1f9d55':'#d64545';});
+      var итог=бл.querySelector('.вид-итог'); итог.className='вид-итог '+(хорошо===всего?'вид-да':'вид-нет');
+      итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
+    };
+  });
+})();
+</script>
+<!--ВИДЕО-END-->
   <footer class="lp-foot">Конспект занятия с Дашей · 27.08.2026 · собран из записи занятия и презентации · озвучка Anna (Premium), голос Apple.</footer>
 </div>
 
