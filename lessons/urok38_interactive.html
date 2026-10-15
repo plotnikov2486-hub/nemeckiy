@@ -141,6 +141,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1098,7 +1099,7 @@ phrases('domashka',[
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1127,7 +1128,9 @@ phrases('domashka',[
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1140,6 +1143,54 @@ phrases('domashka',[
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1187,6 +1238,16 @@ phrases('domashka',[
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1198,6 +1259,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/hi9FDmsPsTY/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Урок немецкого языка #34.Относительные придаточные предложения в немецком языке.</b><small>Deutsch mit Yehor · 6:01</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="hi9FDmsPsTY">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 43, "кусок": "что это такое", "все": ["что это такое", "der, die, das, den", "исключения: denen, dessen, deren", "dessen / deren — «чей»", "с предлогом", "mit deren Kindern"], "верно": ["В относительном предложении глагол уходит в конец.", true, ""]}, {"t": 93, "кусок": "der, die, das, den", "все": ["что это такое", "der, die, das, den", "исключения: denen, dessen, deren", "dessen / deren — «чей»", "с предлогом", "mit deren Kindern"], "верно": ["«Das Kind, deren Mütze …» — правильно, раз Mütze женского рода.", false, "Выбор зависит от «хозяина»: das Kind → dessen Mütze."]}, {"t": 202, "кусок": "исключения: denen, dessen, deren", "все": ["что это такое", "der, die, das, den", "исключения: denen, dessen, deren", "dessen / deren — «чей»", "с предлогом", "mit deren Kindern"]}, {"t": 245, "кусок": "dessen / deren — «чей»", "все": ["что это такое", "der, die, das, den", "исключения: denen, dessen, deren", "dessen / deren — «чей»", "с предлогом", "mit deren Kindern"]}, {"t": 289, "кусок": "с предлогом", "все": ["что это такое", "der, die, das, den", "исключения: denen, dessen, deren", "dessen / deren — «чей»", "с предлогом", "mit deren Kindern"]}], "последний": "mit deren Kindern", "все": ["что это такое", "der, die, das, den", "исключения: denen, dessen, deren", "dessen / deren — «чей»", "с предлогом", "mit deren Kindern"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Относительные придаточные коротко по-русски (Deutsch mit Yehor): der, die, das как «который», исключения denen, dessen, deren, с предлогами (auf den ich hoffe) и «с чьими детьми».</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/hi9FDmsPsTY?t=0" target="_blank" rel="noopener">0:00</a> — что это такое</li><li><a href="https://youtu.be/hi9FDmsPsTY?t=43" target="_blank" rel="noopener">0:43</a> — der, die, das, den</li><li><a href="https://youtu.be/hi9FDmsPsTY?t=93" target="_blank" rel="noopener">1:33</a> — исключения: denen, dessen, deren</li><li><a href="https://youtu.be/hi9FDmsPsTY?t=202" target="_blank" rel="noopener">3:22</a> — dessen / deren — «чей»</li><li><a href="https://youtu.be/hi9FDmsPsTY?t=245" target="_blank" rel="noopener">4:05</a> — с предлогом</li><li><a href="https://youtu.be/hi9FDmsPsTY?t=289" target="_blank" rel="noopener">4:49</a> — mit deren Kindern</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь относительное местоимение.</h4><ol><li data-впиши="die" data-почему="">Das ist die Frau, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> mit mir studiert.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="den" data-почему="Akkusativ">Das ist der Mann, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich kenne.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="die" data-почему="">Das sind Kinder, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> hier wohnen.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="denen" data-почему="Dativ мн.ч. → denen">Das sind die Leute, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich helfe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="dessen" data-почему="чей (мужской/средний)">Das Kind, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Ball ich habe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="den" data-почему="hoffen auf + Akk.">Das ist der Mann, auf <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich hoffe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">В относительном предложении глагол уходит в конец. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Выбор зависит от «хозяина»: das Kind → dessen Mütze.">«Das Kind, deren Mütze …» — правильно, раз Mütze женского рода. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1208,6 +1272,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/3NCR_G-Z5v8/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>Deutsch lernen A2, B1 | Relativsätze und Relativpronomen | Personen und Gegenstände beschreiben</b><small>Hallo Deutschschule · 13:43</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="3NCR_G-Z5v8">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 90, "кусок": "der Mann, der / dem / dessen", "все": ["der Mann, der / dem / dessen", "das Buch, das; die Frau, deren", "квиз", "Sternfrucht, Glückspilz", "Pechvogel", "какое местоимение пропущено?", "задания"]}, {"t": 197, "кусок": "das Buch, das; die Frau, deren", "все": ["der Mann, der / dem / dessen", "das Buch, das; die Frau, deren", "квиз", "Sternfrucht, Glückspilz", "Pechvogel", "какое местоимение пропущено?", "задания"]}, {"t": 300, "кусок": "квиз", "все": ["der Mann, der / dem / dessen", "das Buch, das; die Frau, deren", "квиз", "Sternfrucht, Glückspilz", "Pechvogel", "какое местоимение пропущено?", "задания"]}, {"t": 455, "кусок": "Sternfrucht, Glückspilz", "все": ["der Mann, der / dem / dessen", "das Buch, das; die Frau, deren", "квиз", "Sternfrucht, Glückspilz", "Pechvogel", "какое местоимение пропущено?", "задания"]}, {"t": 490, "кусок": "Pechvogel", "все": ["der Mann, der / dem / dessen", "das Buch, das; die Frau, deren", "квиз", "Sternfrucht, Glückspilz", "Pechvogel", "какое местоимение пропущено?", "задания"]}, {"t": 770, "кусок": "какое местоимение пропущено?", "все": ["der Mann, der / dem / dessen", "das Buch, das; die Frau, deren", "квиз", "Sternfrucht, Glückspilz", "Pechvogel", "какое местоимение пропущено?", "задания"]}], "последний": "задания", "все": ["der Mann, der / dem / dessen", "das Buch, das; die Frau, deren", "квиз", "Sternfrucht, Glückspilz", "Pechvogel", "какое местоимение пропущено?", "задания"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Hallo Deutschschule: десятки примеров «Das ist der Mann, der einen Ferrari hat / dem der Ferrari gehört / dessen Ferrari kaputt ist» + загадки (Was ist ein Pechvogel? ein Glückspilz?) и квиз.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/3NCR_G-Z5v8?t=25" target="_blank" rel="noopener">0:25</a> — der Mann, der / dem / dessen</li><li><a href="https://youtu.be/3NCR_G-Z5v8?t=90" target="_blank" rel="noopener">1:30</a> — das Buch, das; die Frau, deren</li><li><a href="https://youtu.be/3NCR_G-Z5v8?t=197" target="_blank" rel="noopener">3:17</a> — квиз</li><li><a href="https://youtu.be/3NCR_G-Z5v8?t=300" target="_blank" rel="noopener">5:00</a> — Sternfrucht, Glückspilz</li><li><a href="https://youtu.be/3NCR_G-Z5v8?t=455" target="_blank" rel="noopener">7:35</a> — Pechvogel</li><li><a href="https://youtu.be/3NCR_G-Z5v8?t=490" target="_blank" rel="noopener">8:10</a> — какое местоимение пропущено?</li><li><a href="https://youtu.be/3NCR_G-Z5v8?t=770" target="_blank" rel="noopener">12:50</a> — задания</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь (из квиза видео).</h4><ol><li data-впиши="der" data-почему="">Der Bruder, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> viel lernt, hat gute Schulnoten.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="der" data-почему="">Kannst du mir den Salat, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> neben dem Teller steht, geben?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="den" data-почему="">Den Rotwein, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> wir heute trinken, habe ich aus Frankreich mitgebracht.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="den" data-почему="sich verlieben in + Akk.">Ist das der Mann, in <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Nicole sich verliebt hat?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="deren" data-почему="">Das ist die Frau, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Hund so süß ist.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="die" data-почему="задание 1 из видео">Wo ist die Stadt, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> deine Mutter so liebt?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Что это значит?</h4><ol><li>ein Glückspilz → <select data-ок="человек, которому везёт"><option value="">—</option><option>человек, которому вечно не везёт</option><option>фрукт в форме звезды (карамбола)</option><option>человек, которому везёт</option></select></li><li>ein Pechvogel → <select data-ок="человек, которому вечно не везёт"><option value="">—</option><option>человек, которому вечно не везёт</option><option>фрукт в форме звезды (карамбола)</option><option>человек, которому везёт</option></select></li><li>eine Sternfrucht → <select data-ок="фрукт в форме звезды (карамбола)"><option value="">—</option><option>человек, которому вечно не везёт</option><option>фрукт в форме звезды (карамбола)</option><option>человек, которому везёт</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Задание 2 из видео: Das ist mein Freund. Er kommt aus Kolumbien. — сделай одним предложением. Потом опиши так же 2 своих коллег.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Das ist mein Freund, der aus Kolumbien kommt. Das ist meine Kollegin, die seit zehn Jahren Ultraschall macht. Das ist der Chef, dessen Büro neben meinem liegt.</details></div>
@@ -1218,6 +1285,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/rFVEGc9cjy4/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>German Relative Clause with WO &amp; WAS  | Relativsatz mit wo &amp; was</b><small>YourGermanTeacher · 18:38</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="rFVEGc9cjy4">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 85, "кусок": "от A1 до B1", "все": ["от A1 до B1", "wo вместо предлог + der", "was: три случая", "после etwas, nichts, alles", "после das Beste", "про всё предложение", "бонус: wovon, wofür"], "верно": ["wo проще, чем «in dem»: не нужно думать о падеже.", true, ""]}, {"t": 358, "кусок": "wo вместо предлог + der", "все": ["от A1 до B1", "wo вместо предлог + der", "was: три случая", "после etwas, nichts, alles", "после das Beste", "про всё предложение", "бонус: wovon, wofür"], "верно": ["«für was ich mich interessiere» — в экзамене правильно.", false, "Разговорно; на экзамене — wofür."]}, {"t": 420, "кусок": "was: три случая", "все": ["от A1 до B1", "wo вместо предлог + der", "was: три случая", "после etwas, nichts, alles", "после das Beste", "про всё предложение", "бонус: wovon, wofür"]}, {"t": 628, "кусок": "после etwas, nichts, alles", "все": ["от A1 до B1", "wo вместо предлог + der", "was: три случая", "после etwas, nichts, alles", "после das Beste", "про всё предложение", "бонус: wovon, wofür"]}, {"t": 692, "кусок": "после das Beste", "все": ["от A1 до B1", "wo вместо предлог + der", "was: три случая", "после etwas, nichts, alles", "после das Beste", "про всё предложение", "бонус: wovon, wofür"]}, {"t": 912, "кусок": "про всё предложение", "все": ["от A1 до B1", "wo вместо предлог + der", "was: три случая", "после etwas, nichts, alles", "после das Beste", "про всё предложение", "бонус: wovon, wofür"]}], "последний": "бонус: wovon, wofür", "все": ["от A1 до B1", "wo вместо предлог + der", "was: три случая", "после etwas, nichts, alles", "после das Beste", "про всё предложение", "бонус: wovon, wofür"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Для B1+ (по-английски): относительные с wo (Das ist das Café, wo wir uns treffen) и с was — после etwas, nichts, alles, после превосходной степени (das Beste, was …) и про всё предложение (…, was unseren Chef ärgert).</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/rFVEGc9cjy4?t=0" target="_blank" rel="noopener">0:00</a> — от A1 до B1</li><li><a href="https://youtu.be/rFVEGc9cjy4?t=85" target="_blank" rel="noopener">1:25</a> — wo вместо предлог + der</li><li><a href="https://youtu.be/rFVEGc9cjy4?t=358" target="_blank" rel="noopener">5:58</a> — was: три случая</li><li><a href="https://youtu.be/rFVEGc9cjy4?t=420" target="_blank" rel="noopener">7:00</a> — после etwas, nichts, alles</li><li><a href="https://youtu.be/rFVEGc9cjy4?t=628" target="_blank" rel="noopener">10:28</a> — после das Beste</li><li><a href="https://youtu.be/rFVEGc9cjy4?t=692" target="_blank" rel="noopener">11:32</a> — про всё предложение</li><li><a href="https://youtu.be/rFVEGc9cjy4?t=912" target="_blank" rel="noopener">15:12</a> — бонус: wovon, wofür</li></ul>
   <div class="вид-зд"><h4>Задание 1. wo, was или wo+предлог?</h4><ol><li data-впиши="wo" data-почему="">Basel ist eine kleine Stadt, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich geboren bin.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="was" data-почему="">Das ist etwas, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich nie vergessen werde.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="was" data-почему="">Das ist das Beste, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich je gegessen habe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="was" data-почему="про всё предложение">Otto macht zu lange Mittagspause, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> unseren Chef ärgert.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="wovon" data-почему="träumen von → wovon">Das ist etwas, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich schon lange träume.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="wofür" data-почему="">Das ist nichts, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich mich interessiere.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">wo проще, чем «in dem»: не нужно думать о падеже. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Разговорно; на экзамене — wofür.">«für was ich mich interessiere» — в экзамене правильно. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1231,8 +1301,11 @@ phrases('domashka',[
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1253,9 +1326,75 @@ phrases('domashka',[
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
 
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>

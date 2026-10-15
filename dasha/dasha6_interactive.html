@@ -190,6 +190,7 @@
   .кн-ответы { margin-top:10px; background:var(--surface-2); border:1px solid var(--line); border-radius:8px;
     padding:9px 16px; font-size:13.5px; font-weight:600; color:var(--accent); cursor:pointer; font-family:inherit; }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1172,7 +1173,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1201,7 +1202,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1214,6 +1217,54 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1261,6 +1312,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1272,6 +1333,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/E0jPvbX3mrI/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Немецкий язык: Вопросительные слова и вопросы в немецком языке.</b><small>Немецкий Просто · 9:58</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="E0jPvbX3mrI">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 60, "кусок": "wer", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}, {"t": 170, "кусок": "was", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}, {"t": 275, "кусок": "wo", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}, {"t": 300, "кусок": "wann", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}, {"t": 330, "кусок": "warum", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}, {"t": 370, "кусок": "wohin, woher", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}, {"t": 395, "кусок": "wie viel", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}, {"t": 470, "кусок": "wie", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"]}], "последний": "вопросы без вопросительного слова", "все": ["wer", "was", "wo", "wann", "warum", "wohin, woher", "wie viel", "wie", "вопросы без вопросительного слова"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Разговорник вопросов: на каждое слово (wer, was, wo, wann, warum, wohin, woher, wie viel, wie) по 5–6 живых вопросов из жизни — Was ist los? Wo kann ich ein Taxi nehmen? Wie spät ist es? Darf ich hier rauchen?</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/E0jPvbX3mrI?t=8" target="_blank" rel="noopener">0:08</a> — wer</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=60" target="_blank" rel="noopener">1:00</a> — was</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=170" target="_blank" rel="noopener">2:50</a> — wo</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=275" target="_blank" rel="noopener">4:35</a> — wann</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=300" target="_blank" rel="noopener">5:00</a> — warum</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=330" target="_blank" rel="noopener">5:30</a> — wohin, woher</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=370" target="_blank" rel="noopener">6:10</a> — wie viel</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=395" target="_blank" rel="noopener">6:35</a> — wie</li><li><a href="https://youtu.be/E0jPvbX3mrI?t=470" target="_blank" rel="noopener">7:50</a> — вопросы без вопросительного слова</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Вопрос → перевод.</h4><ol><li>Was ist los? → <select data-ок="Что случилось?"><option value="">—</option><option>Который час?</option><option>В чём проблема?</option><option>Что у тебя болит?</option><option>Можно вас побеспокоить?</option><option>Что случилось?</option><option>С чего ты это взял?</option><option>Что ты делаешь сегодня вечером?</option></select></li><li>Was tut dir weh? → <select data-ок="Что у тебя болит?"><option value="">—</option><option>Который час?</option><option>В чём проблема?</option><option>Что у тебя болит?</option><option>Можно вас побеспокоить?</option><option>Что случилось?</option><option>С чего ты это взял?</option><option>Что ты делаешь сегодня вечером?</option></select></li><li>Was hast du heute Abend vor? → <select data-ок="Что ты делаешь сегодня вечером?"><option value="">—</option><option>Который час?</option><option>В чём проблема?</option><option>Что у тебя болит?</option><option>Можно вас побеспокоить?</option><option>Что случилось?</option><option>С чего ты это взял?</option><option>Что ты делаешь сегодня вечером?</option></select></li><li>Wie spät ist es? → <select data-ок="Который час?"><option value="">—</option><option>Который час?</option><option>В чём проблема?</option><option>Что у тебя болит?</option><option>Можно вас побеспокоить?</option><option>Что случилось?</option><option>С чего ты это взял?</option><option>Что ты делаешь сегодня вечером?</option></select></li><li>Wie kommst du darauf? → <select data-ок="С чего ты это взял?"><option value="">—</option><option>Который час?</option><option>В чём проблема?</option><option>Что у тебя болит?</option><option>Можно вас побеспокоить?</option><option>Что случилось?</option><option>С чего ты это взял?</option><option>Что ты делаешь сегодня вечером?</option></select></li><li>Darf ich Sie mal stören? → <select data-ок="Можно вас побеспокоить?"><option value="">—</option><option>Который час?</option><option>В чём проблема?</option><option>Что у тебя болит?</option><option>Можно вас побеспокоить?</option><option>Что случилось?</option><option>С чего ты это взял?</option><option>Что ты делаешь сегодня вечером?</option></select></li><li>Wo liegt das Problem? → <select data-ок="В чём проблема?"><option value="">—</option><option>Который час?</option><option>В чём проблема?</option><option>Что у тебя болит?</option><option>Можно вас побеспокоить?</option><option>Что случилось?</option><option>С чего ты это взял?</option><option>Что ты делаешь сегодня вечером?</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь вопросительное слово.</h4><ol><li data-впиши="Wo" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> wohnst du?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Wann" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> treffen wir uns?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Was|Wie viel" data-почему="Оба варианта звучат в видео."><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> kostet das?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Wie" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> sagt man das auf Deutsch?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Woher" data-почему="stammen aus — быть родом из."><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> stammst du?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Wer" data-почему="Кто говорит? (по телефону)"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> spricht hier?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Задай врачу-коллеге 4 вопроса из видео, которые пригодятся в больнице.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Was tut Ihnen weh? Was ist los? Haben Sie einen Moment? Wo liegt das Problem?</details></div>
@@ -1282,6 +1346,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/DJDaJn808Ao/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>Basic German Question Words | W-Fragen | How to ask questions in German | Learn German - A1</b><small>Deutsch for you · 5:32</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="DJDaJn808Ao">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 51, "кусок": "wie, was", "все": ["wie, was", "wer, wo", "woher", "wohin, wann", "warum", "welcher, welche, welches"]}, {"t": 100, "кусок": "wer, wo", "все": ["wie, was", "wer, wo", "woher", "wohin, wann", "warum", "welcher, welche, welches"]}, {"t": 150, "кусок": "woher", "все": ["wie, was", "wer, wo", "woher", "wohin, wann", "warum", "welcher, welche, welches"]}, {"t": 200, "кусок": "wohin, wann", "все": ["wie, was", "wer, wo", "woher", "wohin, wann", "warum", "welcher, welche, welches"]}, {"t": 255, "кусок": "warum", "все": ["wie, was", "wer, wo", "woher", "wohin, wann", "warum", "welcher, welche, welches"]}], "последний": "welcher, welche, welches", "все": ["wie, was", "wer, wo", "woher", "wohin, wann", "warum", "welcher, welche, welches"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">5 минут «слушай и повторяй»: каждое W-слово — вопрос и короткий ответ (Wo wohnst du? – Ich wohne in Paris. Warum bist du müde? – … weil ich nicht gut geschlafen habe). Хорошо для ответов полными фразами.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/DJDaJn808Ao?t=0" target="_blank" rel="noopener">0:00</a> — wie, was</li><li><a href="https://youtu.be/DJDaJn808Ao?t=51" target="_blank" rel="noopener">0:51</a> — wer, wo</li><li><a href="https://youtu.be/DJDaJn808Ao?t=100" target="_blank" rel="noopener">1:40</a> — woher</li><li><a href="https://youtu.be/DJDaJn808Ao?t=150" target="_blank" rel="noopener">2:30</a> — wohin, wann</li><li><a href="https://youtu.be/DJDaJn808Ao?t=200" target="_blank" rel="noopener">3:20</a> — warum</li><li><a href="https://youtu.be/DJDaJn808Ao?t=255" target="_blank" rel="noopener">4:15</a> — welcher, welche, welches</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Вопрос → ответ.</h4><ol><li>Wie alt bist du? → <select data-ок="Ich bin zwölf Jahre alt."><option value="">—</option><option>Die warme Jacke.</option><option>Ich bin zu Hause.</option><option>Ich komme aus Frankreich.</option><option>Ich fahre nach Italien.</option><option>Ich bin zwölf Jahre alt.</option><option>Am 10. Mai.</option></select></li><li>Wo bist du? → <select data-ок="Ich bin zu Hause."><option value="">—</option><option>Die warme Jacke.</option><option>Ich bin zu Hause.</option><option>Ich komme aus Frankreich.</option><option>Ich fahre nach Italien.</option><option>Ich bin zwölf Jahre alt.</option><option>Am 10. Mai.</option></select></li><li>Woher kommen Sie? → <select data-ок="Ich komme aus Frankreich."><option value="">—</option><option>Die warme Jacke.</option><option>Ich bin zu Hause.</option><option>Ich komme aus Frankreich.</option><option>Ich fahre nach Italien.</option><option>Ich bin zwölf Jahre alt.</option><option>Am 10. Mai.</option></select></li><li>Wohin fährst du im Sommer? → <select data-ок="Ich fahre nach Italien."><option value="">—</option><option>Die warme Jacke.</option><option>Ich bin zu Hause.</option><option>Ich komme aus Frankreich.</option><option>Ich fahre nach Italien.</option><option>Ich bin zwölf Jahre alt.</option><option>Am 10. Mai.</option></select></li><li>Wann hast du Geburtstag? → <select data-ок="Am 10. Mai."><option value="">—</option><option>Die warme Jacke.</option><option>Ich bin zu Hause.</option><option>Ich komme aus Frankreich.</option><option>Ich fahre nach Italien.</option><option>Ich bin zwölf Jahre alt.</option><option>Am 10. Mai.</option></select></li><li>Welche Jacke nimmst du? → <select data-ок="Die warme Jacke."><option value="">—</option><option>Die warme Jacke.</option><option>Ich bin zu Hause.</option><option>Ich komme aus Frankreich.</option><option>Ich fahre nach Italien.</option><option>Ich bin zwölf Jahre alt.</option><option>Am 10. Mai.</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь вопросительное слово.</h4><ol><li data-впиши="Was" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> machst du heute? — Ich mache Hausaufgaben.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Wer" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> kommt heute? — Maria.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Warum" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> bist du müde? — Weil ich nicht gut geschlafen habe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Welcher" data-почему="der Koffer → welcher."><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Koffer gehört Ihnen? — Der rote.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Welches" data-почему="das Buch → welches."><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Buch möchtest du lesen?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Ответь полными фразами о себе: Wie alt bist du? Wo wohnst du? Wann hast du Geburtstag? Wohin fährst du im Sommer?</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Ich bin 30 Jahre alt. Ich wohne in Moskau. Mein Geburtstag ist am … Im Sommer fahre ich nach …</details></div>
@@ -1292,6 +1359,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/1o6whao8y1M/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>Вопросительные слова в немецком / Fragewörter</b><small>Deutsch mit Yehor · 4:05</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="1o6whao8y1M">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 55, "кусок": "wer, was, wo", "все": ["wer, was, wo", "wohin, woher, wann", "wie lange, wie oft, warum", "wie, welcher", "предлог + wen: Über wen…?", "wo(r) + предлог: Wovon, Worauf"], "верно": ["Про человека спрашивают «предлог + wen/wem»: Mit wem? Über wen?", true, ""]}, {"t": 75, "кусок": "wohin, woher, wann", "все": ["wer, was, wo", "wohin, woher, wann", "wie lange, wie oft, warum", "wie, welcher", "предлог + wen: Über wen…?", "wo(r) + предлог: Wovon, Worauf"], "верно": ["Про вещь говорят «Über was?», а правильно — «Worüber?»", true, "wo + предлог; перед гласной вставляется r: wo-r-über, wo-r-auf."]}, {"t": 102, "кусок": "wie lange, wie oft, warum", "все": ["wer, was, wo", "wohin, woher, wann", "wie lange, wie oft, warum", "wie, welcher", "предлог + wen: Über wen…?", "wo(r) + предлог: Wovon, Worauf"], "верно": ["«Wovon» пишется раздельно: «Wo von».", false, "Пишется слитно."]}, {"t": 150, "кусок": "wie, welcher", "все": ["wer, was, wo", "wohin, woher, wann", "wie lange, wie oft, warum", "wie, welcher", "предлог + wen: Über wen…?", "wo(r) + предлог: Wovon, Worauf"]}, {"t": 200, "кусок": "предлог + wen: Über wen…?", "все": ["wer, was, wo", "wohin, woher, wann", "wie lange, wie oft, warum", "wie, welcher", "предлог + wen: Über wen…?", "wo(r) + предлог: Wovon, Worauf"]}], "последний": "wo(r) + предлог: Wovon, Worauf", "все": ["wer, was, wo", "wohin, woher, wann", "wie lange, wie oft, warum", "wie, welcher", "предлог + wen: Über wen…?", "wo(r) + предлог: Wovon, Worauf"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">4 минуты по-русски: все вопросительные слова с примерами (wie lange, wie oft, welcher) и как спросить «о ком?» и «о чём?» — Über wen…? / Wovon…? Woran…?</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/1o6whao8y1M?t=0" target="_blank" rel="noopener">0:00</a> — wer, was, wo</li><li><a href="https://youtu.be/1o6whao8y1M?t=55" target="_blank" rel="noopener">0:55</a> — wohin, woher, wann</li><li><a href="https://youtu.be/1o6whao8y1M?t=75" target="_blank" rel="noopener">1:15</a> — wie lange, wie oft, warum</li><li><a href="https://youtu.be/1o6whao8y1M?t=102" target="_blank" rel="noopener">1:42</a> — wie, welcher</li><li><a href="https://youtu.be/1o6whao8y1M?t=150" target="_blank" rel="noopener">2:30</a> — предлог + wen: Über wen…?</li><li><a href="https://youtu.be/1o6whao8y1M?t=200" target="_blank" rel="noopener">3:20</a> — wo(r) + предлог: Wovon, Worauf</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Вопрос → перевод.</h4><ol><li>Wie lange lernst du schon Deutsch? → <select data-ок="Как долго ты уже учишь немецкий?"><option value="">—</option><option>О чём он говорит?</option><option>Как часто ты это делаешь?</option><option>Какую обувь она носит?</option><option>Как долго ты уже учишь немецкий?</option><option>О ком вы говорили?</option><option>Откуда твоя семья?</option></select></li><li>Wie oft machst du das? → <select data-ок="Как часто ты это делаешь?"><option value="">—</option><option>О чём он говорит?</option><option>Как часто ты это делаешь?</option><option>Какую обувь она носит?</option><option>Как долго ты уже учишь немецкий?</option><option>О ком вы говорили?</option><option>Откуда твоя семья?</option></select></li><li>Woher kommt deine Familie? → <select data-ок="Откуда твоя семья?"><option value="">—</option><option>О чём он говорит?</option><option>Как часто ты это делаешь?</option><option>Какую обувь она носит?</option><option>Как долго ты уже учишь немецкий?</option><option>О ком вы говорили?</option><option>Откуда твоя семья?</option></select></li><li>Welche Schuhe trägt sie? → <select data-ок="Какую обувь она носит?"><option value="">—</option><option>О чём он говорит?</option><option>Как часто ты это делаешь?</option><option>Какую обувь она носит?</option><option>Как долго ты уже учишь немецкий?</option><option>О ком вы говорили?</option><option>Откуда твоя семья?</option></select></li><li>Über wen habt ihr gesprochen? → <select data-ок="О ком вы говорили?"><option value="">—</option><option>О чём он говорит?</option><option>Как часто ты это делаешь?</option><option>Какую обувь она носит?</option><option>Как долго ты уже учишь немецкий?</option><option>О ком вы говорили?</option><option>Откуда твоя семья?</option></select></li><li>Wovon spricht er? → <select data-ок="О чём он говорит?"><option value="">—</option><option>О чём он говорит?</option><option>Как часто ты это делаешь?</option><option>Какую обувь она носит?</option><option>Как долго ты уже учишь немецкий?</option><option>О ком вы говорили?</option><option>Откуда твоя семья?</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Верно или нет?</h4><ol><li data-верно="1" data-почему="">Про человека спрашивают «предлог + wen/wem»: Mit wem? Über wen? <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="wo + предлог; перед гласной вставляется r: wo-r-über, wo-r-auf.">Про вещь говорят «Über was?», а правильно — «Worüber?» <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Пишется слитно.">«Wovon» пишется раздельно: «Wo von». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1305,8 +1375,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1327,9 +1400,77 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
+
+
   <footer class="lp-foot">Конспект занятия Гриши с Дашей · 13.09.2026 · собран из записи занятия и домашки от 14.09 · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
 </div>
 

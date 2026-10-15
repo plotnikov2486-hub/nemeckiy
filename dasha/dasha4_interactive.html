@@ -183,6 +183,7 @@
   .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
   .pair button.play { width:30px; height:30px; font-size:13px; }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1211,7 +1212,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1240,7 +1241,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1253,6 +1256,54 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1300,6 +1351,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1311,6 +1372,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/ckkpbaBko84/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Deutsch lernen | Wortschatz: Einkaufen &amp; Alltag | wichtige Verben</b><small>Deutsch verstehen · 8:05</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="ckkpbaBko84">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 43, "кусок": "Ich gehe in den Supermarkt", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}, {"t": 90, "кусок": "тележка и молоко", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}, {"t": 145, "кусок": "мясо и пицца", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}, {"t": 190, "кусок": "очередь в кассу", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}, {"t": 240, "кусок": "оплата картой", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}, {"t": 292, "кусок": "парковка и Baumarkt", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}, {"t": 399, "кусок": "спросить продавца", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}, {"t": 446, "кусок": "снова касса", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"]}], "последний": "сюрприз дома", "все": ["Ich gehe in den Supermarkt", "тележка и молоко", "мясо и пицца", "очередь в кассу", "оплата картой", "парковка и Baumarkt", "спросить продавца", "снова касса", "сюрприз дома"], "верно": [], "вопросы": [["Зачем ему мясо?", "Weil sie am Wochenende grillen werden."], ["Сколько стоили продукты?", "78 Euro und 67 Cent."], ["Зачем ему краска?", "Er muss das Kinderzimmer streichen — die Wand rosa."], ["Где стоят краски?", "Im zweiten Gang, auf der rechten Seite."], ["Какой сюрприз ждал дома?", "Michelle hat seinen Lieblingskuchen gebacken."]]}</script>
   <p class="вид-зачем">8 минут живой бытовой сценки: муж идёт в супермаркет и строительный магазин — тележка, касса, «Kann ich mit Karte bezahlen?», поиск краски у продавца. Все фразы повторяются дважды.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/ckkpbaBko84?t=0" target="_blank" rel="noopener">0:00</a> — Ich gehe in den Supermarkt</li><li><a href="https://youtu.be/ckkpbaBko84?t=43" target="_blank" rel="noopener">0:43</a> — тележка и молоко</li><li><a href="https://youtu.be/ckkpbaBko84?t=90" target="_blank" rel="noopener">1:30</a> — мясо и пицца</li><li><a href="https://youtu.be/ckkpbaBko84?t=145" target="_blank" rel="noopener">2:25</a> — очередь в кассу</li><li><a href="https://youtu.be/ckkpbaBko84?t=190" target="_blank" rel="noopener">3:10</a> — оплата картой</li><li><a href="https://youtu.be/ckkpbaBko84?t=240" target="_blank" rel="noopener">4:00</a> — парковка и Baumarkt</li><li><a href="https://youtu.be/ckkpbaBko84?t=292" target="_blank" rel="noopener">4:52</a> — спросить продавца</li><li><a href="https://youtu.be/ckkpbaBko84?t=399" target="_blank" rel="noopener">6:39</a> — снова касса</li><li><a href="https://youtu.be/ckkpbaBko84?t=446" target="_blank" rel="noopener">7:26</a> — сюрприз дома</li></ul>
   <div class="вид-зд"><h4>Задание 1. Ответь по видео.</h4><ol><li>Зачем ему мясо?<details><summary>показать ответ</summary>Weil sie am Wochenende grillen werden.</details></li><li>Сколько стоили продукты?<details><summary>показать ответ</summary>78 Euro und 67 Cent.</details></li><li>Зачем ему краска?<details><summary>показать ответ</summary>Er muss das Kinderzimmer streichen — die Wand rosa.</details></li><li>Где стоят краски?<details><summary>показать ответ</summary>Im zweiten Gang, auf der rechten Seite.</details></li><li>Какой сюрприз ждал дома?<details><summary>показать ответ</summary>Michelle hat seinen Lieblingskuchen gebacken.</details></li></ol></div><div class="вид-зд"><h4>Задание 2. Вставь слово.</h4><ol><li data-впиши="Einkaufswagen" data-почему="der Einkaufswagen — тележка.">Ich habe mir einen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> geholt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Schlange" data-почему="die Schlange — очередь (и змея).">Hoffentlich muss ich nicht zu lange in der <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> warten.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Karte" data-почему="">Kann ich mit <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> bezahlen?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="macht" data-почему="Das macht … — с вас …">Das <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> 66,50 Euro, bitte.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="helfen" data-почему="">Können Sie mir <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 3. Где это? Слово → место.</h4><ol><li>die Tiefkühlpizza → <select data-ок="Supermarkt"><option value="">—</option><option>Supermarkt</option><option>Baumarkt</option><option>Baumarkt</option><option>Supermarkt</option><option>an der Kasse</option></select></li><li>die Farbe → <select data-ок="Baumarkt"><option value="">—</option><option>Supermarkt</option><option>Baumarkt</option><option>Baumarkt</option><option>Supermarkt</option><option>an der Kasse</option></select></li><li>der Farbroller → <select data-ок="Baumarkt"><option value="">—</option><option>Supermarkt</option><option>Baumarkt</option><option>Baumarkt</option><option>Supermarkt</option><option>an der Kasse</option></select></li><li>die Milch → <select data-ок="Supermarkt"><option value="">—</option><option>Supermarkt</option><option>Baumarkt</option><option>Baumarkt</option><option>Supermarkt</option><option>an der Kasse</option></select></li><li>die Kassiererin → <select data-ок="an der Kasse"><option value="">—</option><option>Supermarkt</option><option>Baumarkt</option><option>Baumarkt</option><option>Supermarkt</option><option>an der Kasse</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 4. Составь мини-диалог на кассе: тебя зовут «Nächster bitte», называют сумму, ты спрашиваешь про карту.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>– Nächster, bitte! – Hallo. – Das macht 23 Euro 40. – Kann ich mit Karte bezahlen? – Ja, natürlich. – Danke, schönen Tag noch!</details></div>
@@ -1321,6 +1385,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/z9jqOLp-VGg/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>Deutsch lernen | Wortschatz Zuhause und Alltag | wichtige Verben</b><small>Deutsch verstehen · 8:34</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="z9jqOLp-VGg">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 20, "кусок": "подъём: Kissen, Decke", "все": ["подъём: Kissen, Decke", "ванная: бритьё, зубы, душ", "одеться", "завтрак", "сад: газон, цветы", "гриль, мебель", "гости"]}, {"t": 140, "кусок": "ванная: бритьё, зубы, душ", "все": ["подъём: Kissen, Decke", "ванная: бритьё, зубы, душ", "одеться", "завтрак", "сад: газон, цветы", "гриль, мебель", "гости"]}, {"t": 170, "кусок": "одеться", "все": ["подъём: Kissen, Decke", "ванная: бритьё, зубы, душ", "одеться", "завтрак", "сад: газон, цветы", "гриль, мебель", "гости"]}, {"t": 220, "кусок": "завтрак", "все": ["подъём: Kissen, Decke", "ванная: бритьё, зубы, душ", "одеться", "завтрак", "сад: газон, цветы", "гриль, мебель", "гости"]}, {"t": 345, "кусок": "сад: газон, цветы", "все": ["подъём: Kissen, Decke", "ванная: бритьё, зубы, душ", "одеться", "завтрак", "сад: газон, цветы", "гриль, мебель", "гости"]}, {"t": 440, "кусок": "гриль, мебель", "все": ["подъём: Kissen, Decke", "ванная: бритьё, зубы, душ", "одеться", "завтрак", "сад: газон, цветы", "гриль, мебель", "гости"]}], "последний": "гости", "все": ["подъём: Kissen, Decke", "ванная: бритьё, зубы, душ", "одеться", "завтрак", "сад: газон, цветы", "гриль, мебель", "гости"], "верно": [], "вопросы": [["Что он делает до душа?", "Er rasiert sich (Ich sollte mich rasieren, bevor ich duschen gehe)."], ["Почему он одевается по-летнему?", "Draußen ist es warm."], ["Что он ест на завтрак?", "Müsli, Toastbrot, Bratwurst, Tomaten, ein Ei und Tee."], ["Почему нужно полить цветы?", "Es hat lange nicht mehr geregnet."], ["Как зовут собаку гостей?", "Bruno."]]}</script>
   <p class="вид-зачем">Один день Яна целиком по-немецки: подъём, ванная, завтрак, сад, гриль с гостями. Каждый предмет подписан с артиклем — полезно для бытовых глаголов в настоящем времени.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/z9jqOLp-VGg?t=0" target="_blank" rel="noopener">0:00</a> — подъём: Kissen, Decke</li><li><a href="https://youtu.be/z9jqOLp-VGg?t=20" target="_blank" rel="noopener">0:20</a> — ванная: бритьё, зубы, душ</li><li><a href="https://youtu.be/z9jqOLp-VGg?t=140" target="_blank" rel="noopener">2:20</a> — одеться</li><li><a href="https://youtu.be/z9jqOLp-VGg?t=170" target="_blank" rel="noopener">2:50</a> — завтрак</li><li><a href="https://youtu.be/z9jqOLp-VGg?t=220" target="_blank" rel="noopener">3:40</a> — сад: газон, цветы</li><li><a href="https://youtu.be/z9jqOLp-VGg?t=345" target="_blank" rel="noopener">5:45</a> — гриль, мебель</li><li><a href="https://youtu.be/z9jqOLp-VGg?t=440" target="_blank" rel="noopener">7:20</a> — гости</li></ul>
   <div class="вид-зд"><h4>Задание 1. Ответь по видео.</h4><ol><li>Что он делает до душа?<details><summary>показать ответ</summary>Er rasiert sich (Ich sollte mich rasieren, bevor ich duschen gehe).</details></li><li>Почему он одевается по-летнему?<details><summary>показать ответ</summary>Draußen ist es warm.</details></li><li>Что он ест на завтрак?<details><summary>показать ответ</summary>Müsli, Toastbrot, Bratwurst, Tomaten, ein Ei und Tee.</details></li><li>Почему нужно полить цветы?<details><summary>показать ответ</summary>Es hat lange nicht mehr geregnet.</details></li><li>Как зовут собаку гостей?<details><summary>показать ответ</summary>Bruno.</details></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Действие → предмет.</h4><ol><li>Zähne putzen → <select data-ок="die Zahnbürste"><option value="">—</option><option>das Handtuch</option><option>der Föhn</option><option>die Zahnbürste</option><option>die Gießkanne</option><option>das Shampoo</option></select></li><li>Haare föhnen → <select data-ок="der Föhn"><option value="">—</option><option>das Handtuch</option><option>der Föhn</option><option>die Zahnbürste</option><option>die Gießkanne</option><option>das Shampoo</option></select></li><li>Haare waschen → <select data-ок="das Shampoo"><option value="">—</option><option>das Handtuch</option><option>der Föhn</option><option>die Zahnbürste</option><option>die Gießkanne</option><option>das Shampoo</option></select></li><li>die Blumen gießen → <select data-ок="die Gießkanne"><option value="">—</option><option>das Handtuch</option><option>der Föhn</option><option>die Zahnbürste</option><option>die Gießkanne</option><option>das Shampoo</option></select></li><li>sich abtrocknen → <select data-ок="das Handtuch"><option value="">—</option><option>das Handtuch</option><option>der Föhn</option><option>die Zahnbürste</option><option>die Gießkanne</option><option>das Shampoo</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Вставь артикль (der / die / das).</h4><ol><li data-впиши="das" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Kissen<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="die" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Decke<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="das" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Waschbecken<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="der" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Wasserhahn<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="die" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Zahnpasta<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="das" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Handtuch<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="der" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Kleiderschrank<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 4. Опиши своё утро 5 предложениями (Zuerst … dann … danach …).</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Zuerst stehe ich um sechs Uhr auf. Dann gehe ich ins Badezimmer und putze mir die Zähne. Danach dusche ich. Ich ziehe mich an. Zum Frühstück esse ich Müsli und trinke Tee.</details></div>
@@ -1331,6 +1398,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/bPLiQ2djYxU/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>Deutsch lernen | 25 wichtige Verben | Konjugation im Präsens, Perfekt und Präteritum</b><small>Hallo Deutschschule · 24:28</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="bPLiQ2djYxU">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 140, "кусок": "sein, haben", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"], "верно": ["У fahren, fliegen, schwimmen Perfekt строится с sein.", true, "Глаголы движения: ich bin gefahren, geflogen, geschwommen."]}, {"t": 273, "кусок": "spielen, einkaufen", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"], "верно": ["«Sie isst» и «Sie ist» — одно и то же.", false, "isst — ест (essen), ist — есть, является (sein)."]}, {"t": 472, "кусок": "sitzen, putzen, öffnen", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"]}, {"t": 630, "кусок": "lesen, fahren, trinken", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"]}, {"t": 868, "кусок": "essen, weinen, lieben", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"]}, {"t": 1020, "кусок": "verdienen, schlafen, fliegen", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"]}, {"t": 1220, "кусок": "schwimmen, malen, kochen", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"]}], "последний": "fragen, anrufen, schreiben, geben", "все": ["sein, haben", "spielen, einkaufen", "sitzen, putzen, öffnen", "lesen, fahren, trinken", "essen, weinen, lieben", "verdienen, schlafen, fliegen", "schwimmen, malen, kochen", "fragen, anrufen, schreiben, geben"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">25 глаголов в трёх временах подряд: Präsens → Perfekt → Präteritum (ich spiele – ich habe gespielt – ich spielte). Сейчас нам важно настоящее время; прошедшие — просто послушать на будущее.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/bPLiQ2djYxU?t=0" target="_blank" rel="noopener">0:00</a> — sein, haben</li><li><a href="https://youtu.be/bPLiQ2djYxU?t=140" target="_blank" rel="noopener">2:20</a> — spielen, einkaufen</li><li><a href="https://youtu.be/bPLiQ2djYxU?t=273" target="_blank" rel="noopener">4:33</a> — sitzen, putzen, öffnen</li><li><a href="https://youtu.be/bPLiQ2djYxU?t=472" target="_blank" rel="noopener">7:52</a> — lesen, fahren, trinken</li><li><a href="https://youtu.be/bPLiQ2djYxU?t=630" target="_blank" rel="noopener">10:30</a> — essen, weinen, lieben</li><li><a href="https://youtu.be/bPLiQ2djYxU?t=868" target="_blank" rel="noopener">14:28</a> — verdienen, schlafen, fliegen</li><li><a href="https://youtu.be/bPLiQ2djYxU?t=1020" target="_blank" rel="noopener">17:00</a> — schwimmen, malen, kochen</li><li><a href="https://youtu.be/bPLiQ2djYxU?t=1220" target="_blank" rel="noopener">20:20</a> — fragen, anrufen, schreiben, geben</li></ul>
   <div class="вид-зд"><h4>Задание 1. Только настоящее время: вставь форму для «sie» (она).</h4><ol><li data-впиши="liest" data-почему="">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein Buch. (lesen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="fährt" data-почему="fahren: a → ä.">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> mit dem Auto. (fahren)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="isst" data-почему="essen: e → i, du/er isst.">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> im Restaurant. (essen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ruft" data-почему="">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ihre Freundin an. (anrufen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="öffnet" data-почему="Основа на -n после согласной → öffn-e-t.">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> das Geschenk. (öffnen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="schläft" data-почему="">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (schlafen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Настоящее → прошедшее (Perfekt). Просто узнай форму.</h4><ol><li>ich spiele → <select data-ок="ich habe gespielt"><option value="">—</option><option>ich habe gelesen</option><option>ich bin gefahren</option><option>ich habe eingekauft</option><option>ich habe getrunken</option><option>ich habe gespielt</option></select></li><li>ich lese → <select data-ок="ich habe gelesen"><option value="">—</option><option>ich habe gelesen</option><option>ich bin gefahren</option><option>ich habe eingekauft</option><option>ich habe getrunken</option><option>ich habe gespielt</option></select></li><li>ich fahre → <select data-ок="ich bin gefahren"><option value="">—</option><option>ich habe gelesen</option><option>ich bin gefahren</option><option>ich habe eingekauft</option><option>ich habe getrunken</option><option>ich habe gespielt</option></select></li><li>ich trinke → <select data-ок="ich habe getrunken"><option value="">—</option><option>ich habe gelesen</option><option>ich bin gefahren</option><option>ich habe eingekauft</option><option>ich habe getrunken</option><option>ich habe gespielt</option></select></li><li>ich kaufe ein → <select data-ок="ich habe eingekauft"><option value="">—</option><option>ich habe gelesen</option><option>ich bin gefahren</option><option>ich habe eingekauft</option><option>ich habe getrunken</option><option>ich habe gespielt</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Верно или нет?</h4><ol><li data-верно="1" data-почему="Глаголы движения: ich bin gefahren, geflogen, geschwommen.">У fahren, fliegen, schwimmen Perfekt строится с sein. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="isst — ест (essen), ist — есть, является (sein).">«Sie isst» и «Sie ist» — одно и то же. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1344,8 +1414,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1366,9 +1439,77 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
+
+
   <footer class="lp-foot">Занятие 4 Гриши с Дашей · 31.08.2026 · собрано из записи занятия · озвучка Anna (Premium), голос Apple.</footer>
 </div>
 

@@ -208,6 +208,7 @@
   .qa-a { font-family:Georgia,serif; font-size:15px; color:var(--accent); display:flex; align-items:center; gap:8px; margin-top:4px; padding-left:18px; }
   .qa-ru { font-size:12.5px; color:var(--ink-faint); padding-left:18px; }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1132,7 +1133,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1161,7 +1162,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1174,6 +1177,54 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1221,6 +1272,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1232,6 +1293,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/KvLXFlts9l4/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Немецкий для начинающих. Немецкие слова и фразы на тему - профессия.</b><small>Brandt Schule · 11:44</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="KvLXFlts9l4">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 99, "кусок": "der Beruf, tätig sein, sich weiterbilden", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"]}, {"t": 150, "кусок": "Freiberufler, Haupt- und Nebenberuf", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"]}, {"t": 245, "кусок": "как спросить о профессии", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"]}, {"t": 345, "кусок": "arbeiten als / bei / für", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"]}, {"t": 390, "кусок": "arbeiten an / mit", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"]}, {"t": 440, "кусок": "sich beschäftigen mit", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"]}, {"t": 575, "кусок": "женские формы", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"]}], "последний": "образец рассказа", "все": ["der Beruf, tätig sein, sich weiterbilden", "Freiberufler, Haupt- und Nebenberuf", "как спросить о профессии", "arbeiten als / bei / für", "arbeiten an / mit", "sich beschäftigen mit", "женские формы", "образец рассказа"], "верно": [], "вопросы": [["Кто вы по профессии?", "Was sind Sie von Beruf?"], ["Чем ты занимаешься по работе?", "Was machst du beruflich?"], ["Кем ты работаешь?", "Als was arbeitest du?"], ["Какая у тебя профессия?", "Welchen Beruf hast du?"]]}</script>
   <p class="вид-зачем">Профессии по-русски (Мила Брандт): Was sind Sie von Beruf?, arbeiten als / bei / für / an / mit, Hauptberuf и Nebenberuf, женские формы на -in и в конце образец рассказа о своей работе.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/KvLXFlts9l4?t=0" target="_blank" rel="noopener">0:00</a> — der Beruf, tätig sein, sich weiterbilden</li><li><a href="https://youtu.be/KvLXFlts9l4?t=99" target="_blank" rel="noopener">1:39</a> — Freiberufler, Haupt- und Nebenberuf</li><li><a href="https://youtu.be/KvLXFlts9l4?t=150" target="_blank" rel="noopener">2:30</a> — как спросить о профессии</li><li><a href="https://youtu.be/KvLXFlts9l4?t=245" target="_blank" rel="noopener">4:05</a> — arbeiten als / bei / für</li><li><a href="https://youtu.be/KvLXFlts9l4?t=345" target="_blank" rel="noopener">5:45</a> — arbeiten an / mit</li><li><a href="https://youtu.be/KvLXFlts9l4?t=390" target="_blank" rel="noopener">6:30</a> — sich beschäftigen mit</li><li><a href="https://youtu.be/KvLXFlts9l4?t=440" target="_blank" rel="noopener">7:20</a> — женские формы</li><li><a href="https://youtu.be/KvLXFlts9l4?t=575" target="_blank" rel="noopener">9:35</a> — образец рассказа</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь предлог после arbeiten.</h4><ol><li data-впиши="als" data-почему="als + профессия.">Ich arbeite <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Architekt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="bei" data-почему="bei + фирма (где).">Ich arbeite <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Siemens.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="für" data-почему="für + на кого.">Ich arbeite <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Herrn Meier.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="an" data-почему="an + над чем.">Ich arbeite im Moment <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> dem Projekt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mit" data-почему="mit + с кем.">Ich arbeite <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Herrn Hoffmann.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Мужская форма → женская.</h4><ol><li>der Lehrer → <select data-ок="die Lehrerin"><option value="">—</option><option>die Anwältin</option><option>die Ärztin</option><option>die Bürokauffrau</option><option>die Lehrerin</option><option>die Moderatorin</option></select></li><li>der Arzt → <select data-ок="die Ärztin"><option value="">—</option><option>die Anwältin</option><option>die Ärztin</option><option>die Bürokauffrau</option><option>die Lehrerin</option><option>die Moderatorin</option></select></li><li>der Anwalt → <select data-ок="die Anwältin"><option value="">—</option><option>die Anwältin</option><option>die Ärztin</option><option>die Bürokauffrau</option><option>die Lehrerin</option><option>die Moderatorin</option></select></li><li>der Moderator → <select data-ок="die Moderatorin"><option value="">—</option><option>die Anwältin</option><option>die Ärztin</option><option>die Bürokauffrau</option><option>die Lehrerin</option><option>die Moderatorin</option></select></li><li>der Bürokaufmann → <select data-ок="die Bürokauffrau"><option value="">—</option><option>die Anwältin</option><option>die Ärztin</option><option>die Bürokauffrau</option><option>die Lehrerin</option><option>die Moderatorin</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Как спросить по-немецки?</h4><ol><li>Кто вы по профессии?<details><summary>показать ответ</summary>Was sind Sie von Beruf?</details></li><li>Чем ты занимаешься по работе?<details><summary>показать ответ</summary>Was machst du beruflich?</details></li><li>Кем ты работаешь?<details><summary>показать ответ</summary>Als was arbeitest du?</details></li><li>Какая у тебя профессия?<details><summary>показать ответ</summary>Welchen Beruf hast du?</details></li></ol></div><div class="вид-зд"><h4>Задание 4. Расскажи о своей работе по образцу Милы (4–5 предложений).</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Ich bin Arzt von Beruf. Ich arbeite als Phlebologe in einer Klinik. Ich arbeite gern mit meinen Kollegen. Ich beschäftige mich mit Venenerkrankungen. Ich bilde mich regelmäßig weiter.</details></div>
@@ -1242,6 +1306,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/eHG1pJ7Wl2Q/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>Deutschkurs A1.1 Lektion 7 -Länder/Sprachen/Nationalitäten-</b><small>Benjamin - Der Deutschlehrer · 19:10</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="eHG1pJ7Wl2Q">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 213, "кусок": "страны", "все": ["страны", "In Deutschland spricht man Deutsch", "национальности: м. и ж.", "континенты, Wo liegt…?", "страны с артиклем", "in / aus / nach", "in der / aus der / in die"]}, {"t": 263, "кусок": "In Deutschland spricht man Deutsch", "все": ["страны", "In Deutschland spricht man Deutsch", "национальности: м. и ж.", "континенты, Wo liegt…?", "страны с артиклем", "in / aus / nach", "in der / aus der / in die"]}, {"t": 367, "кусок": "национальности: м. и ж.", "все": ["страны", "In Deutschland spricht man Deutsch", "национальности: м. и ж.", "континенты, Wo liegt…?", "страны с артиклем", "in / aus / nach", "in der / aus der / in die"]}, {"t": 600, "кусок": "континенты, Wo liegt…?", "все": ["страны", "In Deutschland spricht man Deutsch", "национальности: м. и ж.", "континенты, Wo liegt…?", "страны с артиклем", "in / aus / nach", "in der / aus der / in die"]}, {"t": 700, "кусок": "страны с артиклем", "все": ["страны", "In Deutschland spricht man Deutsch", "национальности: м. и ж.", "континенты, Wo liegt…?", "страны с артиклем", "in / aus / nach", "in der / aus der / in die"]}, {"t": 908, "кусок": "in / aus / nach", "все": ["страны", "In Deutschland spricht man Deutsch", "национальности: м. и ж.", "континенты, Wo liegt…?", "страны с артиклем", "in / aus / nach", "in der / aus der / in die"]}], "последний": "in der / aus der / in die", "все": ["страны", "In Deutschland spricht man Deutsch", "национальности: м. и ж.", "континенты, Wo liegt…?", "страны с артиклем", "in / aus / nach", "in der / aus der / in die"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Easy German, урок 7 (объясняют на английском): страны, языки, национальности (Deutscher/Deutsche, Russe/Russin), Wo liegt…? и главное — in / aus / nach, а также страны с артиклем: in der Türkei, aus der Ukraine, in die USA.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/eHG1pJ7Wl2Q?t=87" target="_blank" rel="noopener">1:27</a> — страны</li><li><a href="https://youtu.be/eHG1pJ7Wl2Q?t=213" target="_blank" rel="noopener">3:33</a> — In Deutschland spricht man Deutsch</li><li><a href="https://youtu.be/eHG1pJ7Wl2Q?t=263" target="_blank" rel="noopener">4:23</a> — национальности: м. и ж.</li><li><a href="https://youtu.be/eHG1pJ7Wl2Q?t=367" target="_blank" rel="noopener">6:07</a> — континенты, Wo liegt…?</li><li><a href="https://youtu.be/eHG1pJ7Wl2Q?t=600" target="_blank" rel="noopener">10:00</a> — страны с артиклем</li><li><a href="https://youtu.be/eHG1pJ7Wl2Q?t=700" target="_blank" rel="noopener">11:40</a> — in / aus / nach</li><li><a href="https://youtu.be/eHG1pJ7Wl2Q?t=908" target="_blank" rel="noopener">15:08</a> — in der / aus der / in die</li></ul>
   <div class="вид-зд"><h4>Задание 1. in, aus или nach?</h4><ol><li data-впиши="in" data-почему="">Wo bist du? — Ich bin <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Berlin.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="aus" data-почему="">Woher kommst du? — Ich komme <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Deutschland.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="nach" data-почему="">Wohin fliegen Sie? — Ich fliege <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Moskau.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="in" data-почему="Страна с артиклем die: in der.">Ich bin <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> der Türkei.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="aus" data-почему="">Ich komme <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> der Ukraine.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="in" data-почему="Страна с артиклем: wohin → in die.">Ich fliege <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> die USA.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Страна → язык.</h4><ol><li>Russland → <select data-ок="Russisch"><option value="">—</option><option>Französisch</option><option>Chinesisch</option><option>Spanisch</option><option>Portugiesisch</option><option>Russisch</option><option>Arabisch</option></select></li><li>Frankreich → <select data-ок="Französisch"><option value="">—</option><option>Französisch</option><option>Chinesisch</option><option>Spanisch</option><option>Portugiesisch</option><option>Russisch</option><option>Arabisch</option></select></li><li>Spanien → <select data-ок="Spanisch"><option value="">—</option><option>Französisch</option><option>Chinesisch</option><option>Spanisch</option><option>Portugiesisch</option><option>Russisch</option><option>Arabisch</option></select></li><li>Ägypten → <select data-ок="Arabisch"><option value="">—</option><option>Französisch</option><option>Chinesisch</option><option>Spanisch</option><option>Portugiesisch</option><option>Russisch</option><option>Arabisch</option></select></li><li>China → <select data-ок="Chinesisch"><option value="">—</option><option>Französisch</option><option>Chinesisch</option><option>Spanisch</option><option>Portugiesisch</option><option>Russisch</option><option>Arabisch</option></select></li><li>Portugal → <select data-ок="Portugiesisch"><option value="">—</option><option>Französisch</option><option>Chinesisch</option><option>Spanisch</option><option>Portugiesisch</option><option>Russisch</option><option>Arabisch</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд" data-соедини><h4>Задание 3. Он → она.</h4><ol><li>Deutscher → <select data-ок="Deutsche"><option value="">—</option><option>Französin</option><option>Deutsche</option><option>Spanierin</option><option>Türkin</option><option>Russin</option></select></li><li>Russe → <select data-ок="Russin"><option value="">—</option><option>Französin</option><option>Deutsche</option><option>Spanierin</option><option>Türkin</option><option>Russin</option></select></li><li>Franzose → <select data-ок="Französin"><option value="">—</option><option>Französin</option><option>Deutsche</option><option>Spanierin</option><option>Türkin</option><option>Russin</option></select></li><li>Spanier → <select data-ок="Spanierin"><option value="">—</option><option>Französin</option><option>Deutsche</option><option>Spanierin</option><option>Türkin</option><option>Russin</option></select></li><li>Türke → <select data-ок="Türkin"><option value="">—</option><option>Französin</option><option>Deutsche</option><option>Spanierin</option><option>Türkin</option><option>Russin</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 4. Напиши 3 фразы о себе: откуда ты, где живёшь, куда поедешь. И где лежит твоя страна.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Ich komme aus Russland. Ich bin Russe. Ich wohne in Moskau. Im Sommer fahre ich nach Österreich. Russland liegt in Europa und Asien.</details></div>
@@ -1252,6 +1319,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/49Q6gChyNNY/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>20 professions in German | Die Berufe | Pronunciation | Examples | Learn German - A1/A2</b><small>Deutsch for you · 9:11</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="49Q6gChyNNY">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 60, "кусок": "Lehrer, Arzt", "все": ["Lehrer, Arzt", "Ingenieur, Polizist", "Koch, Kellner, Fahrer", "Verkäufer, Mechaniker, Elektriker", "Journalist, Anwalt, Bäcker", "Friseur, Architekt, Programmierer", "Fotograf, Feuerwehrmann, Pilot, Musiker"], "верно": ["О профессии говорят без артикля: Ich bin Lehrer.", true, "Не «ein Lehrer», а просто Lehrer."]}, {"t": 110, "кусок": "Ingenieur, Polizist", "все": ["Lehrer, Arzt", "Ingenieur, Polizist", "Koch, Kellner, Fahrer", "Verkäufer, Mechaniker, Elektriker", "Journalist, Anwalt, Bäcker", "Friseur, Architekt, Programmierer", "Fotograf, Feuerwehrmann, Pilot, Musiker"], "верно": ["Женская форма Arzt — Arztin.", false, "С умлаутом: Ärztin."]}, {"t": 165, "кусок": "Koch, Kellner, Fahrer", "все": ["Lehrer, Arzt", "Ingenieur, Polizist", "Koch, Kellner, Fahrer", "Verkäufer, Mechaniker, Elektriker", "Journalist, Anwalt, Bäcker", "Friseur, Architekt, Programmierer", "Fotograf, Feuerwehrmann, Pilot, Musiker"]}, {"t": 245, "кусок": "Verkäufer, Mechaniker, Elektriker", "все": ["Lehrer, Arzt", "Ingenieur, Polizist", "Koch, Kellner, Fahrer", "Verkäufer, Mechaniker, Elektriker", "Journalist, Anwalt, Bäcker", "Friseur, Architekt, Programmierer", "Fotograf, Feuerwehrmann, Pilot, Musiker"]}, {"t": 340, "кусок": "Journalist, Anwalt, Bäcker", "все": ["Lehrer, Arzt", "Ingenieur, Polizist", "Koch, Kellner, Fahrer", "Verkäufer, Mechaniker, Elektriker", "Journalist, Anwalt, Bäcker", "Friseur, Architekt, Programmierer", "Fotograf, Feuerwehrmann, Pilot, Musiker"]}, {"t": 430, "кусок": "Friseur, Architekt, Programmierer", "все": ["Lehrer, Arzt", "Ingenieur, Polizist", "Koch, Kellner, Fahrer", "Verkäufer, Mechaniker, Elektriker", "Journalist, Anwalt, Bäcker", "Friseur, Architekt, Programmierer", "Fotograf, Feuerwehrmann, Pilot, Musiker"]}], "последний": "Fotograf, Feuerwehrmann, Pilot, Musiker", "все": ["Lehrer, Arzt", "Ingenieur, Polizist", "Koch, Kellner, Fahrer", "Verkäufer, Mechaniker, Elektriker", "Journalist, Anwalt, Bäcker", "Friseur, Architekt, Programmierer", "Fotograf, Feuerwehrmann, Pilot, Musiker"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">«Слушай и повторяй»: 20 профессий в паре он/она с примером — Meine Mutter ist Ärztin, Er arbeitet als Kellner, Mein Vater ist Busfahrer.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/49Q6gChyNNY?t=0" target="_blank" rel="noopener">0:00</a> — Lehrer, Arzt</li><li><a href="https://youtu.be/49Q6gChyNNY?t=60" target="_blank" rel="noopener">1:00</a> — Ingenieur, Polizist</li><li><a href="https://youtu.be/49Q6gChyNNY?t=110" target="_blank" rel="noopener">1:50</a> — Koch, Kellner, Fahrer</li><li><a href="https://youtu.be/49Q6gChyNNY?t=165" target="_blank" rel="noopener">2:45</a> — Verkäufer, Mechaniker, Elektriker</li><li><a href="https://youtu.be/49Q6gChyNNY?t=245" target="_blank" rel="noopener">4:05</a> — Journalist, Anwalt, Bäcker</li><li><a href="https://youtu.be/49Q6gChyNNY?t=340" target="_blank" rel="noopener">5:40</a> — Friseur, Architekt, Programmierer</li><li><a href="https://youtu.be/49Q6gChyNNY?t=430" target="_blank" rel="noopener">7:10</a> — Fotograf, Feuerwehrmann, Pilot, Musiker</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Он → она.</h4><ol><li>der Koch → <select data-ок="die Köchin"><option value="">—</option><option>die Friseurin</option><option>die Anwältin</option><option>die Köchin</option><option>die Feuerwehrfrau</option><option>die Kellnerin</option><option>die Ärztin</option></select></li><li>der Arzt → <select data-ок="die Ärztin"><option value="">—</option><option>die Friseurin</option><option>die Anwältin</option><option>die Köchin</option><option>die Feuerwehrfrau</option><option>die Kellnerin</option><option>die Ärztin</option></select></li><li>der Anwalt → <select data-ок="die Anwältin"><option value="">—</option><option>die Friseurin</option><option>die Anwältin</option><option>die Köchin</option><option>die Feuerwehrfrau</option><option>die Kellnerin</option><option>die Ärztin</option></select></li><li>der Feuerwehrmann → <select data-ок="die Feuerwehrfrau"><option value="">—</option><option>die Friseurin</option><option>die Anwältin</option><option>die Köchin</option><option>die Feuerwehrfrau</option><option>die Kellnerin</option><option>die Ärztin</option></select></li><li>der Friseur → <select data-ок="die Friseurin"><option value="">—</option><option>die Friseurin</option><option>die Anwältin</option><option>die Köchin</option><option>die Feuerwehrfrau</option><option>die Kellnerin</option><option>die Ärztin</option></select></li><li>der Kellner → <select data-ок="die Kellnerin"><option value="">—</option><option>die Friseurin</option><option>die Anwältin</option><option>die Köchin</option><option>die Feuerwehrfrau</option><option>die Kellnerin</option><option>die Ärztin</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Кто кем работает? Вставь профессию.</h4><ol><li data-впиши="Bäcker" data-почему="">Er backt Brot. Er ist <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Friseurin" data-почему="">Sie schneidet Haare. Sie ist <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Busfahrer" data-почему="">Er fährt einen Bus. Er ist <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Pilotin" data-почему="">Sie fliegt ein Flugzeug. Sie ist <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Programmierer" data-почему="">Er schreibt Programme. Er ist <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Верно или нет?</h4><ol><li data-верно="1" data-почему="Не «ein Lehrer», а просто Lehrer.">О профессии говорят без артикля: Ich bin Lehrer. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="С умлаутом: Ärztin.">Женская форма Arzt — Arztin. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1265,8 +1335,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1287,9 +1360,77 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
+
+
   <footer class="lp-foot">Конспект занятия Гриши с Дашей · 30.09.2026 · собран из записи занятия (77 минут) и домашки · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple.</footer>
 </div>
 

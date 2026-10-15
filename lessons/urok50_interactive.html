@@ -141,6 +141,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1117,7 +1118,7 @@ phrases('domashka',[
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1146,7 +1147,9 @@ phrases('domashka',[
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1159,6 +1162,54 @@ phrases('domashka',[
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1206,6 +1257,16 @@ phrases('domashka',[
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1217,6 +1278,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/MXTBIaCSktE/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Patientenvorstellung: der Anfang</b><small>Deutsch für Ärzte · 5:42</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="MXTBIaCSktE">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 35, "кусок": "почему первое предложение важнее всего", "все": ["почему первое предложение важнее всего", "три способа попасть в клинику", "Notaufnahme, Begleitung", "уточняем жалобы", "время", "возраст и профессия"]}, {"t": 105, "кусок": "три способа попасть в клинику", "все": ["почему первое предложение важнее всего", "три способа попасть в клинику", "Notaufnahme, Begleitung", "уточняем жалобы", "время", "возраст и профессия"]}, {"t": 150, "кусок": "Notaufnahme, Begleitung", "все": ["почему первое предложение важнее всего", "три способа попасть в клинику", "Notaufnahme, Begleitung", "уточняем жалобы", "время", "возраст и профессия"]}, {"t": 207, "кусок": "уточняем жалобы", "все": ["почему первое предложение важнее всего", "три способа попасть в клинику", "Notaufnahme, Begleitung", "уточняем жалобы", "время", "возраст и профессия"]}, {"t": 250, "кусок": "время", "все": ["почему первое предложение важнее всего", "три способа попасть в клинику", "Notaufnahme, Begleitung", "уточняем жалобы", "время", "возраст и профессия"]}], "последний": "возраст и профессия", "все": ["почему первое предложение важнее всего", "три способа попасть в клинику", "Notaufnahme, Begleitung", "уточняем жалобы", "время", "возраст и профессия"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">5 минут о главном — первом предложении доклада. Как из «Herr Ebert ist ein Patient, der sich vorstellte» шаг за шагом сделать идеальное вступление: с жалобами, временем, возрастом, профессией и тем, кто привёз.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/MXTBIaCSktE?t=0" target="_blank" rel="noopener">0:00</a> — почему первое предложение важнее всего</li><li><a href="https://youtu.be/MXTBIaCSktE?t=35" target="_blank" rel="noopener">0:35</a> — три способа попасть в клинику</li><li><a href="https://youtu.be/MXTBIaCSktE?t=105" target="_blank" rel="noopener">1:45</a> — Notaufnahme, Begleitung</li><li><a href="https://youtu.be/MXTBIaCSktE?t=150" target="_blank" rel="noopener">2:30</a> — уточняем жалобы</li><li><a href="https://youtu.be/MXTBIaCSktE?t=207" target="_blank" rel="noopener">3:27</a> — время</li><li><a href="https://youtu.be/MXTBIaCSktE?t=250" target="_blank" rel="noopener">4:10</a> — возраст и профессия</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Три способа попасть в клинику.</h4><ol><li>… der an unser Haus überwiesen wurde. → <select data-ок="направлен (обычно с готовыми данными)"><option value="">—</option><option>пришёл сам</option><option>направлен (обычно с готовыми данными)</option><option>доставлен скорой</option></select></li><li>… der mit dem Rettungswagen eingeliefert wurde. → <select data-ок="доставлен скорой"><option value="">—</option><option>пришёл сам</option><option>направлен (обычно с готовыми данными)</option><option>доставлен скорой</option></select></li><li>… der sich in unserer Notaufnahme vorstellte. → <select data-ок="пришёл сам"><option value="">—</option><option>пришёл сам</option><option>направлен (обычно с готовыми данными)</option><option>доставлен скорой</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Собери итоговое предложение из видео.</h4><ol><li data-впиши="geboren" data-почему="">Herr Hannes Ebert, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> am 03.12.1943, …<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="verrenteter" data-почему="пенсионер">… ist ein <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Lehrer, …<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Flankenschmerzen" data-почему="">… der sich heute Morgen mit brennenden, rechtsseitigen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> …<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Begleitung" data-почему="mit — только для жалоб!">… und Pollakisurie in <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> seiner Ehefrau …<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Notaufnahme" data-почему="">… in unserer <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> vorstellte.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Составь такое же первое предложение для своего пациента с ТГВ.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Frau Anna Weber, geboren am 12.05.1962, ist eine pensionierte Lehrerin, die sich heute Morgen mit seit zwei Tagen bestehenden ziehenden Schmerzen und einer Schwellung des linken Unterschenkels in Begleitung ihres Ehemannes in unserer Notaufnahme vorstellte.</details></div>
@@ -1227,6 +1291,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/hs0HE-xh5c0/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>FaMed Arzt-Arzt-Gespräch: Patientenvorstellung Femurfraktur (Beispiel)</b><small>FSP Vorbereitung mit Julian · 6:19</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="hs0HE-xh5c0">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 57, "кусок": "вступление", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"]}, {"t": 80, "кусок": "что отрицает", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"]}, {"t": 118, "кусок": "анамнез, факторы риска", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"]}, {"t": 166, "кусок": "витальные параметры", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"]}, {"t": 213, "кусок": "осмотр", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"]}, {"t": 250, "кусок": "рентген и лаборатория", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"]}, {"t": 282, "кусок": "домашние лекарства", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"]}], "последний": "план: ОП, тромбопрофилактика, реабилитация", "все": ["вступление", "что отрицает", "анамнез, факторы риска", "витальные параметры", "осмотр", "рентген и лаборатория", "домашние лекарства", "план: ОП, тромбопрофилактика, реабилитация"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Полный доклад коллеге (FaMed): 78-летняя пациентка с переломом шейки бедра. Слушай структуру: кто и почему → анамнез в Konjunktiv I (Sie sei gestürzt) → факторы риска → витальные → осмотр → лаборатория → домашние лекарства → план.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/hs0HE-xh5c0?t=6" target="_blank" rel="noopener">0:06</a> — вступление</li><li><a href="https://youtu.be/hs0HE-xh5c0?t=57" target="_blank" rel="noopener">0:57</a> — что отрицает</li><li><a href="https://youtu.be/hs0HE-xh5c0?t=80" target="_blank" rel="noopener">1:20</a> — анамнез, факторы риска</li><li><a href="https://youtu.be/hs0HE-xh5c0?t=118" target="_blank" rel="noopener">1:58</a> — витальные параметры</li><li><a href="https://youtu.be/hs0HE-xh5c0?t=166" target="_blank" rel="noopener">2:46</a> — осмотр</li><li><a href="https://youtu.be/hs0HE-xh5c0?t=213" target="_blank" rel="noopener">3:33</a> — рентген и лаборатория</li><li><a href="https://youtu.be/hs0HE-xh5c0?t=250" target="_blank" rel="noopener">4:10</a> — домашние лекарства</li><li><a href="https://youtu.be/hs0HE-xh5c0?t=282" target="_blank" rel="noopener">4:42</a> — план: ОП, тромбопрофилактика, реабилитация</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь (из доклада).</h4><ol><li data-впиши="Femurhalsfraktur" data-почему="">… die aufgrund einer dislozierten <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> infolge eines Sturzes stationär aufgenommen wurde.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sei" data-почему="Konjunktiv I — передаём слова пациента">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> im eigenen Zuhause gestürzt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="negierte|verneinte" data-почему="">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> aber Bewusstseinsverlust.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Verkürzung" data-почему="">Bei der Inspektion zeigte sich eine <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> des rechten Beins.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Außenrotationsstellung" data-почему="">Das Bein befand sich in <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Thromboseprophylaxe" data-почему="">Postoperativ sollte eine adäquate <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> eingeleitet werden.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Блок доклада → пример.</h4><ol><li>Vitalparameter → <select data-ок="Blutdruck 135/85 mmHg, Herzfrequenz 95/min"><option value="">—</option><option>Osteoporose, arterielle Hypertonie, Hypothyreose</option><option>operative Versorgung, Hüft-TEP</option><option>Blutdruck 135/85 mmHg, Herzfrequenz 95/min</option><option>Ramipril 5 mg, L-Thyroxin 50 µg</option></select></li><li>Vorerkrankungen → <select data-ок="Osteoporose, arterielle Hypertonie, Hypothyreose"><option value="">—</option><option>Osteoporose, arterielle Hypertonie, Hypothyreose</option><option>operative Versorgung, Hüft-TEP</option><option>Blutdruck 135/85 mmHg, Herzfrequenz 95/min</option><option>Ramipril 5 mg, L-Thyroxin 50 µg</option></select></li><li>Hausmedikation → <select data-ок="Ramipril 5 mg, L-Thyroxin 50 µg"><option value="">—</option><option>Osteoporose, arterielle Hypertonie, Hypothyreose</option><option>operative Versorgung, Hüft-TEP</option><option>Blutdruck 135/85 mmHg, Herzfrequenz 95/min</option><option>Ramipril 5 mg, L-Thyroxin 50 µg</option></select></li><li>Procedere → <select data-ок="operative Versorgung, Hüft-TEP"><option value="">—</option><option>Osteoporose, arterielle Hypertonie, Hypothyreose</option><option>operative Versorgung, Hüft-TEP</option><option>Blutdruck 135/85 mmHg, Herzfrequenz 95/min</option><option>Ramipril 5 mg, L-Thyroxin 50 µg</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div>
@@ -1237,6 +1304,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/_A5zCjhjGQ0/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>Arzt-Arzt-Gespräch – FaMed: Eisenmangelanämie</b><small>Fachleiter · 3:21</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="_A5zCjhjGQ0">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 46, "кусок": "вступление и жалобы", "все": ["вступление и жалобы", "отрицания, питание, анамнез", "витальные и осмотр", "лаборатория", "УЗИ и лечение", "вывод и рекомендации"]}, {"t": 91, "кусок": "отрицания, питание, анамнез", "все": ["вступление и жалобы", "отрицания, питание, анамнез", "витальные и осмотр", "лаборатория", "УЗИ и лечение", "вывод и рекомендации"]}, {"t": 120, "кусок": "витальные и осмотр", "все": ["вступление и жалобы", "отрицания, питание, анамнез", "витальные и осмотр", "лаборатория", "УЗИ и лечение", "вывод и рекомендации"]}, {"t": 138, "кусок": "лаборатория", "все": ["вступление и жалобы", "отрицания, питание, анамнез", "витальные и осмотр", "лаборатория", "УЗИ и лечение", "вывод и рекомендации"]}, {"t": 170, "кусок": "УЗИ и лечение", "все": ["вступление и жалобы", "отрицания, питание, анамнез", "витальные и осмотр", "лаборатория", "УЗИ и лечение", "вывод и рекомендации"]}], "последний": "вывод и рекомендации", "все": ["вступление и жалобы", "отрицания, питание, анамнез", "витальные и осмотр", "лаборатория", "УЗИ и лечение", "вывод и рекомендации"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Короткий доклад профессору (3 мин): 29-летняя пациентка с железодефицитной анемией из-за меноррагии и миомы. Образец, как сжато сказать диагноз, причину и рекомендации.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/_A5zCjhjGQ0?t=0" target="_blank" rel="noopener">0:00</a> — вступление и жалобы</li><li><a href="https://youtu.be/_A5zCjhjGQ0?t=46" target="_blank" rel="noopener">0:46</a> — отрицания, питание, анамнез</li><li><a href="https://youtu.be/_A5zCjhjGQ0?t=91" target="_blank" rel="noopener">1:31</a> — витальные и осмотр</li><li><a href="https://youtu.be/_A5zCjhjGQ0?t=120" target="_blank" rel="noopener">2:00</a> — лаборатория</li><li><a href="https://youtu.be/_A5zCjhjGQ0?t=138" target="_blank" rel="noopener">2:18</a> — УЗИ и лечение</li><li><a href="https://youtu.be/_A5zCjhjGQ0?t=170" target="_blank" rel="noopener">2:50</a> — вывод и рекомендации</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь.</h4><ol><li data-впиши="Eisenmangelanämie" data-почему="">Ich möchte Ihnen eine Patientin mit einer <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> vorstellen.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="verneint" data-почему="">Gastrointestinale Blutungen werden <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="hypochrome" data-почему="">Laborchemisch zeigte sich eine mikrozytäre, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Anämie.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="aus" data-почему="ausgehen von — предполагать">Zusammenfassend gehen wir von einer Eisenmangelanämie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="erwägen" data-почему="">Bei Unverträglichkeit wäre eine parenterale Eisengabe zu <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Термин → перевод.</h4><ol><li>die Fatigue → <select data-ок="утомляемость"><option value="">—</option><option>обильные менструации</option><option>ломкие ногти</option><option>утомляемость</option><option>миома матки</option><option>консультация по питанию</option><option>снижение работоспособности</option></select></li><li>die Leistungsminderung → <select data-ок="снижение работоспособности"><option value="">—</option><option>обильные менструации</option><option>ломкие ногти</option><option>утомляемость</option><option>миома матки</option><option>консультация по питанию</option><option>снижение работоспособности</option></select></li><li>die Menorrhagie → <select data-ок="обильные менструации"><option value="">—</option><option>обильные менструации</option><option>ломкие ногти</option><option>утомляемость</option><option>миома матки</option><option>консультация по питанию</option><option>снижение работоспособности</option></select></li><li>spröde Nägel → <select data-ок="ломкие ногти"><option value="">—</option><option>обильные менструации</option><option>ломкие ногти</option><option>утомляемость</option><option>миома матки</option><option>консультация по питанию</option><option>снижение работоспособности</option></select></li><li>das Uterusmyom → <select data-ок="миома матки"><option value="">—</option><option>обильные менструации</option><option>ломкие ногти</option><option>утомляемость</option><option>миома матки</option><option>консультация по питанию</option><option>снижение работоспособности</option></select></li><li>die Ernährungsberatung → <select data-ок="консультация по питанию"><option value="">—</option><option>обильные менструации</option><option>ломкие ногти</option><option>утомляемость</option><option>миома матки</option><option>консультация по питанию</option><option>снижение работоспособности</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div>
@@ -1250,8 +1320,11 @@ phrases('domashka',[
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1272,9 +1345,75 @@ phrases('domashka',[
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
 
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>

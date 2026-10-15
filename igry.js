@@ -43,6 +43,48 @@ function норм(s) {
 
 function слова_(s) { return чисто(s).split(/\s+/).filter(Boolean); }
 
+/* Расстояние Левенштейна — для подсказки «почти, проверь написание» (с 15.10.2026, как на ZUM) */
+function левенштейн(a, b) {
+  a = String(a); b = String(b);
+  var d = [], i, j;
+  for (i = 0; i <= a.length; i++) d[i] = [i];
+  for (j = 0; j <= b.length; j++) d[0][j] = j;
+  for (i = 1; i <= a.length; i++)
+    for (j = 1; j <= b.length; j++)
+      d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+  return d[a.length][b.length];
+}
+/* «Ärtzin» вместо «Ärztin» — опечатка, а не незнание: 1 ошибка на короткое слово, 2 — на длинное */
+function опечатка(ввод, верно) {
+  var a = String(ввод || '').trim(), b = String(верно || '').trim();
+  if (!a || a === b) return false;
+  var н = левенштейн(a.toLowerCase(), b.toLowerCase());
+  return н > 0 && н <= (b.length >= 7 ? 2 : 1);
+}
+window.ИГРЫ_ОПЕЧАТКА = опечатка;   // домашка тоже пользуется
+
+/* Настоящие предложения (с точкой/вопросом), а не строчки словаря «die Wolke, die Wolken» */
+function предложения(д, макс) {
+  var п = д.фразы.filter(function (ф) { return /[.!?]["»]?\s*$/.test(ф.de) && ф.н <= (макс || 12); });
+  return п.length >= 4 ? п : д.фразы.filter(function (ф) { return ф.н <= (макс || 12); });
+}
+
+function распознавание() {
+  return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+}
+
+/* Фразы урока группами по началу ид (bs1…bs18 — одна группа): в группе порядок как в уроке */
+function группы(д) {
+  var г = {}, порядок = [];
+  д.фразы.forEach(function (ф) {
+    var к = String(ф.ид || '').replace(/\d+$/, '');
+    if (!к) return;
+    if (!г[к]) { г[к] = []; порядок.push(к); }
+    г[к].push(ф);
+  });
+  return порядок.map(function (к) { return г[к]; });
+}
+
 /* слово без обрамляющих знаков: «dick,» → «dick» */
 function голое(с) {
   return String(с || '').replace(/^[«»"'(\[]+/, '').replace(/[.,!?;:«»"')\]]+$/, '');
@@ -228,6 +270,30 @@ var СТИЛЬ = ''
 + '.иг-табличка .два{ display:flex; justify-content:center; gap:32px; margin:6px 0 10px; }'
 + '.иг-табличка .два div{ font-size:30px; font-weight:900; color:var(--accent,#1f5f5b); line-height:1.1; }'
 + '.иг-табличка .два small{ display:block; font-size:12px; font-weight:600; color:var(--ink-muted,#5b615c); }'
++ '.иг-мик{ font:inherit; font-size:17px; font-weight:800; padding:16px 22px; border-radius:99px; cursor:pointer; border:none;'
++ '  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); min-height:56px; }'
++ '.иг-мик.слушает{ background:var(--warn,#b3402a); animation:игПульс 1s infinite; }'
++ '@keyframes игПульс{ 0%{ box-shadow:0 0 0 0 rgba(179,64,42,.5);} 100%{ box-shadow:0 0 0 14px rgba(179,64,42,0);} }'
++ '.иг-слова{ font-family:Georgia,"Iowan Old Style",serif; font-size:17px; line-height:1.9; margin:8px 0 12px; }'
++ '.иг-слова .ок{ color:var(--accent,#1f5f5b); font-weight:700; } .иг-слова .нет{ color:var(--warn,#b3402a); text-decoration:underline wavy; }'
++ '.иг-слова .почти{ color:#c07a00; font-weight:700; }'
++ '.иг-поле{ width:100%; box-sizing:border-box; font:inherit; font-family:Georgia,"Iowan Old Style",serif; font-size:17px;'
++ '  padding:12px 13px; border-radius:12px; border:1px solid var(--line,#e4e6ef); background:var(--surface-2,#f3f4fa); color:inherit; margin-bottom:12px; }'
++ '.иг-метки{ display:flex; flex-wrap:wrap; gap:6px; margin:6px 0 14px; }'
++ '.иг-метка{ font:inherit; font-family:Georgia,"Iowan Old Style",serif; font-size:16px; padding:8px 10px; border-radius:10px; cursor:pointer;'
++ '  border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:inherit; min-height:42px; }'
++ '.иг-метка.выбрана{ background:rgba(31,95,91,.16); border-color:var(--accent,#1f5f5b); font-weight:700; }'
++ '.иг-метка.нейтр{ cursor:default; opacity:.85; border-style:dashed; }'
++ '.иг-метка.пропущена{ outline:3px solid #c07a00; }'
++ '.иг-строки{ display:grid; gap:7px; margin-bottom:12px; }'
++ '.иг-строчка{ font:inherit; text-align:left; padding:10px 12px; border-radius:12px; cursor:pointer; border:1px solid var(--line,#e4e6ef);'
++ '  background:var(--surface-2,#f3f4fa); color:inherit; line-height:1.4; }'
++ '.иг-строчка b{ font-family:Georgia,"Iowan Old Style",serif; font-size:16px; } .иг-строчка small{ display:block; color:var(--ink-muted,#5b615c); font-size:12.5px; }'
++ '.иг-строчка .ном{ display:inline-block; min-width:22px; font-weight:800; color:var(--accent,#1f5f5b); }'
++ '.иг-карточка{ border-radius:18px; border:3px solid var(--accent,#1f5f5b); padding:18px 14px; text-align:center; margin:6px 0 12px; background:var(--surface,#fff); }'
++ '.иг-карточка .кто{ font-size:12.5px; color:var(--ink-muted,#5b615c); text-transform:uppercase; letter-spacing:.06em; }'
++ '.иг-карточка .реплика{ font-family:Georgia,"Iowan Old Style",serif; font-size:20px; font-weight:700; margin:6px 0; }'
++ '.иг-карточка .перев{ font-size:14px; color:var(--ink-muted,#5b615c); }'
 + '@media (max-width:420px){ .иг-кн{ font-size:14.5px; } .иг-де{ font-size:17px; } .иг-текст .ряд{ font-size:16px; }'
 + '  .иг-пара{ font-size:12.5px; min-height:60px; } .иг-колесо{ font-size:21px; }'
 + '  .иг-стена{ grid-template-columns:repeat(3,1fr); } .иг-большая b{ font-size:20px; } }';
@@ -1462,7 +1528,316 @@ var КНИЖКИ = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
+/* ═════════ Пятая очередь (15.10.2026) — то, что увидели на ZUM Deutsch Lernen ═════════ */
+
+/* 11. Говори вслух — микрофон, браузер распознаёт немецкую речь (бесплатно, без сервера) */
+function сравнитьРечь(сказано, надо) {
+  var н = слова_(надо).map(function (с) { return норм(голое(с)); }).filter(Boolean);
+  var с = норм(сказано).split(' ').filter(Boolean);
+  var пул = с.slice(), есть = н.map(function (сл) {
+    var i = пул.indexOf(сл);
+    if (i >= 0) { пул.splice(i, 1); return 'ок'; }
+    for (var j = 0; j < пул.length; j++) if (опечатка(пул[j], сл)) { пул.splice(j, 1); return 'почти'; }
+    return 'нет';
+  });
+  var балл = есть.reduce(function (a, x) { return a + (x === 'ок' ? 1 : x === 'почти' ? .7 : 0); }, 0) / Math.max(н.length, 1);
+  return { балл: балл, есть: есть };
+}
+var СКАЖИ = {
+  код: 'скажи', имя: 'Говори вслух', значок: '🎤',
+  под: 'Скажи фразу по-немецки в микрофон — сайт поймёт и проверит',
+  хватает: function (д) { return !!распознавание() && д.фразы.length >= 4; },
+  задания: function (д) {
+    return перемешать(предложения(д)).slice(0, 6);
+  },
+  раунд: function (ход) {
+    var з = ход.задание(), Р = распознавание(), слушаем = null, попыток = 0, видноDe = false;
+    function экран(итог) {
+      ход.рисовать(
+        '<p class="иг-ру">' + экр(з.ru) + '</p>' +
+        '<p class="иг-подсказ">Скажи это по-немецки. Не знаешь — открой подсказку, прочитай и скажи.</p>' +
+        (видноDe ? '<p class="иг-де">' + экр(з.de) + '</p>' + (з.тр ? '<p class="иг-тр">[' + экр(з.тр) + ']</p>' : '') : '') +
+        '<div style="text-align:center;margin:10px 0 14px"><button class="иг-мик" id="игМик">🎤 Говорить</button></div>' +
+        '<div id="игИтог">' + (итог || '') + '</div>' +
+        '<div class="иг-низ"><button class="иг-тихая" id="игПодсказка">' + (видноDe ? 'Скрыть' : '👁 Подсказка') + '</button>' +
+        '<button class="иг-тихая" id="игЗвук">🔊 Как звучит</button>' +
+        '<button class="иг-тихая" id="игПропуск">Дальше</button></div>');
+      document.getElementById('игПодсказка').onclick = function () { видноDe = !видноDe; экран(итог); };
+      document.getElementById('игЗвук').onclick = function () { ход.голос(з.ид, з.de); };
+      document.getElementById('игПропуск').onclick = function () {
+        if (слушаем) try { слушаем.abort(); } catch (e) {}
+        if (!итог) ход.ответ(false, { de: з.de, ru: з.ru });
+        ход.дальше();
+      };
+      document.getElementById('игМик').onclick = слушать;
+    }
+    function слушать() {
+      var мик = document.getElementById('игМик');
+      try {
+        слушаем = new Р(); слушаем.lang = 'de-DE'; слушаем.interimResults = false; слушаем.maxAlternatives = 3;
+      } catch (e) { document.getElementById('игИтог').innerHTML = '<div class="иг-ответ мимо">Микрофон в этом браузере не работает — открой в Chrome или Safari.</div>'; return; }
+      мик.classList.add('слушает'); мик.textContent = '● Слушаю…';
+      слушаем.onresult = function (e) {
+        var лучшее = null;
+        for (var i = 0; i < e.results[0].length; i++) {
+          var т = e.results[0][i].transcript, с = сравнитьРечь(т, з.de);
+          if (!лучшее || с.балл > лучшее.с.балл) лучшее = { т: т, с: с };
+        }
+        попыток++;
+        var верно = лучшее.с.балл >= .85;
+        var ч = слова_(з.de);
+        var разбор = '<div class="иг-слова">' + ч.map(function (сл, i) {
+          return '<span class="' + лучшее.с.есть[i] + '">' + экр(сл) + '</span>';
+        }).join(' ') + '</div>';
+        var итог = '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' +
+          (верно ? '✓ Понятно! ' : 'Сайт услышал: ') + '«' + экр(лучшее.т) + '»' +
+          (верно ? '' : '<br>Зелёное — сказал верно, оранжевое — почти, красное — не услышал. Попробуй ещё раз.') + '</div>' + разбор;
+        if (верно || попыток >= 3) {
+          ход.ответ(верно, верно ? null : { de: з.de, ru: з.ru });
+          ход.рисовать('<p class="иг-ру">' + экр(з.ru) + '</p>' + итог +
+            '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше</button>' +
+            '<button class="иг-тихая" id="игЗвук">🔊 Как звучит</button></div>');
+          document.getElementById('игДальше').onclick = ход.дальше;
+          document.getElementById('игЗвук').onclick = function () { ход.голос(з.ид, з.de); };
+          if (!верно) ход.голос(з.ид, з.de);
+        } else экран(итог);
+      };
+      слушаем.onerror = function (e) {
+        var почему = e.error === 'not-allowed' ? 'Нужно разрешить микрофон для этого сайта (значок в адресной строке).'
+                   : e.error === 'no-speech' ? 'Ничего не услышал — говори громче и ближе к телефону.'
+                   : 'Не получилось распознать (' + e.error + '). Попробуй ещё раз.';
+        экран('<div class="иг-ответ мимо">' + почему + '</div>');
+      };
+      слушаем.onend = function () { var м = document.getElementById('игМик'); if (м) { м.classList.remove('слушает'); м.textContent = '🎤 Говорить'; } };
+      try { слушаем.start(); } catch (e) {}
+    }
+    экран('');
+  }
+};
+
+/* 12. Диктант — слушаешь фразу урока, пишешь; разбор по словам, опечатки отдельно */
+var ДИКТАНТ = {
+  код: 'диктант', имя: 'Диктант', значок: '✍️',
+  под: 'Послушай фразу и напиши её — проверка по словам',
+  хватает: function (д) { return д.фразы.length >= 4; },
+  задания: function (д) {
+    return перемешать(предложения(д)).slice(0, 5);
+  },
+  раунд: function (ход) {
+    var з = ход.задание();
+    ход.рисовать(
+      '<p class="иг-подсказ">Нажми «Слушать», напиши, что услышал. Заглавные буквы важны: существительные пишутся с большой.</p>' +
+      '<div class="иг-низ" style="margin-bottom:10px"><button class="иг-главная" id="игСлушать">🔊 Слушать</button>' +
+      '<button class="иг-тихая" id="игМедленно">🐢 Медленно</button>' +
+      '<button class="иг-тихая" id="игПеревод">Перевод</button></div>' +
+      '<p class="иг-ру" id="игРу" style="display:none">' + экр(з.ru) + '</p>' +
+      '<textarea class="иг-поле" id="игВвод" rows="2" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="пиши здесь…"></textarea>' +
+      '<div id="игОтвет"></div>' +
+      '<div class="иг-низ" id="игНиз"><button class="иг-главная" id="игПроверить">Проверить</button></div>');
+    function медленно() {
+      try { var р = new SpeechSynthesisUtterance(з.de); р.lang = 'de-DE'; р.rate = .65; speechSynthesis.cancel(); speechSynthesis.speak(р); } catch (e) {}
+    }
+    document.getElementById('игСлушать').onclick = function () { ход.голос(з.ид, з.de); };
+    document.getElementById('игМедленно').onclick = медленно;
+    document.getElementById('игПеревод').onclick = function () { var э = document.getElementById('игРу'); э.style.display = э.style.display ? '' : 'none'; };
+    ход.голос(з.ид, з.de);
+    document.getElementById('игПроверить').onclick = function () {
+      var ввод = document.getElementById('игВвод').value;
+      var надо = слова_(з.de), есть = ввод.trim().split(/\s+/).filter(Boolean);
+      var ошибок = 0, опечаток = 0;
+      var разбор = надо.map(function (сл, i) {
+        var г = голое(сл), т = голое(есть[i] || '');
+        if (т === г) return '<span class="ок">' + экр(сл) + '</span>';
+        if (т && т.toLowerCase() === г.toLowerCase()) { опечаток++; return '<span class="почти" title="заглавная буква">' + экр(сл) + '</span>'; }
+        if (опечатка(т, г)) { опечаток++; return '<span class="почти" title="у тебя: ' + экр(т) + '">' + экр(сл) + '</span>'; }
+        ошибок++; return '<span class="нет">' + экр(сл) + '</span>';
+      }).join(' ');
+      if (есть.length > надо.length) ошибок++;
+      var верно = !ошибок && !опечаток;
+      ход.ответ(верно, верно ? null : { de: з.de, ru: з.ru });
+      document.getElementById('игОтвет').innerHTML =
+        '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' +
+        (верно ? '✓ Без ошибок!' : ошибок ? 'Ошибок: ' + ошибок + (опечаток ? ', опечаток/заглавных: ' + опечаток : '') :
+          'Почти! Проверь написание — оранжевое: опечатка или маленькая буква вместо заглавной.') + '</div>' +
+        '<div class="иг-слова">' + разбор + '</div>';
+      document.getElementById('игНиз').innerHTML = '<button class="иг-главная" id="игДальше">Дальше</button>';
+      document.getElementById('игДальше').onclick = ход.дальше;
+    };
+  }
+};
+
+/* 13. Отметь слова — нажми все существительные (у немцев они с большой буквы — тренирует глаз и артикли) */
+var МЕСТОИМЕНИЯ_SIE = { 'Sie': 1, 'Ihr': 1, 'Ihre': 1, 'Ihnen': 1, 'Ihren': 1, 'Ihrem': 1, 'Ihrer': 1, 'Ihres': 1 };
+var ОТМЕТЬ = {
+  код: 'отметь', имя: 'Отметь слова', значок: '🖍',
+  под: 'Нажми в предложении все существительные',
+  разметка: function (ф, сущ) {
+    return слова_(ф.de).map(function (сл, i) {
+      var г = голое(сл), заглавная = /^[A-ZÄÖÜ]/.test(г);
+      var цель = заглавная && !МЕСТОИМЕНИЯ_SIE[г] && (i > 0 || сущ[г]);
+      var нейтр = заглавная && i === 0 && !цель;     // первое слово с большой — может быть чем угодно
+      return { сл: сл, цель: !!цель, нейтр: нейтр };
+    });
+  },
+  хватает: function (д) { return ОТМЕТЬ.задания(д).length >= 4; },
+  задания: function (д) {
+    var сущ = {};
+    д.существительные.forEach(function (с) { сущ[с.слово] = 1; });
+    return перемешать(д.фразы.filter(function (ф) { return ф.н >= 4 && ф.н <= 14; })).map(function (ф) {
+      return { ф: ф, т: ОТМЕТЬ.разметка(ф, сущ) };
+    }).filter(function (з) { return з.т.some(function (x) { return x.цель; }); }).slice(0, 6);
+  },
+  раунд: function (ход) {
+    var з = ход.задание(), выбор = {};
+    ход.рисовать(
+      '<p class="иг-подсказ">Нажми <b>все существительные</b> (предметы, люди, места, имена). Пунктир — первое слово, его не трогаем.</p>' +
+      '<div class="иг-метки" id="игМетки">' + з.т.map(function (x, i) {
+        return '<button class="иг-метка' + (x.нейтр ? ' нейтр' : '') + '" data-i="' + i + '">' + экр(x.сл) + '</button>';
+      }).join('') + '</div>' +
+      '<p class="иг-ру" style="font-size:14px;font-weight:500">' + экр(з.ф.ru) + '</p>' +
+      '<div id="игОтвет"></div><div class="иг-низ" id="игНиз"><button class="иг-главная" id="игПроверить">Проверить</button></div>');
+    карта_кнопки('.иг-метка').forEach(function (к) {
+      var i = +к.getAttribute('data-i');
+      if (з.т[i].нейтр) return;
+      к.onclick = function () { выбор[i] = !выбор[i]; к.classList.toggle('выбрана', !!выбор[i]); };
+    });
+    document.getElementById('игПроверить').onclick = function () {
+      var промах = 0, пропуск = 0;
+      карта_кнопки('.иг-метка').forEach(function (к) {
+        var i = +к.getAttribute('data-i'), x = з.т[i];
+        к.onclick = null;
+        if (x.цель && выбор[i]) к.classList.add('иг-верно');
+        else if (!x.цель && выбор[i]) { к.classList.add('иг-мимо'); промах++; }
+        else if (x.цель) { к.classList.add('пропущена'); пропуск++; }
+      });
+      var верно = !промах && !пропуск;
+      ход.ответ(верно, верно ? null : { de: з.ф.de, ru: з.ф.ru });
+      document.getElementById('игОтвет').innerHTML = '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' +
+        (верно ? '✓ Все существительные найдены!' : (пропуск ? 'Пропущено: ' + пропуск + ' (оранжевая рамка). ' : '') +
+          (промах ? 'Лишних: ' + промах + ' (красные).' : '')) + '</div>';
+      document.getElementById('игНиз').innerHTML = '<button class="иг-главная" id="игДальше">Дальше</button>';
+      document.getElementById('игДальше').onclick = ход.дальше;
+      ход.голос(з.ф.ид, з.ф.de);
+    };
+  }
+};
+
+/* 14. Расставь текст по порядку — строки рассказа или диалога урока перемешаны */
+/* слова, которые цепляют строку за предыдущую: местоимение-отсылка или «потом/но/поэтому» */
+var СВЯЗКИ = /^(er|sie|es|dann|danach|aber|deshalb|deswegen|zuerst|jetzt|später|dort|außerdem|trotzdem|also|doch|ja|nein)$/i;
+var ТЕКСТ = {
+  код: 'текст', имя: 'Текст по порядку', значок: '📜',
+  под: 'Строки рассказа или диалога перемешались — расставь их',
+  /* Порядок должен что-то значить: берём только
+     • рассказ — больше половины строк (кроме первой) цепляются за предыдущую (er/sie/dann/aber…);
+     • диалог — на вопросы отвечают (ответ перекликается словом или Ja/Nein/Doch), вопросов подряд не больше двух.
+     Списки вопросов к анамнезу и разрозненные примеры с листа сюда не попадают. */
+  куски: function (д) {
+    var если = window.ИГРЫ_ТЕКСТЫ_ПОРЯДОК;          // страница может дать свои тексты
+    if (если && если.length) return если;
+    return группы(д).filter(function (г) {
+      if (г.length < 4) return false;
+      var хвост = г.slice(1);
+      var цепь = хвост.filter(function (ф) { return СВЯЗКИ.test(голое(слова_(ф.de)[0] || '')); }).length;
+      if (цепь / хвост.length > .5) return true;
+      var ответов = 0, подряд = 0, макс = 0;
+      for (var i = 0; i < г.length; i++) {
+        var вопрос = /\?\s*$/.test(г[i].de);
+        подряд = вопрос ? подряд + 1 : 0; макс = Math.max(макс, подряд);
+        if (вопрос && г[i + 1] && !/\?\s*$/.test(г[i + 1].de) && ДИАЛОГ.связаны(г[i].de, г[i + 1].de)) ответов++;
+      }
+      return ответов >= 2 && макс <= 2;
+    });
+  },
+  хватает: function (д) { return ТЕКСТ.куски(д).length >= 1; },
+  задания: function (д) {
+    return перемешать(ТЕКСТ.куски(д)).slice(0, 3).map(function (г) {
+      var размер = Math.min(г.length, 6), начало = Math.floor(Math.random() * (г.length - размер + 1));
+      return г.slice(начало, начало + размер);
+    });
+  },
+  раунд: function (ход) {
+    var строки = ход.задание(), порядок = [], тасовка = перемешать(строки.map(function (_, i) { return i; }));
+    function рисовать(итог) {
+      ход.рисовать(
+        '<p class="иг-подсказ">Нажимай строки в том порядке, как они шли в уроке. Нажми на поставленную — вернётся.</p>' +
+        '<div class="иг-строки" id="игГотово">' + порядок.map(function (i, п) {
+          return '<button class="иг-строчка" data-п="' + п + '"><span class="ном">' + (п + 1) + '.</span><b>' + экр(строки[i].de) + '</b></button>';
+        }).join('') + '</div>' +
+        '<div class="иг-строки" id="игОсталось">' + тасовка.filter(function (i) { return порядок.indexOf(i) < 0; }).map(function (i) {
+          return '<button class="иг-строчка" data-i="' + i + '"><b>' + экр(строки[i].de) + '</b><small>' + экр(строки[i].ru) + '</small></button>';
+        }).join('') + '</div>' + (итог || '') +
+        '<div class="иг-низ" id="игНиз">' + (итог ? '<button class="иг-главная" id="игДальше">Дальше</button>'
+          : '<button class="иг-главная" id="игПроверить">Проверить</button>') + '</div>');
+      if (итог) { document.getElementById('игДальше').onclick = ход.дальше; return; }
+      карта_кнопки('#игОсталось .иг-строчка').forEach(function (к) { к.onclick = function () { порядок.push(+к.getAttribute('data-i')); рисовать(); }; });
+      карта_кнопки('#игГотово .иг-строчка').forEach(function (к) { к.onclick = function () { порядок.splice(+к.getAttribute('data-п'), 1); рисовать(); }; });
+      document.getElementById('игПроверить').onclick = function () {
+        if (порядок.length < строки.length) return;
+        var верно = порядок.every(function (i, п) { return i === п; });
+        ход.ответ(верно, верно ? null : { de: строки.map(function (с) { return с.de; }).join(' / '), ru: 'порядок строк' });
+        рисовать('<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' + (верно ? '✓ Всё по порядку!' :
+          'Правильно так:<br>' + строки.map(function (с, п) { return (п + 1) + '. <span class="де">' + экр(с.de) + '</span>'; }).join('<br>')) + '</div>');
+      };
+    }
+    рисовать();
+  }
+};
+
+/* 15. Диалог-карточки — реплика → ответь вслух → переверни (как Dialogcards на ZUM) */
+var ДИАЛОГ = {
+  код: 'диалог', имя: 'Диалог-карточки', значок: '💬', сама: true,
+  под: 'Вопрос из урока — ответь вслух, потом переверни и сверь',
+  /* ответ должен перекликаться с вопросом: общее слово (4+ букв) или Ja / Nein / Doch */
+  связаны: function (в, о) {
+    if (/^(ja|nein|doch)\b/i.test(о)) return true;
+    var слв = {};
+    слова_(в).forEach(function (с) { var н = норм(голое(с)); if (н.length >= 4) слв[н] = 1; });
+    return слова_(о).some(function (с) { return слв[норм(голое(с))]; });
+  },
+  пары: function (д) {
+    var п = [];
+    // «Wo sind die Kinder? Sie sind bei der Oma.» — вопрос и ответ в одной строке урока
+    д.фразы.forEach(function (ф) {
+      var м = ф.de.match(/^(.+?\?)\s+(.+[.!])$/), мр = (ф.ru || '').match(/^(.+?\?)\s+(.+)$/);
+      if (м && !/\?/.test(м[2]))
+        п.push([{ ид: null, de: м[1], ru: мр ? мр[1] : ф.ru }, { ид: null, de: м[2], ru: мр ? мр[2] : '' }]);  // звук записи целиком выдал бы ответ — читает голос браузера
+    });
+    группы(д).forEach(function (г) {
+      for (var i = 0; i + 1 < г.length; i++)
+        if (/\?\s*$/.test(г[i].de) && !/\?\s*$/.test(г[i + 1].de) && ДИАЛОГ.связаны(г[i].de, г[i + 1].de))
+          п.push([г[i], г[i + 1]]);
+    });
+    return п;
+  },
+  хватает: function (д) { return ДИАЛОГ.пары(д).length >= 3; },
+  экран: function (х) {
+    var пары = перемешать(ДИАЛОГ.пары(х.данные)).slice(0, 10), i = 0, знал = 0, открыта = false;
+    function карта() {
+      if (i >= пары.length) { х.конец(Math.round(знал / пары.length * 100), 'Знал ответ: ' + знал + ' из ' + пары.length); return; }
+      var в = пары[i][0], о = пары[i][1];
+      х.рисовать(
+        '<p class="иг-подсказ">Карточка ' + (i + 1) + ' из ' + пары.length + '. Прочитай вопрос, ответь вслух — потом переверни.</p>' +
+        '<div class="иг-карточка"><div class="кто">вопрос</div><div class="реплика">' + экр(в.de) + '</div>' +
+        '<div class="перев">' + экр(в.ru) + '</div></div>' +
+        (открыта ? '<div class="иг-карточка" style="border-color:var(--das,#8a6d1a)"><div class="кто">ответ из урока</div>' +
+          '<div class="реплика">' + экр(о.de) + '</div><div class="перев">' + экр(о.ru) + '</div></div>' : '') +
+        '<div class="иг-низ">' + (открыта
+          ? '<button class="иг-главная" id="игЗнал">✓ Знал</button><button class="иг-тихая" id="игНеЗнал">✗ Повторить</button>'
+          : '<button class="иг-главная" id="игПеревернуть">⟲ Перевернуть</button>') +
+        '<button class="иг-тихая" id="игЗвук">🔊</button></div>');
+      document.getElementById('игЗвук').onclick = function () { var к = открыта ? о : в; х.голос(к.ид, к.de); };
+      if (открыта) {
+        document.getElementById('игЗнал').onclick = function () { знал++; х.звукОтвета(true); i++; открыта = false; карта(); };
+        document.getElementById('игНеЗнал').onclick = function () { пары.push(пары[i]); i++; открыта = false; карта(); };
+      } else document.getElementById('игПеревернуть').onclick = function () { открыта = true; карта(); х.голос(о.ид, о.de); };
+      if (!открыта) х.голос(в.ид, в.de);
+    }
+    карта();
+  }
+};
+
+var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });

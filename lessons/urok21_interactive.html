@@ -120,7 +120,6 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
-
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -981,7 +980,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1010,7 +1009,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1023,6 +1024,54 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1070,6 +1119,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1081,6 +1140,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/Qj-V8xgcTi0/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Deutsch lernen | Personalpronomen im Nominativ, Akkusativ und Dativ | Satzstellung</b><small>Hallo Deutschschule · 10:01</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="Qj-V8xgcTi0">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 52, "кусок": "три правила", "все": ["три правила", "примеры: Ring, Brief, Plüschtier", "составь сам"], "верно": ["Два существительных: сначала Dativ, потом Akkusativ.", true, ""]}, {"t": 338, "кусок": "примеры: Ring, Brief, Plüschtier", "все": ["три правила", "примеры: Ring, Brief, Plüschtier", "составь сам"], "верно": ["Два местоимения: сначала Dativ, потом Akkusativ.", false, "Наоборот: Akkusativ перед Dativ — ihn ihr."]}], "последний": "составь сам", "все": ["три правила", "примеры: Ring, Brief, Plüschtier", "составь сам"], "верно": [["Местоимение всегда стоит перед существительным.", true, "«коротко перед длинным»"]], "вопросы": []}</script>
   <p class="вид-зачем">Порядок слов с двумя дополнениями: Der Mann schenkt seiner Freundin einen Ring → ihr einen Ring → ihn seiner Freundin → ihn ihr. Три правила и тренировка.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/Qj-V8xgcTi0?t=1" target="_blank" rel="noopener">0:01</a> — три правила</li><li><a href="https://youtu.be/Qj-V8xgcTi0?t=52" target="_blank" rel="noopener">0:52</a> — примеры: Ring, Brief, Plüschtier</li><li><a href="https://youtu.be/Qj-V8xgcTi0?t=338" target="_blank" rel="noopener">5:38</a> — составь сам</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Замени и соедини.</h4><ol><li>Sie schreibt ihrer Mutter einen Brief. → <select data-ок="Sie schreibt ihr einen Brief."><option value="">—</option><option>Sie schreibt ihr einen Brief.</option><option>Daniel gibt ihn ihr.</option><option>Der Großvater erzählt sie ihnen.</option><option>Die Mutter kauft es ihm.</option></select></li><li>Die Mutter kauft ihrem Sohn ein Plüschtier. → <select data-ок="Die Mutter kauft es ihm."><option value="">—</option><option>Sie schreibt ihr einen Brief.</option><option>Daniel gibt ihn ihr.</option><option>Der Großvater erzählt sie ihnen.</option><option>Die Mutter kauft es ihm.</option></select></li><li>Daniel gibt Tina einen Kuss. → <select data-ок="Daniel gibt ihn ihr."><option value="">—</option><option>Sie schreibt ihr einen Brief.</option><option>Daniel gibt ihn ihr.</option><option>Der Großvater erzählt sie ihnen.</option><option>Die Mutter kauft es ihm.</option></select></li><li>Der Großvater erzählt den Enkeln eine Geschichte. → <select data-ок="Der Großvater erzählt sie ihnen."><option value="">—</option><option>Sie schreibt ihr einen Brief.</option><option>Daniel gibt ihn ihr.</option><option>Der Großvater erzählt sie ihnen.</option><option>Die Mutter kauft es ihm.</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Составь как в видео.</h4><ol><li data-впиши="dem" data-почему="Dativ (кому?)">Der Kellner empfiehlt <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Paar einen Wein.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sich" data-почему="">Das Mädchen wünscht <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> einen Hund.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ihr" data-почему="два местоимения: Akk перед Dat">Der Mann bringt ihn <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (ей)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">Два существительных: сначала Dativ, потом Akkusativ. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Наоборот: Akkusativ перед Dativ — ihn ihr.">Два местоимения: сначала Dativ, потом Akkusativ. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="«коротко перед длинным»">Местоимение всегда стоит перед существительным. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1091,6 +1153,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/RdTaXw5F0Hc/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>Die 20 wichtigsten Dativ-Verben + Artikel-Training 💪</b><small>Benjamin - Der Deutschlehrer · 19:08</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="RdTaXw5F0Hc">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 158, "кусок": "повтор артиклей в Dativ", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"]}, {"t": 306, "кусок": "antworten, helfen", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"]}, {"t": 414, "кусок": "gefallen, gehören, danken", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"]}, {"t": 600, "кусок": "glauben, folgen, gratulieren", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"]}, {"t": 700, "кусок": "passen, schmecken, vertrauen", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"]}, {"t": 840, "кусок": "zuhören, wehtun, widersprechen", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"]}, {"t": 990, "кусок": "zustimmen, leidtun, auffallen", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"]}], "последний": "fehlen, empfehlen", "все": ["повтор артиклей в Dativ", "antworten, helfen", "gefallen, gehören, danken", "glauben, folgen, gratulieren", "passen, schmecken, vertrauen", "zuhören, wehtun, widersprechen", "zustimmen, leidtun, auffallen", "fehlen, empfehlen"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">20 главных глаголов с Dativ (Бенджамин, по-немецки): antworten, helfen, gefallen, gehören, danken, glauben, folgen, gratulieren, passen, schmecken, vertrauen, zuhören, wehtun, widersprechen, zustimmen, leidtun, auffallen, fehlen, empfehlen. На каждый — три предложения с паузой «впиши окончание».</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/RdTaXw5F0Hc?t=0" target="_blank" rel="noopener">0:00</a> — повтор артиклей в Dativ</li><li><a href="https://youtu.be/RdTaXw5F0Hc?t=158" target="_blank" rel="noopener">2:38</a> — antworten, helfen</li><li><a href="https://youtu.be/RdTaXw5F0Hc?t=306" target="_blank" rel="noopener">5:06</a> — gefallen, gehören, danken</li><li><a href="https://youtu.be/RdTaXw5F0Hc?t=414" target="_blank" rel="noopener">6:54</a> — glauben, folgen, gratulieren</li><li><a href="https://youtu.be/RdTaXw5F0Hc?t=600" target="_blank" rel="noopener">10:00</a> — passen, schmecken, vertrauen</li><li><a href="https://youtu.be/RdTaXw5F0Hc?t=700" target="_blank" rel="noopener">11:40</a> — zuhören, wehtun, widersprechen</li><li><a href="https://youtu.be/RdTaXw5F0Hc?t=840" target="_blank" rel="noopener">14:00</a> — zustimmen, leidtun, auffallen</li><li><a href="https://youtu.be/RdTaXw5F0Hc?t=990" target="_blank" rel="noopener">16:30</a> — fehlen, empfehlen</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь местоимение/артикль в Dativ.</h4><ol><li data-впиши="dir" data-почему="">Ich danke <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> für deine Hilfe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mir" data-почему="">Dein neuer Hut gefällt <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> sehr gut.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="er" data-почему="">Er hilft sein<input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Oma immer beim Einkaufen.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="den" data-почему="Dativ мн.ч.">Wir helfen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Nachbarn oft im Garten.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mir" data-почему="fehlen = скучать (кто-то не хватает кому-то)">Du fehlst <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> sehr. (мне)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mir" data-почему="">Der Termin am Montag passt <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> gut.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Глагол и смысл.</h4><ol><li>gehören → <select data-ок="принадлежать"><option value="">—</option><option>доверять</option><option>возражать</option><option>соглашаться</option><option>бросаться в глаза, замечать</option><option>принадлежать</option><option>не хватать; скучать по</option></select></li><li>vertrauen → <select data-ок="доверять"><option value="">—</option><option>доверять</option><option>возражать</option><option>соглашаться</option><option>бросаться в глаза, замечать</option><option>принадлежать</option><option>не хватать; скучать по</option></select></li><li>widersprechen → <select data-ок="возражать"><option value="">—</option><option>доверять</option><option>возражать</option><option>соглашаться</option><option>бросаться в глаза, замечать</option><option>принадлежать</option><option>не хватать; скучать по</option></select></li><li>zustimmen → <select data-ок="соглашаться"><option value="">—</option><option>доверять</option><option>возражать</option><option>соглашаться</option><option>бросаться в глаза, замечать</option><option>принадлежать</option><option>не хватать; скучать по</option></select></li><li>auffallen → <select data-ок="бросаться в глаза, замечать"><option value="">—</option><option>доверять</option><option>возражать</option><option>соглашаться</option><option>бросаться в глаза, замечать</option><option>принадлежать</option><option>не хватать; скучать по</option></select></li><li>fehlen → <select data-ок="не хватать; скучать по"><option value="">—</option><option>доверять</option><option>возражать</option><option>соглашаться</option><option>бросаться в глаза, замечать</option><option>принадлежать</option><option>не хватать; скучать по</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Как просит Бенджамин: выбери 4 глагола и напиши по предложению — лучше про работу.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Ich helfe meinen Patienten. Der Termin passt mir gut. Ich vertraue meinem Kollegen. Ich empfehle der Patientin Kompressionsstrümpfe.</details></div>
@@ -1101,6 +1166,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/vhASqUo9rDU/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>Dativ Personal Pronouns in German | mir, dir, ihm, ihr, ihnen | Dativ Personalpronomen | German A2</b><small>Five Minute German · 9:23</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="vhASqUo9rDU">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 186, "кусок": "когда Dativ", "все": ["когда Dativ", "таблица mir, dir, ihm …", "примеры по каждому"], "верно": ["Тот, кто получает что-то от действия, — в Dativ.", true, ""]}, {"t": 236, "кусок": "таблица mir, dir, ihm …", "все": ["когда Dativ", "таблица mir, dir, ihm …", "примеры по каждому"], "верно": ["uns и euch в Dativ и Akkusativ одинаковые.", true, ""]}], "последний": "примеры по каждому", "все": ["когда Dativ", "таблица mir, dir, ihm …", "примеры по каждому"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Местоимения в Dativ — mir, dir, ihm, ihr, uns, euch, ihnen/Ihnen — по-английски, с правилом «кто получает пользу — тот Dativ» и примерами с geben, gehören, mit, zu.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/vhASqUo9rDU?t=47" target="_blank" rel="noopener">0:47</a> — когда Dativ</li><li><a href="https://youtu.be/vhASqUo9rDU?t=186" target="_blank" rel="noopener">3:06</a> — таблица mir, dir, ihm …</li><li><a href="https://youtu.be/vhASqUo9rDU?t=236" target="_blank" rel="noopener">3:56</a> — примеры по каждому</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь местоимение.</h4><ol><li data-впиши="mir" data-почему="">Er gibt <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein Buch. (мне)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mir" data-почему="">Die Tasche gehört <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (мне)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="dir" data-почему="">Ich fahre mit <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> nach Berlin. (с тобой)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ihm" data-почему="">Kannst du mit <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> sprechen? (с ним)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ihr" data-почему="">Ich kaufe <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> den Tisch. (ей)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Ihnen" data-почему="">Wie geht es <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ? (вам, вежл.)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">Тот, кто получает что-то от действия, — в Dativ. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="">uns и euch в Dativ и Akkusativ одинаковые. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1114,8 +1182,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1136,9 +1207,77 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
+
+
   <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Новый урок 12.09.2026 — тема из стандартного списка A1.</footer>
 </div>
 

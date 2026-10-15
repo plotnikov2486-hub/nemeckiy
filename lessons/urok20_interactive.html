@@ -120,6 +120,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -971,7 +972,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1000,7 +1001,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1013,6 +1016,54 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1060,6 +1111,16 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1071,6 +1132,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/EfnSm8YvAjM/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Немецкий язык, 20 урок. Какой падеж выбрать - Dativ или Akkusativ? ПРЕДЛОГИ</b><small>Немецкий с нуля! · 14:48</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="EfnSm8YvAjM">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 200, "кусок": "как образуются Akkusativ и Dativ", "все": ["как образуются Akkusativ и Dativ", "предлоги с Dativ", "примеры: mit meinem Mann, nach der Schule", "предлоги с Akkusativ", "ab, seit, außer, gegenüber", "предлоги места: ins Kino / im Kino"], "верно": ["seit — для прошлого (seit Januar — с прошлого января), ab — для будущего.", true, ""]}, {"t": 330, "кусок": "предлоги с Dativ", "все": ["как образуются Akkusativ и Dativ", "предлоги с Dativ", "примеры: mit meinem Mann, nach der Schule", "предлоги с Akkusativ", "ab, seit, außer, gegenüber", "предлоги места: ins Kino / im Kino"], "верно": ["Во множественном числе Dativ добавляет -n: den Leuten.", true, ""]}, {"t": 475, "кусок": "примеры: mit meinem Mann, nach der Schule", "все": ["как образуются Akkusativ и Dativ", "предлоги с Dativ", "примеры: mit meinem Mann, nach der Schule", "предлоги с Akkusativ", "ab, seit, außer, gegenüber", "предлоги места: ins Kino / im Kino"], "верно": ["Украину говорят без артикля: Ich fahre nach Ukraine.", false, "С артиклем: in die Ukraine / in der Ukraine."]}, {"t": 650, "кусок": "предлоги с Akkusativ", "все": ["как образуются Akkusativ и Dativ", "предлоги с Dativ", "примеры: mit meinem Mann, nach der Schule", "предлоги с Akkusativ", "ab, seit, außer, gegenüber", "предлоги места: ins Kino / im Kino"]}, {"t": 720, "кусок": "ab, seit, außer, gegenüber", "все": ["как образуются Akkusativ и Dativ", "предлоги с Dativ", "примеры: mit meinem Mann, nach der Schule", "предлоги с Akkusativ", "ab, seit, außer, gegenüber", "предлоги места: ins Kino / im Kino"]}], "последний": "предлоги места: ins Kino / im Kino", "все": ["как образуются Akkusativ и Dativ", "предлоги с Dativ", "примеры: mit meinem Mann, nach der Schule", "предлоги с Akkusativ", "ab, seit, außer, gegenüber", "предлоги места: ins Kino / im Kino"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Какой падеж выбрать — по-русски и со стишками: «mit, nach, aus, zu, von, bei» всегда Dativ, «für, bis, ohne, durch, gegen, um» всегда Akkusativ, а in, an, auf — по вопросу wo? / wohin?</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/EfnSm8YvAjM?t=52" target="_blank" rel="noopener">0:52</a> — как образуются Akkusativ и Dativ</li><li><a href="https://youtu.be/EfnSm8YvAjM?t=200" target="_blank" rel="noopener">3:20</a> — предлоги с Dativ</li><li><a href="https://youtu.be/EfnSm8YvAjM?t=330" target="_blank" rel="noopener">5:30</a> — примеры: mit meinem Mann, nach der Schule</li><li><a href="https://youtu.be/EfnSm8YvAjM?t=475" target="_blank" rel="noopener">7:55</a> — предлоги с Akkusativ</li><li><a href="https://youtu.be/EfnSm8YvAjM?t=650" target="_blank" rel="noopener">10:50</a> — ab, seit, außer, gegenüber</li><li><a href="https://youtu.be/EfnSm8YvAjM?t=720" target="_blank" rel="noopener">12:00</a> — предлоги места: ins Kino / im Kino</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь артикль или окончание.</h4><ol><li data-впиши="em" data-почему="mit → Dativ">Ich tanze mit mein<input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Mann.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="der" data-почему="nach → Dativ">Nach <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Schule gehe ich nach Hause.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="em" data-почему="zu → Dativ">Heute gehe ich zu mein<input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Großvater.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="e" data-почему="für → Akkusativ">Ich kaufe ein Buch für mein<input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Schwester.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="den" data-почему="durch → Akkusativ">Ich gehe gern durch <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Park.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="dich" data-почему="ohne → Akkusativ">Es ist langweilig ohne <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (тебя)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Предлог и падеж.</h4><ol><li>mit, nach, aus, zu, von, bei → <select data-ок="всегда Dativ"><option value="">—</option><option>всегда Dativ</option><option>Akkusativ</option><option>всегда Akkusativ</option><option>Dativ</option></select></li><li>für, bis, ohne, durch, gegen, um → <select data-ок="всегда Akkusativ"><option value="">—</option><option>всегда Dativ</option><option>Akkusativ</option><option>всегда Akkusativ</option><option>Dativ</option></select></li><li>in, an, auf + wo? → <select data-ок="Dativ"><option value="">—</option><option>всегда Dativ</option><option>Akkusativ</option><option>всегда Akkusativ</option><option>Dativ</option></select></li><li>in, an, auf + wohin? → <select data-ок="Akkusativ"><option value="">—</option><option>всегда Dativ</option><option>Akkusativ</option><option>всегда Akkusativ</option><option>Dativ</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">seit — для прошлого (seit Januar — с прошлого января), ab — для будущего. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="">Во множественном числе Dativ добавляет -n: den Leuten. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="С артиклем: in die Ukraine / in der Ukraine.">Украину говорят без артикля: Ich fahre nach Ukraine. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1081,6 +1145,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/Qnm7RI5wYDc/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>Deutsch lernen A2, B1 / Präpositionen immer mit Dativ oder Akkusativ / Personalpronomen</b><small>Hallo Deutschschule · 17:37</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="Qnm7RI5wYDc">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 140, "кусок": "für", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 200, "кусок": "gegen", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 256, "кусок": "ohne", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 314, "кусок": "durch", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 416, "кусок": "mit", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 560, "кусок": "von, bei, zu", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 610, "кусок": "aus", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 710, "кусок": "seit", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}, {"t": 960, "кусок": "gegenüber von", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"]}], "последний": "ich, mich, mir — вся таблица", "все": ["für", "gegen", "ohne", "durch", "mit", "von, bei, zu", "aus", "seit", "gegenüber von", "ich, mich, mir — вся таблица"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">«Слушай и повторяй»: вопрос-ответ с каждым предлогом — Für wen ist das Paket? Gegen wen spielt Bayern? Mit wem triffst du dich? Seit wann lebst du in Deutschland? В конце — местоимения ich / mich / mir.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/Qnm7RI5wYDc?t=0" target="_blank" rel="noopener">0:00</a> — für</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=140" target="_blank" rel="noopener">2:20</a> — gegen</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=200" target="_blank" rel="noopener">3:20</a> — ohne</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=256" target="_blank" rel="noopener">4:16</a> — durch</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=314" target="_blank" rel="noopener">5:14</a> — mit</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=416" target="_blank" rel="noopener">6:56</a> — von, bei, zu</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=560" target="_blank" rel="noopener">9:20</a> — aus</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=610" target="_blank" rel="noopener">10:10</a> — seit</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=710" target="_blank" rel="noopener">11:50</a> — gegenüber von</li><li><a href="https://youtu.be/Qnm7RI5wYDc?t=960" target="_blank" rel="noopener">16:00</a> — ich, mich, mir — вся таблица</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Вопрос — ответ.</h4><ol><li>Für wen ist das Paket? → <select data-ок="Das Paket ist für dich."><option value="">—</option><option>Gegen den FC Barcelona.</option><option>Ich war beim Arzt.</option><option>Seit einem Jahr.</option><option>Mit meiner Kollegin.</option><option>Ich gehe zur Ärztin.</option><option>Das Paket ist für dich.</option></select></li><li>Gegen wen spielt der FC Bayern? → <select data-ок="Gegen den FC Barcelona."><option value="">—</option><option>Gegen den FC Barcelona.</option><option>Ich war beim Arzt.</option><option>Seit einem Jahr.</option><option>Mit meiner Kollegin.</option><option>Ich gehe zur Ärztin.</option><option>Das Paket ist für dich.</option></select></li><li>Mit wem triffst du dich? → <select data-ок="Mit meiner Kollegin."><option value="">—</option><option>Gegen den FC Barcelona.</option><option>Ich war beim Arzt.</option><option>Seit einem Jahr.</option><option>Mit meiner Kollegin.</option><option>Ich gehe zur Ärztin.</option><option>Das Paket ist für dich.</option></select></li><li>Bei wem warst du? → <select data-ок="Ich war beim Arzt."><option value="">—</option><option>Gegen den FC Barcelona.</option><option>Ich war beim Arzt.</option><option>Seit einem Jahr.</option><option>Mit meiner Kollegin.</option><option>Ich gehe zur Ärztin.</option><option>Das Paket ist für dich.</option></select></li><li>Zu wem gehst du? → <select data-ок="Ich gehe zur Ärztin."><option value="">—</option><option>Gegen den FC Barcelona.</option><option>Ich war beim Arzt.</option><option>Seit einem Jahr.</option><option>Mit meiner Kollegin.</option><option>Ich gehe zur Ärztin.</option><option>Das Paket ist für dich.</option></select></li><li>Seit wann lebst du in Deutschland? → <select data-ок="Seit einem Jahr."><option value="">—</option><option>Gegen den FC Barcelona.</option><option>Ich war beim Arzt.</option><option>Seit einem Jahr.</option><option>Mit meiner Kollegin.</option><option>Ich gehe zur Ärztin.</option><option>Das Paket ist für dich.</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь.</h4><ol><li data-впиши="Handy" data-почему="">Ohne mein <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> gehe ich nie aus dem Haus.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="den" data-почему="durch + Akkusativ">Durch <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Unfall ist eine Person umgekommen.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="er" data-почему="von + Dativ">Die E-Mail ist von mein<input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Schwester.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="der" data-почему="">Mein Haus steht gegenüber von <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Kirche.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Jahren" data-почему="Dativ мн.ч. + n">Ich wohne seit drei <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> in Deutschland.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div>
@@ -1091,6 +1158,9 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     <img src="https://i.ytimg.com/vi/CeltQazcOXY/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>Deutsch lernen mit Dialogen / Lektion 49 / Präpositionen immer mit Akkusativ oder Dativ</b><small>Hallo Deutschschule · 11:58</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="CeltQazcOXY">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 95, "кусок": "mit — транспорт", "все": ["mit — транспорт", "zu, bei", "seit, nach", "ohne, für, gegen, um, durch"], "верно": ["Алекс ездит только на общественном транспорте.", true, "mit den öffentlichen Verkehrsmitteln"]}, {"t": 260, "кусок": "zu, bei", "все": ["mit — транспорт", "zu, bei", "seit, nach", "ohne, für, gegen, um, durch"], "верно": ["Без действительного документа сюда можно войти.", false, "ohne einen gültigen Ausweis kommen Sie hier nicht rein"]}, {"t": 300, "кусок": "seit, nach", "все": ["mit — транспорт", "zu, bei", "seit, nach", "ohne, für, gegen, um, durch"]}], "последний": "ohne, für, gegen, um, durch", "все": ["mit — транспорт", "zu, bei", "seit, nach", "ohne, für, gegen, um, durch"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Те же предлоги в бытовых фразах: на транспорте (mit dem Bus), к врачу (zum Arzt), у друга (bei einem Freund), seit, nach der Pause, ohne den Schlüssel, für meinen Vater, um den Garten.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/CeltQazcOXY?t=25" target="_blank" rel="noopener">0:25</a> — mit — транспорт</li><li><a href="https://youtu.be/CeltQazcOXY?t=95" target="_blank" rel="noopener">1:35</a> — zu, bei</li><li><a href="https://youtu.be/CeltQazcOXY?t=260" target="_blank" rel="noopener">4:20</a> — seit, nach</li><li><a href="https://youtu.be/CeltQazcOXY?t=300" target="_blank" rel="noopener">5:00</a> — ohne, für, gegen, um, durch</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь предлог.</h4><ol><li data-впиши="mit" data-почему="">Lisa fährt <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> dem Bus.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="zum" data-почему="">Ich muss <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Arzt gehen.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="beim" data-почему="">Meine Frau war drei Stunden <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Friseur.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Seit" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> einem Jahr wohne ich in Zürich.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Nach" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> der Pause machen wir weiter.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="um" data-почему="">Mark trägt einen Verband <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> seinen Kopf.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="1" data-почему="mit den öffentlichen Verkehrsmitteln">Алекс ездит только на общественном транспорте. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="ohne einen gültigen Ausweis kommen Sie hier nicht rein">Без действительного документа сюда можно войти. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1104,8 +1174,11 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1126,9 +1199,77 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
+
+
   <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Новый урок 12.09.2026 — тема из стандартного списка A1.</footer>
 </div>
 

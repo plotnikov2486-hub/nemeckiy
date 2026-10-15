@@ -141,6 +141,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1110,7 +1111,7 @@ phrases('domashka',[
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1139,7 +1140,9 @@ phrases('domashka',[
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1152,6 +1155,54 @@ phrases('domashka',[
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1199,6 +1250,16 @@ phrases('domashka',[
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1210,6 +1271,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/MBMGcmJRnPk/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Урок 44. Немецкая грамматика B1-B2: союзы bevor, seitdem, sobald, bis, während. Немецкие слова.</b><small>Александр Беккер. Немецкий с нуля до С1. · 2:26</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="MBMGcmJRnPk">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 50, "кусок": "bis, seitdem", "все": ["bis, seitdem", "bevor, sobald", "während"]}, {"t": 80, "кусок": "bevor, sobald", "все": ["bis, seitdem", "bevor, sobald", "während"]}], "последний": "während", "все": ["bis, seitdem", "bevor, sobald", "während"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Две минуты от Беккера: временные союзы bis, seitdem, bevor, sobald, während (и während как предлог с Genitiv).</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/MBMGcmJRnPk?t=0" target="_blank" rel="noopener">0:00</a> — bis, seitdem</li><li><a href="https://youtu.be/MBMGcmJRnPk?t=50" target="_blank" rel="noopener">0:50</a> — bevor, sobald</li><li><a href="https://youtu.be/MBMGcmJRnPk?t=80" target="_blank" rel="noopener">1:20</a> — während</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь союз.</h4><ol><li data-впиши="Seitdem" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich in Deutschland wohne, verstehe ich ein bisschen Deutsch.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="bevor" data-почему="">Ich dusche immer, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich ins Bett gehe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Während" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> sie in der Schule war, kaufte ihre Mutter ein Geschenk.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Während" data-почему="предлог + Genitiv"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> der Stunde hat er ein Buch gelesen. (предлог)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div>
@@ -1220,6 +1284,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/T3coer0N7L0/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>Make Your German More Vivid with: &quot;bevor, während &amp; nachdem&quot; 🎯</b><small>YourGermanTeacher · 14:14</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="T3coer0N7L0">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 96, "кусок": "три союза", "все": ["три союза", "bevor", "während", "nachdem и времена", "Tom ist müde, nachdem …", "бонус: während = «тогда как»"], "верно": ["«einen Kaffee haben» — нормальный немецкий.", false, "einen Kaffee trinken."]}, {"t": 328, "кусок": "bevor", "все": ["три союза", "bevor", "während", "nachdem и времена", "Tom ist müde, nachdem …", "бонус: während = «тогда как»"], "верно": ["То, что было раньше, при bevor стоит в главном предложении.", true, ""]}, {"t": 465, "кусок": "während", "все": ["три союза", "bevor", "während", "nachdem и времена", "Tom ist müde, nachdem …", "бонус: während = «тогда как»"]}, {"t": 555, "кусок": "nachdem и времена", "все": ["три союза", "bevor", "während", "nachdem и времена", "Tom ist müde, nachdem …", "бонус: während = «тогда как»"]}, {"t": 720, "кусок": "Tom ist müde, nachdem …", "все": ["три союза", "bevor", "während", "nachdem и времена", "Tom ist müde, nachdem …", "бонус: während = «тогда как»"]}], "последний": "бонус: während = «тогда как»", "все": ["три союза", "bevor", "während", "nachdem и времена", "Tom ist müde, nachdem …", "бонус: während = «тогда как»"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">«Schatz, wie war dein Tag?» — YourGermanTeacher (по-английски) объясняет bevor, während, nachdem и главное правило времён: после nachdem время на шаг «старше» (gelaufen ist → war müde / gelaufen war).</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/T3coer0N7L0?t=0" target="_blank" rel="noopener">0:00</a> — три союза</li><li><a href="https://youtu.be/T3coer0N7L0?t=96" target="_blank" rel="noopener">1:36</a> — bevor</li><li><a href="https://youtu.be/T3coer0N7L0?t=328" target="_blank" rel="noopener">5:28</a> — während</li><li><a href="https://youtu.be/T3coer0N7L0?t=465" target="_blank" rel="noopener">7:45</a> — nachdem и времена</li><li><a href="https://youtu.be/T3coer0N7L0?t=555" target="_blank" rel="noopener">9:15</a> — Tom ist müde, nachdem …</li><li><a href="https://youtu.be/T3coer0N7L0?t=720" target="_blank" rel="noopener">12:00</a> — бонус: während = «тогда как»</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь.</h4><ol><li data-впиши="bevor" data-почему="">Ich putze meine Zähne, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich einen Kaffee trinke.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="während" data-почему="">Ich lese Zeitung, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich frühstücke.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ist" data-почему="Präsens → Perfekt">Tom ist müde, nachdem er 10 km gelaufen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="war" data-почему="Präteritum → Plusquamperfekt">Tom war müde, nachdem er 10 km gelaufen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="hast" data-почему="">Nachdem du deine Hausaufgaben gemacht <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> , darfst du ins Kino.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Während" data-почему="противопоставление"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich gern Tee trinke, mag meine Frau lieber Kaffee.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="0" data-почему="einen Kaffee trinken.">«einen Kaffee haben» — нормальный немецкий. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="">То, что было раньше, при bevor стоит в главном предложении. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1230,6 +1297,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/vQXxjNb7pHA/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>5 Important German Temporal Conjunctions | Super Easy German 210</b><small>Easy German · 7:10</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="vQXxjNb7pHA">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 100, "кусок": "bevor", "все": ["bevor", "nachdem", "während", "seitdem", "sobald", "итог"]}, {"t": 150, "кусок": "nachdem", "все": ["bevor", "nachdem", "während", "seitdem", "sobald", "итог"]}, {"t": 240, "кусок": "während", "все": ["bevor", "nachdem", "während", "seitdem", "sobald", "итог"]}, {"t": 298, "кусок": "seitdem", "все": ["bevor", "nachdem", "während", "seitdem", "sobald", "итог"]}, {"t": 350, "кусок": "sobald", "все": ["bevor", "nachdem", "während", "seitdem", "sobald", "итог"]}], "последний": "итог", "все": ["bevor", "nachdem", "während", "seitdem", "sobald", "итог"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Easy German: пять временных союзов — bevor, nachdem, während, seitdem, sobald — с короткими сценками. «Wir fahren in den Urlaub, sobald diese Episode fertig ist».</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/vQXxjNb7pHA?t=46" target="_blank" rel="noopener">0:46</a> — bevor</li><li><a href="https://youtu.be/vQXxjNb7pHA?t=100" target="_blank" rel="noopener">1:40</a> — nachdem</li><li><a href="https://youtu.be/vQXxjNb7pHA?t=150" target="_blank" rel="noopener">2:30</a> — während</li><li><a href="https://youtu.be/vQXxjNb7pHA?t=240" target="_blank" rel="noopener">4:00</a> — seitdem</li><li><a href="https://youtu.be/vQXxjNb7pHA?t=298" target="_blank" rel="noopener">4:58</a> — sobald</li><li><a href="https://youtu.be/vQXxjNb7pHA?t=350" target="_blank" rel="noopener">5:50</a> — итог</li></ul>
   <div class="вид-зд"><h4>Задание 1. Вставь союз по видео.</h4><ol><li data-впиши="bevor" data-почему="">Ich schreibe eine Einkaufsliste, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ich einkaufen gehe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Nachdem" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> das Konzert vorbei war, sind wir noch essen gegangen.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="während" data-почему="">Ich trinke Wein, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Mitch arbeitet.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Seitdem" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> wir einen neuen Pürierstab haben, kochen wir viele Suppen.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sobald" data-почему="">Wir fahren in den Urlaub, <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> diese Episode fertig ist.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div>
@@ -1243,8 +1313,11 @@ phrases('domashka',[
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1265,9 +1338,75 @@ phrases('domashka',[
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
 
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>

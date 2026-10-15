@@ -141,6 +141,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1083,7 +1084,7 @@ phrases('domashka',[
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610141642"></script>
+<script src="../igry.js?v=202610151550"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1112,7 +1113,9 @@ phrases('domashka',[
     var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
                   картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст' };
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1125,6 +1128,54 @@ phrases('domashka',[
       к.onclick = function () { ИГРЫ.запустить(к.getAttribute('data-игра')); };
     });
   }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
 
   fetch('../words/' + файл + '.json?v=' + Date.now())
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
@@ -1172,6 +1223,16 @@ phrases('domashka',[
 .вид-да{color:#1f9d55}.вид-нет{color:#d64545}
 .вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
 .вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
 @media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
 </style>
 <section class="вид" id="видео">
@@ -1183,6 +1244,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/RHAcbpf-qPk/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 1 из 3</small><b>Немецкий язык, 62 урок. Прошедшее время Претеритум - Präteritum</b><small>Немецкий с нуля! · 25:12</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="RHAcbpf-qPk">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 305, "кусок": "правильные: mach-te", "все": ["правильные: mach-te", "окончания по лицам", "сильные: bleiben → blieb", "с приставкой: machte … auf, fing an", "war, hatte, wurde, konnte — и в речи", "бесконечная сказка"], "верно": ["Präteritum — в основном письменное время: книги, статьи, сказки.", true, ""]}, {"t": 555, "кусок": "окончания по лицам", "все": ["правильные: mach-te", "окончания по лицам", "сильные: bleiben → blieb", "с приставкой: machte … auf, fing an", "war, hatte, wurde, konnte — и в речи", "бесконечная сказка"], "верно": ["У ich и er/sie/es в Präteritum разные окончания.", false, "Одинаковые: ich machte — er machte."]}, {"t": 855, "кусок": "сильные: bleiben → blieb", "все": ["правильные: mach-te", "окончания по лицам", "сильные: bleiben → blieb", "с приставкой: machte … auf, fing an", "war, hatte, wurde, konnte — и в речи", "бесконечная сказка"], "верно": ["Сказки начинаются словами «Es war einmal …».", true, "«Жил-был …»"]}, {"t": 1075, "кусок": "с приставкой: machte … auf, fing an", "все": ["правильные: mach-te", "окончания по лицам", "сильные: bleiben → blieb", "с приставкой: machte … auf, fing an", "war, hatte, wurde, konnte — и в речи", "бесконечная сказка"]}, {"t": 1270, "кусок": "war, hatte, wurde, konnte — и в речи", "все": ["правильные: mach-te", "окончания по лицам", "сильные: bleiben → blieb", "с приставкой: machte … auf, fing an", "war, hatte, wurde, konnte — и в речи", "бесконечная сказка"]}], "последний": "бесконечная сказка", "все": ["правильные: mach-te", "окончания по лицам", "сильные: bleiben → blieb", "с приставкой: machte … auf, fing an", "war, hatte, wurde, konnte — и в речи", "бесконечная сказка"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Präteritum по-русски (урок 62): слабые глаголы (machte, lernte), окончания по лицам, сильные (blieb, lag, sprach, fing an) и какие глаголы и в разговоре звучат в Präteritum: war, hatte, konnte, wusste, es gab. В конце — «бесконечная сказка».</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/RHAcbpf-qPk?t=150" target="_blank" rel="noopener">2:30</a> — правильные: mach-te</li><li><a href="https://youtu.be/RHAcbpf-qPk?t=305" target="_blank" rel="noopener">5:05</a> — окончания по лицам</li><li><a href="https://youtu.be/RHAcbpf-qPk?t=555" target="_blank" rel="noopener">9:15</a> — сильные: bleiben → blieb</li><li><a href="https://youtu.be/RHAcbpf-qPk?t=855" target="_blank" rel="noopener">14:15</a> — с приставкой: machte … auf, fing an</li><li><a href="https://youtu.be/RHAcbpf-qPk?t=1075" target="_blank" rel="noopener">17:55</a> — war, hatte, wurde, konnte — и в речи</li><li><a href="https://youtu.be/RHAcbpf-qPk?t=1270" target="_blank" rel="noopener">21:10</a> — бесконечная сказка</li></ul>
   <div class="вид-зд"><h4>Задание 1. Поставь в Präteritum.</h4><ol><li data-впиши="studierten" data-почему="">Wir <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> drei Jahre zusammen. (studieren)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="lachte" data-почему="">Sie <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> lange. (lachen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="blieb" data-почему="">Meine Tochter <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> zu Hause. (bleiben)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="lag" data-почему="">Der alte Mann <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> auf dem Bett. (liegen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="fing" data-почему="">Das neue Schuljahr <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> an. (anfangen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="gab" data-почему="">Im Kino <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> es viele Kinder. (es gibt)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">Präteritum — в основном письменное время: книги, статьи, сказки. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Одинаковые: ich machte — er machte.">У ich и er/sie/es в Präteritum разные окончания. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="«Жил-был …»">Сказки начинаются словами «Es war einmal …». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Расскажи «бесконечную сказку» из видео наизусть.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Es war einmal ein Mann. Er hatte sieben Söhne. Die sieben Söhne sprachen: „Vater, erzähl uns eine Geschichte!“ Da fing der Vater an: Es war einmal ein Mann …</details></div>
@@ -1193,6 +1257,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/SNbmm2EFF2o/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 2 из 3</small><b>PERFEKT ИЛИ PRÄTERITUM? КАК ВЫБРАТЬ?</b><small>ModulDeutsch · 18:43</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="SNbmm2EFF2o">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 275, "кусок": "результат или процесс", "все": ["результат или процесс", "один раз или много раз", "устная/письменная — это миф", "Perfekt для будущего: sobald … beendet haben", "sein, haben, werden, модальные", "stammen, scheinen, pflegen, drohen", "прямой и переносный смысл"], "верно": ["Perfekt подчёркивает результат, Präteritum — процесс.", true, "hat gelernt — выучил; lernte — учил."]}, {"t": 335, "кусок": "один раз или много раз", "все": ["результат или процесс", "один раз или много раз", "устная/письменная — это миф", "Perfekt для будущего: sobald … beendet haben", "sein, haben, werden, модальные", "stammen, scheinen, pflegen, drohen", "прямой и переносный смысл"], "верно": ["Präteritum никогда не бывает в устной речи.", false, "Бывает: в официальных выступлениях, репортажах; и с sein, haben, модальными — всегда."]}, {"t": 575, "кусок": "устная/письменная — это миф", "все": ["результат или процесс", "один раз или много раз", "устная/письменная — это миф", "Perfekt для будущего: sobald … beendet haben", "sein, haben, werden, модальные", "stammen, scheinen, pflegen, drohen", "прямой и переносный смысл"], "верно": ["«Wir fanden den Film lustig» — Präteritum, потому что finden в переносном смысле.", true, "Прямой смысл (нашли собаку) — Perfekt."]}, {"t": 725, "кусок": "Perfekt для будущего: sobald … beendet haben", "все": ["результат или процесс", "один раз или много раз", "устная/письменная — это миф", "Perfekt для будущего: sobald … beendet haben", "sein, haben, werden, модальные", "stammen, scheinen, pflegen, drohen", "прямой и переносный смысл"], "верно": ["«Sobald wir die Forschung beendet haben …» — про будущее.", true, "Perfekt может означать законченное действие в будущем."]}, {"t": 800, "кусок": "sein, haben, werden, модальные", "все": ["результат или процесс", "один раз или много раз", "устная/письменная — это миф", "Perfekt для будущего: sobald … beendet haben", "sein, haben, werden, модальные", "stammen, scheinen, pflegen, drohen", "прямой и переносный смысл"]}, {"t": 935, "кусок": "stammen, scheinen, pflegen, drohen", "все": ["результат или процесс", "один раз или много раз", "устная/письменная — это миф", "Perfekt для будущего: sobald … beendet haben", "sein, haben, werden, модальные", "stammen, scheinen, pflegen, drohen", "прямой и переносный смысл"]}], "последний": "прямой и переносный смысл", "все": ["результат или процесс", "один раз или много раз", "устная/письменная — это миф", "Perfekt для будущего: sobald … beendet haben", "sein, haben, werden, модальные", "stammen, scheinen, pflegen, drohen", "прямой и переносный смысл"], "верно": [], "вопросы": []}</script>
   <p class="вид-зачем">Perfekt или Präteritum — что выбрать? (ModulDeutsch): результат vs процесс, один раз vs много раз, бытовое vs официальное, глаголы, которые и в речи чаще в Präteritum, и прямой/переносный смысл: Wir fanden den Film lustig.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/SNbmm2EFF2o?t=95" target="_blank" rel="noopener">1:35</a> — результат или процесс</li><li><a href="https://youtu.be/SNbmm2EFF2o?t=275" target="_blank" rel="noopener">4:35</a> — один раз или много раз</li><li><a href="https://youtu.be/SNbmm2EFF2o?t=335" target="_blank" rel="noopener">5:35</a> — устная/письменная — это миф</li><li><a href="https://youtu.be/SNbmm2EFF2o?t=575" target="_blank" rel="noopener">9:35</a> — Perfekt для будущего: sobald … beendet haben</li><li><a href="https://youtu.be/SNbmm2EFF2o?t=725" target="_blank" rel="noopener">12:05</a> — sein, haben, werden, модальные</li><li><a href="https://youtu.be/SNbmm2EFF2o?t=800" target="_blank" rel="noopener">13:20</a> — stammen, scheinen, pflegen, drohen</li><li><a href="https://youtu.be/SNbmm2EFF2o?t=935" target="_blank" rel="noopener">15:35</a> — прямой и переносный смысл</li></ul>
   <div class="вид-зд"><h4>Задание 1. Верно или неверно — по видео?</h4><ol><li data-верно="1" data-почему="hat gelernt — выучил; lernte — учил.">Perfekt подчёркивает результат, Präteritum — процесс. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Бывает: в официальных выступлениях, репортажах; и с sein, haben, модальными — всегда.">Präteritum никогда не бывает в устной речи. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="Прямой смысл (нашли собаку) — Perfekt.">«Wir fanden den Film lustig» — Präteritum, потому что finden в переносном смысле. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="Perfekt может означать законченное действие в будущем.">«Sobald wir die Forschung beendet haben …» — про будущее. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Глагол → значение.</h4><ol><li>stammen aus → <select data-ок="быть родом из"><option value="">—</option><option>казаться</option><option>иметь обыкновение</option><option>Речь шла о моей сестре.</option><option>угрожать</option><option>быть родом из</option></select></li><li>scheinen → <select data-ок="казаться"><option value="">—</option><option>казаться</option><option>иметь обыкновение</option><option>Речь шла о моей сестре.</option><option>угрожать</option><option>быть родом из</option></select></li><li>pflegen zu … → <select data-ок="иметь обыкновение"><option value="">—</option><option>казаться</option><option>иметь обыкновение</option><option>Речь шла о моей сестре.</option><option>угрожать</option><option>быть родом из</option></select></li><li>drohen → <select data-ок="угрожать"><option value="">—</option><option>казаться</option><option>иметь обыкновение</option><option>Речь шла о моей сестре.</option><option>угрожать</option><option>быть родом из</option></select></li><li>Es ging um meine Schwester. → <select data-ок="Речь шла о моей сестре."><option value="">—</option><option>казаться</option><option>иметь обыкновение</option><option>Речь шла о моей сестре.</option><option>угрожать</option><option>быть родом из</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div>
@@ -1203,6 +1270,9 @@ phrases('domashka',[
     <img src="https://i.ytimg.com/vi/kEBsQ0MT7Uc/mqdefault.jpg" alt="" loading="lazy">
     <span><small>Видео 3 из 3</small><b>Die Bremer Stadtmusikanten - &quot;Бременские музыканты&quot; читаем по-немецки + грамматика</b><small>Немецкий с нуля! · 36:03</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
   </a>
+  <button class="вид-плеер-кн" type="button" data-видео="kEBsQ0MT7Uc">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 245, "кусок": "осёл уходит", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"], "верно": ["Когда персонаж говорит сам, даже в сказке — Perfekt: Sie hat mir das Gesicht zerkratzt.", true, ""]}, {"t": 380, "кусок": "собака", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"], "верно": ["Новый персонаж вводят с ein, потом — с der.", true, "Ein Mann hatte einen Esel. Der Esel war alt."]}, {"t": 560, "кусок": "кошка", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"]}, {"t": 730, "кусок": "петух", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"]}, {"t": 880, "кусок": "ночь в лесу", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"]}, {"t": 1170, "кусок": "дом разбойников", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"]}, {"t": 1785, "кусок": "разбойник возвращается", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"]}], "последний": "вся сказка целиком", "все": ["осёл уходит", "собака", "кошка", "петух", "ночь в лесу", "дом разбойников", "разбойник возвращается", "вся сказка целиком"], "верно": [], "вопросы": [["Почему осёл ушёл от хозяина?", "Он был старый и слабый, хозяин хотел его убить."], ["Почему петух так громко кричал?", "В воскресенье придут гости, хозяйка хочет сварить его в супе."], ["Как животные прогнали разбойников?", "Встали друг на друга у окна и все вместе «запели»: осёл кричал, собака лаяла, кошка мяукала, петух кукарекал."], ["Кем разбойнику показались животные?", "Ведьмой с длинными пальцами, мужчиной с ножом и судьёй на крыше."]]}</script>
   <p class="вид-зачем">Сказка «Бременские музыканты» на немецком с разбором каждого предложения: десятки сильных глаголов в Präteritum (lief, traf, sah aus, sprang, flog, schrie, biss). В конце — вся сказка целиком, слушай без текста.</p>
   <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=47" target="_blank" rel="noopener">0:47</a> — осёл уходит</li><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=245" target="_blank" rel="noopener">4:05</a> — собака</li><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=380" target="_blank" rel="noopener">6:20</a> — кошка</li><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=560" target="_blank" rel="noopener">9:20</a> — петух</li><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=730" target="_blank" rel="noopener">12:10</a> — ночь в лесу</li><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=880" target="_blank" rel="noopener">14:40</a> — дом разбойников</li><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=1170" target="_blank" rel="noopener">19:30</a> — разбойник возвращается</li><li><a href="https://youtu.be/kEBsQ0MT7Uc?t=1785" target="_blank" rel="noopener">29:45</a> — вся сказка целиком</li></ul>
   <div class="вид-зд" data-соедини><h4>Задание 1. Präteritum → инфинитив.</h4><ol><li>lief fort → <select data-ок="fortlaufen"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li><li>traf → <select data-ок="treffen"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li><li>sah aus → <select data-ок="aussehen"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li><li>sprang → <select data-ок="springen"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li><li>flog → <select data-ок="fliegen"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li><li>schrie → <select data-ок="schreien"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li><li>biss → <select data-ок="beißen"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li><li>schliefen ein → <select data-ок="einschlafen"><option value="">—</option><option>fliegen</option><option>einschlafen</option><option>fortlaufen</option><option>beißen</option><option>springen</option><option>aussehen</option><option>treffen</option><option>schreien</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Ответь по сказке.</h4><ol><li>Почему осёл ушёл от хозяина?<details><summary>показать ответ</summary>Он был старый и слабый, хозяин хотел его убить.</details></li><li>Почему петух так громко кричал?<details><summary>показать ответ</summary>В воскресенье придут гости, хозяйка хочет сварить его в супе.</details></li><li>Как животные прогнали разбойников?<details><summary>показать ответ</summary>Встали друг на друга у окна и все вместе «запели»: осёл кричал, собака лаяла, кошка мяукала, петух кукарекал.</details></li><li>Кем разбойнику показались животные?<details><summary>показать ответ</summary>Ведьмой с длинными пальцами, мужчиной с ножом и судьёй на крыше.</details></li></ol></div><div class="вид-зд"><h4>Задание 3. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">Когда персонаж говорит сам, даже в сказке — Perfekt: Sie hat mir das Gesicht zerkratzt. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="Ein Mann hatte einen Esel. Der Esel war alt.">Новый персонаж вводят с ein, потом — с der. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
@@ -1216,8 +1286,11 @@ phrases('domashka',[
     var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
     function проверить(){
       var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
       итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
     }
     кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
   });
@@ -1238,9 +1311,75 @@ phrases('domashka',[
       итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
     };
   });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
 })();
 </script>
 <!--ВИДЕО-END-->
+
+
 
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
