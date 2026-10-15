@@ -1837,7 +1837,76 @@ var ДИАЛОГ = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
+/* 16. Разговор с развилками (BranchingScenario на ZUM): пациент говорит — выбираешь реплику врача.
+   Хорошая ведёт дальше, плохая — пациент переспрашивает или обижается, можно исправиться.
+   Данные: scenarii/<урок>.json (пишет сценарии.py) → window.ИГРЫ_СЦЕНАРИЙ (блок урока грузит сам).
+   { "имя", "вступление", "начало": "id", "узлы": { id: { "кто": "Patientin", "de", "ru",
+     "варианты": [ { "de", "ru", "балл": 2|1|0, "почему", "к": "id" | null } ] } } }      */
+var СЦЕНАРИЙ = {
+  код: 'сценарий', имя: 'Разговор с пациентом', значок: '🩺', сама: true,
+  под: 'Пациент говорит — выбери, что ответит врач. Разговор идёт по-разному',
+  хватает: function () { var с = window.ИГРЫ_СЦЕНАРИЙ; return !!(с && с.узлы && с.начало); },
+  экран: function (х) {
+    var с = window.ИГРЫ_СЦЕНАРИЙ, путь = [], набрано = 0, максимум = 0, шагов = 0;
+    function голос(de) { try { if (!window.speechSynthesis) return; var р = new SpeechSynthesisUtterance(de); р.lang = 'de-DE'; р.rate = .92; speechSynthesis.cancel(); speechSynthesis.speak(р); } catch (e) {} }
+    function итог() {
+      var процент = максимум ? Math.round(набрано / максимум * 100) : 0;
+      х.рекорд(процент, набрано, максимум);
+      х.рисовать('<div class="иг-итог"><div class="число">' + процент + '%</div><div class="строка">' +
+        экр(с.имя || '') + ' · лучших ответов ' + путь.filter(function (п) { return п.в.балл === 2; }).length + ' из ' + путь.length + '</div></div>' +
+        '<div class="иг-разбор"><h3>Разбор разговора:</h3>' + путь.map(function (п) {
+          var лучший = п.у.варианты.filter(function (в) { return в.балл === 2; })[0];
+          return '<div style="background:' + (п.в.балл === 2 ? 'rgba(31,95,91,.10)' : п.в.балл === 1 ? 'rgba(192,122,0,.10)' : 'var(--warn-bg,#fbeae6)') + '">' +
+            '<b>' + (п.в.балл === 2 ? '✓' : п.в.балл === 1 ? '≈' : '✗') + '</b> <span class="де">' + экр(п.в.de) + '</span>' +
+            (п.в.почему ? '<br><small>' + экр(п.в.почему) + '</small>' : '') +
+            (п.в.балл < 2 && лучший ? '<br><small>Лучше: <span class="де">' + экр(лучший.de) + '</span></small>' : '') + '</div>';
+        }).join('') + '</div>' +
+        '<div class="иг-низ"><button class="иг-главная" id="игЕщё">↻ Ещё раз</button><button class="иг-тихая" id="игВыход">К играм</button></div>');
+      document.getElementById('игЕщё').onclick = function () { СЦЕНАРИЙ.экран(х); };
+      document.getElementById('игВыход').onclick = х.меню;
+    }
+    function узел(id, отклик) {
+      var у = с.узлы[id];
+      if (!у) { итог(); return; }
+      шагов++;
+      var варианты = перемешать(у.варианты);
+      х.рисовать(
+        (шагов === 1 && с.вступление ? '<p class="иг-подсказ">' + экр(с.вступление) + '</p>' : '') +
+        (отклик || '') +
+        '<div class="иг-карточка" style="text-align:left"><div class="кто">' + экр(у.кто || 'Patientin') + '</div>' +
+        '<div class="реплика">' + экр(у.de) + '</div><div class="перев" id="игПер" hidden>' + экр(у.ru || '') + '</div></div>' +
+        '<div class="иг-низ" style="margin:-4px 0 10px"><button class="иг-тихая" id="игСлушать">🔊</button><button class="иг-тихая" id="игПерКн">Перевод</button></div>' +
+        (у.варианты.length ? '<p class="иг-подсказ"><b>Что скажет врач?</b></p><div class="иг-варианты">' + варианты.map(function (в, i) {
+          return '<button class="иг-вариант" data-i="' + i + '">' + экр(в.de) + '</button>';
+        }).join('') + '</div><div id="игОтвет"></div>' : '<div class="иг-низ"><button class="иг-главная" id="игКонец">Чем закончилось ›</button></div>'));
+      document.getElementById('игСлушать').onclick = function () { голос(у.de); };
+      document.getElementById('игПерКн').onclick = function () { var п = document.getElementById('игПер'); п.hidden = !п.hidden; };
+      голос(у.de);
+      if (!у.варианты.length) { document.getElementById('игКонец').onclick = итог; return; }
+      карта_кнопки('.иг-вариант').forEach(function (к) {
+        к.onclick = function () {
+          var в = варианты[+к.getAttribute('data-i')];
+          максимум += 2; набрано += в.балл; путь.push({ у: у, в: в });
+          х.звукОтвета(в.балл === 2);
+          карта_кнопки('.иг-вариант').forEach(function (д) {
+            д.onclick = null;
+            var вв = варианты[+д.getAttribute('data-i')];
+            if (вв.балл === 2) д.classList.add('иг-верно'); else if (д === к) д.classList.add('иг-мимо');
+          });
+          document.getElementById('игОтвет').innerHTML = '<div class="иг-ответ ' + (в.балл === 2 ? 'верно' : 'мимо') + '">' +
+            (в.балл === 2 ? '✓ ' : в.балл === 1 ? '≈ Можно, но… ' : '✗ ') + экр(в.почему || '') +
+            (в.ru ? '<br><small>' + экр(в.ru) + '</small>' : '') + '</div>' +
+            '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше ›</button></div>';
+          голос(в.de);
+          document.getElementById('игДальше').onclick = function () { в.к ? узел(в.к) : итог(); };
+        };
+      });
+    }
+    узел(с.начало);
+  }
+};
+
+var ВСЕ_ИГРЫ = [ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, СЦЕНАРИЙ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });

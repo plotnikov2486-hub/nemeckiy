@@ -222,7 +222,6 @@
   .hwline { margin:10px 0; }
   .hwline input.fld { width:100%; max-width:520px; }
 </style>
-
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1045,11 +1044,9 @@ blanksBlock('hwLese', LESE, 'polya14_hw_lese_');
 
 
 
-
-
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610151550"></script>
+<script src="../igry.js?v=202610151616"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1080,7 +1077,7 @@ blanksBlock('hwLese', LESE, 'polya14_hw_lese_');
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
                   плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
                   скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
-                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1142,7 +1139,12 @@ blanksBlock('hwLese', LESE, 'polya14_hw_lese_');
   if (document.readyState === 'complete') запуститьПроверку();
   else window.addEventListener('load', запуститьПроверку);
 
-  fetch('../words/' + файл + '.json?v=' + Date.now())
+  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
+  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; })
+    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
+    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
     .then(function (д) {
       if (!д || д.length < 6) { корень.style.display = 'none'; return; }

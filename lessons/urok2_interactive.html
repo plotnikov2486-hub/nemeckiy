@@ -35,6 +35,7 @@
   }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1197,7 +1198,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610151550"></script>
+<script src="../igry.js?v=202610151616"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1228,7 +1229,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
                   порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
                   плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
                   скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
-                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки' };
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
     var коробка = document.createElement('div');
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
@@ -1290,7 +1291,12 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   if (document.readyState === 'complete') запуститьПроверку();
   else window.addEventListener('load', запуститьПроверку);
 
-  fetch('../words/' + файл + '.json?v=' + Date.now())
+  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
+  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; })
+    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
+    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
     .then(function (r) { if (!r.ok) throw 0; return r.json(); })
     .then(function (д) {
       if (!д || д.length < 6) { корень.style.display = 'none'; return; }
@@ -1491,8 +1497,6 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--ВИДЕО-END-->
-
-
 
 
   <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка — Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 11.09.2026.</footer>
