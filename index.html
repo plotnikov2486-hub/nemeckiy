@@ -764,6 +764,8 @@ if (!Слушалка){
 
 
 
+
+
   <header>
     <h1>🇩🇪 Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
@@ -927,6 +929,11 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 
 // Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
 const POLYA = [
+  {id:'p18', num:'Занятие 18', date:'14.10.2026', title:'dieser, jener, solcher в тексте и транспорт',
+   topic:'Сорок пять минут. Вопрос по прошлой домашке: «seins» — притяжательное вместо опущенного существительного (Der kleine Otto hat seins zu Hause vergessen) и притяжательное в Genitiv (Die Farbe ihres Kleides ist blau — сначала вопрос wessen?, потом форма как у артикля). ⭐⭐ dieser, jener, solcher в тексте про книжный магазин и кафе (dieses Buch, von jenem Autor, diese Zeitschrift, in diesem Café, jenen Kuchen). ⭐ von, mit, nach — всегда Dativ. Новая тема — транспорт и путешествия: das Gepäck, der Koffer, die Haltestelle, der Bahnsteig, die U-Bahn, die Straßenbahn, das Flugzeug; steigen ≠ wachsen. Домашка: два видео (Wortschatz Reisen, Eine Reise um die Welt), «Was kann man in Deutschland, Österreich, der Schweiz und Ägypten machen?», карточки Stadt & Verkehr.',
+   pdf:'', audio:'dasha/polya18_interactive.html', mins:45, hard:'Средне', cards:71,
+   photos:['dasha/polya18_hw_aufgabe.jpg'],
+   photoLabels:['Сообщение Даши с домашкой']},
   {id:'p17', num:'Занятие 17', date:'11.10.2026', title:'Указательные местоимения: dieser, jener, solcher',
    topic:'Пятьдесят минут. История из учебника: Кристиан Шмидт работает у озера, а ему звонят коллега, Эва и шеф — слова офиса (der Schlüssel, Stifte, Briefpapier, Rechnungen, Formulare, telefonieren, anrufen), ответы на задания 3 и 4. Как устроено письмо: обращение с запятой, текст с маленькой буквы, прощание и подпись. Повтор склонения mein. ⭐⭐ Новая тема — указательные местоимения dieser, jener, solcher, derselbe, derjenige: окончание есть уже в Nominativ, склонение как у der; 16 предложений на все падежи. Мелочи: Kollegin von, Kollegen (n-Deklination), kaufen ≠ einkaufen, zustimmen и vertrauen + Dativ. Домашка: ответы по учебнику Menschen A1.1, с. 29–37 (уроки 5 и 6: ein/kein, очки и материалы, заказ часов, офис, множественное число, Akkusativ, телефон, Lesemagazin) и с. 48, задание 8 (письмо-отказ), выражения из видео про официальное письмо (Гёте A1–A2), письмо Лауре на 50–60 слов с образцом, таблица dieser по памяти.',
    pdf:'', audio:'dasha/polya17_interactive.html', mins:52, hard:'Средне', cards:203,
@@ -1106,7 +1113,7 @@ const LEVELS = [
     {t:'Именительный падеж (Nominativ)', l:['l2','p11','p12','p13']},
     {t:'Винительный падеж (Akkusativ)', l:['l4','p11','p12','p13']},
     {t:'Дательный падеж (Dativ) — база', l:['l11','p11','p12','p13']},
-    {t:'Притяжательные местоимения (mein, dein)', l:['d1','d2','p16','p17']},
+    {t:'Притяжательные местоимения (mein, dein)', l:['d1','d2','p16','p17','p18']},
     {t:'Порядок слов: глагол на 2-м месте', l:['l3']},
     {t:'Вопросы с W-словом (W-Fragen)', l:['l8','d6','d7']},
     {t:'Вопросы да/нет', l:['l3','d6']},
@@ -1131,7 +1138,7 @@ const LEVELS = [
     {t:'Погода', l:['l16']},
     {t:'Союзы und, aber, oder, denn, sondern', l:['l23']},
     {t:'Сложные слова (Komposita)', l:['l23']},
-    {t:'welcher, dieser, jeder', l:['l23','p17']},
+    {t:'welcher, dieser, jeder', l:['l23','p17','p18']},
   ]},
   {code:'A2', name:'Базовый', weight:0.20, color:'#1f8fb5', topics:[
     {t:'Perfekt со всеми глаголами', l:[]},
@@ -1140,7 +1147,7 @@ const LEVELS = [
     {t:'Возвратные глаголы (sich waschen)', l:['l18']},
     {t:'Дательный падеж полностью + глаголы с Dativ', l:['l21']},
     {t:'Предлоги Wo? / Wohin? (Wechselpräpositionen)', l:['l17','p12']},
-    {t:'Предлоги с Dativ (mit, nach, bei, seit)', l:['l20']},
+    {t:'Предлоги с Dativ (mit, nach, bei, seit)', l:['l20','p18']},
     {t:'Предлоги с Akkusativ (für, ohne, gegen)', l:['l20']},
     {t:'Сравнительная степень (größer, am größten)', l:['l22','p14']},
     {t:'Придаточные с weil / denn', l:['l25']},
@@ -1151,7 +1158,7 @@ const LEVELS = [
     {t:'Будущее время (Futur I)', l:['l34']},
     {t:'Императив во всех формах', l:['l13']},
     {t:'Infinitiv mit zu', l:[]},
-    {t:'Родительный падеж (Genitiv) — база', l:['p11','p12','p13','d10']},
+    {t:'Родительный падеж (Genitiv) — база', l:['p11','p12','p13','d10','p18']},
     {t:'Пассив — введение', l:['l27']},
     {t:'Глагол lassen', l:['l28']},
     {t:'Косвенный вопрос (ob)', l:['l31']},
@@ -1159,7 +1166,7 @@ const LEVELS = [
     {t:'Медицина: симптомы и жалобы пациента', l:['l47']},
     {t:'Здоровье и самочувствие', l:[]},
     {t:'Покупки и магазины', l:['p12']},
-    {t:'Путешествия и транспорт', l:[]},
+    {t:'Путешествия и транспорт', l:['p18']},
     {t:'Работа, офис, документы', l:['p17']},
     {t:'Жильё: аренда, мебель', l:['l15','p12']},
     {t:'Свободное время и хобби', l:[]},

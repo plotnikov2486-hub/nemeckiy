@@ -141,6 +141,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1124,7 +1125,7 @@ phrases('domashka',[
 <!--QUIZ-END-->
 <!--ИГРЫ-START-->
 <section class="игры" id="игры"></section>
-<script src="../igry.js?v=202610151616"></script>
+<script src="../igry.js?v=202610160930"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1241,6 +1242,188 @@ phrases('domashka',[
 </script>
 <!--ИГРЫ-END-->
 
+<!--ВИДЕО-START-->
+<style>
+.вид{margin:34px 0 0}
+.вид h2{margin:0 0 6px}
+.вид-шапка{color:var(--ink-muted,#666);margin:0 0 14px}
+.вид-карта{background:var(--surface,#fff);border:1px solid var(--line,#e5e5e5);border-radius:18px;padding:18px 16px;margin:0 0 18px;box-shadow:var(--shadow,none)}
+.вид-ролик{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+.вид-ролик img{width:168px;max-width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:var(--line,#eee)}
+.вид-ролик b{display:block;line-height:1.3}
+.вид-ролик small{color:var(--ink-muted,#666)}
+.вид-смотреть{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);font-size:.85em;font-weight:600}
+.вид-зачем{margin:12px 0 0}
+.вид-тк{margin:8px 0 0;padding-left:18px}
+.вид-тк a{color:var(--accent,#4A63D6);font-weight:600;text-decoration:none}
+.вид-зд{margin:16px 0 0}
+.вид-зд h4{margin:0 0 8px;font-size:1em}
+.вид-зд ol{margin:0;padding-left:22px}
+.вид-зд li{margin:0 0 10px}
+.вид-зд details summary{cursor:pointer;color:var(--accent,#4A63D6);font-size:.9em}
+.вид-зд input[type=text],.вид-зд select,.вид-зд textarea{font:inherit;padding:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;max-width:100%}
+.вид-зд input[type=text]{width:9em}
+.вид-зд textarea{width:100%;min-height:70px;margin:4px 0}
+.вид-кн{font:inherit;font-size:.85em;padding:3px 10px;margin-left:6px;border-radius:999px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit;cursor:pointer}
+.вид-итог{display:block;font-size:.9em;margin-top:4px}
+.вид-да{color:#1f9d55}.вид-нет{color:#d64545}
+.вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
+.вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
+@media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
+</style>
+<section class="вид" id="видео">
+  <h2>🎬 Видео к уроку</h2>
+  <p class="вид-шапка">Ещё одна часть домашки: открой ролик, посмотри и сделай задания под ним. Ответы проверяются тут же.</p>
+  
+<div class="вид-карта" id="видео1">
+  <a class="вид-ролик" href="https://youtu.be/YtbQcE6W46k" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/YtbQcE6W46k/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 1 из 3</small><b>Урок немецкого языка #47. Глагол lassen в немецком языке.</b><small>Deutsch mit Yehor · 5:45</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="YtbQcE6W46k">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 90, "кусок": "оставлять", "все": ["оставлять", "поручать: Ich lasse das Auto waschen", "Perfekt: habe … waschen lassen", "позволять + Akkusativ", "Lass uns …", "sich lassen = можно, поддаётся"]}, {"t": 150, "кусок": "поручать: Ich lasse das Auto waschen", "все": ["оставлять", "поручать: Ich lasse das Auto waschen", "Perfekt: habe … waschen lassen", "позволять + Akkusativ", "Lass uns …", "sich lassen = можно, поддаётся"]}, {"t": 185, "кусок": "Perfekt: habe … waschen lassen", "все": ["оставлять", "поручать: Ich lasse das Auto waschen", "Perfekt: habe … waschen lassen", "позволять + Akkusativ", "Lass uns …", "sich lassen = можно, поддаётся"]}, {"t": 220, "кусок": "позволять + Akkusativ", "все": ["оставлять", "поручать: Ich lasse das Auto waschen", "Perfekt: habe … waschen lassen", "позволять + Akkusativ", "Lass uns …", "sich lassen = можно, поддаётся"]}, {"t": 250, "кусок": "Lass uns …", "все": ["оставлять", "поручать: Ich lasse das Auto waschen", "Perfekt: habe … waschen lassen", "позволять + Akkusativ", "Lass uns …", "sich lassen = можно, поддаётся"]}], "последний": "sich lassen = можно, поддаётся", "все": ["оставлять", "поручать: Ich lasse das Auto waschen", "Perfekt: habe … waschen lassen", "позволять + Akkusativ", "Lass uns …", "sich lassen = можно, поддаётся"], "верно": [], "вопросы": []}</script>
+  <p class="вид-зачем">Шесть значений lassen по-русски за 5 минут: оставлять, поручать (Ich lasse mir die Haare schneiden), позволять, «давай …» (Lass uns …), «позвольте мне …» и «поддаётся» (Die Tür lässt sich öffnen).</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/YtbQcE6W46k?t=40" target="_blank" rel="noopener">0:40</a> — оставлять</li><li><a href="https://youtu.be/YtbQcE6W46k?t=90" target="_blank" rel="noopener">1:30</a> — поручать: Ich lasse das Auto waschen</li><li><a href="https://youtu.be/YtbQcE6W46k?t=150" target="_blank" rel="noopener">2:30</a> — Perfekt: habe … waschen lassen</li><li><a href="https://youtu.be/YtbQcE6W46k?t=185" target="_blank" rel="noopener">3:05</a> — позволять + Akkusativ</li><li><a href="https://youtu.be/YtbQcE6W46k?t=220" target="_blank" rel="noopener">3:40</a> — Lass uns …</li><li><a href="https://youtu.be/YtbQcE6W46k?t=250" target="_blank" rel="noopener">4:10</a> — sich lassen = можно, поддаётся</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Значение lassen.</h4><ol><li>Ich lasse die Tasche im Auto. → <select data-ок="оставляю"><option value="">—</option><option>разрешаю</option><option>поручаю (стригусь у мастера)</option><option>давайте путешествовать</option><option>дверь можно открыть</option><option>оставляю</option></select></li><li>Ich lasse mir die Haare schneiden. → <select data-ок="поручаю (стригусь у мастера)"><option value="">—</option><option>разрешаю</option><option>поручаю (стригусь у мастера)</option><option>давайте путешествовать</option><option>дверь можно открыть</option><option>оставляю</option></select></li><li>Ich lasse mein Kind fernsehen. → <select data-ок="разрешаю"><option value="">—</option><option>разрешаю</option><option>поручаю (стригусь у мастера)</option><option>давайте путешествовать</option><option>дверь можно открыть</option><option>оставляю</option></select></li><li>Lasst uns reisen! → <select data-ок="давайте путешествовать"><option value="">—</option><option>разрешаю</option><option>поручаю (стригусь у мастера)</option><option>давайте путешествовать</option><option>дверь можно открыть</option><option>оставляю</option></select></li><li>Die Tür lässt sich öffnen. → <select data-ок="дверь можно открыть"><option value="">—</option><option>разрешаю</option><option>поручаю (стригусь у мастера)</option><option>давайте путешествовать</option><option>дверь можно открыть</option><option>оставляю</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь.</h4><ol><li data-впиши="lassen" data-почему="в Perfekt — два инфинитива">Ich habe die Unterlagen beglaubigen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mein" data-почему="lassen + Akkusativ">Ich lasse <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Kind fernsehen. (моего)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mich" data-почему="">Lass <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> bitte bezahlen! (меня)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>lassen</span><span>оставлять; позволять; поручать</span><span>die Unterlagen beglaubigen</span><span>заверить документы</span><span>heilen</span><span>лечить, излечивать</span><span>sich öffnen lassen</span><span>поддаваться открытию</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео2">
+  <a class="вид-ролик" href="https://youtu.be/QvApz023svw" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/QvApz023svw/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 2 из 3</small><b>Deutsch lernen B2 | Willkommen im Hotel Mama | das Verb &quot;lassen&quot; und seine Bedeutungen</b><small>Hallo Deutschschule · 15:26</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="QvApz023svw">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 140, "кусок": "поручить маме", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"], "верно": ["«Dieses Problem lässt sich leicht lösen» — «эту проблему легко решить».", true, "sich lassen + инфинитив = можно сделать (замена пассива)."]}, {"t": 230, "кусок": "Lass mich …", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"], "верно": ["«Lass das Kochen, Mama» — «мама, приготовь еду».", false, "lass das … — брось, не делай: «мама, не готовь»."]}, {"t": 325, "кусок": "разрешать / не разрешать", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"]}, {"t": 385, "кусок": "Lass uns …", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"]}, {"t": 520, "кусок": "сводит с ума", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"]}, {"t": 615, "кусок": "lässt sich — можно", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"]}, {"t": 735, "кусок": "оставить (без инфинитива)", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"]}], "последний": "бросить, перестать", "все": ["поручить маме", "Lass mich …", "разрешать / не разрешать", "Lass uns …", "сводит с ума", "lässt sich — можно", "оставить (без инфинитива)", "бросить, перестать"], "верно": [], "вопросы": []}</script>
+  <p class="вид-зачем">Все значения lassen в сценках (Hallo Deutschschule): «поручить другому» (Ich lasse mein Bett machen), «разрешать» (Ich lasse meine Tochter fernsehen), «давай!» (Lass uns ins Kino gehen), «можно сделать» (Das lässt sich lösen) и lassen без инфинитива — «оставить», «бросить» (Er hat das Rauchen gelassen).</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/QvApz023svw?t=0" target="_blank" rel="noopener">0:00</a> — поручить маме</li><li><a href="https://youtu.be/QvApz023svw?t=140" target="_blank" rel="noopener">2:20</a> — Lass mich …</li><li><a href="https://youtu.be/QvApz023svw?t=230" target="_blank" rel="noopener">3:50</a> — разрешать / не разрешать</li><li><a href="https://youtu.be/QvApz023svw?t=325" target="_blank" rel="noopener">5:25</a> — Lass uns …</li><li><a href="https://youtu.be/QvApz023svw?t=385" target="_blank" rel="noopener">6:25</a> — сводит с ума</li><li><a href="https://youtu.be/QvApz023svw?t=520" target="_blank" rel="noopener">8:40</a> — lässt sich — можно</li><li><a href="https://youtu.be/QvApz023svw?t=615" target="_blank" rel="noopener">10:15</a> — оставить (без инфинитива)</li><li><a href="https://youtu.be/QvApz023svw?t=735" target="_blank" rel="noopener">12:15</a> — бросить, перестать</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Фраза → какое значение lassen.</h4><ol><li>Ich lasse meine Kleider von meiner Mutter waschen. → <select data-ок="поручить другому"><option value="">—</option><option>оставить</option><option>можно / нельзя сделать</option><option>давай вместе</option><option>бросить, перестать</option><option>разрешить</option><option>поручить другому</option></select></li><li>Ich lasse meine Tochter die ganze Nacht fernsehen. → <select data-ок="разрешить"><option value="">—</option><option>оставить</option><option>можно / нельзя сделать</option><option>давай вместе</option><option>бросить, перестать</option><option>разрешить</option><option>поручить другому</option></select></li><li>Lass uns ins Kino gehen! → <select data-ок="давай вместе"><option value="">—</option><option>оставить</option><option>можно / нельзя сделать</option><option>давай вместе</option><option>бросить, перестать</option><option>разрешить</option><option>поручить другому</option></select></li><li>Der Fernseher lässt sich nicht mehr reparieren. → <select data-ок="можно / нельзя сделать"><option value="">—</option><option>оставить</option><option>можно / нельзя сделать</option><option>давай вместе</option><option>бросить, перестать</option><option>разрешить</option><option>поручить другому</option></select></li><li>Heute lasse ich mein Handy zu Hause. → <select data-ок="оставить"><option value="">—</option><option>оставить</option><option>можно / нельзя сделать</option><option>давай вместе</option><option>бросить, перестать</option><option>разрешить</option><option>поручить другому</option></select></li><li>Er hat das Rauchen gelassen. → <select data-ок="бросить, перестать"><option value="">—</option><option>оставить</option><option>можно / нельзя сделать</option><option>давай вместе</option><option>бросить, перестать</option><option>разрешить</option><option>поручить другому</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Perfekt с lassen: два инфинитива в конце.</h4><ol><li data-впиши="lassen" data-почему="lassen + инфинитив в Perfekt — снова lassen, не gelassen.">Ich habe mein Bett von meiner Mutter machen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="lassen" data-почему="">Meine Mutter hat mich nie Computergames spielen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="gelassen" data-почему="Без второго глагола — обычное причастие gelassen.">Lisa hat die Wäsche draußen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="lassen" data-почему="">Die schwierige Prüfung hat sie schwitzen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Верно или нет?</h4><ol><li data-верно="1" data-почему="sich lassen + инфинитив = можно сделать (замена пассива).">«Dieses Problem lässt sich leicht lösen» — «эту проблему легко решить». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="lass das … — брось, не делай: «мама, не готовь».">«Lass das Kochen, Mama» — «мама, приготовь еду». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>ordentlich</span><span>аккуратный, прибранный</span><span>eincremen</span><span>намазывать кремом</span><span>sich verbrennen</span><span>обгореть</span><span>lutschen</span><span>сосать (леденец)</span><span>verzweifeln</span><span>отчаиваться</span><span>wahnsinnig werden</span><span>сходить с ума</span><span>der Roller</span><span>самокат</span><span>schwitzen</span><span>потеть</span><span>die Unordnung</span><span>беспорядок</span><span>vermeiden</span><span>избегать</span><span>das Zeug</span><span>вещи, барахло</span><span>das Rauchen lassen</span><span>бросить курить</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео3">
+  <a class="вид-ролик" href="https://youtu.be/Ree_YclSVTE" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/Ree_YclSVTE/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 3 из 3</small><b>German Verbs: Lassen | Super Easy German 173</b><small>Easy German · 7:47</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="Ree_YclSVTE">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 150, "кусок": "перестать: Ich lasse es", "все": ["перестать: Ich lasse es", "разрешать", "сделать чужими руками", "Lass uns …", "не брать с собой"]}, {"t": 258, "кусок": "разрешать", "все": ["перестать: Ich lasse es", "разрешать", "сделать чужими руками", "Lass uns …", "не брать с собой"]}, {"t": 313, "кусок": "сделать чужими руками", "все": ["перестать: Ich lasse es", "разрешать", "сделать чужими руками", "Lass uns …", "не брать с собой"]}, {"t": 370, "кусок": "Lass uns …", "все": ["перестать: Ich lasse es", "разрешать", "сделать чужими руками", "Lass uns …", "не брать с собой"]}], "последний": "не брать с собой", "все": ["перестать: Ich lasse es", "разрешать", "сделать чужими руками", "Lass uns …", "не брать с собой"], "верно": [], "вопросы": []}</script>
+  <p class="вид-зачем">Easy German: lassen в живых сценках — «Lass das!», «Lass mich mal spielen», «Wir lassen die Hecke machen», «Lass uns ein Bier trinken», «Ich habe mein Portemonnaie zu Hause gelassen».</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/Ree_YclSVTE?t=54" target="_blank" rel="noopener">0:54</a> — перестать: Ich lasse es</li><li><a href="https://youtu.be/Ree_YclSVTE?t=150" target="_blank" rel="noopener">2:30</a> — разрешать</li><li><a href="https://youtu.be/Ree_YclSVTE?t=258" target="_blank" rel="noopener">4:18</a> — сделать чужими руками</li><li><a href="https://youtu.be/Ree_YclSVTE?t=313" target="_blank" rel="noopener">5:13</a> — Lass uns …</li><li><a href="https://youtu.be/Ree_YclSVTE?t=370" target="_blank" rel="noopener">6:10</a> — не брать с собой</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Что значит фраза?</h4><ol><li>Lass das! → <select data-ок="Перестань! Не делай этого!"><option value="">—</option><option>Просто оставь меня в покое.</option><option>Куртку я оставлю здесь.</option><option>Дашь мне тоже поиграть?</option><option>Перестань! Не делай этого!</option><option>Мы закажем это (сделают другие).</option></select></li><li>Lass mich einfach alleine. → <select data-ок="Просто оставь меня в покое."><option value="">—</option><option>Просто оставь меня в покое.</option><option>Куртку я оставлю здесь.</option><option>Дашь мне тоже поиграть?</option><option>Перестань! Не делай этого!</option><option>Мы закажем это (сделают другие).</option></select></li><li>Lässt du mich auch mal spielen? → <select data-ок="Дашь мне тоже поиграть?"><option value="">—</option><option>Просто оставь меня в покое.</option><option>Куртку я оставлю здесь.</option><option>Дашь мне тоже поиграть?</option><option>Перестань! Не делай этого!</option><option>Мы закажем это (сделают другие).</option></select></li><li>Wir lassen es machen. → <select data-ок="Мы закажем это (сделают другие)."><option value="">—</option><option>Просто оставь меня в покое.</option><option>Куртку я оставлю здесь.</option><option>Дашь мне тоже поиграть?</option><option>Перестань! Не делай этого!</option><option>Мы закажем это (сделают другие).</option></select></li><li>Die Jacke lasse ich hier. → <select data-ок="Куртку я оставлю здесь."><option value="">—</option><option>Просто оставь меня в покое.</option><option>Куртку я оставлю здесь.</option><option>Дашь мне тоже поиграть?</option><option>Перестань! Не делай этого!</option><option>Мы закажем это (сделают другие).</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь.</h4><ol><li data-впиши="mir" data-почему="sich selbst — Dativ">Ich lasse <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> die Haare schneiden. (себе)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="gelassen" data-почему="одно lassen → gelassen">Ich habe mein Portemonnaie zu Hause <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Lass" data-почему=""><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> uns doch koreanisch essen gehen!<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>aufhören</span><span>прекращать</span><span>aufgeben</span><span>сдаваться</span><span>aufbleiben</span><span>не ложиться спать</span><span>die Hecke</span><span>живая изгородь</span><span>das Portemonnaie</span><span>кошелёк</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+</section>
+<script>
+(function(){
+  function чисто(s){return (s||'').toLowerCase().replace(/[.,!?;:«»"„“]/g,'').replace(/\s+/g,' ').trim();}
+  document.querySelectorAll('.вид [data-впиши]').forEach(function(li){
+    var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
+    function проверить(){
+      var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
+      итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+    }
+    кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
+  });
+  document.querySelectorAll('.вид [data-верно]').forEach(function(li){
+    li.querySelectorAll('button').forEach(function(кн){
+      кн.onclick=function(){
+        var верно=кн.dataset.да===li.dataset.верно, итог=li.querySelector('.вид-итог');
+        итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+        итог.innerHTML=(верно?'✓ ':'✗ ')+(li.dataset.верно==='1'?'верно':'неверно')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      };
+    });
+  });
+  document.querySelectorAll('.вид [data-соедини]').forEach(function(бл){
+    бл.querySelector('button').onclick=function(){
+      var всего=0,хорошо=0;
+      бл.querySelectorAll('select').forEach(function(с){всего++; var ок=с.value===с.dataset.ок; if(ок)хорошо++; с.style.borderColor=ок?'#1f9d55':'#d64545';});
+      var итог=бл.querySelector('.вид-итог'); итог.className='вид-итог '+(хорошо===всего?'вид-да':'вид-нет');
+      итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
+    };
+  });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
+})();
+</script>
+<!--ВИДЕО-END-->
 
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>

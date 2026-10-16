@@ -51,14 +51,22 @@ function левенштейн(a, b) {
   for (j = 0; j <= b.length; j++) d[0][j] = j;
   for (i = 1; i <= a.length; i++)
     for (j = 1; j <= b.length; j++)
+    {
       d[i][j] = Math.min(d[i - 1][j] + 1, d[i][j - 1] + 1, d[i - 1][j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+      // перестановка соседних букв (Ärtzin ↔ Ärztin) — одна опечатка, а не две
+      if (i > 1 && j > 1 && a[i - 1] === b[j - 2] && a[i - 2] === b[j - 1]) d[i][j] = Math.min(d[i][j], d[i - 2][j - 2] + 1);
+    }
   return d[a.length][b.length];
 }
 /* «Ärtzin» вместо «Ärztin» — опечатка, а не незнание: 1 ошибка на короткое слово, 2 — на длинное */
 function опечатка(ввод, верно) {
   var a = String(ввод || '').trim(), b = String(верно || '').trim();
   if (!a || a === b) return false;
-  var н = левенштейн(a.toLowerCase(), b.toLowerCase());
+  // разница только в окончании (jenen/jenem, der/dem, sint/sind) — это падеж или форма, а не опечатка
+  var x = a.toLowerCase(), y = b.toLowerCase(), общ = 0;
+  while (общ < Math.min(x.length, y.length) && x[общ] === y[общ]) общ++;
+  if (общ >= Math.min(x.length, y.length) - 2 && Math.abs(x.length - y.length) <= 2) return false;
+  var н = левенштейн(x, y);
   return н > 0 && н <= (b.length >= 7 ? 2 : 1);
 }
 window.ИГРЫ_ОПЕЧАТКА = опечатка;   // домашка тоже пользуется
