@@ -134,6 +134,7 @@ var СТИЛЬ = ''
 + '.иг-шапка{ display:flex; align-items:center; gap:10px; margin-bottom:14px; }'
 + '.иг-шапка .иг-назад{ background:none; border:none; font:inherit; font-size:14px; cursor:pointer;'
 + '  color:var(--ink-muted,#5b615c); padding:6px 8px 6px 0; }'
++ '.иг-шапка .иг-пропуск{ margin-left:auto; padding:6px 0 6px 8px; color:var(--accent,#1f5f5b); font-weight:700; white-space:nowrap; }'
 + '.иг-полоса{ flex:1; height:8px; border-radius:99px; background:var(--surface-2,#eceef6); overflow:hidden; }'
 + '.иг-полоса i{ display:block; height:100%; background:var(--accent,#1f5f5b); transition:width .25s ease; }'
 + '.иг-счёт{ font-size:13px; font-weight:700; color:var(--ink-muted,#5b615c); white-space:nowrap; }'
@@ -256,6 +257,15 @@ var СТИЛЬ = ''
 + '.иг-книга.летит{ position:fixed; z-index:9999; pointer-events:none; opacity:.92; transform:rotate(-3deg) scale(1.05);'
 + '  box-shadow:0 10px 24px rgba(0,0,0,.25); }'
 + '.иг-книга.тень{ opacity:.3; }'
++ '.иг-книжки{ display:grid; grid-template-columns:minmax(104px,36%) 1fr; gap:10px; align-items:start; margin-bottom:12px; }'
++ '.иг-книжки .иг-полка{ position:sticky; top:62px; flex-direction:column; flex-wrap:nowrap; align-items:stretch; margin:0; padding:5px; gap:6px; }'
++ '.иг-книжки .иг-полка.пусто::after{ content:"всё расставлено"; font-size:12px; text-align:center; }'
++ '.иг-книжки .иг-книга{ font-size:14px; padding:6px 6px 6px 8px; border-left-width:5px; min-height:34px; line-height:1.2;'
++ '  overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto; }'
++ '.иг-книжки .иг-текст{ margin:0; gap:2px; }'
++ '.иг-книжки .иг-текст .ряд{ font-size:15px; line-height:1.85; padding:1px 0 3px; }'
++ '.иг-книжки .иг-дырка{ min-width:58px; min-height:30px; margin:0 2px; }'
++ '.иг-книжки .иг-дырка .иг-книга{ font-size:13.5px; min-height:26px; padding:2px 7px 2px 9px; }'
 + '.иг-текст{ display:grid; gap:4px; margin-bottom:14px; }'
 + '.иг-текст .ряд{ font-family:Georgia,"Iowan Old Style",serif; font-size:17px; line-height:2.3; padding:2px 0;'
 + '  border-bottom:1px dashed var(--line,#e4e6ef); }'
@@ -530,7 +540,59 @@ var ИГРЫ = {
       } catch (e) {}
     }
 
+    /* 20.10.2026 (врач): игры урока — отдельным экраном «как ЗУБР»: список с галочками,
+       первая — «все игры подряд». Страница даёт своё меню (наст.меню), ядро — очередь игр. */
+    var своёМеню = typeof наст.меню === 'function' ? наст.меню : null;
+    var очередь = null, место = 0;
+    function найти(код) { for (var i = 0; i < список.length; i++) if (список[i].код === код) return список[i]; return null; }
+    function описание() {
+      return список.map(function (и) { return { код: и.код, имя: и.имя, значок: и.значок, под: и.под, рекорд: рекорд(и.код) }; });
+    }
+    function играть(коды) {
+      var игры = (коды || []).map(найти).filter(Boolean);
+      if (!игры.length) return;
+      очередь = игры.length > 1 ? игры : null; место = 0;
+      запустить(игры[0]);
+    }
+    function дальшеВОчереди() {
+      if (!очередь) { меню(); return; }
+      место++;
+      if (место < очередь.length) { запустить(очередь[место]); return; }
+      var пройдено = очередь; очередь = null;
+      карта.innerHTML =
+        '<div class="иг-верх"><div class="иг-знак">🏁</div><div><h2>Все игры пройдены!</h2></div></div>' +
+        '<div class="иг-разбор">' + пройдено.map(function (и) {
+          var р = рекорд(и.код);
+          return '<div>' + и.значок + ' ' + экр(и.имя) + (р ? ' — <b>' + р.процент + '%</b>' : '') + '</div>';
+        }).join('') + '</div>' +
+        '<div class="иг-низ"><button class="иг-главная" id="игДругая">К списку игр</button></div>';
+      карта.querySelector('#игДругая').onclick = меню;
+    }
+    function кнопкиИтога() {
+      if (очередь && место < очередь.length - 1) {
+        var с = очередь[место + 1];
+        return '<button class="иг-главная" id="игСлед">Дальше: ' + с.значок + ' ' + экр(с.имя) + ' →</button>' +
+          '<button class="иг-тихая" id="игЕщё">Ещё раз</button><button class="иг-тихая" id="игДругая">К списку игр</button>';
+      }
+      if (очередь) return '<button class="иг-главная" id="игСлед">🏁 Готово</button><button class="иг-тихая" id="игЕщё">Ещё раз</button>';
+      return '<button class="иг-главная" id="игЕщё">Ещё раз</button><button class="иг-тихая" id="игДругая">Другая игра</button>';
+    }
+    function оживитьИтог(игра) {
+      var е = карта.querySelector('#игЕщё'); if (е) е.onclick = function () { запустить(игра); };
+      var д = карта.querySelector('#игДругая'); if (д) д.onclick = меню;
+      var сл = карта.querySelector('#игСлед'); if (сл) сл.onclick = дальшеВОчереди;
+    }
+    function кнопкаПропуска() {
+      return очередь ? '<button class="иг-назад иг-пропуск" id="игПропуск">Дальше ›</button>' : '';
+    }
+    function оживитьШапку() {
+      var н = карта.querySelector('#игНазад'); if (н) н.onclick = меню;
+      var п = карта.querySelector('#игПропуск'); if (п) п.onclick = дальшеВОчереди;
+    }
+
     function меню() {
+      очередь = null;
+      if (своёМеню) { своёМеню(карта, описание(), играть); return; }
       var кнопки = список.map(function (и) {
         var р = рекорд(и.код);
         return '<button class="иг-кн" data-код="' + и.код + '">' +
@@ -561,10 +623,8 @@ var ИГРЫ = {
         '<div class="иг-верх"><div class="иг-знак">' + игра.значок + '</div><div><h2>' + экр(игра.имя) + '</h2></div></div>' +
         '<div class="иг-итог"><div class="число">' + процент + '%</div>' +
         '<div class="строка">' + экр(подпись || '') + '</div></div>' +
-        '<div class="иг-низ"><button class="иг-главная" id="игЕщё">Ещё раз</button>' +
-        '<button class="иг-тихая" id="игДругая">Другая игра</button></div>';
-      карта.querySelector('#игЕщё').onclick = function () { запустить(игра); };
-      карта.querySelector('#игДругая').onclick = меню;
+        '<div class="иг-низ">' + кнопкиИтога() + '</div>';
+      оживитьИтог(игра);
     }
 
     function запустить(игра) {
@@ -576,9 +636,8 @@ var ИГРЫ = {
           рисовать: function (нутро) {
             карта.innerHTML =
               '<div class="иг-шапка"><button class="иг-назад" id="игНазад">‹ Игры</button>' +
-              '<div class="иг-счёт">' + экр(игра.имя) + '</div></div>' + нутро;
-            var н = карта.querySelector('#игНазад');
-            if (н) н.onclick = меню;
+              '<div class="иг-счёт">' + экр(игра.имя) + '</div>' + кнопкаПропуска() + '</div>' + нутро;
+            оживитьШапку();
           },
           звукОтвета: звук,
           рекорд: function (процент, верных, всего) { записатьРекорд(игра.код, процент, верных, всего); },
@@ -594,15 +653,14 @@ var ИГРЫ = {
         return '<div class="иг-шапка">' +
           '<button class="иг-назад" id="игНазад">‹ Игры</button>' +
           '<div class="иг-полоса"><i style="width:' + Math.round(i / задания.length * 100) + '%"></i></div>' +
-          '<div class="иг-счёт">' + (i + 1) + ' / ' + задания.length + ' · ' + верных + ' ✓</div></div>';
+          '<div class="иг-счёт">' + (i + 1) + ' / ' + задания.length + ' · ' + верных + ' ✓</div>' + кнопкаПропуска() + '</div>';
       }
 
       var ход = {
         игра: игра, голос: голос,
         рисовать: function (нутро) {
           карта.innerHTML = шапка() + нутро;
-          var н = карта.querySelector('#игНазад');
-          if (н) н.onclick = меню;
+          оживитьШапку();
         },
         задание: function () { return задания[i]; },
         ответ: function (верно, разбор) {
@@ -633,10 +691,8 @@ var ИГРЫ = {
           '<div class="иг-итог"><div class="число">' + процент + '%</div>' +
           '<div class="строка">' + верных + ' из ' + задания.length + ' · ' + слово + '</div></div>' +
           разбор +
-          '<div class="иг-низ"><button class="иг-главная" id="игЕщё">Ещё раз</button>' +
-          '<button class="иг-тихая" id="игДругая">Другая игра</button></div>';
-        карта.querySelector('#игЕщё').onclick = function () { запустить(игра); };
-        карта.querySelector('#игДругая').onclick = меню;
+          '<div class="иг-низ">' + кнопкиИтога() + '</div>';
+        оживитьИтог(игра);
       }
 
       игра.раунд(ход);
@@ -647,6 +703,7 @@ var ИГРЫ = {
     ИГРЫ.запустить = function (код) {
       for (var i = 0; i < список.length; i++) {
         if (список[i].код === код) {
+          очередь = null;
           корень.scrollIntoView({ block: 'start' });
           запустить(список[i]);
           return true;
@@ -656,6 +713,9 @@ var ИГРЫ = {
       return false;
     };
     ИГРЫ.какиеЕсть = function () { return список.map(function (и) { return и.код; }); };
+    ИГРЫ.описание = описание;
+    ИГРЫ.играть = играть;
+    ИГРЫ.меню = меню;
 
     меню();
     return true;
@@ -1381,7 +1441,15 @@ var КНИЖКИ = {
   экран: function (х) {
     var свои = КНИЖКИ.свои();
     var пул = свои.length >= 4 ? свои : КНИЖКИ.изФраз(х.данные);
-    var строки = пул.length > 12 ? перемешать(пул).slice(0, 10) : (свои.length ? пул.slice() : перемешать(пул).slice(0, 10));
+    /* 20.10.2026 (врач): на телефоне слова сверху, текст снизу — до пропусков не дотянуться.
+       Теперь слова — столбиком слева, предложения — справа, и не больше 6 строк за раз,
+       чтобы всё было на одном экране. Свой текст урока — подряд, кусок со случайного места. */
+    var МАКС = 6;
+    var строки;
+    if (свои.length) {
+      var с0 = пул.length > МАКС ? Math.floor(Math.random() * (пул.length - МАКС + 1)) : 0;
+      строки = пул.slice(с0, с0 + МАКС);
+    } else строки = перемешать(пул).slice(0, МАКС);
     var книги, места, начало, таймер, проверено, перевод = false, выбрана = -1;
 
     function заново() {
@@ -1399,7 +1467,7 @@ var КНИЖКИ = {
     function стоп() { if (таймер) { clearInterval(таймер); таймер = null; } }
     function гдеКнига(к) { return места.indexOf(к); }
     function книжка(к, доп) {
-      return '<span class="иг-книга ц' + книги[к].цвет + (доп || '') + '" data-к="' + к + '">' + экр(книги[к].т) + '</span>';
+      return '<span lang="de" class="иг-книга ц' + книги[к].цвет + (доп || '') + '" data-к="' + к + '">' + экр(книги[к].т) + '</span>';
     }
     function верноЛи(н) {
       var к = места[н];
@@ -1426,9 +1494,9 @@ var КНИЖКИ = {
       х.рисовать(
         (проверено ? табличка() : '<p class="иг-подсказ"><span class="иг-время" id="игВремя">' + время() + '</span> · ' +
           'перетащи книжку в пропуск — или нажми книжку, потом пропуск. Нажми на поставленную — вернётся на полку.</p>') +
-        (проверено ? '' : '<div class="иг-полка' + (наПолке.length ? '' : ' пусто') + '" id="игПолка">' +
+        (проверено ? '' : '<div class="иг-книжки"><div class="иг-полка' + (наПолке.length ? '' : ' пусто') + '" id="игПолка">' +
           наПолке.map(function (к) { return книжка(к, к === выбрана ? ' выбрана' : ''); }).join('') + '</div>') +
-        '<div class="иг-текст" id="игТекст">' + текст + '</div>' +
+        '<div class="иг-текст" id="игТекст">' + текст + '</div>' + (проверено ? '' : '</div>') +
         '<div class="иг-низ">' +
         (проверено
           ? '<button class="иг-главная" id="игЕщё">↻ Ещё раз</button>' +
