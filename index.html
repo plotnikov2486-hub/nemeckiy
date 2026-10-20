@@ -770,6 +770,9 @@ if (!Слушалка){
 
 
 
+
+
+
   <header>
     <h1>🇩🇪 Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
@@ -933,6 +936,11 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 
 // Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
 const POLYA = [
+  {id:'p19', num:'Занятие 19', date:'16.10.2026', title:'Вокзал, текст «Wandern», n-Deklination и man',
+   topic:'Час. Описываем фото: der Mann ist am Flughafen, eine Tasche und einen Koffer in der Hand. Слова вокзала по группам (Gepäck, Verkehrsmittel, im Bahnhof), S-Bahn = Schnellbahn, Haupt- (Hauptbahnhof, Hauptplatz), der Schalter, abfahren, abholen, «Was bedeutet …?». Ситуации к фото: Wo fährt der Zug nach München ab? Kannst du mich vom Bahnhof abholen? ⭐⭐ Текст «Wandern»: länger und anstrengender als, gleichzeitig, sich entspannen, Wanderwege, ausgeben, einkehren. ⭐ man — «можно, говорят». Большая домашка: 7 вопросов к тексту, dieser/jener/solcher, 35 слов презентации «Reisen», текст «Öffentliche Verkehrsmittel» с вопросами, Kaufhaus Alexa (Goethe A1), лист mit + Dativ и fahren/fliegen/gehen, загадки, видео Easy German. Добавка 17.10: n-Deklination, Genitiv -s/-es, Dativ Plural -n, das Herz и der Name, man — с видео и упражнениями.',
+   pdf:'', audio:'dasha/polya19_interactive.html', mins:61, hard:'Средне', cards:206,
+   photos:['dasha/polya19_hw_aufgabe1.jpg','dasha/polya19_hw_blatt.jpg','dasha/polya19_hw_extra1.jpg'],
+   photoLabels:['Домашка Даши 16.10','Arbeitsblatt: mit + Dativ, fahren/fliegen/gehen','Добавка 17.10: n-Deklination']},
   {id:'p18', num:'Занятие 18', date:'14.10.2026', title:'dieser, jener, solcher в тексте и транспорт',
    topic:'Сорок пять минут. Вопрос по прошлой домашке: «seins» — притяжательное вместо опущенного существительного (Der kleine Otto hat seins zu Hause vergessen) и притяжательное в Genitiv (Die Farbe ihres Kleides ist blau — сначала вопрос wessen?, потом форма как у артикля). ⭐⭐ dieser, jener, solcher в тексте про книжный магазин и кафе (dieses Buch, von jenem Autor, diese Zeitschrift, in diesem Café, jenen Kuchen). ⭐ von, mit, nach — всегда Dativ. Новая тема — транспорт и путешествия: das Gepäck, der Koffer, die Haltestelle, der Bahnsteig, die U-Bahn, die Straßenbahn, das Flugzeug; steigen ≠ wachsen. Домашка: два видео (Wortschatz Reisen, Eine Reise um die Welt), «Was kann man in Deutschland, Österreich, der Schweiz und Ägypten machen?», карточки Stadt & Verkehr.',
    pdf:'', audio:'dasha/polya18_interactive.html', mins:45, hard:'Средне', cards:71,
@@ -1142,7 +1150,7 @@ const LEVELS = [
     {t:'Погода', l:['l16']},
     {t:'Союзы und, aber, oder, denn, sondern', l:['l23']},
     {t:'Сложные слова (Komposita)', l:['l23']},
-    {t:'welcher, dieser, jeder', l:['l23','p17','p18']},
+    {t:'welcher, dieser, jeder', l:['l23','p17','p18','p19']},
   ]},
   {code:'A2', name:'Базовый', weight:0.20, color:'#1f8fb5', topics:[
     {t:'Perfekt со всеми глаголами', l:[]},
@@ -1151,9 +1159,9 @@ const LEVELS = [
     {t:'Возвратные глаголы (sich waschen)', l:['l18']},
     {t:'Дательный падеж полностью + глаголы с Dativ', l:['l21']},
     {t:'Предлоги Wo? / Wohin? (Wechselpräpositionen)', l:['l17','p12']},
-    {t:'Предлоги с Dativ (mit, nach, bei, seit)', l:['l20','p18']},
+    {t:'Предлоги с Dativ (mit, nach, bei, seit)', l:['l20','p18','p19']},
     {t:'Предлоги с Akkusativ (für, ohne, gegen)', l:['l20']},
-    {t:'Сравнительная степень (größer, am größten)', l:['l22','p14']},
+    {t:'Сравнительная степень (größer, am größten)', l:['l22','p14','p19']},
     {t:'Придаточные с weil / denn', l:['l25']},
     {t:'Придаточные с dass', l:['l25']},
     {t:'Придаточные с wenn / als', l:['l25']},
@@ -1162,7 +1170,7 @@ const LEVELS = [
     {t:'Будущее время (Futur I)', l:['l34']},
     {t:'Императив во всех формах', l:['l13']},
     {t:'Infinitiv mit zu', l:[]},
-    {t:'Родительный падеж (Genitiv) — база', l:['p11','p12','p13','d10','p18']},
+    {t:'Родительный падеж (Genitiv) — база', l:['p11','p12','p13','d10','p18','p19']},
     {t:'Пассив — введение', l:['l27']},
     {t:'Глагол lassen', l:['l28']},
     {t:'Косвенный вопрос (ob)', l:['l31']},
@@ -1170,7 +1178,7 @@ const LEVELS = [
     {t:'Медицина: симптомы и жалобы пациента', l:['l47']},
     {t:'Здоровье и самочувствие', l:[]},
     {t:'Покупки и магазины', l:['p12']},
-    {t:'Путешествия и транспорт', l:['p18']},
+    {t:'Путешествия и транспорт', l:['p18','p19']},
     {t:'Работа, офис, документы', l:['p17']},
     {t:'Жильё: аренда, мебель', l:['l15','p12']},
     {t:'Свободное время и хобби', l:[]},
@@ -1181,7 +1189,7 @@ const LEVELS = [
     {t:'Пассив во всех временах', l:['l35']},
     {t:'Относительные придаточные (der, die, das)', l:['l38']},
     {t:'Genitiv полностью', l:['l37']},
-    {t:'n-Deklination (den Patienten)', l:['l36']},
+    {t:'n-Deklination (den Patienten)', l:['l36','p19']},
     {t:'Склонение прилагательных полностью', l:['l24']},
     {t:'Partizip I и II как определение', l:['l42']},
     {t:'Infinitivkonstruktionen (um zu, ohne zu, statt zu)', l:['l39']},
