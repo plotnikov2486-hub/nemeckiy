@@ -47,6 +47,7 @@
   function чистыйРу(ru) {
     ru = чисто(ru);
     if (/❌/.test(ru)) return '';
+    if (/^\s*\d+\.\s*\S+[.:]?\s*$/.test(ru)) return '';   // «4. Пациенту.» — пометка ответа домашки, не перевод
     ru = ru.replace(/✅/g, '').replace(/^\s*\d+\.\s*/, '').split(/\s+→\s+/)[0];
     ru = ru.replace(/\s*\([^)]*\)\s*$/, '').replace(/\s*\([^)]*$/, '').trim();   // и недорезанная «(…»
     return ru.length >= 3 ? ru : '';
