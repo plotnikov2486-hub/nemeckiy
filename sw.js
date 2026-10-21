@@ -5,7 +5,7 @@
    из кэша. Звук, словари и картинки, наоборот, из кэша сразу: они
    тяжёлые и почти не меняются.  */
 
-const ВЕРСИЯ = 'nemeckiy-v119';
+const ВЕРСИЯ = 'nemeckiy-v120';
 const ОСНОВА = [
   './',
   './index.html',
@@ -16,6 +16,7 @@ const ОСНОВА = [
   './ekzameny/stil.css',
   './glagoly.html',
   './igry.js',
+  './dz.js',
   './trenazhyor.html',
   './stat.html',
   './manifest.json',
