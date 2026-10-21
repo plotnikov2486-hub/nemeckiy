@@ -257,13 +257,13 @@ var СТИЛЬ = ''
 + '.иг-книга.летит{ position:fixed; z-index:9999; pointer-events:none; opacity:.92; transform:rotate(-3deg) scale(1.05);'
 + '  box-shadow:0 10px 24px rgba(0,0,0,.25); }'
 + '.иг-книга.тень{ opacity:.3; }'
-+ '.иг-книжки{ display:grid; grid-template-columns:minmax(104px,36%) 1fr; gap:10px; align-items:start; margin-bottom:12px; }'
++ '.иг-книжки{ display:grid; grid-template-columns:fit-content(42%) 1fr; gap:10px; align-items:start; margin-bottom:12px; }'
 + '.иг-книжки .иг-полка{ position:sticky; top:62px; flex-direction:column; flex-wrap:nowrap; align-items:stretch; margin:0; padding:5px; gap:6px; }'
 + '.иг-книжки .иг-полка.пусто::after{ content:"всё расставлено"; font-size:12px; text-align:center; }'
-+ '.иг-книжки .иг-книга{ font-size:14px; padding:6px 6px 6px 8px; border-left-width:5px; min-height:34px; line-height:1.2;'
++ '.иг-книжки .иг-книга{ font-size:15px; padding:6px 8px 6px 8px; text-align:center; border-left-width:5px; min-height:34px; line-height:1.2;'
 + '  overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto; }'
 + '.иг-книжки .иг-текст{ margin:0; gap:2px; }'
-+ '.иг-книжки .иг-текст .ряд{ font-size:15px; line-height:1.85; padding:1px 0 3px; }'
++ '.иг-книжки .иг-текст .ряд{ font-size:17.5px; line-height:1.95; padding:1px 0 4px; }'
 + '.иг-книжки .иг-дырка{ min-width:58px; min-height:30px; margin:0 2px; }'
 + '.иг-книжки .иг-дырка .иг-книга{ font-size:13.5px; min-height:26px; padding:2px 7px 2px 9px; }'
 + '.иг-текст{ display:grid; gap:4px; margin-bottom:14px; }'
@@ -565,8 +565,10 @@ var ИГРЫ = {
           var р = рекорд(и.код);
           return '<div>' + и.значок + ' ' + экр(и.имя) + (р ? ' — <b>' + р.процент + '%</b>' : '') + '</div>';
         }).join('') + '</div>' +
-        '<div class="иг-низ"><button class="иг-главная" id="игДругая">К списку игр</button></div>';
+        '<div class="иг-низ">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button class="иг-главная" id="игДЗ">📝 Выполнить задания к уроку</button>' : '') +
+        '<button class="' + (window.ДОМАШКА_ОТКРЫТЬ ? 'иг-тихая' : 'иг-главная') + '" id="игДругая">К списку игр</button></div>';
       карта.querySelector('#игДругая').onclick = меню;
+      var дз = карта.querySelector('#игДЗ'); if (дз) дз.onclick = function () { window.ДОМАШКА_ОТКРЫТЬ(); };
     }
     function кнопкиИтога() {
       if (очередь && место < очередь.length - 1) {

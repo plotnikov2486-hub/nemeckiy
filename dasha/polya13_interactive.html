@@ -222,6 +222,7 @@
   .hwline { margin:10px 0; }
   .hwline input.fld { width:100%; max-width:520px; }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1748,7 +1749,8 @@ document.getElementById('hwSaetze').innerHTML = МОИ.map(([clip, de, ru, по�
   box-shadow:0 6px 20px rgba(0,0,0,.18); }
 .иг-играть:disabled{ opacity:.45; }
 </style>
-<script src="../igry.js?v=202610201537"></script>
+<script src="../igry.js?v=202610211208"></script>
+<script src="../dz.js?v=202610211208"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1784,9 +1786,11 @@ document.getElementById('hwSaetze').innerHTML = МОИ.map(([clip, de, ru, по�
     коробка.className = 'иг-вдомашке';
     коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
       '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
-      '<div class="иг-вдомашке-кн"><button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
+      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
+      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
     секция.appendChild(коробка);
     коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
+    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
   }
 
   /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
@@ -1888,6 +1892,39 @@ document.getElementById('hwSaetze').innerHTML = МОИ.map(([clip, de, ru, по�
       корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
         '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
       корень.querySelector('#игПуск').onclick = function () { открыть(); };
+
+      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
+         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
+      var дзЭкран = null;
+      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
+        дзЭкран = document.createElement('div');
+        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
+        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
+          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
+        document.body.appendChild(дзЭкран);
+        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
+          игры: function () { спрятатьДЗ(); открыть(); } });
+        if (заданий) {
+          var кн = document.createElement('button');
+          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
+          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
+          кн.onclick = function () { открытьДЗ(); };
+          корень.insertBefore(кн, корень.firstChild);
+          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
+          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
+        } else { дзЭкран.remove(); дзЭкран = null; }
+      }
+      function открытьДЗ() {
+        if (!дзЭкран) return;
+        if (дзЭкран.hidden) {
+          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
+        }
+        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
+      }
+      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
+      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
+      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
       экран.querySelector('#игЗакрыть').onclick = закрыть;
       window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
       // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
@@ -1919,6 +1956,8 @@ document.getElementById('hwSaetze').innerHTML = МОИ.map(([clip, de, ru, по�
 })();
 </script>
 <!--ИГРЫ-END-->
+
+
 
 <!--ДОПОЛНЕНО-START--><script>
 if (typeof phrases === 'undefined') { window.phrases = function(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`<div class="pcard"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }; }
