@@ -103,7 +103,7 @@
   }
 
   function заданиеПисьмо(ф) {
-    if (ф.слова.length > 9 || /[«»„“"]/.test(ф.de)) return null;
+    if (ф.слова.length > 9 || /[«»„“"]/.test(ф.de) || /\d|[<>&%]/.test(ф.de)) return null;   // числа и знаки писать неудобно
     return { тип: 'письмо', ф: ф };
   }
 
