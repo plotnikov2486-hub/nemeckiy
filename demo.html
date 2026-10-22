@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GlobalDoc — медицинский немецкий для врачей</title>
+<meta name="description" content="Платформа медицинского немецкого для русскоязычных врачей: уроки A1–B2, медицинский блок для FSP, тренажёр слов ЗУБР, домашка, игры, экзамены.">
+<meta name="robots" content="noindex">
+<style>
+
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+  body { margin:0; background:var(--bg); }
+  .дм-герой { padding:10px 0 6px; }
+  .дм-метка { display:inline-block; font-size:12px; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:10px; }
+  .дм-герой h1 { font-size:34px; line-height:1.15; margin:0 0 12px; }
+  .дм-герой p { font-size:17px; color:var(--ink-muted); margin:0 0 16px; max-width:640px; }
+  .дм-цифры { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; margin:18px 0 26px; }
+  .дм-цифра { background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:14px 12px; box-shadow:var(--shadow); }
+  .дм-цифра b { display:block; font-family:Georgia,serif; font-size:28px; color:var(--accent); line-height:1.1; }
+  .дм-цифра span { font-size:13px; color:var(--ink-muted); }
+  .дм-раздел { margin:26px 0 10px; font-size:13px; font-weight:800; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-muted); }
+  .дм-карты { display:grid; grid-template-columns:repeat(2,1fr); gap:12px; }
+  .дм-карта { display:block; text-decoration:none; color:inherit; background:var(--surface); border:1px solid var(--line);
+    border-radius:16px; padding:16px; box-shadow:var(--shadow); transition:transform .15s ease; }
+  .дм-карта:hover { transform:translateY(-2px); border-color:var(--accent); }
+  .дм-карта i { font-style:normal; font-size:26px; display:block; margin-bottom:6px; }
+  .дм-карта b { display:block; font-size:16.5px; margin-bottom:4px; }
+  .дм-карта span { display:block; font-size:13.5px; color:var(--ink-muted); line-height:1.45; }
+  .дм-карта em { display:inline-block; margin-top:8px; font-style:normal; font-size:13px; font-weight:700; color:var(--accent); }
+  .дм-скоро { background:var(--surface-2); border:1px dashed var(--line); border-radius:16px; padding:14px 16px; margin-top:12px; }
+  .дм-скоро li { margin:6px 0; color:var(--ink-muted); }
+  .дм-скоро li b { color:var(--ink); }
+  .дм-подвал { margin-top:30px; font-size:13px; color:var(--ink-faint); line-height:1.6; }
+  @media (max-width:640px) {
+    .дм-герой h1 { font-size:27px; }
+    .дм-цифры { grid-template-columns:repeat(2,1fr); }
+    .дм-карты { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="lp">
+  <div class="дм-герой">
+    <div class="дм-метка">GlobalDoc · демо</div>
+    <h1>Медицинский немецкий для врачей — в одном месте</h1>
+    <p>Уроки от A1 до B2, медицинский блок для FSP и работы в клинике, тренажёр слов, домашка с проверкой, игры, видео и подготовка к экзаменам. Всё работает в браузере и на телефоне.</p>
+  </div>
+
+  <div class="дм-цифры">
+    <div class="дм-цифра"><b>60</b><span>уроков A1–B2 со звуком</span></div>
+    <div class="дм-цифра"><b>13</b><span>медицинских уроков под FSP</span></div>
+    <div class="дм-цифра"><b>37 000</b><span>карточек слов со звуком</span></div>
+    <div class="дм-цифра"><b>27</b><span>медицинских специальностей</span></div>
+  </div>
+
+  <div class="дм-раздел">С чего посмотреть</div>
+  <div class="дм-карты">
+    <a class="дм-карта" href="lessons/urok57_interactive.html"><i>🩺</i><b>Урок 57. Флебология по-немецки</b><span>Специальность целиком: анатомия, стадии, дуплекс, лечение, как объяснить пациенту и доложить старшему врачу.</span><em>Открыть урок →</em></a>
+    <a class="дм-карта" href="lessons/urok58_interactive.html"><i>🚑</i><b>Урок 58. Неотложные состояния</b><span>Вызов скорой, ABCDE, анафилаксия, ТЭЛА, реанимация, передача пациента по ISBAR.</span><em>Открыть урок →</em></a>
+    <a class="дм-карта" href="lessons/urok47_interactive.html"><i>📋</i><b>Урок 47. Сбор анамнеза</b><span>Первый урок медицинского блока: разговор с пациентом так, как его ждут на FSP.</span><em>Открыть урок →</em></a>
+    <a class="дм-карта" href="lessons/urok1_interactive.html"><i>👋</i><b>Урок 1. С нуля</b><span>Так начинается курс для тех, кто только садится за немецкий.</span><em>Открыть урок →</em></a>
+  </div>
+
+  <div class="дм-раздел">После каждого урока</div>
+  <div class="дм-карты">
+    <a class="дм-карта" href="lessons/urok57_interactive.html#домашка"><i>📚</i><b>Домашка на весь экран</b><span>12 заданий по одному: выбрать вариант, написать по-немецки. Сразу проверка, перевод, звук и объяснение «почему».</span><em>Попробовать →</em></a>
+    <a class="дм-карта" href="lessons/urok57_interactive.html#игры"><i>🎮</i><b>Игры на словах урока</b><span>Больше десяти игр: собрать фразу, артикли, вставить в текст, диктант, сказать вслух в микрофон. Можно все подряд.</span><em>Поиграть →</em></a>
+    <a class="дм-карта" href="lessons/urok20_interactive.html"><i>🎬</i><b>Видео к уроку</b><span>Ролики с YouTube по теме урока: останавливаются на нужных местах и задают вопросы. Блок «Видео к уроку» внизу страницы.</span><em>Открыть урок →</em></a>
+    <a class="дм-карта" href="zubr.html"><i>🦬</i><b>ЗУБР — тренажёр слов</b><span>37 000 карточек: карточки, тест, письмо на слух, только артикли, повторение по расписанию. Медицинские наборы по 27 специальностям.</span><em>Открыть ЗУБР →</em></a>
+  </div>
+
+  <div class="дм-раздел">Экзамены и справочники</div>
+  <div class="дм-карты">
+    <a class="дм-карта" href="ekzameny/oesd.html"><i>🎓</i><b>ÖSD A1–C1</b><span>Языковые сертификаты Австрии: устройство экзамена и пробники с разбором.</span><em>Открыть →</em></a>
+    <a class="дм-карта" href="ekzameny/sprachpruefung.html"><i>🏥</i><b>ÖÄK Sprachprüfung</b><span>Медицинская языковая проверка Österreichische Ärztekammer.</span><em>Открыть →</em></a>
+    <a class="дм-карта" href="ekzameny/medizinrecht.html"><i>⚖️</i><b>Медицинское право и фармакология</b><span>Вопросы к нострификации. Рядом — раздел фармакологии.</span><em>Открыть →</em></a>
+    <a class="дм-карта" href="pravila.html"><i>📐</i><b>Справочник правил</b><span>Вся грамматика с таблицами и повторением, плюс тренажёр спряжений.</span><em>Открыть →</em></a>
+  </div>
+
+  <div class="дм-раздел">Скоро</div>
+  <div class="дм-скоро"><ul>
+    <li><b>Личный кабинет и план.</b> Специальность, страна, экзамены — и свой план подготовки.</li>
+    <li><b>Пакеты под специальность.</b> Диалоги, доклад и письмо для терапевта, хирурга, анестезиолога и других.</li>
+    <li><b>ИИ-пациент для FSP.</b> Разговор голосом и разбор ошибок после.</li>
+  </ul></div>
+
+  <p class="дм-подвал">GlobalDoc — рабочее название. Автор — Григорий Плотников, хирург-флеболог. Демо-версия: часть разделов закрыта, личные страницы учеников не входят в продукт.</p>
+</div>
+</body>
+</html>

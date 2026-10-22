@@ -177,6 +177,7 @@
   .pair .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
   .pair button.play { width:30px; height:30px; font-size:13px; }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1227,8 +1228,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
   box-shadow:0 6px 20px rgba(0,0,0,.18); }
 .иг-играть:disabled{ opacity:.45; }
 </style>
-<script src="../igry.js?v=202610211244"></script>
-<script src="../dz.js?v=202610211244"></script>
+<script src="../igry.js?v=202610221301"></script>
+<script src="../dz.js?v=202610221301"></script>
 <script>
 /* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
    поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
@@ -1403,6 +1404,10 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
       function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
       window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
+      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
+      var хеш = decodeURIComponent(location.hash || '');
+      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
+      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
       экран.querySelector('#игЗакрыть').onclick = закрыть;
       window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
       // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
