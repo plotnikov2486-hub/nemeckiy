@@ -515,253 +515,6 @@ phrases('domashka',[
   ["x8","Erklären Sie mir, wie die Behandlung funktioniert.","эрклэрэн зи миа, ви ди бэхандлунг функционирт","Объясните мне, как работает лечение."],
 ]);
 </script>
-
-<!--ИГРЫ-START-->
-<section class="игры" id="игры"></section>
-<style>
-/* 20.10.2026: игры урока — отдельным экраном на весь экран, как ЗУБР */
-.иг-пуск{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; font:inherit;
-  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); border:none; border-radius:18px; padding:18px 18px; min-height:72px;
-  box-shadow:var(--shadow,0 8px 24px rgba(40,50,110,.12)); }
-.иг-пуск i{ font-style:normal; font-size:30px; } .иг-пуск b{ display:block; font-size:18px; }
-.иг-пуск small{ display:block; font-size:13px; opacity:.85; margin-top:2px; font-weight:500; }
-.иг-экран{ position:fixed; inset:0; z-index:9000; overflow-y:auto; -webkit-overflow-scrolling:touch;
-  background:var(--bg,var(--surface,#fff)); padding:0 12px 40px; }
-.иг-экран[hidden]{ display:none !important; }
-.иг-экран-верх{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; padding:10px 2px;
-  background:var(--bg,var(--surface,#fff)); border-bottom:1px solid var(--line,#e4e6ef); margin:0 -2px 12px;
-  font-family:-apple-system,"SF Pro Text",Arial,sans-serif; color:var(--ink,#1c2242); }
-.иг-экран-верх button{ font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:999px;
-  padding:8px 14px; border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242); }
-.иг-экран-верх button{ white-space:nowrap; flex:0 0 auto; }
-.иг-экран-верх b{ font-size:14px; line-height:1.3; }
-.иг-экран .игры{ margin:0 auto; max-width:760px; }
-.иг-выбор{ display:grid; gap:8px; margin:6px 0 14px; }
-.иг-выбор label{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:14px; cursor:pointer;
-  background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:54px; }
-.иг-выбор label.все{ border:2px solid var(--accent,#1f5f5b); }
-.иг-выбор input{ width:22px; height:22px; flex:0 0 auto; accent-color:var(--accent,#1f5f5b); }
-.иг-выбор .зн{ font-size:22px; } .иг-выбор .им{ flex:1; font-weight:700; font-size:15px; }
-.иг-выбор .им small{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted,#5b615c); margin-top:2px; }
-.иг-выбор .рек{ font-size:12.5px; font-weight:700; color:var(--accent,#1f5f5b); white-space:nowrap; }
-.иг-играть{ position:sticky; bottom:10px; width:100%; font:inherit; font-size:17px; font-weight:800; cursor:pointer;
-  border:none; border-radius:16px; padding:15px; background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff);
-  box-shadow:0 6px 20px rgba(0,0,0,.18); }
-.иг-играть:disabled{ opacity:.45; }
-</style>
-<script src="../kartinki.js?v=202610241119"></script>
-<script src="../igry.js?v=202610241119"></script>
-<script src="../dz.js?v=202610241119"></script>
-<script>
-/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
-   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
-(function () {
-  var корень = document.getElementById('игры');
-  if (!корень) return;
-  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
-  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
-
-  /* Игры в домашку (18.09). Домашку проверяет не Даша, а сам ученик, и
-     после письменной части полезно прогнать те же слова в игре. Кнопки
-     ставим прямо в конец блока домашки — они зовут ядро напрямую. */
-  function вДомашку() {
-    var метка = document.querySelector('.hwrow, .hw-tr-btn');
-    var секция = метка && метка.closest('section');
-    if (!секция) {
-      // уроки со мной: домашка — обычный раздел с заголовком
-      var все = document.querySelectorAll('section h2');
-      for (var i = 0; i < все.length; i++) {
-        if (/Домашк/i.test(все[i].textContent)) { секция = все[i].closest('section'); break; }
-      }
-    }
-    if (!секция || секция === корень || секция.querySelector('.иг-вдомашке')) return;
-    var коды = (ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть()) || [];
-    if (!коды.length) return;
-    var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
-                  картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
-                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
-                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
-                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
-    var коробка = document.createElement('div');
-    коробка.className = 'иг-вдомашке';
-    коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
-      '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
-      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
-      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
-    секция.appendChild(коробка);
-    коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
-    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
-  }
-
-  /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
-  function выбор(карта, игры, играть) {
-    var ключ = 'nemeckiy_igry_vybor_' + файл, помню = null;
-    try { помню = JSON.parse(localStorage.getItem(ключ) || 'null'); } catch (e) {}
-    var вкл = {}; игры.forEach(function (и) { вкл[и.код] = !помню || помню.indexOf(и.код) >= 0; });
-    function экр(т) { return String(т == null ? '' : т).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-    карта.innerHTML = '<div class="иг-верх"><div class="иг-знак">🎮</div><div><h2>Выбери игры</h2></div></div>' +
-      '<p class="иг-под">Все слова — из этого занятия. Отметь, во что играть, и жми «Играть»: игры пойдут одна за другой.</p>' +
-      '<div class="иг-выбор"><label class="все"><input type="checkbox" id="игВсе"><span class="зн">⭐</span>' +
-      '<span class="им">Играть во все игры подряд<small>' + игры.length + ' игр, по очереди</small></span></label>' +
-      игры.map(function (и) {
-        return '<label><input type="checkbox" data-к="' + и.код + '"' + (вкл[и.код] ? ' checked' : '') + '>' +
-          '<span class="зн">' + и.значок + '</span><span class="им">' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
-          (и.рекорд ? '<span class="рек">' + и.рекорд.процент + '%</span>' : '') + '</label>';
-      }).join('') + '</div><button type="button" class="иг-играть" id="игИграть"></button>';
-    var все = карта.querySelector('#игВсе'), поля = карта.querySelectorAll('input[data-к]'), кн = карта.querySelector('#игИграть');
-    function отмечено() { return Array.prototype.filter.call(поля, function (п) { return п.checked; }).map(function (п) { return п.getAttribute('data-к'); }); }
-    function обновить() {
-      var о = отмечено();
-      все.checked = о.length === поля.length;
-      кн.disabled = !о.length;
-      кн.textContent = о.length ? '▶ Играть' + (о.length > 1 ? ' (' + о.length + ' игр подряд)' : '') : 'Отметь хотя бы одну игру';
-      try { localStorage.setItem(ключ, JSON.stringify(о)); } catch (e) {}
-    }
-    все.onchange = function () { Array.prototype.forEach.call(поля, function (п) { п.checked = все.checked; }); обновить(); };
-    Array.prototype.forEach.call(поля, function (п) { п.onchange = обновить; });
-    кн.onclick = function () { var о = отмечено(); if (о.length) { карта.scrollIntoView({ block: 'start' }); играть(о); } };
-    обновить();
-  }
-
-  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
-     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
-     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
-  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
-  function проверкаДомашки() {
-    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
-      if (кн.dataset.проверка) return;
-      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
-      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
-      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
-      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
-        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
-      });
-      var строки = блок.querySelectorAll('.hwrow');
-      if (!список.length || список.length !== строки.length) return;
-      кн.dataset.проверка = '1';
-      var пр = document.createElement('button');
-      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
-      пр.textContent = '✓ Проверить мои ответы';
-      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
-      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
-      пр.onclick = function () {
-        var верно = 0, всего = 0, почти = 0;
-        Array.prototype.forEach.call(строки, function (строка, i) {
-          var поля = строка.querySelectorAll('input.fld');
-          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
-          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
-          Array.prototype.forEach.call(поля, function (поле, k) {
-            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
-            var в = чист(поле.value); всего++;
-            поле.title = '';
-            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
-            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
-            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
-              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
-            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
-          });
-        });
-        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
-          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
-      };
-    });
-  }
-  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
-  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
-  if (document.readyState === 'complete') запуститьПроверку();
-  else window.addEventListener('load', запуститьПроверку);
-
-  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
-  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .catch(function () { return null; })
-    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
-    .then(function () { return window.КАРТИНКИ ? КАРТИНКИ.готово : null; })  // 24.10: играм и домашке нужны картинки слов
-    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
-    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-    .then(function (д) {
-      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
-      var экран = document.createElement('div');
-      экран.className = 'иг-экран'; экран.hidden = true;
-      var заголовок = (document.querySelector('.bb-title') || document.querySelector('h1') || {}).textContent || '';
-      экран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="игЗакрыть">✕ Закрыть</button>' +
-        '<b>🎮 Игры · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section class="игры" id="игрыЭкран"></section>';
-      document.body.appendChild(экран);
-      var вышло = ИГРЫ.старт({ корень: экран.querySelector('#игрыЭкран'), слова: д, урок: файл, база: '../', меню: выбор });
-      if (!вышло) { корень.style.display = 'none'; return; }
-      var коды = ИГРЫ.какиеЕсть();
-      корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
-        '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
-      корень.querySelector('#игПуск').onclick = function () { открыть(); };
-
-      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
-         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
-      var дзЭкран = null;
-      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
-        дзЭкран = document.createElement('div');
-        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
-        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
-          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
-        document.body.appendChild(дзЭкран);
-        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
-          игры: function () { спрятатьДЗ(); открыть(); } });
-        if (заданий) {
-          var кн = document.createElement('button');
-          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
-          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
-          кн.onclick = function () { открытьДЗ(); };
-          корень.insertBefore(кн, корень.firstChild);
-          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
-          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
-        } else { дзЭкран.remove(); дзЭкран = null; }
-      }
-      function открытьДЗ() {
-        if (!дзЭкран) return;
-        if (дзЭкран.hidden) {
-          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
-          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
-        }
-        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
-      }
-      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
-      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
-      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
-      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
-      var хеш = decodeURIComponent(location.hash || '');
-      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
-      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
-      экран.querySelector('#игЗакрыть').onclick = закрыть;
-      window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
-      // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
-      var прямо = ИГРЫ.запустить;
-      ИГРЫ.запустить = function (код) { открыть(true); return прямо(код); };
-
-      function открыть(безМеню) {
-        if (экран.hidden) {
-          экран.hidden = false; document.documentElement.style.overflow = 'hidden';
-          try { history.pushState({ игры: 1 }, '', '#игры'); } catch (e) {}
-        }
-        if (!безМеню) ИГРЫ.меню();
-        экран.scrollTop = 0;
-      }
-      function спрятать() { экран.hidden = true; document.documentElement.style.overflow = ''; }
-      function закрыть() { спрятать(); if (location.hash === '#игры') { try { history.back(); } catch (e) {} } }
-      window.ИГРЫ_ОТКРЫТЬ = открыть;
-
-      вДомашку();
-      var toc = document.querySelector('.toc ol');
-      if (toc) {
-        var li = document.createElement('li');
-        li.innerHTML = '<a href="#игры">🎮 Игры к этому занятию</a>';
-        li.querySelector('a').onclick = function (e) { e.preventDefault(); открыть(); };
-        toc.appendChild(li);
-      }
-    })
-    .catch(function () { корень.style.display = 'none'; });
-})();
-</script>
-<!--ИГРЫ-END-->
 <!--QUIZ-START-->
 <!--UPR-START-->
 <style>
@@ -1317,7 +1070,252 @@ phrases('domashka',[
 })();
 </script>
 <!--QUIZ-END-->
+<!--ИГРЫ-START-->
+<section class="игры" id="игры"></section>
+<style>
+/* 20.10.2026: игры урока — отдельным экраном на весь экран, как ЗУБР */
+.иг-пуск{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; font:inherit;
+  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); border:none; border-radius:18px; padding:18px 18px; min-height:72px;
+  box-shadow:var(--shadow,0 8px 24px rgba(40,50,110,.12)); }
+.иг-пуск i{ font-style:normal; font-size:30px; } .иг-пуск b{ display:block; font-size:18px; }
+.иг-пуск small{ display:block; font-size:13px; opacity:.85; margin-top:2px; font-weight:500; }
+.иг-экран{ position:fixed; inset:0; z-index:9000; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  background:var(--bg,var(--surface,#fff)); padding:0 12px 40px; }
+.иг-экран[hidden]{ display:none !important; }
+.иг-экран-верх{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; padding:10px 2px;
+  background:var(--bg,var(--surface,#fff)); border-bottom:1px solid var(--line,#e4e6ef); margin:0 -2px 12px;
+  font-family:-apple-system,"SF Pro Text",Arial,sans-serif; color:var(--ink,#1c2242); }
+.иг-экран-верх button{ font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:999px;
+  padding:8px 14px; border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242); }
+.иг-экран-верх button{ white-space:nowrap; flex:0 0 auto; }
+.иг-экран-верх b{ font-size:14px; line-height:1.3; }
+.иг-экран .игры{ margin:0 auto; max-width:760px; }
+.иг-выбор{ display:grid; gap:8px; margin:6px 0 14px; }
+.иг-выбор label{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:14px; cursor:pointer;
+  background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:54px; }
+.иг-выбор label.все{ border:2px solid var(--accent,#1f5f5b); }
+.иг-выбор input{ width:22px; height:22px; flex:0 0 auto; accent-color:var(--accent,#1f5f5b); }
+.иг-выбор .зн{ font-size:22px; } .иг-выбор .им{ flex:1; font-weight:700; font-size:15px; }
+.иг-выбор .им small{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted,#5b615c); margin-top:2px; }
+.иг-выбор .рек{ font-size:12.5px; font-weight:700; color:var(--accent,#1f5f5b); white-space:nowrap; }
+.иг-играть{ position:sticky; bottom:10px; width:100%; font:inherit; font-size:17px; font-weight:800; cursor:pointer;
+  border:none; border-radius:16px; padding:15px; background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff);
+  box-shadow:0 6px 20px rgba(0,0,0,.18); }
+.иг-играть:disabled{ opacity:.45; }
+</style>
+<script src="../kartinki.js?v=202610241600"></script>
+<script src="../igry.js?v=202610241600"></script>
+<script src="../dz.js?v=202610241600"></script>
+<script>
+/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
+   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
+(function () {
+  var корень = document.getElementById('игры');
+  if (!корень) return;
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
+  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
 
+  /* Игры в домашку (18.09). Домашку проверяет не Даша, а сам ученик, и
+     после письменной части полезно прогнать те же слова в игре. Кнопки
+     ставим прямо в конец блока домашки — они зовут ядро напрямую. */
+  function вДомашку() {
+    var метка = document.querySelector('.hwrow, .hw-tr-btn');
+    var секция = метка && метка.closest('section');
+    if (!секция) {
+      // уроки со мной: домашка — обычный раздел с заголовком
+      var все = document.querySelectorAll('section h2');
+      for (var i = 0; i < все.length; i++) {
+        if (/Домашк/i.test(все[i].textContent)) { секция = все[i].closest('section'); break; }
+      }
+    }
+    if (!секция || секция === корень || секция.querySelector('.иг-вдомашке')) return;
+    var коды = (ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть()) || [];
+    if (!коды.length) return;
+    var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
+                  картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
+                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
+    var коробка = document.createElement('div');
+    коробка.className = 'иг-вдомашке';
+    коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
+      '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
+      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
+      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
+    секция.appendChild(коробка);
+    коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
+    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
+  }
+
+  /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
+  function выбор(карта, игры, играть) {
+    var ключ = 'nemeckiy_igry_vybor_' + файл, помню = null;
+    try { помню = JSON.parse(localStorage.getItem(ключ) || 'null'); } catch (e) {}
+    var вкл = {}; игры.forEach(function (и) { вкл[и.код] = !помню || помню.indexOf(и.код) >= 0; });
+    function экр(т) { return String(т == null ? '' : т).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    карта.innerHTML = '<div class="иг-верх"><div class="иг-знак">🎮</div><div><h2>Выбери игры</h2></div></div>' +
+      '<p class="иг-под">Все слова — из этого занятия. Отметь, во что играть, и жми «Играть»: игры пойдут одна за другой.</p>' +
+      '<div class="иг-выбор"><label class="все"><input type="checkbox" id="игВсе"><span class="зн">⭐</span>' +
+      '<span class="им">Играть во все игры подряд<small>' + игры.length + ' игр, по очереди</small></span></label>' +
+      игры.map(function (и) {
+        return '<label><input type="checkbox" data-к="' + и.код + '"' + (вкл[и.код] ? ' checked' : '') + '>' +
+          '<span class="зн">' + и.значок + '</span><span class="им">' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
+          (и.рекорд ? '<span class="рек">' + и.рекорд.процент + '%</span>' : '') + '</label>';
+      }).join('') + '</div><button type="button" class="иг-играть" id="игИграть"></button>';
+    var все = карта.querySelector('#игВсе'), поля = карта.querySelectorAll('input[data-к]'), кн = карта.querySelector('#игИграть');
+    function отмечено() { return Array.prototype.filter.call(поля, function (п) { return п.checked; }).map(function (п) { return п.getAttribute('data-к'); }); }
+    function обновить() {
+      var о = отмечено();
+      все.checked = о.length === поля.length;
+      кн.disabled = !о.length;
+      кн.textContent = о.length ? '▶ Играть' + (о.length > 1 ? ' (' + о.length + ' игр подряд)' : '') : 'Отметь хотя бы одну игру';
+      try { localStorage.setItem(ключ, JSON.stringify(о)); } catch (e) {}
+    }
+    все.onchange = function () { Array.prototype.forEach.call(поля, function (п) { п.checked = все.checked; }); обновить(); };
+    Array.prototype.forEach.call(поля, function (п) { п.onchange = обновить; });
+    кн.onclick = function () { var о = отмечено(); if (о.length) { карта.scrollIntoView({ block: 'start' }); играть(о); } };
+    обновить();
+  }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
+
+  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
+  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; })
+    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
+    .then(function () { return window.КАРТИНКИ ? КАРТИНКИ.готово : null; })  // 24.10: играм и домашке нужны картинки слов
+    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (д) {
+      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
+      var экран = document.createElement('div');
+      экран.className = 'иг-экран'; экран.hidden = true;
+      var заголовок = (document.querySelector('.bb-title') || document.querySelector('h1') || {}).textContent || '';
+      экран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="игЗакрыть">✕ Закрыть</button>' +
+        '<b>🎮 Игры · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section class="игры" id="игрыЭкран"></section>';
+      document.body.appendChild(экран);
+      var вышло = ИГРЫ.старт({ корень: экран.querySelector('#игрыЭкран'), слова: д, урок: файл, база: '../', меню: выбор });
+      if (!вышло) { корень.style.display = 'none'; return; }
+      var коды = ИГРЫ.какиеЕсть();
+      корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
+        '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
+      корень.querySelector('#игПуск').onclick = function () { открыть(); };
+
+      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
+         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
+      var дзЭкран = null;
+      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
+        дзЭкран = document.createElement('div');
+        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
+        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
+          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
+        document.body.appendChild(дзЭкран);
+        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
+          игры: function () { спрятатьДЗ(); открыть(); } });
+        if (заданий) {
+          var кн = document.createElement('button');
+          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
+          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
+          кн.onclick = function () { открытьДЗ(); };
+          корень.insertBefore(кн, корень.firstChild);
+          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
+          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
+        } else { дзЭкран.remove(); дзЭкран = null; }
+      }
+      function открытьДЗ() {
+        if (!дзЭкран) return;
+        if (дзЭкран.hidden) {
+          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
+        }
+        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
+      }
+      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
+      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
+      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
+      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
+      var хеш = decodeURIComponent(location.hash || '');
+      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
+      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
+      экран.querySelector('#игЗакрыть').onclick = закрыть;
+      window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
+      // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
+      var прямо = ИГРЫ.запустить;
+      ИГРЫ.запустить = function (код) { открыть(true); return прямо(код); };
+
+      function открыть(безМеню) {
+        if (экран.hidden) {
+          экран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ игры: 1 }, '', '#игры'); } catch (e) {}
+        }
+        if (!безМеню) ИГРЫ.меню();
+        экран.scrollTop = 0;
+      }
+      function спрятать() { экран.hidden = true; document.documentElement.style.overflow = ''; }
+      function закрыть() { спрятать(); if (location.hash === '#игры') { try { history.back(); } catch (e) {} } }
+      window.ИГРЫ_ОТКРЫТЬ = открыть;
+
+      вДомашку();
+      var toc = document.querySelector('.toc ol');
+      if (toc) {
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#игры">🎮 Игры к этому занятию</a>';
+        li.querySelector('a').onclick = function (e) { e.preventDefault(); открыть(); };
+        toc.appendChild(li);
+      }
+    })
+    .catch(function () { корень.style.display = 'none'; });
+})();
+</script>
+<!--ИГРЫ-END-->
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
