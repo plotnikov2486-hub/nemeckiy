@@ -5,7 +5,7 @@
    из кэша. Звук, словари и картинки, наоборот, из кэша сразу: они
    тяжёлые и почти не меняются.  */
 
-const ВЕРСИЯ = 'nemeckiy-v126';
+const ВЕРСИЯ = 'nemeckiy-v127';
 const ОСНОВА = [
   './',
   './index.html',
@@ -17,6 +17,7 @@ const ОСНОВА = [
   './glagoly.html',
   './igry.js',
   './dz.js',
+  './kartinki.js',
   './trenazhyor.html',
   './stat.html',
   './manifest.json',
@@ -43,7 +44,7 @@ self.addEventListener('activate', e => {
 });
 
 function этоТяжёлое(url) {
-  return /\.(mp3|png|jpg|jpeg|svg|woff2?|pdf)$/i.test(url.pathname) ||
+  return /\.(mp3|png|jpg|jpeg|webp|svg|woff2?|pdf)$/i.test(url.pathname) ||
          url.pathname.includes('/words/');
 }
 

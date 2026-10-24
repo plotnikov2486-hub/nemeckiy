@@ -103,6 +103,20 @@
     return { тип: 'выбор', ф: ф, текст: текст, верно: верно, варианты: смешать(варианты), почему: почему.join('<br>') };
   }
 
+  // 24.10.2026: фото к заданию — первое существительное фразы, для которого есть картинка Nano Banana
+  function фотоФразы(ф) {
+    if (!window.КАРТИНКИ) return null;
+    var слова = String(ф.de || '').replace(/<[^>]+>/g, ' ').split(/\s+/);
+    for (var i = 0; i < слова.length; i++) {
+      var т = слова[i].replace(/[^A-Za-zÄÖÜäöüß-]/g, '');
+      if (т.length < 3 || т[0] !== т[0].toUpperCase() || т[0] === т[0].toLowerCase()) continue;
+      var п = КАРТИНКИ.путь(т);
+      if (п) return п;
+    }
+    return null;
+  }
+  function фотоБлок(ф) { var п = фотоФразы(ф); return п ? '<img class="дз-фото" alt="" src="' + п + '">' : ''; }
+
   function заданиеПисьмо(ф) {
     if (ф.слова.length > 9 || /[«»„“"]/.test(ф.de) || /\d|[<>&%]/.test(ф.de)) return null;   // числа и знаки писать неудобно
     return { тип: 'письмо', ф: ф };
@@ -147,6 +161,7 @@
     + '.дз-тип{ font-size:12px; letter-spacing:.06em; text-transform:uppercase; font-weight:800; color:var(--accent,#1f5f5b); margin-bottom:8px; }'
     + '.дз-фраза{ font-family:Georgia,"Iowan Old Style",serif; font-size:21px; font-weight:700; line-height:1.5; margin:0 0 6px; }'
     + '.дз-фраза .дыр{ display:inline-block; min-width:58px; border-bottom:3px solid var(--accent,#1f5f5b); text-align:center; color:var(--accent,#1f5f5b); }'
+    + '.дз-фото{ display:block; width:min(100%,300px); aspect-ratio:1/1; object-fit:cover; border-radius:16px; margin:4px auto 12px; }'
     + '.дз-ру{ font-size:18px; font-weight:700; line-height:1.4; margin:0 0 6px; }'
     + '.дз-подск{ font-size:13px; color:var(--ink-muted,#5b615c); margin:0 0 12px; }'
     + '.дз-вар{ display:grid; gap:10px; margin:12px 0; } .дз-вар button{ font:inherit; font-family:Georgia,"Iowan Old Style",serif; font-size:18px; font-weight:700;'
@@ -208,7 +223,7 @@
         var з = задания[i];
         if (з.тип === 'выбор') {
           var фраза = экр(з.текст).replace(/___/g, '<span class="дыр">?</span>');
-          корень.innerHTML = '<div class="дз"><div class="дз-карта">' + шапка() + '<div class="дз-тип">Выбери правильный вариант</div>' +
+          корень.innerHTML = '<div class="дз"><div class="дз-карта">' + шапка() + '<div class="дз-тип">Выбери правильный вариант</div>' + фотоБлок(з.ф) +
             '<div class="дз-фраза">' + фраза + '</div><div class="дз-подск">' + экр(з.ф.ru) + '</div>' +
             '<div class="дз-вар">' + з.варианты.map(function (в, к) { return '<button type="button" data-в="' + к + '">' + экр(в.join(' – ')) + '</button>'; }).join('') + '</div>' +
             '<div id="дзОтвет"></div><div class="дз-низ"><button type="button" class="главная" id="дзДалее" disabled>Далее →</button></div></div></div>';
@@ -229,7 +244,7 @@
             };
           });
         } else {
-          корень.innerHTML = '<div class="дз"><div class="дз-карта">' + шапка() + '<div class="дз-тип">Напиши по-немецки</div>' +
+          корень.innerHTML = '<div class="дз"><div class="дз-карта">' + шапка() + '<div class="дз-тип">Напиши по-немецки</div>' + фотоБлок(з.ф) +
             '<div class="дз-ру">' + экр(з.ф.ru) + '</div><div class="дз-подск">' + з.ф.слова.length + ' слов · фраза из урока</div>' +
             '<textarea id="дзВвод" lang="de" autocapitalize="sentences" spellcheck="false" placeholder="по-немецки…"></textarea>' +
             '<div id="дзОтвет"></div><div class="дз-низ"><button type="button" id="дзПроверить" class="главная">Проверить</button>' +

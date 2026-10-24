@@ -499,6 +499,13 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   box-shadow:0 3px 12px rgba(40,50,120,.07); }
 .спр-правило b{ color:var(--синий); }
 
+/* 24.10.2026: фото Nano Banana на карточке — квадрат во всю ширину сверху, слово под ним (макет одобрен врачом 22.10) */
+.карта .грань.с-фото{ justify-content:flex-start; }
+.карта .грань.с-фото .подпись{ display:none; }
+.фото-карты{ display:block; margin:-34px -24px 16px; width:calc(100% + 48px); aspect-ratio:1/1; max-height:62%;
+  object-fit:cover; border-radius:26px 26px 0 0; flex:none; }
+.фото-повтор{ display:block; width:min(70%,260px); aspect-ratio:1/1; object-fit:cover; border-radius:18px; margin:0 auto 14px; }
+
 </style>
 </head>
 <body>
@@ -516,7 +523,8 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202610221616';</script>
+<script>window.ЗУБР_ВЕРСИЯ = '202610241120';</script>
+<script src="kartinki.js?v=202610241120"></script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -1998,9 +2006,12 @@ function экранНаправления(где, заголовок, поясн
     // Транскрипция идёт сразу под немецким словом — там, где на неё смотрят.
     // Данные из колод AnkiWeb, разобраны 09.09; есть примерно у половины слов.
     var транс = c.тр ? '<div class="транс">[' + экр(c.тр) + ']</div>' : '';
-    var лицо = деЛицом
+    // 24.10.2026: фото Nano Banana сверху карточки, если для слова есть (kartinki.js)
+    var фото = window.КАРТИНКИ && КАРТИНКИ.путь(c.de);
+    var фотоHtml = фото ? '<img class="фото-карты" alt="" src="' + фото + '">' : '';
+    var лицо = фотоHtml + (деЛицом
       ? '<div class="слово">' + c.deHtml + '</div>' + транс
-      : '<div class="перевод">' + экр(c.ответ) + '</div>';
+      : '<div class="перевод">' + экр(c.ответ) + '</div>');
     var тыл = деЛицом
       ? '<div class="перевод">' + экр(c.ru) + '</div>'
       : '<div class="слово">' + c.deHtml + '</div>' + транс;
@@ -2008,7 +2019,7 @@ function экранНаправления(где, заголовок, поясн
     $('местоКарты').innerHTML =
       '<div class="карта" id="карта">' +
         '<div class="флип" id="флип">' +
-          '<div class="грань лицо"><span class="подпись">' + (деЛицом?'немецкий':'перевод') + '</span>' +
+          '<div class="грань лицо' + (фото ? ' с-фото' : '') + '"><span class="подпись">' + (деЛицом?'немецкий':'перевод') + '</span>' +
             лицо + '<span class="намёк">нажми, чтобы перевернуть</span></div>' +
           '<div class="грань тыл"><span class="подпись">' + (деЛицом?'перевод':'немецкий') + '</span>' +
             тыл + '</div>' +
@@ -2700,6 +2711,7 @@ function очередь(набор){
         '<span>' + (с ? 'повторение' : 'новое слово') + '</span></div>' +
       '<div class="сцена" style="min-height:260px"><div class="карта" style="position:relative;inset:auto;width:100%">' +
         '<div class="грань лицо" style="position:relative;min-height:250px">' +
+          (window.КАРТИНКИ && КАРТИНКИ.путь(c.de) ? '<img class="фото-повтор" alt="" src="' + КАРТИНКИ.путь(c.de) + '">' : '') +
           '<div class="слово">' + c.deHtml + '</div>' +
           '<div class="перевод" id="ответТут" style="margin-top:16px;color:var(--текст2);display:none">' + экр(c.ru) + '</div>' +
         '</div></div></div>' +

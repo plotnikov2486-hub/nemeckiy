@@ -120,6 +120,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -469,6 +470,436 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
       </ol>
     </div>
   </section>
+
+<!--ИГРЫ-START-->
+<section class="игры" id="игры"></section>
+<style>
+/* 20.10.2026: игры урока — отдельным экраном на весь экран, как ЗУБР */
+.иг-пуск{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; font:inherit;
+  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); border:none; border-radius:18px; padding:18px 18px; min-height:72px;
+  box-shadow:var(--shadow,0 8px 24px rgba(40,50,110,.12)); }
+.иг-пуск i{ font-style:normal; font-size:30px; } .иг-пуск b{ display:block; font-size:18px; }
+.иг-пуск small{ display:block; font-size:13px; opacity:.85; margin-top:2px; font-weight:500; }
+.иг-экран{ position:fixed; inset:0; z-index:9000; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  background:var(--bg,var(--surface,#fff)); padding:0 12px 40px; }
+.иг-экран[hidden]{ display:none !important; }
+.иг-экран-верх{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; padding:10px 2px;
+  background:var(--bg,var(--surface,#fff)); border-bottom:1px solid var(--line,#e4e6ef); margin:0 -2px 12px;
+  font-family:-apple-system,"SF Pro Text",Arial,sans-serif; color:var(--ink,#1c2242); }
+.иг-экран-верх button{ font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:999px;
+  padding:8px 14px; border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242); }
+.иг-экран-верх button{ white-space:nowrap; flex:0 0 auto; }
+.иг-экран-верх b{ font-size:14px; line-height:1.3; }
+.иг-экран .игры{ margin:0 auto; max-width:760px; }
+.иг-выбор{ display:grid; gap:8px; margin:6px 0 14px; }
+.иг-выбор label{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:14px; cursor:pointer;
+  background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:54px; }
+.иг-выбор label.все{ border:2px solid var(--accent,#1f5f5b); }
+.иг-выбор input{ width:22px; height:22px; flex:0 0 auto; accent-color:var(--accent,#1f5f5b); }
+.иг-выбор .зн{ font-size:22px; } .иг-выбор .им{ flex:1; font-weight:700; font-size:15px; }
+.иг-выбор .им small{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted,#5b615c); margin-top:2px; }
+.иг-выбор .рек{ font-size:12.5px; font-weight:700; color:var(--accent,#1f5f5b); white-space:nowrap; }
+.иг-играть{ position:sticky; bottom:10px; width:100%; font:inherit; font-size:17px; font-weight:800; cursor:pointer;
+  border:none; border-radius:16px; padding:15px; background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff);
+  box-shadow:0 6px 20px rgba(0,0,0,.18); }
+.иг-играть:disabled{ opacity:.45; }
+</style>
+<script src="../kartinki.js?v=202610241119"></script>
+<script src="../igry.js?v=202610241119"></script>
+<script src="../dz.js?v=202610241119"></script>
+<script>
+/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
+   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
+(function () {
+  var корень = document.getElementById('игры');
+  if (!корень) return;
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
+  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
+
+  /* Игры в домашку (18.09). Домашку проверяет не Даша, а сам ученик, и
+     после письменной части полезно прогнать те же слова в игре. Кнопки
+     ставим прямо в конец блока домашки — они зовут ядро напрямую. */
+  function вДомашку() {
+    var метка = document.querySelector('.hwrow, .hw-tr-btn');
+    var секция = метка && метка.closest('section');
+    if (!секция) {
+      // уроки со мной: домашка — обычный раздел с заголовком
+      var все = document.querySelectorAll('section h2');
+      for (var i = 0; i < все.length; i++) {
+        if (/Домашк/i.test(все[i].textContent)) { секция = все[i].closest('section'); break; }
+      }
+    }
+    if (!секция || секция === корень || секция.querySelector('.иг-вдомашке')) return;
+    var коды = (ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть()) || [];
+    if (!коды.length) return;
+    var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
+                  картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
+                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
+    var коробка = document.createElement('div');
+    коробка.className = 'иг-вдомашке';
+    коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
+      '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
+      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
+      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
+    секция.appendChild(коробка);
+    коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
+    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
+  }
+
+  /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
+  function выбор(карта, игры, играть) {
+    var ключ = 'nemeckiy_igry_vybor_' + файл, помню = null;
+    try { помню = JSON.parse(localStorage.getItem(ключ) || 'null'); } catch (e) {}
+    var вкл = {}; игры.forEach(function (и) { вкл[и.код] = !помню || помню.indexOf(и.код) >= 0; });
+    function экр(т) { return String(т == null ? '' : т).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    карта.innerHTML = '<div class="иг-верх"><div class="иг-знак">🎮</div><div><h2>Выбери игры</h2></div></div>' +
+      '<p class="иг-под">Все слова — из этого занятия. Отметь, во что играть, и жми «Играть»: игры пойдут одна за другой.</p>' +
+      '<div class="иг-выбор"><label class="все"><input type="checkbox" id="игВсе"><span class="зн">⭐</span>' +
+      '<span class="им">Играть во все игры подряд<small>' + игры.length + ' игр, по очереди</small></span></label>' +
+      игры.map(function (и) {
+        return '<label><input type="checkbox" data-к="' + и.код + '"' + (вкл[и.код] ? ' checked' : '') + '>' +
+          '<span class="зн">' + и.значок + '</span><span class="им">' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
+          (и.рекорд ? '<span class="рек">' + и.рекорд.процент + '%</span>' : '') + '</label>';
+      }).join('') + '</div><button type="button" class="иг-играть" id="игИграть"></button>';
+    var все = карта.querySelector('#игВсе'), поля = карта.querySelectorAll('input[data-к]'), кн = карта.querySelector('#игИграть');
+    function отмечено() { return Array.prototype.filter.call(поля, function (п) { return п.checked; }).map(function (п) { return п.getAttribute('data-к'); }); }
+    function обновить() {
+      var о = отмечено();
+      все.checked = о.length === поля.length;
+      кн.disabled = !о.length;
+      кн.textContent = о.length ? '▶ Играть' + (о.length > 1 ? ' (' + о.length + ' игр подряд)' : '') : 'Отметь хотя бы одну игру';
+      try { localStorage.setItem(ключ, JSON.stringify(о)); } catch (e) {}
+    }
+    все.onchange = function () { Array.prototype.forEach.call(поля, function (п) { п.checked = все.checked; }); обновить(); };
+    Array.prototype.forEach.call(поля, function (п) { п.onchange = обновить; });
+    кн.onclick = function () { var о = отмечено(); if (о.length) { карта.scrollIntoView({ block: 'start' }); играть(о); } };
+    обновить();
+  }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
+
+  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
+  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; })
+    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
+    .then(function () { return window.КАРТИНКИ ? КАРТИНКИ.готово : null; })  // 24.10: играм и домашке нужны картинки слов
+    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (д) {
+      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
+      var экран = document.createElement('div');
+      экран.className = 'иг-экран'; экран.hidden = true;
+      var заголовок = (document.querySelector('.bb-title') || document.querySelector('h1') || {}).textContent || '';
+      экран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="игЗакрыть">✕ Закрыть</button>' +
+        '<b>🎮 Игры · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section class="игры" id="игрыЭкран"></section>';
+      document.body.appendChild(экран);
+      var вышло = ИГРЫ.старт({ корень: экран.querySelector('#игрыЭкран'), слова: д, урок: файл, база: '../', меню: выбор });
+      if (!вышло) { корень.style.display = 'none'; return; }
+      var коды = ИГРЫ.какиеЕсть();
+      корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
+        '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
+      корень.querySelector('#игПуск').onclick = function () { открыть(); };
+
+      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
+         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
+      var дзЭкран = null;
+      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
+        дзЭкран = document.createElement('div');
+        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
+        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
+          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
+        document.body.appendChild(дзЭкран);
+        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
+          игры: function () { спрятатьДЗ(); открыть(); } });
+        if (заданий) {
+          var кн = document.createElement('button');
+          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
+          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
+          кн.onclick = function () { открытьДЗ(); };
+          корень.insertBefore(кн, корень.firstChild);
+          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
+          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
+        } else { дзЭкран.remove(); дзЭкран = null; }
+      }
+      function открытьДЗ() {
+        if (!дзЭкран) return;
+        if (дзЭкран.hidden) {
+          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
+        }
+        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
+      }
+      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
+      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
+      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
+      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
+      var хеш = decodeURIComponent(location.hash || '');
+      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
+      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
+      экран.querySelector('#игЗакрыть').onclick = закрыть;
+      window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
+      // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
+      var прямо = ИГРЫ.запустить;
+      ИГРЫ.запустить = function (код) { открыть(true); return прямо(код); };
+
+      function открыть(безМеню) {
+        if (экран.hidden) {
+          экран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ игры: 1 }, '', '#игры'); } catch (e) {}
+        }
+        if (!безМеню) ИГРЫ.меню();
+        экран.scrollTop = 0;
+      }
+      function спрятать() { экран.hidden = true; document.documentElement.style.overflow = ''; }
+      function закрыть() { спрятать(); if (location.hash === '#игры') { try { history.back(); } catch (e) {} } }
+      window.ИГРЫ_ОТКРЫТЬ = открыть;
+
+      вДомашку();
+      var toc = document.querySelector('.toc ol');
+      if (toc) {
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#игры">🎮 Игры к этому занятию</a>';
+        li.querySelector('a').onclick = function (e) { e.preventDefault(); открыть(); };
+        toc.appendChild(li);
+      }
+    })
+    .catch(function () { корень.style.display = 'none'; });
+})();
+</script>
+<!--ИГРЫ-END-->
+
+<!--ВИДЕО-START-->
+<style>
+.вид{margin:34px 0 0}
+.вид h2{margin:0 0 6px}
+.вид-шапка{color:var(--ink-muted,#666);margin:0 0 14px}
+.вид-карта{background:var(--surface,#fff);border:1px solid var(--line,#e5e5e5);border-radius:18px;padding:18px 16px;margin:0 0 18px;box-shadow:var(--shadow,none)}
+.вид-ролик{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+.вид-ролик img{width:168px;max-width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:var(--line,#eee)}
+.вид-ролик b{display:block;line-height:1.3}
+.вид-ролик small{color:var(--ink-muted,#666)}
+.вид-смотреть{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);font-size:.85em;font-weight:600}
+.вид-зачем{margin:12px 0 0}
+.вид-тк{margin:8px 0 0;padding-left:18px}
+.вид-тк a{color:var(--accent,#4A63D6);font-weight:600;text-decoration:none}
+.вид-зд{margin:16px 0 0}
+.вид-зд h4{margin:0 0 8px;font-size:1em}
+.вид-зд ol{margin:0;padding-left:22px}
+.вид-зд li{margin:0 0 10px}
+.вид-зд details summary{cursor:pointer;color:var(--accent,#4A63D6);font-size:.9em}
+.вид-зд input[type=text],.вид-зд select,.вид-зд textarea{font:inherit;padding:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;max-width:100%}
+.вид-зд input[type=text]{width:9em}
+.вид-зд textarea{width:100%;min-height:70px;margin:4px 0}
+.вид-кн{font:inherit;font-size:.85em;padding:3px 10px;margin-left:6px;border-radius:999px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit;cursor:pointer}
+.вид-итог{display:block;font-size:.9em;margin-top:4px}
+.вид-да{color:#1f9d55}.вид-нет{color:#d64545}
+.вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
+.вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
+@media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
+</style>
+<section class="вид" id="видео">
+  <h2>🎬 Видео к уроку</h2>
+  <p class="вид-шапка">Ещё одна часть домашки: открой ролик, посмотри и сделай задания под ним. Ответы проверяются тут же.</p>
+  
+<div class="вид-карта" id="видео1">
+  <a class="вид-ролик" href="https://youtu.be/L_A6hReqqO0" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/L_A6hReqqO0/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 1 из 3</small><b>Deutsch lernen | Wortschatz und Redemittel zum Thema: Essen &amp; trinken 🥗🍝☕</b><small>Hallo Deutschschule · 14:08</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="L_A6hReqqO0">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 110, "кусок": "Worauf hast du Lust?", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 215, "кусок": "предложить еду: Kann ich dir … anbieten?", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 260, "кусок": "вегетарианец, веган", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 445, "кусок": "Lieferdienst, гриль", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 510, "кусок": "аллергия на орехи", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 710, "кусок": "Ich hätte gern …", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}], "последний": "Lieblingsessen", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"], "верно": [], "вопросы": []}</script>
+  <p class="вид-зачем">Разговор о еде: что хочешь, что любишь, вегетарианец, аллергия на орехи, «Ich hätte gern …». Каждая фраза дважды — повторяй. Аллергия и диета — твоя будущая тема на приёме.</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/L_A6hReqqO0?t=0" target="_blank" rel="noopener">0:00</a> — Worauf hast du Lust?</li><li><a href="https://youtu.be/L_A6hReqqO0?t=110" target="_blank" rel="noopener">1:50</a> — предложить еду: Kann ich dir … anbieten?</li><li><a href="https://youtu.be/L_A6hReqqO0?t=215" target="_blank" rel="noopener">3:35</a> — вегетарианец, веган</li><li><a href="https://youtu.be/L_A6hReqqO0?t=260" target="_blank" rel="noopener">4:20</a> — Lieferdienst, гриль</li><li><a href="https://youtu.be/L_A6hReqqO0?t=445" target="_blank" rel="noopener">7:25</a> — аллергия на орехи</li><li><a href="https://youtu.be/L_A6hReqqO0?t=510" target="_blank" rel="noopener">8:30</a> — Ich hätte gern …</li><li><a href="https://youtu.be/L_A6hReqqO0?t=710" target="_blank" rel="noopener">11:50</a> — Lieblingsessen</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Подбери ответ.</h4><ol><li>Worauf hast du Lust? → <select data-ок="Ich habe Lust auf Pizza."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Kann ich dir etwas zu essen anbieten? → <select data-ок="Nein, danke. Ich habe schon gegessen."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Magst du mexikanisches Essen? → <select data-ок="Nein, es ist mir zu scharf."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Isst du gern Sushi? → <select data-ок="Nein, ich mag keinen Fisch."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Möchtest du etwas essen? → <select data-ок="Nein, ich bin auf Diät."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь слово.</h4><ol><li data-впиши="Vegetarier" data-почему="">Ich esse kein Fleisch. Ich bin <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Nussallergie" data-почему="">Ich habe eine <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (аллергия на орехи)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="enthalten" data-почему="содержат">Gemüse und Obst <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> viele Vitamine.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="gern" data-почему="вежливо: мне бы …">Ich hätte <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein Schnitzel mit Pommes.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="verderben" data-почему="испортятся">Wir müssen sie essen, sonst <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> sie.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Ответь на вопросы видео: Was ist dein Lieblingsessen? Worauf hast du heute Lust? Gibt es etwas, was du nicht isst?</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Mein Lieblingsessen ist Borschtsch. Heute habe ich Lust auf Fisch. Ich esse keine scharfen Gerichte.</details></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>Lust haben auf</span><span>хотеть (чего-то)</span><span>anbieten</span><span>предлагать</span><span>die Verabredung</span><span>встреча, свидание</span><span>der Imbissstand</span><span>закусочная</span><span>das Gericht</span><span>блюдо</span><span>tierische Produkte</span><span>продукты животного происхождения</span><span>das Mehl</span><span>мука</span><span>verderben</span><span>портиться</span><span>der Lieferdienst</span><span>доставка еды</span><span>scharf</span><span>острый</span><span>die Nussallergie</span><span>аллергия на орехи</span><span>auf Diät sein</span><span>сидеть на диете</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео2">
+  <a class="вид-ролик" href="https://youtu.be/bPVmTzL7D7I" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/bPVmTzL7D7I/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 2 из 3</small><b>Deutsch lernen mit Dialogen / Lektion 12 / Was möchten Sie bestellen? / im Restaurant</b><small>Hallo Deutschschule · 11:28</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="bPVmTzL7D7I">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 80, "кусок": "сколько стоит", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"], "верно": ["«Ich trinke meinen Kaffee schwarz» — без молока.", true, ""]}, {"t": 356, "кусок": "заказ", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"], "верно": ["«Getrennt, bitte» — значит «всё вместе».", false, "getrennt — раздельно, zusammen — вместе."]}, {"t": 420, "кусок": "zusammen oder getrennt?", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"]}, {"t": 510, "кусок": "nehmen по лицам", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"]}, {"t": 570, "кусок": "mögen по лицам", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"]}], "последний": "haben по лицам", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"], "верно": [], "вопросы": []}</script>
+  <p class="вид-зачем">Кафе от начала до счёта: Was möchten Sie bestellen? Ich hätte gern … Wasser ohne Kohlensäure, Kaffee schwarz, «вместе или раздельно?». В конце — nehmen, mögen, haben по лицам.</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/bPVmTzL7D7I?t=0" target="_blank" rel="noopener">0:00</a> — сколько стоит</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=80" target="_blank" rel="noopener">1:20</a> — заказ</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=356" target="_blank" rel="noopener">5:56</a> — zusammen oder getrennt?</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=420" target="_blank" rel="noopener">7:00</a> — nehmen по лицам</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=510" target="_blank" rel="noopener">8:30</a> — mögen по лицам</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=570" target="_blank" rel="noopener">9:30</a> — haben по лицам</li></ul>
+  <div class="вид-зд"><h4>Задание 1. Вставь слово.</h4><ol><li data-впиши="Kohlensäure" data-почему="без газа">Ich trinke ein Wasser ohne <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Zucker" data-почему="">Ich hätte gern einen Kaffee mit Milch und <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="getrennt" data-почему="раздельно">Bezahlen Sie zusammen oder <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Nimmst" data-почему="nehmen → du nimmst"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> du auch einen Kaffee? (nehmen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mögen" data-почему="">Wir <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> kein Fleisch. (mögen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Durst" data-почему="">Nein, danke. Ich habe keinen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (жажда)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">«Ich trinke meinen Kaffee schwarz» — без молока. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="getrennt — раздельно, zusammen — вместе.">«Getrennt, bitte» — значит «всё вместе». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Kohlensäure</span><span>газ (в воде)</span><span>getrennt</span><span>раздельно</span><span>zusammen</span><span>вместе</span><span>der Durst</span><span>жажда</span><span>eine Tasse Tee</span><span>чашка чая</span><span>der Käsetoast</span><span>тост с сыром</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео3">
+  <a class="вид-ролик" href="https://youtu.be/tm2RNRRl_cE" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/tm2RNRRl_cE/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 3 из 3</small><b>#906 Esskultur in Deutschland [Deutsch lernen durch Hören] Learn German with stories A1-A2 #dldh</b><small>Deutsch lernen durch Hören · 3:00</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="tm2RNRRl_cE">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 47, "кусок": "завтрак", "все": ["завтрак", "обед, столовая", "ужин", "напитки"]}, {"t": 91, "кусок": "обед, столовая", "все": ["завтрак", "обед, столовая", "ужин", "напитки"]}, {"t": 133, "кусок": "ужин", "все": ["завтрак", "обед, столовая", "ужин", "напитки"]}], "последний": "напитки", "все": ["завтрак", "обед, столовая", "ужин", "напитки"], "верно": [], "вопросы": [["Что немцы едят утром?", "Булочку с вареньем, сыром или колбасой; мюсли с молоком или йогуртом; кофе или чай."], ["Где обедают сотрудники фирм?", "В столовой: in der Kantine."], ["Что многие едят вечером?", "Хлеб с сыром или колбасой; некоторые семьи готовят — спагетти, айнтопф, запеканку."], ["Что такое Apfelwein?", "Напиток из яблок, его пьют взрослые в некоторых регионах."]]}</script>
+  <p class="вид-зачем">Три минуты простого текста: как едят в Германии — Frühstück, Kantine, Abendbrot, по выходным всей семьёй. Хорошо для понимания на слух.</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/tm2RNRRl_cE?t=0" target="_blank" rel="noopener">0:00</a> — завтрак</li><li><a href="https://youtu.be/tm2RNRRl_cE?t=47" target="_blank" rel="noopener">0:47</a> — обед, столовая</li><li><a href="https://youtu.be/tm2RNRRl_cE?t=91" target="_blank" rel="noopener">1:31</a> — ужин</li><li><a href="https://youtu.be/tm2RNRRl_cE?t=133" target="_blank" rel="noopener">2:13</a> — напитки</li></ul>
+  <div class="вид-зд"><h4>Задание 1. Ответь по тексту.</h4><ol><li>Что немцы едят утром?<details><summary>показать ответ</summary>Булочку с вареньем, сыром или колбасой; мюсли с молоком или йогуртом; кофе или чай.</details></li><li>Где обедают сотрудники фирм?<details><summary>показать ответ</summary>В столовой: in der Kantine.</details></li><li>Что многие едят вечером?<details><summary>показать ответ</summary>Хлеб с сыром или колбасой; некоторые семьи готовят — спагетти, айнтопф, запеканку.</details></li><li>Что такое Apfelwein?<details><summary>показать ответ</summary>Напиток из яблок, его пьют взрослые в некоторых регионах.</details></li></ol></div><div class="вид-зд"><h4>Задание 2. Вставь слово.</h4><ol><li data-впиши="Tag" data-почему="">In Deutschland essen viele Menschen dreimal am <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Kantine" data-почему="">Viele Firmen haben eine <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Zeit" data-почему="">Pizza ist praktisch, wenn man wenig <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> hat.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Mahlzeit</span><span>приём пищи</span><span>das belegte Brötchen</span><span>бутерброд-булочка</span><span>die Kantine</span><span>столовая (на работе)</span><span>der Eintopf</span><span>густой суп, рагу</span><span>der Auflauf</span><span>запеканка</span><span>der Apfelwein</span><span>яблочное вино, сидр</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+</section>
+<script>
+(function(){
+  function чисто(s){return (s||'').toLowerCase().replace(/[.,!?;:«»"„“]/g,'').replace(/\s+/g,' ').trim();}
+  document.querySelectorAll('.вид [data-впиши]').forEach(function(li){
+    var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
+    function проверить(){
+      var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
+      итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+    }
+    кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
+  });
+  document.querySelectorAll('.вид [data-верно]').forEach(function(li){
+    li.querySelectorAll('button').forEach(function(кн){
+      кн.onclick=function(){
+        var верно=кн.dataset.да===li.dataset.верно, итог=li.querySelector('.вид-итог');
+        итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+        итог.innerHTML=(верно?'✓ ':'✗ ')+(li.dataset.верно==='1'?'верно':'неверно')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      };
+    });
+  });
+  document.querySelectorAll('.вид [data-соедини]').forEach(function(бл){
+    бл.querySelector('button').onclick=function(){
+      var всего=0,хорошо=0;
+      бл.querySelectorAll('select').forEach(function(с){всего++; var ок=с.value===с.dataset.ок; if(ок)хорошо++; с.style.borderColor=ок?'#1f9d55':'#d64545';});
+      var итог=бл.querySelector('.вид-итог'); итог.className='вид-итог '+(хорошо===всего?'вид-да':'вид-нет');
+      итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
+    };
+  });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
+})();
+</script>
+<!--ВИДЕО-END-->
 <!--QUIZ-START-->
 <!--UPR-START-->
 <style>
@@ -1024,433 +1455,7 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar{
 })();
 </script>
 <!--QUIZ-END-->
-<!--ИГРЫ-START-->
-<section class="игры" id="игры"></section>
-<style>
-/* 20.10.2026: игры урока — отдельным экраном на весь экран, как ЗУБР */
-.иг-пуск{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; font:inherit;
-  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); border:none; border-radius:18px; padding:18px 18px; min-height:72px;
-  box-shadow:var(--shadow,0 8px 24px rgba(40,50,110,.12)); }
-.иг-пуск i{ font-style:normal; font-size:30px; } .иг-пуск b{ display:block; font-size:18px; }
-.иг-пуск small{ display:block; font-size:13px; opacity:.85; margin-top:2px; font-weight:500; }
-.иг-экран{ position:fixed; inset:0; z-index:9000; overflow-y:auto; -webkit-overflow-scrolling:touch;
-  background:var(--bg,var(--surface,#fff)); padding:0 12px 40px; }
-.иг-экран[hidden]{ display:none !important; }
-.иг-экран-верх{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; padding:10px 2px;
-  background:var(--bg,var(--surface,#fff)); border-bottom:1px solid var(--line,#e4e6ef); margin:0 -2px 12px;
-  font-family:-apple-system,"SF Pro Text",Arial,sans-serif; color:var(--ink,#1c2242); }
-.иг-экран-верх button{ font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:999px;
-  padding:8px 14px; border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242); }
-.иг-экран-верх button{ white-space:nowrap; flex:0 0 auto; }
-.иг-экран-верх b{ font-size:14px; line-height:1.3; }
-.иг-экран .игры{ margin:0 auto; max-width:760px; }
-.иг-выбор{ display:grid; gap:8px; margin:6px 0 14px; }
-.иг-выбор label{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:14px; cursor:pointer;
-  background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:54px; }
-.иг-выбор label.все{ border:2px solid var(--accent,#1f5f5b); }
-.иг-выбор input{ width:22px; height:22px; flex:0 0 auto; accent-color:var(--accent,#1f5f5b); }
-.иг-выбор .зн{ font-size:22px; } .иг-выбор .им{ flex:1; font-weight:700; font-size:15px; }
-.иг-выбор .им small{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted,#5b615c); margin-top:2px; }
-.иг-выбор .рек{ font-size:12.5px; font-weight:700; color:var(--accent,#1f5f5b); white-space:nowrap; }
-.иг-играть{ position:sticky; bottom:10px; width:100%; font:inherit; font-size:17px; font-weight:800; cursor:pointer;
-  border:none; border-radius:16px; padding:15px; background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff);
-  box-shadow:0 6px 20px rgba(0,0,0,.18); }
-.иг-играть:disabled{ opacity:.45; }
-</style>
-<script src="../igry.js?v=202610221616"></script>
-<script src="../dz.js?v=202610221616"></script>
-<script>
-/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
-   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
-(function () {
-  var корень = document.getElementById('игры');
-  if (!корень) return;
-  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
-  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
 
-  /* Игры в домашку (18.09). Домашку проверяет не Даша, а сам ученик, и
-     после письменной части полезно прогнать те же слова в игре. Кнопки
-     ставим прямо в конец блока домашки — они зовут ядро напрямую. */
-  function вДомашку() {
-    var метка = document.querySelector('.hwrow, .hw-tr-btn');
-    var секция = метка && метка.closest('section');
-    if (!секция) {
-      // уроки со мной: домашка — обычный раздел с заголовком
-      var все = document.querySelectorAll('section h2');
-      for (var i = 0; i < все.length; i++) {
-        if (/Домашк/i.test(все[i].textContent)) { секция = все[i].closest('section'); break; }
-      }
-    }
-    if (!секция || секция === корень || секция.querySelector('.иг-вдомашке')) return;
-    var коды = (ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть()) || [];
-    if (!коды.length) return;
-    var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
-                  картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
-                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
-                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
-                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
-    var коробка = document.createElement('div');
-    коробка.className = 'иг-вдомашке';
-    коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
-      '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
-      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
-      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
-    секция.appendChild(коробка);
-    коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
-    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
-  }
-
-  /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
-  function выбор(карта, игры, играть) {
-    var ключ = 'nemeckiy_igry_vybor_' + файл, помню = null;
-    try { помню = JSON.parse(localStorage.getItem(ключ) || 'null'); } catch (e) {}
-    var вкл = {}; игры.forEach(function (и) { вкл[и.код] = !помню || помню.indexOf(и.код) >= 0; });
-    function экр(т) { return String(т == null ? '' : т).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-    карта.innerHTML = '<div class="иг-верх"><div class="иг-знак">🎮</div><div><h2>Выбери игры</h2></div></div>' +
-      '<p class="иг-под">Все слова — из этого занятия. Отметь, во что играть, и жми «Играть»: игры пойдут одна за другой.</p>' +
-      '<div class="иг-выбор"><label class="все"><input type="checkbox" id="игВсе"><span class="зн">⭐</span>' +
-      '<span class="им">Играть во все игры подряд<small>' + игры.length + ' игр, по очереди</small></span></label>' +
-      игры.map(function (и) {
-        return '<label><input type="checkbox" data-к="' + и.код + '"' + (вкл[и.код] ? ' checked' : '') + '>' +
-          '<span class="зн">' + и.значок + '</span><span class="им">' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
-          (и.рекорд ? '<span class="рек">' + и.рекорд.процент + '%</span>' : '') + '</label>';
-      }).join('') + '</div><button type="button" class="иг-играть" id="игИграть"></button>';
-    var все = карта.querySelector('#игВсе'), поля = карта.querySelectorAll('input[data-к]'), кн = карта.querySelector('#игИграть');
-    function отмечено() { return Array.prototype.filter.call(поля, function (п) { return п.checked; }).map(function (п) { return п.getAttribute('data-к'); }); }
-    function обновить() {
-      var о = отмечено();
-      все.checked = о.length === поля.length;
-      кн.disabled = !о.length;
-      кн.textContent = о.length ? '▶ Играть' + (о.length > 1 ? ' (' + о.length + ' игр подряд)' : '') : 'Отметь хотя бы одну игру';
-      try { localStorage.setItem(ключ, JSON.stringify(о)); } catch (e) {}
-    }
-    все.onchange = function () { Array.prototype.forEach.call(поля, function (п) { п.checked = все.checked; }); обновить(); };
-    Array.prototype.forEach.call(поля, function (п) { п.onchange = обновить; });
-    кн.onclick = function () { var о = отмечено(); if (о.length) { карта.scrollIntoView({ block: 'start' }); играть(о); } };
-    обновить();
-  }
-
-  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
-     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
-     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
-  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
-  function проверкаДомашки() {
-    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
-      if (кн.dataset.проверка) return;
-      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
-      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
-      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
-      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
-        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
-      });
-      var строки = блок.querySelectorAll('.hwrow');
-      if (!список.length || список.length !== строки.length) return;
-      кн.dataset.проверка = '1';
-      var пр = document.createElement('button');
-      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
-      пр.textContent = '✓ Проверить мои ответы';
-      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
-      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
-      пр.onclick = function () {
-        var верно = 0, всего = 0, почти = 0;
-        Array.prototype.forEach.call(строки, function (строка, i) {
-          var поля = строка.querySelectorAll('input.fld');
-          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
-          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
-          Array.prototype.forEach.call(поля, function (поле, k) {
-            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
-            var в = чист(поле.value); всего++;
-            поле.title = '';
-            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
-            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
-            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
-              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
-            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
-          });
-        });
-        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
-          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
-      };
-    });
-  }
-  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
-  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
-  if (document.readyState === 'complete') запуститьПроверку();
-  else window.addEventListener('load', запуститьПроверку);
-
-  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
-  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .catch(function () { return null; })
-    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
-    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
-    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-    .then(function (д) {
-      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
-      var экран = document.createElement('div');
-      экран.className = 'иг-экран'; экран.hidden = true;
-      var заголовок = (document.querySelector('.bb-title') || document.querySelector('h1') || {}).textContent || '';
-      экран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="игЗакрыть">✕ Закрыть</button>' +
-        '<b>🎮 Игры · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section class="игры" id="игрыЭкран"></section>';
-      document.body.appendChild(экран);
-      var вышло = ИГРЫ.старт({ корень: экран.querySelector('#игрыЭкран'), слова: д, урок: файл, база: '../', меню: выбор });
-      if (!вышло) { корень.style.display = 'none'; return; }
-      var коды = ИГРЫ.какиеЕсть();
-      корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
-        '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
-      корень.querySelector('#игПуск').onclick = function () { открыть(); };
-
-      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
-         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
-      var дзЭкран = null;
-      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
-        дзЭкран = document.createElement('div');
-        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
-        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
-          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
-        document.body.appendChild(дзЭкран);
-        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
-          игры: function () { спрятатьДЗ(); открыть(); } });
-        if (заданий) {
-          var кн = document.createElement('button');
-          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
-          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
-          кн.onclick = function () { открытьДЗ(); };
-          корень.insertBefore(кн, корень.firstChild);
-          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
-          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
-        } else { дзЭкран.remove(); дзЭкран = null; }
-      }
-      function открытьДЗ() {
-        if (!дзЭкран) return;
-        if (дзЭкран.hidden) {
-          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
-          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
-        }
-        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
-      }
-      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
-      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
-      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
-      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
-      var хеш = decodeURIComponent(location.hash || '');
-      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
-      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
-      экран.querySelector('#игЗакрыть').onclick = закрыть;
-      window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
-      // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
-      var прямо = ИГРЫ.запустить;
-      ИГРЫ.запустить = function (код) { открыть(true); return прямо(код); };
-
-      function открыть(безМеню) {
-        if (экран.hidden) {
-          экран.hidden = false; document.documentElement.style.overflow = 'hidden';
-          try { history.pushState({ игры: 1 }, '', '#игры'); } catch (e) {}
-        }
-        if (!безМеню) ИГРЫ.меню();
-        экран.scrollTop = 0;
-      }
-      function спрятать() { экран.hidden = true; document.documentElement.style.overflow = ''; }
-      function закрыть() { спрятать(); if (location.hash === '#игры') { try { history.back(); } catch (e) {} } }
-      window.ИГРЫ_ОТКРЫТЬ = открыть;
-
-      вДомашку();
-      var toc = document.querySelector('.toc ol');
-      if (toc) {
-        var li = document.createElement('li');
-        li.innerHTML = '<a href="#игры">🎮 Игры к этому занятию</a>';
-        li.querySelector('a').onclick = function (e) { e.preventDefault(); открыть(); };
-        toc.appendChild(li);
-      }
-    })
-    .catch(function () { корень.style.display = 'none'; });
-})();
-</script>
-<!--ИГРЫ-END-->
-
-<!--ВИДЕО-START-->
-<style>
-.вид{margin:34px 0 0}
-.вид h2{margin:0 0 6px}
-.вид-шапка{color:var(--ink-muted,#666);margin:0 0 14px}
-.вид-карта{background:var(--surface,#fff);border:1px solid var(--line,#e5e5e5);border-radius:18px;padding:18px 16px;margin:0 0 18px;box-shadow:var(--shadow,none)}
-.вид-ролик{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
-.вид-ролик img{width:168px;max-width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:var(--line,#eee)}
-.вид-ролик b{display:block;line-height:1.3}
-.вид-ролик small{color:var(--ink-muted,#666)}
-.вид-смотреть{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);font-size:.85em;font-weight:600}
-.вид-зачем{margin:12px 0 0}
-.вид-тк{margin:8px 0 0;padding-left:18px}
-.вид-тк a{color:var(--accent,#4A63D6);font-weight:600;text-decoration:none}
-.вид-зд{margin:16px 0 0}
-.вид-зд h4{margin:0 0 8px;font-size:1em}
-.вид-зд ol{margin:0;padding-left:22px}
-.вид-зд li{margin:0 0 10px}
-.вид-зд details summary{cursor:pointer;color:var(--accent,#4A63D6);font-size:.9em}
-.вид-зд input[type=text],.вид-зд select,.вид-зд textarea{font:inherit;padding:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;max-width:100%}
-.вид-зд input[type=text]{width:9em}
-.вид-зд textarea{width:100%;min-height:70px;margin:4px 0}
-.вид-кн{font:inherit;font-size:.85em;padding:3px 10px;margin-left:6px;border-radius:999px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit;cursor:pointer}
-.вид-итог{display:block;font-size:.9em;margin-top:4px}
-.вид-да{color:#1f9d55}.вид-нет{color:#d64545}
-.вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
-.вид-слова span:nth-child(odd){font-weight:600}
-.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
-.вид-плеер{margin:12px 0 0}
-.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
-.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
-.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
-.вид-стоп b.в{display:block;margin:0 0 8px}
-.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
-.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
-.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
-.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
-@media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
-</style>
-<section class="вид" id="видео">
-  <h2>🎬 Видео к уроку</h2>
-  <p class="вид-шапка">Ещё одна часть домашки: открой ролик, посмотри и сделай задания под ним. Ответы проверяются тут же.</p>
-  
-<div class="вид-карта" id="видео1">
-  <a class="вид-ролик" href="https://youtu.be/L_A6hReqqO0" target="_blank" rel="noopener">
-    <img src="https://i.ytimg.com/vi/L_A6hReqqO0/mqdefault.jpg" alt="" loading="lazy">
-    <span><small>Видео 1 из 3</small><b>Deutsch lernen | Wortschatz und Redemittel zum Thema: Essen &amp; trinken 🥗🍝☕</b><small>Hallo Deutschschule · 14:08</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
-  </a>
-  <button class="вид-плеер-кн" type="button" data-видео="L_A6hReqqO0">▶ Смотреть здесь, с вопросами</button>
-  <div class="вид-плеер" hidden></div>
-  <script type="application/json" class="вид-данные">{"стопы": [{"t": 110, "кусок": "Worauf hast du Lust?", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 215, "кусок": "предложить еду: Kann ich dir … anbieten?", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 260, "кусок": "вегетарианец, веган", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 445, "кусок": "Lieferdienst, гриль", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 510, "кусок": "аллергия на орехи", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}, {"t": 710, "кусок": "Ich hätte gern …", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"]}], "последний": "Lieblingsessen", "все": ["Worauf hast du Lust?", "предложить еду: Kann ich dir … anbieten?", "вегетарианец, веган", "Lieferdienst, гриль", "аллергия на орехи", "Ich hätte gern …", "Lieblingsessen"], "верно": [], "вопросы": []}</script>
-  <p class="вид-зачем">Разговор о еде: что хочешь, что любишь, вегетарианец, аллергия на орехи, «Ich hätte gern …». Каждая фраза дважды — повторяй. Аллергия и диета — твоя будущая тема на приёме.</p>
-  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/L_A6hReqqO0?t=0" target="_blank" rel="noopener">0:00</a> — Worauf hast du Lust?</li><li><a href="https://youtu.be/L_A6hReqqO0?t=110" target="_blank" rel="noopener">1:50</a> — предложить еду: Kann ich dir … anbieten?</li><li><a href="https://youtu.be/L_A6hReqqO0?t=215" target="_blank" rel="noopener">3:35</a> — вегетарианец, веган</li><li><a href="https://youtu.be/L_A6hReqqO0?t=260" target="_blank" rel="noopener">4:20</a> — Lieferdienst, гриль</li><li><a href="https://youtu.be/L_A6hReqqO0?t=445" target="_blank" rel="noopener">7:25</a> — аллергия на орехи</li><li><a href="https://youtu.be/L_A6hReqqO0?t=510" target="_blank" rel="noopener">8:30</a> — Ich hätte gern …</li><li><a href="https://youtu.be/L_A6hReqqO0?t=710" target="_blank" rel="noopener">11:50</a> — Lieblingsessen</li></ul>
-  <div class="вид-зд" data-соедини><h4>Задание 1. Подбери ответ.</h4><ol><li>Worauf hast du Lust? → <select data-ок="Ich habe Lust auf Pizza."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Kann ich dir etwas zu essen anbieten? → <select data-ок="Nein, danke. Ich habe schon gegessen."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Magst du mexikanisches Essen? → <select data-ок="Nein, es ist mir zu scharf."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Isst du gern Sushi? → <select data-ок="Nein, ich mag keinen Fisch."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li><li>Möchtest du etwas essen? → <select data-ок="Nein, ich bin auf Diät."><option value="">—</option><option>Nein, ich bin auf Diät.</option><option>Nein, danke. Ich habe schon gegessen.</option><option>Nein, ich mag keinen Fisch.</option><option>Ich habe Lust auf Pizza.</option><option>Nein, es ist mir zu scharf.</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь слово.</h4><ol><li data-впиши="Vegetarier" data-почему="">Ich esse kein Fleisch. Ich bin <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Nussallergie" data-почему="">Ich habe eine <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (аллергия на орехи)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="enthalten" data-почему="содержат">Gemüse und Obst <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> viele Vitamine.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="gern" data-почему="вежливо: мне бы …">Ich hätte <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein Schnitzel mit Pommes.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="verderben" data-почему="испортятся">Wir müssen sie essen, sonst <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> sie.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Ответь на вопросы видео: Was ist dein Lieblingsessen? Worauf hast du heute Lust? Gibt es etwas, was du nicht isst?</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Mein Lieblingsessen ist Borschtsch. Heute habe ich Lust auf Fisch. Ich esse keine scharfen Gerichte.</details></div>
-  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>Lust haben auf</span><span>хотеть (чего-то)</span><span>anbieten</span><span>предлагать</span><span>die Verabredung</span><span>встреча, свидание</span><span>der Imbissstand</span><span>закусочная</span><span>das Gericht</span><span>блюдо</span><span>tierische Produkte</span><span>продукты животного происхождения</span><span>das Mehl</span><span>мука</span><span>verderben</span><span>портиться</span><span>der Lieferdienst</span><span>доставка еды</span><span>scharf</span><span>острый</span><span>die Nussallergie</span><span>аллергия на орехи</span><span>auf Diät sein</span><span>сидеть на диете</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
-</div>
-<div class="вид-карта" id="видео2">
-  <a class="вид-ролик" href="https://youtu.be/bPVmTzL7D7I" target="_blank" rel="noopener">
-    <img src="https://i.ytimg.com/vi/bPVmTzL7D7I/mqdefault.jpg" alt="" loading="lazy">
-    <span><small>Видео 2 из 3</small><b>Deutsch lernen mit Dialogen / Lektion 12 / Was möchten Sie bestellen? / im Restaurant</b><small>Hallo Deutschschule · 11:28</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
-  </a>
-  <button class="вид-плеер-кн" type="button" data-видео="bPVmTzL7D7I">▶ Смотреть здесь, с вопросами</button>
-  <div class="вид-плеер" hidden></div>
-  <script type="application/json" class="вид-данные">{"стопы": [{"t": 80, "кусок": "сколько стоит", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"], "верно": ["«Ich trinke meinen Kaffee schwarz» — без молока.", true, ""]}, {"t": 356, "кусок": "заказ", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"], "верно": ["«Getrennt, bitte» — значит «всё вместе».", false, "getrennt — раздельно, zusammen — вместе."]}, {"t": 420, "кусок": "zusammen oder getrennt?", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"]}, {"t": 510, "кусок": "nehmen по лицам", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"]}, {"t": 570, "кусок": "mögen по лицам", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"]}], "последний": "haben по лицам", "все": ["сколько стоит", "заказ", "zusammen oder getrennt?", "nehmen по лицам", "mögen по лицам", "haben по лицам"], "верно": [], "вопросы": []}</script>
-  <p class="вид-зачем">Кафе от начала до счёта: Was möchten Sie bestellen? Ich hätte gern … Wasser ohne Kohlensäure, Kaffee schwarz, «вместе или раздельно?». В конце — nehmen, mögen, haben по лицам.</p>
-  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/bPVmTzL7D7I?t=0" target="_blank" rel="noopener">0:00</a> — сколько стоит</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=80" target="_blank" rel="noopener">1:20</a> — заказ</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=356" target="_blank" rel="noopener">5:56</a> — zusammen oder getrennt?</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=420" target="_blank" rel="noopener">7:00</a> — nehmen по лицам</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=510" target="_blank" rel="noopener">8:30</a> — mögen по лицам</li><li><a href="https://youtu.be/bPVmTzL7D7I?t=570" target="_blank" rel="noopener">9:30</a> — haben по лицам</li></ul>
-  <div class="вид-зд"><h4>Задание 1. Вставь слово.</h4><ol><li data-впиши="Kohlensäure" data-почему="без газа">Ich trinke ein Wasser ohne <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Zucker" data-почему="">Ich hätte gern einen Kaffee mit Milch und <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="getrennt" data-почему="раздельно">Bezahlen Sie zusammen oder <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ?<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Nimmst" data-почему="nehmen → du nimmst"><input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> du auch einen Kaffee? (nehmen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="mögen" data-почему="">Wir <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> kein Fleisch. (mögen)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Durst" data-почему="">Nein, danke. Ich habe keinen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> . (жажда)<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 2. Верно или неверно?</h4><ol><li data-верно="1" data-почему="">«Ich trinke meinen Kaffee schwarz» — без молока. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="getrennt — раздельно, zusammen — вместе.">«Getrennt, bitte» — значит «всё вместе». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div>
-  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Kohlensäure</span><span>газ (в воде)</span><span>getrennt</span><span>раздельно</span><span>zusammen</span><span>вместе</span><span>der Durst</span><span>жажда</span><span>eine Tasse Tee</span><span>чашка чая</span><span>der Käsetoast</span><span>тост с сыром</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
-</div>
-<div class="вид-карта" id="видео3">
-  <a class="вид-ролик" href="https://youtu.be/tm2RNRRl_cE" target="_blank" rel="noopener">
-    <img src="https://i.ytimg.com/vi/tm2RNRRl_cE/mqdefault.jpg" alt="" loading="lazy">
-    <span><small>Видео 3 из 3</small><b>#906 Esskultur in Deutschland [Deutsch lernen durch Hören] Learn German with stories A1-A2 #dldh</b><small>Deutsch lernen durch Hören · 3:00</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
-  </a>
-  <button class="вид-плеер-кн" type="button" data-видео="tm2RNRRl_cE">▶ Смотреть здесь, с вопросами</button>
-  <div class="вид-плеер" hidden></div>
-  <script type="application/json" class="вид-данные">{"стопы": [{"t": 47, "кусок": "завтрак", "все": ["завтрак", "обед, столовая", "ужин", "напитки"]}, {"t": 91, "кусок": "обед, столовая", "все": ["завтрак", "обед, столовая", "ужин", "напитки"]}, {"t": 133, "кусок": "ужин", "все": ["завтрак", "обед, столовая", "ужин", "напитки"]}], "последний": "напитки", "все": ["завтрак", "обед, столовая", "ужин", "напитки"], "верно": [], "вопросы": [["Что немцы едят утром?", "Булочку с вареньем, сыром или колбасой; мюсли с молоком или йогуртом; кофе или чай."], ["Где обедают сотрудники фирм?", "В столовой: in der Kantine."], ["Что многие едят вечером?", "Хлеб с сыром или колбасой; некоторые семьи готовят — спагетти, айнтопф, запеканку."], ["Что такое Apfelwein?", "Напиток из яблок, его пьют взрослые в некоторых регионах."]]}</script>
-  <p class="вид-зачем">Три минуты простого текста: как едят в Германии — Frühstück, Kantine, Abendbrot, по выходным всей семьёй. Хорошо для понимания на слух.</p>
-  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/tm2RNRRl_cE?t=0" target="_blank" rel="noopener">0:00</a> — завтрак</li><li><a href="https://youtu.be/tm2RNRRl_cE?t=47" target="_blank" rel="noopener">0:47</a> — обед, столовая</li><li><a href="https://youtu.be/tm2RNRRl_cE?t=91" target="_blank" rel="noopener">1:31</a> — ужин</li><li><a href="https://youtu.be/tm2RNRRl_cE?t=133" target="_blank" rel="noopener">2:13</a> — напитки</li></ul>
-  <div class="вид-зд"><h4>Задание 1. Ответь по тексту.</h4><ol><li>Что немцы едят утром?<details><summary>показать ответ</summary>Булочку с вареньем, сыром или колбасой; мюсли с молоком или йогуртом; кофе или чай.</details></li><li>Где обедают сотрудники фирм?<details><summary>показать ответ</summary>В столовой: in der Kantine.</details></li><li>Что многие едят вечером?<details><summary>показать ответ</summary>Хлеб с сыром или колбасой; некоторые семьи готовят — спагетти, айнтопф, запеканку.</details></li><li>Что такое Apfelwein?<details><summary>показать ответ</summary>Напиток из яблок, его пьют взрослые в некоторых регионах.</details></li></ol></div><div class="вид-зд"><h4>Задание 2. Вставь слово.</h4><ol><li data-впиши="Tag" data-почему="">In Deutschland essen viele Menschen dreimal am <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Kantine" data-почему="">Viele Firmen haben eine <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="Zeit" data-почему="">Pizza ist praktisch, wenn man wenig <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> hat.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div>
-  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Mahlzeit</span><span>приём пищи</span><span>das belegte Brötchen</span><span>бутерброд-булочка</span><span>die Kantine</span><span>столовая (на работе)</span><span>der Eintopf</span><span>густой суп, рагу</span><span>der Auflauf</span><span>запеканка</span><span>der Apfelwein</span><span>яблочное вино, сидр</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
-</div>
-</section>
-<script>
-(function(){
-  function чисто(s){return (s||'').toLowerCase().replace(/[.,!?;:«»"„“]/g,'').replace(/\s+/g,' ').trim();}
-  document.querySelectorAll('.вид [data-впиши]').forEach(function(li){
-    var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
-    function проверить(){
-      var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
-      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
-      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
-      итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
-        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
-    }
-    кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
-  });
-  document.querySelectorAll('.вид [data-верно]').forEach(function(li){
-    li.querySelectorAll('button').forEach(function(кн){
-      кн.onclick=function(){
-        var верно=кн.dataset.да===li.dataset.верно, итог=li.querySelector('.вид-итог');
-        итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-        итог.innerHTML=(верно?'✓ ':'✗ ')+(li.dataset.верно==='1'?'верно':'неверно')+(li.dataset.почему?' — '+li.dataset.почему:'');
-      };
-    });
-  });
-  document.querySelectorAll('.вид [data-соедини]').forEach(function(бл){
-    бл.querySelector('button').onclick=function(){
-      var всего=0,хорошо=0;
-      бл.querySelectorAll('select').forEach(function(с){всего++; var ок=с.value===с.dataset.ок; if(ок)хорошо++; с.style.borderColor=ок?'#1f9d55':'#d64545';});
-      var итог=бл.querySelector('.вид-итог'); итог.className='вид-итог '+(хорошо===всего?'вид-да':'вид-нет');
-      итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
-    };
-  });
-  /* ── видео с вопросами ── */
-  var api=null, ждут=[];
-  function грузиAPI(готово){
-    if(window.YT&&YT.Player){готово();return;}
-    ждут.push(готово); if(api)return;
-    var прежний=window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
-    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
-  }
-  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
-  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
-    кн.onclick=function(){
-      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
-      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
-      кн.hidden=true; место.hidden=false;
-      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
-      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
-      function спросить(с, дальше){
-        clearInterval(таймер); плеер.pauseVideo();
-        var шаги=[];
-        if(д.все.length>=3){
-          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
-          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
-        }
-        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
-        function шаг(k){
-          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
-          var ш=шаги[k]; стоп.hidden=false;
-          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
-          стоп.querySelectorAll('.вар').forEach(function(б){
-            б.onclick=function(){
-              всего++; var да=б.textContent===ш.ок; if(да)верных++;
-              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
-              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
-              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
-            };
-          });
-        }
-        шаг(0);
-      }
-      function следить(){
-        clearInterval(таймер);
-        таймер=setInterval(function(){
-          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
-          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
-        },400);
-      }
-      function финал(){
-        clearInterval(таймер);
-        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
-        стоп.hidden=false;
-        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
-          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
-          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
-      }
-      грузиAPI(function(){
-        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
-          playerVars:{rel:0,playsinline:1,modestbranding:1},
-          events:{onReady:function(){плеер.playVideo(); следить();},
-                  onStateChange:function(e){ if(e.data===0)финал(); }}});
-      });
-    };
-  });
-})();
-</script>
-<!--ВИДЕО-END-->
   <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
 </div>
 

@@ -206,6 +206,7 @@
   .btn.trainer{background:var(--dasha); border-color:var(--dasha); color:#fff; font-weight:600;}
   @media (prefers-color-scheme: dark){ .btn.trainer{color:#1a1020;} }
 
+  .card-фото{ display:block; width:100%; margin:0 0 12px; aspect-ratio:16/9; object-fit:cover; border-radius:14px; }
   .card{
     background:var(--surface); border:1px solid var(--line); border-radius:var(--радиус);
     padding:16px 18px; transition:border-color .15s;
@@ -593,6 +594,7 @@ if (!Слушалка){
 </script>
 
 <!--/ПЕРЕВОДЧИК-->
+
 
 
 
@@ -1485,6 +1487,8 @@ function renderLevelTabs(){
   });
 }
 
+// обложки уроков — указатель img/sceny.json; пришёл — перерисовать карточки
+fetch('img/sceny.json').then(r => r.ok ? r.json() : null).then(о => { if (о) { window.ОБЛОЖКИ = о; try { render(); } catch (e) {} } }).catch(() => {});
 function render(){
   document.querySelectorAll('.profile-btn').forEach(b=>{
     b.classList.toggle('active', b.dataset.profile === profile);
@@ -1512,7 +1516,9 @@ function render(){
       ? `<a class="btn audio" href="${l.audio}" target="_blank" rel="noopener">🔊 Интерактив со звуком</a>`
       : `<span class="btn audio disabled">🔊 скоро будет</span>`;
 
+    const обл = window.ОБЛОЖКИ && ОБЛОЖКИ['urok' + l.id];   // 24.10.2026: фото-обложка урока (Nano Banana)
     card.innerHTML = `
+      ${обл ? `<img class="card-фото" alt="" loading="lazy" decoding="async" src="img/sceny/${обл}">` : ''}
       <span class="num">${l.title.split('—')[0].trim()}</span>
       <h2>${l.title.split('—')[1] ? l.title.split('—')[1].trim() : l.title}</h2>
       <p class="topic">${l.topic}</p>

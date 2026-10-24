@@ -158,6 +158,8 @@ var СТИЛЬ = ''
 + '.иг-вариант{ font:inherit; font-size:16px; font-weight:600; padding:13px 15px; border-radius:13px; cursor:pointer;'
 + '  text-align:left; min-height:50px; background:var(--surface-2,#f3f4fa); color:inherit;'
 + '  border:1px solid var(--line,#e4e6ef); font-family:Georgia,"Iowan Old Style",serif; }'
++ '.иг-фото{ display:block; width:min(56%,240px); aspect-ratio:1/1; object-fit:cover; border-radius:16px; margin:0 auto 12px; }'
++ '.иг-фото.большое{ width:min(100%,360px); }'
 + '.иг-роды{ display:grid; grid-template-columns:repeat(3,1fr); gap:9px; margin-bottom:12px; }'
 + '.иг-род{ font:inherit; font-size:17px; font-weight:800; padding:15px 6px; border-radius:13px; cursor:pointer;'
 + '  border:2px solid var(--line,#e4e6ef); background:var(--surface-2,#f3f4fa); min-height:58px; }'
@@ -823,7 +825,9 @@ var РОДЫ = {
   задания: function (д) { return перемешать(д.существительные).slice(0, 12); },
   раунд: function (ход) {
     var з = ход.задание();
+    var фото = window.КАРТИНКИ && КАРТИНКИ.путь(з.de);  // 24.10: фото слова, если есть
     ход.рисовать(
+      (фото ? '<img class="иг-фото" alt="" src="' + фото + '">' : '') +
       '<p class="иг-де">' + экр(з.слово) + '</p>' +
       '<p class="иг-ру" style="font-size:15px;font-weight:600">' + экр(з.ru) + '</p>' +
       (з.тр ? '<p class="иг-тр">' + экр(з.тр) + '</p>' : '') +
@@ -849,6 +853,59 @@ var РОДЫ = {
           '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше</button></div>';
         document.getElementById('игДальше').onclick = ход.дальше;
         ход.голос(з.ид, з.de);
+      };
+    });
+  }
+};
+
+/* 2а. Что на картинке? — фото Nano Banana (24.10.2026) и четыре слова урока, выбрать подходящее.
+   Картинки берёт из КАРТИНКИ (kartinki.js); игра появляется, только если у урока ≥ 4 слов с фото. */
+function сФото(д) {
+  if (!window.КАРТИНКИ) return [];
+  var было = {};
+  return д.все.filter(function (к) {
+    // только само слово («das Fleisch», «Kaffee»), не фраза: «Die Speisekarte, bitte.» в варианты не берём
+    var т = String(к.de || '').replace(/<[^>]+>/g, '').trim();
+    if (!/^((der|die|das)\s+)?[A-ZÄÖÜa-zäöüß-]+$/.test(т)) return false;
+    var п = КАРТИНКИ.путь(т), н = норм(к.de);
+    if (!п || было[н]) return false;
+    было[н] = 1; к._фото = п; return true;
+  });
+}
+var ФОТО = {
+  код: 'фото', имя: 'Что на картинке?', значок: '📸',
+  под: 'Фотография — и четыре слова, выбери нужное',
+  хватает: function (д) { return сФото(д).length >= 4; },
+  задания: function (д) {
+    var все = сФото(д);
+    return перемешать(все.slice()).slice(0, 10).map(function (к) {
+      var чужие = перемешать(все.filter(function (х) { return х !== к; })).slice(0, 3);
+      return { к: к, варианты: перемешать([к].concat(чужие)) };
+    });
+  },
+  раунд: function (ход) {
+    var з = ход.задание(), к = з.к;
+    ход.рисовать(
+      '<img class="иг-фото большое" alt="" src="' + к._фото + '">' +
+      '<div class="иг-варианты">' + з.варианты.map(function (в, i) {
+        return '<button class="иг-вариант" data-i="' + i + '">' + экр(в.de) + '</button>';
+      }).join('') + '</div><div id="игОтвет"></div>');
+    var кнопки = карта_кнопки('.иг-вариант');
+    кнопки.forEach(function (кн) {
+      кн.onclick = function () {
+        var в = з.варианты[+кн.getAttribute('data-i')], верно = в === к;
+        кнопки.forEach(function (д) {
+          д.onclick = null;
+          if (з.варианты[+д.getAttribute('data-i')] === к) д.classList.add('иг-верно');
+          else if (д === кн) д.classList.add('иг-мимо');
+        });
+        ход.ответ(верно, верно ? null : { de: к.de, ru: к.ru });
+        document.getElementById('игОтвет').innerHTML =
+          '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' + (верно ? '✓ ' : '✗ Это ') +
+          '<span class="де">' + экр(к.de) + '</span> — ' + экр(к.ru || '') + '</div>' +
+          '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше</button></div>';
+        document.getElementById('игДальше').onclick = ход.дальше;
+        ход.голос(к.ид, к.de);
       };
     });
   }
@@ -2066,7 +2123,7 @@ var СЦЕНАРИЙ = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ГРУППЫ, ВИКТОРИНА, ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, СЦЕНАРИЙ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
+var ВСЕ_ИГРЫ = [ФОТО, ГРУППЫ, ВИКТОРИНА, ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, СЦЕНАРИЙ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });

@@ -141,6 +141,7 @@
     font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
   @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
 </style>
+
 <!--ТЕМА-ЗУБРА-START-->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -544,6 +545,436 @@ phrases('domashka',[
   ["x8","Mit freundlichen kollegialen Grüßen","мит фройндлихьэн колегиален грюсэн","4."],
 ]);
 </script>
+
+<!--ИГРЫ-START-->
+<section class="игры" id="игры"></section>
+<style>
+/* 20.10.2026: игры урока — отдельным экраном на весь экран, как ЗУБР */
+.иг-пуск{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; font:inherit;
+  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); border:none; border-radius:18px; padding:18px 18px; min-height:72px;
+  box-shadow:var(--shadow,0 8px 24px rgba(40,50,110,.12)); }
+.иг-пуск i{ font-style:normal; font-size:30px; } .иг-пуск b{ display:block; font-size:18px; }
+.иг-пуск small{ display:block; font-size:13px; opacity:.85; margin-top:2px; font-weight:500; }
+.иг-экран{ position:fixed; inset:0; z-index:9000; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  background:var(--bg,var(--surface,#fff)); padding:0 12px 40px; }
+.иг-экран[hidden]{ display:none !important; }
+.иг-экран-верх{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; padding:10px 2px;
+  background:var(--bg,var(--surface,#fff)); border-bottom:1px solid var(--line,#e4e6ef); margin:0 -2px 12px;
+  font-family:-apple-system,"SF Pro Text",Arial,sans-serif; color:var(--ink,#1c2242); }
+.иг-экран-верх button{ font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:999px;
+  padding:8px 14px; border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242); }
+.иг-экран-верх button{ white-space:nowrap; flex:0 0 auto; }
+.иг-экран-верх b{ font-size:14px; line-height:1.3; }
+.иг-экран .игры{ margin:0 auto; max-width:760px; }
+.иг-выбор{ display:grid; gap:8px; margin:6px 0 14px; }
+.иг-выбор label{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:14px; cursor:pointer;
+  background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:54px; }
+.иг-выбор label.все{ border:2px solid var(--accent,#1f5f5b); }
+.иг-выбор input{ width:22px; height:22px; flex:0 0 auto; accent-color:var(--accent,#1f5f5b); }
+.иг-выбор .зн{ font-size:22px; } .иг-выбор .им{ flex:1; font-weight:700; font-size:15px; }
+.иг-выбор .им small{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted,#5b615c); margin-top:2px; }
+.иг-выбор .рек{ font-size:12.5px; font-weight:700; color:var(--accent,#1f5f5b); white-space:nowrap; }
+.иг-играть{ position:sticky; bottom:10px; width:100%; font:inherit; font-size:17px; font-weight:800; cursor:pointer;
+  border:none; border-radius:16px; padding:15px; background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff);
+  box-shadow:0 6px 20px rgba(0,0,0,.18); }
+.иг-играть:disabled{ opacity:.45; }
+</style>
+<script src="../kartinki.js?v=202610241119"></script>
+<script src="../igry.js?v=202610241119"></script>
+<script src="../dz.js?v=202610241119"></script>
+<script>
+/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
+   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
+(function () {
+  var корень = document.getElementById('игры');
+  if (!корень) return;
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
+  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
+
+  /* Игры в домашку (18.09). Домашку проверяет не Даша, а сам ученик, и
+     после письменной части полезно прогнать те же слова в игре. Кнопки
+     ставим прямо в конец блока домашки — они зовут ядро напрямую. */
+  function вДомашку() {
+    var метка = document.querySelector('.hwrow, .hw-tr-btn');
+    var секция = метка && метка.closest('section');
+    if (!секция) {
+      // уроки со мной: домашка — обычный раздел с заголовком
+      var все = document.querySelectorAll('section h2');
+      for (var i = 0; i < все.length; i++) {
+        if (/Домашк/i.test(все[i].textContent)) { секция = все[i].closest('section'); break; }
+      }
+    }
+    if (!секция || секция === корень || секция.querySelector('.иг-вдомашке')) return;
+    var коды = (ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть()) || [];
+    if (!коды.length) return;
+    var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
+                  картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
+                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
+    var коробка = document.createElement('div');
+    коробка.className = 'иг-вдомашке';
+    коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
+      '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
+      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
+      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
+    секция.appendChild(коробка);
+    коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
+    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
+  }
+
+  /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
+  function выбор(карта, игры, играть) {
+    var ключ = 'nemeckiy_igry_vybor_' + файл, помню = null;
+    try { помню = JSON.parse(localStorage.getItem(ключ) || 'null'); } catch (e) {}
+    var вкл = {}; игры.forEach(function (и) { вкл[и.код] = !помню || помню.indexOf(и.код) >= 0; });
+    function экр(т) { return String(т == null ? '' : т).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    карта.innerHTML = '<div class="иг-верх"><div class="иг-знак">🎮</div><div><h2>Выбери игры</h2></div></div>' +
+      '<p class="иг-под">Все слова — из этого занятия. Отметь, во что играть, и жми «Играть»: игры пойдут одна за другой.</p>' +
+      '<div class="иг-выбор"><label class="все"><input type="checkbox" id="игВсе"><span class="зн">⭐</span>' +
+      '<span class="им">Играть во все игры подряд<small>' + игры.length + ' игр, по очереди</small></span></label>' +
+      игры.map(function (и) {
+        return '<label><input type="checkbox" data-к="' + и.код + '"' + (вкл[и.код] ? ' checked' : '') + '>' +
+          '<span class="зн">' + и.значок + '</span><span class="им">' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
+          (и.рекорд ? '<span class="рек">' + и.рекорд.процент + '%</span>' : '') + '</label>';
+      }).join('') + '</div><button type="button" class="иг-играть" id="игИграть"></button>';
+    var все = карта.querySelector('#игВсе'), поля = карта.querySelectorAll('input[data-к]'), кн = карта.querySelector('#игИграть');
+    function отмечено() { return Array.prototype.filter.call(поля, function (п) { return п.checked; }).map(function (п) { return п.getAttribute('data-к'); }); }
+    function обновить() {
+      var о = отмечено();
+      все.checked = о.length === поля.length;
+      кн.disabled = !о.length;
+      кн.textContent = о.length ? '▶ Играть' + (о.length > 1 ? ' (' + о.length + ' игр подряд)' : '') : 'Отметь хотя бы одну игру';
+      try { localStorage.setItem(ключ, JSON.stringify(о)); } catch (e) {}
+    }
+    все.onchange = function () { Array.prototype.forEach.call(поля, function (п) { п.checked = все.checked; }); обновить(); };
+    Array.prototype.forEach.call(поля, function (п) { п.onchange = обновить; });
+    кн.onclick = function () { var о = отмечено(); if (о.length) { карта.scrollIntoView({ block: 'start' }); играть(о); } };
+    обновить();
+  }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
+        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить мои ответы';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var поля = строка.querySelectorAll('input.fld');
+          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+          Array.prototype.forEach.call(поля, function (поле, k) {
+            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+            var в = чист(поле.value); всего++;
+            поле.title = '';
+            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+          });
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
+
+  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
+  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; })
+    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
+    .then(function () { return window.КАРТИНКИ ? КАРТИНКИ.готово : null; })  // 24.10: играм и домашке нужны картинки слов
+    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (д) {
+      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
+      var экран = document.createElement('div');
+      экран.className = 'иг-экран'; экран.hidden = true;
+      var заголовок = (document.querySelector('.bb-title') || document.querySelector('h1') || {}).textContent || '';
+      экран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="игЗакрыть">✕ Закрыть</button>' +
+        '<b>🎮 Игры · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section class="игры" id="игрыЭкран"></section>';
+      document.body.appendChild(экран);
+      var вышло = ИГРЫ.старт({ корень: экран.querySelector('#игрыЭкран'), слова: д, урок: файл, база: '../', меню: выбор });
+      if (!вышло) { корень.style.display = 'none'; return; }
+      var коды = ИГРЫ.какиеЕсть();
+      корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
+        '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
+      корень.querySelector('#игПуск').onclick = function () { открыть(); };
+
+      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
+         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
+      var дзЭкран = null;
+      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
+        дзЭкран = document.createElement('div');
+        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
+        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
+          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
+        document.body.appendChild(дзЭкран);
+        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
+          игры: function () { спрятатьДЗ(); открыть(); } });
+        if (заданий) {
+          var кн = document.createElement('button');
+          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
+          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
+          кн.onclick = function () { открытьДЗ(); };
+          корень.insertBefore(кн, корень.firstChild);
+          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
+          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
+        } else { дзЭкран.remove(); дзЭкран = null; }
+      }
+      function открытьДЗ() {
+        if (!дзЭкран) return;
+        if (дзЭкран.hidden) {
+          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
+        }
+        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
+      }
+      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
+      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
+      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
+      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
+      var хеш = decodeURIComponent(location.hash || '');
+      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
+      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
+      экран.querySelector('#игЗакрыть').onclick = закрыть;
+      window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
+      // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
+      var прямо = ИГРЫ.запустить;
+      ИГРЫ.запустить = function (код) { открыть(true); return прямо(код); };
+
+      function открыть(безМеню) {
+        if (экран.hidden) {
+          экран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ игры: 1 }, '', '#игры'); } catch (e) {}
+        }
+        if (!безМеню) ИГРЫ.меню();
+        экран.scrollTop = 0;
+      }
+      function спрятать() { экран.hidden = true; document.documentElement.style.overflow = ''; }
+      function закрыть() { спрятать(); if (location.hash === '#игры') { try { history.back(); } catch (e) {} } }
+      window.ИГРЫ_ОТКРЫТЬ = открыть;
+
+      вДомашку();
+      var toc = document.querySelector('.toc ol');
+      if (toc) {
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#игры">🎮 Игры к этому занятию</a>';
+        li.querySelector('a').onclick = function (e) { e.preventDefault(); открыть(); };
+        toc.appendChild(li);
+      }
+    })
+    .catch(function () { корень.style.display = 'none'; });
+})();
+</script>
+<!--ИГРЫ-END-->
+
+<!--ВИДЕО-START-->
+<style>
+.вид{margin:34px 0 0}
+.вид h2{margin:0 0 6px}
+.вид-шапка{color:var(--ink-muted,#666);margin:0 0 14px}
+.вид-карта{background:var(--surface,#fff);border:1px solid var(--line,#e5e5e5);border-radius:18px;padding:18px 16px;margin:0 0 18px;box-shadow:var(--shadow,none)}
+.вид-ролик{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
+.вид-ролик img{width:168px;max-width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:var(--line,#eee)}
+.вид-ролик b{display:block;line-height:1.3}
+.вид-ролик small{color:var(--ink-muted,#666)}
+.вид-смотреть{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);font-size:.85em;font-weight:600}
+.вид-зачем{margin:12px 0 0}
+.вид-тк{margin:8px 0 0;padding-left:18px}
+.вид-тк a{color:var(--accent,#4A63D6);font-weight:600;text-decoration:none}
+.вид-зд{margin:16px 0 0}
+.вид-зд h4{margin:0 0 8px;font-size:1em}
+.вид-зд ol{margin:0;padding-left:22px}
+.вид-зд li{margin:0 0 10px}
+.вид-зд details summary{cursor:pointer;color:var(--accent,#4A63D6);font-size:.9em}
+.вид-зд input[type=text],.вид-зд select,.вид-зд textarea{font:inherit;padding:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;max-width:100%}
+.вид-зд input[type=text]{width:9em}
+.вид-зд textarea{width:100%;min-height:70px;margin:4px 0}
+.вид-кн{font:inherit;font-size:.85em;padding:3px 10px;margin-left:6px;border-radius:999px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit;cursor:pointer}
+.вид-итог{display:block;font-size:.9em;margin-top:4px}
+.вид-да{color:#1f9d55}.вид-нет{color:#d64545}
+.вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
+.вид-слова span:nth-child(odd){font-weight:600}
+.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-плеер{margin:12px 0 0}
+.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
+.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
+.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
+.вид-стоп b.в{display:block;margin:0 0 8px}
+.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
+.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
+.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
+.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
+@media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
+</style>
+<section class="вид" id="видео">
+  <h2>🎬 Видео к уроку</h2>
+  <p class="вид-шапка">Ещё одна часть домашки: открой ролик, посмотри и сделай задания под ним. Ответы проверяются тут же.</p>
+  
+<div class="вид-карта" id="видео1">
+  <a class="вид-ролик" href="https://youtu.be/_J3uz1E0-Og" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/_J3uz1E0-Og/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 1 из 3</small><b>ErklärungEpikrise</b><small>Deutsch für Ärzte · 4:57</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="_J3uz1E0-Og">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 55, "кусок": "зачем нужна Epikrise", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}, {"t": 106, "кусок": "схема: анамнез → осмотр → лаборатория → диагностика", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}, {"t": 174, "кусок": "Verlauf и рекомендации", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}, {"t": 200, "кусок": "какие фразы куда", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}], "последний": "20 образцовых предложений", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"], "верно": [], "вопросы": [["Кому чаще всего адресована Epikrise?", "Hausärzte, aber auch Fachärzte — тем, кто лечит дальше."], ["Какой раздел выписки самый объёмный?", "der Verlauf — подробное описание и обсуждение случая."], ["Какие разделы можно писать сокращениями и пунктами?", "Laborwerte, Blutgasanalyse, apparative Untersuchungen, Medikation."], ["Что идёт в самом конце?", "Medikation und Empfehlung für die weitere Behandlung."]]}</script>
+  <p class="вид-зачем">5 минут о выписке (Epikrise): из каких частей она состоит и 20 готовых фраз — wurde stationär aufgenommen, konnte ausgeschlossen werden, sprechen für einen Infekt, in die hausärztliche Betreuung übergeben.</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/_J3uz1E0-Og?t=0" target="_blank" rel="noopener">0:00</a> — зачем нужна Epikrise</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=55" target="_blank" rel="noopener">0:55</a> — схема: анамнез → осмотр → лаборатория → диагностика</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=106" target="_blank" rel="noopener">1:46</a> — Verlauf и рекомендации</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=174" target="_blank" rel="noopener">2:54</a> — какие фразы куда</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=200" target="_blank" rel="noopener">3:20</a> — 20 образцовых предложений</li></ul>
+  <div class="вид-зд"><h4>Задание 1. Ответь по видео.</h4><ol><li>Кому чаще всего адресована Epikrise?<details><summary>показать ответ</summary>Hausärzte, aber auch Fachärzte — тем, кто лечит дальше.</details></li><li>Какой раздел выписки самый объёмный?<details><summary>показать ответ</summary>der Verlauf — подробное описание и обсуждение случая.</details></li><li>Какие разделы можно писать сокращениями и пунктами?<details><summary>показать ответ</summary>Laborwerte, Blutgasanalyse, apparative Untersuchungen, Medikation.</details></li><li>Что идёт в самом конце?<details><summary>показать ответ</summary>Medikation und Empfehlung für die weitere Behandlung.</details></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Фраза → раздел выписки.</h4><ol><li>Die Patientin wurde durch den Notarzt eingewiesen. → <select data-ок="Anamnese / Aufnahme"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>Es zeigte sich ein kompletter Verschluss der RCA. → <select data-ок="apparative Diagnostik"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>Ein Myokardinfarkt konnte ausgeschlossen werden. → <select data-ок="Verlauf / Diagnose"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>Der Allgemeinzustand besserte sich deutlich. → <select data-ок="Verlauf"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>In der Folge raten wir zu einer Gabe von Heparin. → <select data-ок="Empfehlung"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Вставь слово из видео.</h4><ol><li data-впиши="aufgenommen" data-почему="aufnehmen — класть в стационар; Partizip II с ge- внутри: auf-ge-nommen.">Der Patient wurde stationär <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sprechen" data-почему="etwas spricht für … — говорит в пользу чего-то.">Die hohen Temperaturen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> für einen Infekt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ausgeschlossen" data-почему="ausschließen — исключить; konnte … werden = Passiv с модальным.">Ein Myokardinfarkt konnte <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> werden.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="verzichtet" data-почему="verzichten auf + Akk — отказаться от.">Auf die Gabe eines ACE-Hemmers wurde <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="übergeben" data-почему="übergeben — передать (неотделяемая приставка, без ge-).">Die Patientin kann in ihre hausärztliche Betreuung <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> werden.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 4. Напиши 3 предложения выписки о своём пациенте с варикозом: поступление, результат УЗДС, рекомендация.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Die Patientin stellte sich mit Schweregefühl in beiden Beinen vor. In der Duplexsonographie zeigte sich eine Insuffizienz der VSM rechts. Wir empfehlen das Tragen von Kompressionsstrümpfen der Klasse II.</details></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Epikrise</span><span>выписной эпикриз</span><span>einweisen</span><span>направить в больницу</span><span>stationär aufnehmen</span><span>госпитализировать</span><span>ausschließen</span><span>исключить</span><span>bestätigen</span><span>подтвердить</span><span>verzichten auf</span><span>отказаться от</span><span>die Eradikationstherapie</span><span>эрадикационная терапия</span><span>die hausärztliche Betreuung</span><span>наблюдение у семейного врача</span><span>pektanginöse Beschwerden</span><span>стенокардитические жалобы</span><span>sich einprägen</span><span>запомнить, врезать в память</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео2">
+  <a class="вид-ролик" href="https://youtu.be/_SNT4qa02Ks" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/_SNT4qa02Ks/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 2 из 3</small><b>Simulation Appendizitis | Anamnese &amp; Arztbrief-Training für Medizindeutsch. Typische Fehler</b><small>Fachsprachprüfung Medizin einfach · 9:22</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="_SNT4qa02Ks">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 90, "кусок": "план симуляции", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["В письме врача можно писать «Der Patient hat Bauchschmerzen».", false, "Жалобы пациента пишут в Konjunktiv I: er habe Bauchschmerzen."]}, {"t": 132, "кусок": "как начать разговор", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["Боль у пациента началась справа внизу и потом ушла к пупку.", false, "Наоборот: от пупка в правую подвздошную область."]}, {"t": 180, "кусок": "вопросы о боли", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["Пациента 5 лет назад оперировали по поводу паховой грыжи справа.", true, "Zustand nach Hernioplastik bei Inguinalhernie rechts."]}, {"t": 228, "кусок": "вегетативный анамнез", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["Метод выбора при аппендиците — лапароскопическая аппендэктомия.", true, "laparoskopische Appendektomie, при перфорации — открытая."]}, {"t": 275, "кусок": "перевод на Fachsprache", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}, {"t": 369, "кусок": "ошибки в Arztbrief и Konjunktiv I", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}, {"t": 419, "кусок": "доклад по SOAP", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}, {"t": 470, "кусок": "5 точек при осмотре", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}], "последний": "диагностика и лечение", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": [], "вопросы": [["Что значит SOAP?", "Subjektiv – Objektiv – Assessment – Plan."], ["Что назначают сразу после поступления?", "stationäre Aufnahme, Nahrungskarenz, i.v. Infusionstherapie."], ["На что смотрят в УЗИ брюшной полости?", "Kokardenphänomen, Wanddicke > 6 mm, freie Flüssigkeit im Douglasraum."]]}</script>
+  <p class="вид-зачем">Симуляция FSP «аппендицит» от начала до конца: анамнез, перевод с языка пациента на медицинский, письмо врача в Konjunktiv I, доклад по SOAP и 5 симптомов (McBurney, Lanz, Blumberg, Rovsing, Psoas).</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/_SNT4qa02Ks?t=44" target="_blank" rel="noopener">0:44</a> — план симуляции</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=90" target="_blank" rel="noopener">1:30</a> — как начать разговор</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=132" target="_blank" rel="noopener">2:12</a> — вопросы о боли</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=180" target="_blank" rel="noopener">3:00</a> — вегетативный анамнез</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=228" target="_blank" rel="noopener">3:48</a> — перевод на Fachsprache</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=275" target="_blank" rel="noopener">4:35</a> — ошибки в Arztbrief и Konjunktiv I</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=369" target="_blank" rel="noopener">6:09</a> — доклад по SOAP</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=419" target="_blank" rel="noopener">6:59</a> — 5 точек при осмотре</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=470" target="_blank" rel="noopener">7:50</a> — диагностика и лечение</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Слово пациента → термин врача.</h4><ol><li>Blinddarmentzündung → <select data-ок="Appendizitis"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Mandel-OP → <select data-ок="Tonsillektomie"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Leistenbruch → <select data-ок="Inguinalhernie"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Übelkeit und Erbrechen → <select data-ок="Nausea und Vomitus"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Appetitlosigkeit → <select data-ок="Inappetenz"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>um den Bauchnabel → <select data-ок="periumbilikal"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Верно или нет?</h4><ol><li data-верно="0" data-почему="Жалобы пациента пишут в Konjunktiv I: er habe Bauchschmerzen.">В письме врача можно писать «Der Patient hat Bauchschmerzen». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Наоборот: от пупка в правую подвздошную область.">Боль у пациента началась справа внизу и потом ушла к пупку. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="Zustand nach Hernioplastik bei Inguinalhernie rechts.">Пациента 5 лет назад оперировали по поводу паховой грыжи справа. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="laparoskopische Appendektomie, при перфорации — открытая.">Метод выбора при аппендиците — лапароскопическая аппендэктомия. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Перепиши в Konjunktiv I.</h4><ol><li data-впиши="seien" data-почему="sein → er/sie sei, sie seien.">Die Schmerzen sind gewandert. → Die Schmerzen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> gewandert.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="habe" data-почему="haben → er habe.">Er hat Fieber. → Er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Fieber.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="hätten" data-почему="Konj. I от haben во мн. числе совпадает с индикативом, поэтому берут Konj. II: hätten.">Die Schmerzen haben zugenommen. → …, die an Intensität zugenommen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 4. Ответь по видео.</h4><ol><li>Что значит SOAP?<details><summary>показать ответ</summary>Subjektiv – Objektiv – Assessment – Plan.</details></li><li>Что назначают сразу после поступления?<details><summary>показать ответ</summary>stationäre Aufnahme, Nahrungskarenz, i.v. Infusionstherapie.</details></li><li>На что смотрят в УЗИ брюшной полости?<details><summary>показать ответ</summary>Kokardenphänomen, Wanddicke > 6 mm, freie Flüssigkeit im Douglasraum.</details></li></ol></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>sich krümmen</span><span>скрючиться (от боли)</span><span>wandern</span><span>мигрировать (о боли)</span><span>krampfartig</span><span>схваткообразный</span><span>stechend</span><span>колющий</span><span>sich übergeben</span><span>вырвать (рвота)</span><span>der Stuhlgang</span><span>стул</span><span>die Nahrungskarenz</span><span>голод (запрет еды)</span><span>der Loslassschmerz</span><span>боль при отпускании (Блюмберг)</span><span>der Wurmfortsatz</span><span>червеобразный отросток</span><span>aus dem Stegreif</span><span>с ходу, без подготовки</span><span>Hand aufs Herz</span><span>положа руку на сердце</span><span>nachhaken</span><span>дотошно переспрашивать</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+<div class="вид-карта" id="видео3">
+  <a class="вид-ролик" href="https://youtu.be/VyAbC4KOay0" target="_blank" rel="noopener">
+    <img src="https://i.ytimg.com/vi/VyAbC4KOay0/mqdefault.jpg" alt="" loading="lazy">
+    <span><small>Видео 3 из 3</small><b>Simulation Asthma bronchiale | FSP Vorbereitung &amp; Arztbrief-Training. Häufige Grammatikfehler</b><small>Fachsprachprüfung Medizin einfach · 9:38</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
+  </a>
+  <button class="вид-плеер-кн" type="button" data-видео="VyAbC4KOay0">▶ Смотреть здесь, с вопросами</button>
+  <div class="вид-плеер" hidden></div>
+  <script type="application/json" class="вид-данные">{"стопы": [{"t": 91, "кусок": "план", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 139, "кусок": "анамнез: что говорит Леон", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 189, "кусок": "перевод на Fachsprache", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 233, "кусок": "предыдущие болезни и семья", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 328, "кусок": "Arztbrief и Konjunktiv I", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 426, "кусок": "доклад по SOAP", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 481, "кусок": "дифдиагноз", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}], "последний": "диагностика и лечение", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"], "верно": [], "вопросы": [["Какие дифдиагнозы нужно назвать?", "akute Bronchitis, Hyperventilation, Vocal Cord Dysfunction, kardiale Belastungsdyspnoe и обязательно Fremdkörperaspiration."], ["Какие обследования назначают?", "Spirometrie mit Bronchospasmolysetest (Salbutamol), FeNO, Röntgen-Thorax, Pricktest."], ["Чем Reliever отличается от Controller?", "Reliever — по требованию (SABA, Salbutamol); Controller — постоянно (ICS, Budesonid)."]]}</script>
+  <p class="вид-зачем">Вторая симуляция FSP: подросток 15 лет с одышкой (Asthma bronchiale). Как перевести «schlecht Luft bekommen» в Dyspnoe, как писать в Konjunktiv I, дифдиагноз и ступени терапии (SABA, ICS).</p>
+  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/VyAbC4KOay0?t=45" target="_blank" rel="noopener">0:45</a> — план</li><li><a href="https://youtu.be/VyAbC4KOay0?t=91" target="_blank" rel="noopener">1:31</a> — анамнез: что говорит Леон</li><li><a href="https://youtu.be/VyAbC4KOay0?t=139" target="_blank" rel="noopener">2:19</a> — перевод на Fachsprache</li><li><a href="https://youtu.be/VyAbC4KOay0?t=189" target="_blank" rel="noopener">3:09</a> — предыдущие болезни и семья</li><li><a href="https://youtu.be/VyAbC4KOay0?t=233" target="_blank" rel="noopener">3:53</a> — Arztbrief и Konjunktiv I</li><li><a href="https://youtu.be/VyAbC4KOay0?t=328" target="_blank" rel="noopener">5:28</a> — доклад по SOAP</li><li><a href="https://youtu.be/VyAbC4KOay0?t=426" target="_blank" rel="noopener">7:06</a> — дифдиагноз</li><li><a href="https://youtu.be/VyAbC4KOay0?t=481" target="_blank" rel="noopener">8:01</a> — диагностика и лечение</li></ul>
+  <div class="вид-зд" data-соедини><h4>Задание 1. Как сказал Леон → как пишет врач.</h4><ol><li>schlecht Luft bekommen → <select data-ок="Dyspnoe"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>die Brust schnürt sich zu → <select data-ок="thorakales Engegefühl"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>Husten ohne Schleim → <select data-ок="unproduktiver Husten"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>Neurodermitis in der Kindheit → <select data-ок="atopisches Ekzem"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>Atemnot beim Sport → <select data-ок="Belastungsdyspnoe"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь слово из видео.</h4><ol><li data-впиши="habe" data-почему="Konjunktiv I от haben.">Der Patient berichtet, er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> eine Belastungsdyspnoe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sei" data-почему="Konjunktiv I от sein.">An Vorerkrankungen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein atopisches Ekzem bekannt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="auszuschließen" data-почему="um … zu + Infinitiv; zu встаёт внутрь отделяемого глагола.">Ein Röntgen-Thorax ist wichtig, um Fremdkörper sicher <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Ответь по видео.</h4><ol><li>Какие дифдиагнозы нужно назвать?<details><summary>показать ответ</summary>akute Bronchitis, Hyperventilation, Vocal Cord Dysfunction, kardiale Belastungsdyspnoe и обязательно Fremdkörperaspiration.</details></li><li>Какие обследования назначают?<details><summary>показать ответ</summary>Spirometrie mit Bronchospasmolysetest (Salbutamol), FeNO, Röntgen-Thorax, Pricktest.</details></li><li>Чем Reliever отличается от Controller?<details><summary>показать ответ</summary>Reliever — по требованию (SABA, Salbutamol); Controller — постоянно (ICS, Budesonid).</details></li></ol></div><div class="вид-зд"><h4>Задание 4. Напиши фразу для письма врача в Konjunktiv I: пациент сообщает, что у него одышка при нагрузке и сухой кашель.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Der Patient berichtet, er habe eine Belastungsdyspnoe und leide unter unproduktivem Husten.</details></div>
+  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Atemnot</span><span>одышка</span><span>die Ambulanz</span><span>приёмное отделение / амбулатория</span><span>diensthabend</span><span>дежурный</span><span>nachbohren</span><span>допытываться</span><span>der Schleim</span><span>мокрота</span><span>die Birkenpollenallergie</span><span>аллергия на пыльцу берёзы</span><span>die Fremdkörperaspiration</span><span>аспирация инородного тела</span><span>der Bedarf</span><span>потребность; bei Bedarf — по требованию</span><span>die Dauertherapie</span><span>постоянная терапия</span><span>etwas in der Tasche haben</span><span>дело в шляпе</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
+</div>
+</section>
+<script>
+(function(){
+  function чисто(s){return (s||'').toLowerCase().replace(/[.,!?;:«»"„“]/g,'').replace(/\s+/g,' ').trim();}
+  document.querySelectorAll('.вид [data-впиши]').forEach(function(li){
+    var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
+    function проверить(){
+      var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
+      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
+      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
+      итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
+        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
+    }
+    кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
+  });
+  document.querySelectorAll('.вид [data-верно]').forEach(function(li){
+    li.querySelectorAll('button').forEach(function(кн){
+      кн.onclick=function(){
+        var верно=кн.dataset.да===li.dataset.верно, итог=li.querySelector('.вид-итог');
+        итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
+        итог.innerHTML=(верно?'✓ ':'✗ ')+(li.dataset.верно==='1'?'верно':'неверно')+(li.dataset.почему?' — '+li.dataset.почему:'');
+      };
+    });
+  });
+  document.querySelectorAll('.вид [data-соедини]').forEach(function(бл){
+    бл.querySelector('button').onclick=function(){
+      var всего=0,хорошо=0;
+      бл.querySelectorAll('select').forEach(function(с){всего++; var ок=с.value===с.dataset.ок; if(ок)хорошо++; с.style.borderColor=ок?'#1f9d55':'#d64545';});
+      var итог=бл.querySelector('.вид-итог'); итог.className='вид-итог '+(хорошо===всего?'вид-да':'вид-нет');
+      итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
+    };
+  });
+  /* ── видео с вопросами ── */
+  var api=null, ждут=[];
+  function грузиAPI(готово){
+    if(window.YT&&YT.Player){готово();return;}
+    ждут.push(готово); if(api)return;
+    var прежний=window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
+    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
+  }
+  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
+  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
+    кн.onclick=function(){
+      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
+      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
+      кн.hidden=true; место.hidden=false;
+      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
+      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
+      function спросить(с, дальше){
+        clearInterval(таймер); плеер.pauseVideo();
+        var шаги=[];
+        if(д.все.length>=3){
+          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
+          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
+        }
+        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
+        function шаг(k){
+          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
+          var ш=шаги[k]; стоп.hidden=false;
+          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
+          стоп.querySelectorAll('.вар').forEach(function(б){
+            б.onclick=function(){
+              всего++; var да=б.textContent===ш.ок; if(да)верных++;
+              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
+              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
+              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
+            };
+          });
+        }
+        шаг(0);
+      }
+      function следить(){
+        clearInterval(таймер);
+        таймер=setInterval(function(){
+          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
+          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
+        },400);
+      }
+      function финал(){
+        clearInterval(таймер);
+        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
+        стоп.hidden=false;
+        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
+          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
+          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
+      }
+      грузиAPI(function(){
+        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
+          playerVars:{rel:0,playsinline:1,modestbranding:1},
+          events:{onReady:function(){плеер.playVideo(); следить();},
+                  onStateChange:function(e){ if(e.data===0)финал(); }}});
+      });
+    };
+  });
+})();
+</script>
+<!--ВИДЕО-END-->
 <!--QUIZ-START-->
 <!--UPR-START-->
 <style>
@@ -1099,434 +1530,6 @@ phrases('domashka',[
 })();
 </script>
 <!--QUIZ-END-->
-<!--ИГРЫ-START-->
-<section class="игры" id="игры"></section>
-<style>
-/* 20.10.2026: игры урока — отдельным экраном на весь экран, как ЗУБР */
-.иг-пуск{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; font:inherit;
-  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); border:none; border-radius:18px; padding:18px 18px; min-height:72px;
-  box-shadow:var(--shadow,0 8px 24px rgba(40,50,110,.12)); }
-.иг-пуск i{ font-style:normal; font-size:30px; } .иг-пуск b{ display:block; font-size:18px; }
-.иг-пуск small{ display:block; font-size:13px; opacity:.85; margin-top:2px; font-weight:500; }
-.иг-экран{ position:fixed; inset:0; z-index:9000; overflow-y:auto; -webkit-overflow-scrolling:touch;
-  background:var(--bg,var(--surface,#fff)); padding:0 12px 40px; }
-.иг-экран[hidden]{ display:none !important; }
-.иг-экран-верх{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; padding:10px 2px;
-  background:var(--bg,var(--surface,#fff)); border-bottom:1px solid var(--line,#e4e6ef); margin:0 -2px 12px;
-  font-family:-apple-system,"SF Pro Text",Arial,sans-serif; color:var(--ink,#1c2242); }
-.иг-экран-верх button{ font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:999px;
-  padding:8px 14px; border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242); }
-.иг-экран-верх button{ white-space:nowrap; flex:0 0 auto; }
-.иг-экран-верх b{ font-size:14px; line-height:1.3; }
-.иг-экран .игры{ margin:0 auto; max-width:760px; }
-.иг-выбор{ display:grid; gap:8px; margin:6px 0 14px; }
-.иг-выбор label{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:14px; cursor:pointer;
-  background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:54px; }
-.иг-выбор label.все{ border:2px solid var(--accent,#1f5f5b); }
-.иг-выбор input{ width:22px; height:22px; flex:0 0 auto; accent-color:var(--accent,#1f5f5b); }
-.иг-выбор .зн{ font-size:22px; } .иг-выбор .им{ flex:1; font-weight:700; font-size:15px; }
-.иг-выбор .им small{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted,#5b615c); margin-top:2px; }
-.иг-выбор .рек{ font-size:12.5px; font-weight:700; color:var(--accent,#1f5f5b); white-space:nowrap; }
-.иг-играть{ position:sticky; bottom:10px; width:100%; font:inherit; font-size:17px; font-weight:800; cursor:pointer;
-  border:none; border-radius:16px; padding:15px; background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff);
-  box-shadow:0 6px 20px rgba(0,0,0,.18); }
-.иг-играть:disabled{ opacity:.45; }
-</style>
-<script src="../igry.js?v=202610221616"></script>
-<script src="../dz.js?v=202610221616"></script>
-<script>
-/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
-   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
-(function () {
-  var корень = document.getElementById('игры');
-  if (!корень) return;
-  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
-  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
-
-  /* Игры в домашку (18.09). Домашку проверяет не Даша, а сам ученик, и
-     после письменной части полезно прогнать те же слова в игре. Кнопки
-     ставим прямо в конец блока домашки — они зовут ядро напрямую. */
-  function вДомашку() {
-    var метка = document.querySelector('.hwrow, .hw-tr-btn');
-    var секция = метка && метка.closest('section');
-    if (!секция) {
-      // уроки со мной: домашка — обычный раздел с заголовком
-      var все = document.querySelectorAll('section h2');
-      for (var i = 0; i < все.length; i++) {
-        if (/Домашк/i.test(все[i].textContent)) { секция = все[i].closest('section'); break; }
-      }
-    }
-    if (!секция || секция === корень || секция.querySelector('.иг-вдомашке')) return;
-    var коды = (ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть()) || [];
-    if (!коды.length) return;
-    var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
-                  картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
-                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
-                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
-                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
-                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
-    var коробка = document.createElement('div');
-    коробка.className = 'иг-вдомашке';
-    коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
-      '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
-      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
-      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
-    секция.appendChild(коробка);
-    коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
-    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
-  }
-
-  /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
-  function выбор(карта, игры, играть) {
-    var ключ = 'nemeckiy_igry_vybor_' + файл, помню = null;
-    try { помню = JSON.parse(localStorage.getItem(ключ) || 'null'); } catch (e) {}
-    var вкл = {}; игры.forEach(function (и) { вкл[и.код] = !помню || помню.indexOf(и.код) >= 0; });
-    function экр(т) { return String(т == null ? '' : т).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
-    карта.innerHTML = '<div class="иг-верх"><div class="иг-знак">🎮</div><div><h2>Выбери игры</h2></div></div>' +
-      '<p class="иг-под">Все слова — из этого занятия. Отметь, во что играть, и жми «Играть»: игры пойдут одна за другой.</p>' +
-      '<div class="иг-выбор"><label class="все"><input type="checkbox" id="игВсе"><span class="зн">⭐</span>' +
-      '<span class="им">Играть во все игры подряд<small>' + игры.length + ' игр, по очереди</small></span></label>' +
-      игры.map(function (и) {
-        return '<label><input type="checkbox" data-к="' + и.код + '"' + (вкл[и.код] ? ' checked' : '') + '>' +
-          '<span class="зн">' + и.значок + '</span><span class="им">' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
-          (и.рекорд ? '<span class="рек">' + и.рекорд.процент + '%</span>' : '') + '</label>';
-      }).join('') + '</div><button type="button" class="иг-играть" id="игИграть"></button>';
-    var все = карта.querySelector('#игВсе'), поля = карта.querySelectorAll('input[data-к]'), кн = карта.querySelector('#игИграть');
-    function отмечено() { return Array.prototype.filter.call(поля, function (п) { return п.checked; }).map(function (п) { return п.getAttribute('data-к'); }); }
-    function обновить() {
-      var о = отмечено();
-      все.checked = о.length === поля.length;
-      кн.disabled = !о.length;
-      кн.textContent = о.length ? '▶ Играть' + (о.length > 1 ? ' (' + о.length + ' игр подряд)' : '') : 'Отметь хотя бы одну игру';
-      try { localStorage.setItem(ключ, JSON.stringify(о)); } catch (e) {}
-    }
-    все.onchange = function () { Array.prototype.forEach.call(поля, function (п) { п.checked = все.checked; }); обновить(); };
-    Array.prototype.forEach.call(поля, function (п) { п.onchange = обновить; });
-    кн.onclick = function () { var о = отмечено(); if (о.length) { карта.scrollIntoView({ block: 'start' }); играть(о); } };
-    обновить();
-  }
-
-  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
-     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
-     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
-  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
-  function проверкаДомашки() {
-    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
-      if (кн.dataset.проверка) return;
-      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
-      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
-      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
-      var список = Array.prototype.map.call(ответы.querySelectorAll('.hw-ans > b'), function (b) {
-        return b.textContent.replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
-      });
-      var строки = блок.querySelectorAll('.hwrow');
-      if (!список.length || список.length !== строки.length) return;
-      кн.dataset.проверка = '1';
-      var пр = document.createElement('button');
-      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
-      пр.textContent = '✓ Проверить мои ответы';
-      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
-      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
-      пр.onclick = function () {
-        var верно = 0, всего = 0, почти = 0;
-        Array.prototype.forEach.call(строки, function (строка, i) {
-          var поля = строка.querySelectorAll('input.fld');
-          var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
-          if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
-          Array.prototype.forEach.call(поля, function (поле, k) {
-            var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
-            var в = чист(поле.value); всего++;
-            поле.title = '';
-            if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
-            if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
-            else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
-              почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
-            } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
-          });
-        });
-        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
-          (верно === всего ? ' — отлично!' : ' — красные и оранжевые сверь с ответами.');
-      };
-    });
-  }
-  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
-  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
-  if (document.readyState === 'complete') запуститьПроверку();
-  else window.addEventListener('load', запуститьПроверку);
-
-  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
-  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .catch(function () { return null; })
-    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
-    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
-    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
-    .then(function (д) {
-      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
-      var экран = document.createElement('div');
-      экран.className = 'иг-экран'; экран.hidden = true;
-      var заголовок = (document.querySelector('.bb-title') || document.querySelector('h1') || {}).textContent || '';
-      экран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="игЗакрыть">✕ Закрыть</button>' +
-        '<b>🎮 Игры · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section class="игры" id="игрыЭкран"></section>';
-      document.body.appendChild(экран);
-      var вышло = ИГРЫ.старт({ корень: экран.querySelector('#игрыЭкран'), слова: д, урок: файл, база: '../', меню: выбор });
-      if (!вышло) { корень.style.display = 'none'; return; }
-      var коды = ИГРЫ.какиеЕсть();
-      корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
-        '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
-      корень.querySelector('#игПуск').onclick = function () { открыть(); };
-
-      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
-         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
-      var дзЭкран = null;
-      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
-        дзЭкран = document.createElement('div');
-        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
-        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
-          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
-        document.body.appendChild(дзЭкран);
-        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
-          игры: function () { спрятатьДЗ(); открыть(); } });
-        if (заданий) {
-          var кн = document.createElement('button');
-          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
-          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
-          кн.onclick = function () { открытьДЗ(); };
-          корень.insertBefore(кн, корень.firstChild);
-          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
-          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
-        } else { дзЭкран.remove(); дзЭкран = null; }
-      }
-      function открытьДЗ() {
-        if (!дзЭкран) return;
-        if (дзЭкран.hidden) {
-          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
-          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
-        }
-        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
-      }
-      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
-      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
-      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
-      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
-      var хеш = decodeURIComponent(location.hash || '');
-      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
-      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
-      экран.querySelector('#игЗакрыть').onclick = закрыть;
-      window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
-      // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
-      var прямо = ИГРЫ.запустить;
-      ИГРЫ.запустить = function (код) { открыть(true); return прямо(код); };
-
-      function открыть(безМеню) {
-        if (экран.hidden) {
-          экран.hidden = false; document.documentElement.style.overflow = 'hidden';
-          try { history.pushState({ игры: 1 }, '', '#игры'); } catch (e) {}
-        }
-        if (!безМеню) ИГРЫ.меню();
-        экран.scrollTop = 0;
-      }
-      function спрятать() { экран.hidden = true; document.documentElement.style.overflow = ''; }
-      function закрыть() { спрятать(); if (location.hash === '#игры') { try { history.back(); } catch (e) {} } }
-      window.ИГРЫ_ОТКРЫТЬ = открыть;
-
-      вДомашку();
-      var toc = document.querySelector('.toc ol');
-      if (toc) {
-        var li = document.createElement('li');
-        li.innerHTML = '<a href="#игры">🎮 Игры к этому занятию</a>';
-        li.querySelector('a').onclick = function (e) { e.preventDefault(); открыть(); };
-        toc.appendChild(li);
-      }
-    })
-    .catch(function () { корень.style.display = 'none'; });
-})();
-</script>
-<!--ИГРЫ-END-->
-
-<!--ВИДЕО-START-->
-<style>
-.вид{margin:34px 0 0}
-.вид h2{margin:0 0 6px}
-.вид-шапка{color:var(--ink-muted,#666);margin:0 0 14px}
-.вид-карта{background:var(--surface,#fff);border:1px solid var(--line,#e5e5e5);border-radius:18px;padding:18px 16px;margin:0 0 18px;box-shadow:var(--shadow,none)}
-.вид-ролик{display:flex;gap:12px;align-items:center;text-decoration:none;color:inherit}
-.вид-ролик img{width:168px;max-width:42%;aspect-ratio:16/9;object-fit:cover;border-radius:10px;flex:none;background:var(--line,#eee)}
-.вид-ролик b{display:block;line-height:1.3}
-.вид-ролик small{color:var(--ink-muted,#666)}
-.вид-смотреть{display:inline-block;margin-top:6px;padding:4px 10px;border-radius:999px;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);font-size:.85em;font-weight:600}
-.вид-зачем{margin:12px 0 0}
-.вид-тк{margin:8px 0 0;padding-left:18px}
-.вид-тк a{color:var(--accent,#4A63D6);font-weight:600;text-decoration:none}
-.вид-зд{margin:16px 0 0}
-.вид-зд h4{margin:0 0 8px;font-size:1em}
-.вид-зд ol{margin:0;padding-left:22px}
-.вид-зд li{margin:0 0 10px}
-.вид-зд details summary{cursor:pointer;color:var(--accent,#4A63D6);font-size:.9em}
-.вид-зд input[type=text],.вид-зд select,.вид-зд textarea{font:inherit;padding:4px 8px;border:1px solid var(--line,#ccc);border-radius:8px;background:var(--bg,#fff);color:inherit;max-width:100%}
-.вид-зд input[type=text]{width:9em}
-.вид-зд textarea{width:100%;min-height:70px;margin:4px 0}
-.вид-кн{font:inherit;font-size:.85em;padding:3px 10px;margin-left:6px;border-radius:999px;border:1px solid var(--line,#ccc);background:var(--surface,#fff);color:inherit;cursor:pointer}
-.вид-итог{display:block;font-size:.9em;margin-top:4px}
-.вид-да{color:#1f9d55}.вид-нет{color:#d64545}
-.вид-слова{display:grid;grid-template-columns:1fr 1fr;gap:4px 14px;margin:8px 0 0;font-size:.95em}
-.вид-слова span:nth-child(odd){font-weight:600}
-.вид-плеер-кн{font:inherit;font-weight:700;margin:10px 8px 0 0;padding:9px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
-.вид-плеер{margin:12px 0 0}
-.вид-экран{position:relative;width:100%;aspect-ratio:16/9;border-radius:12px;overflow:hidden;background:#000}
-.вид-экран iframe,.вид-экран>div{position:absolute;inset:0;width:100%;height:100%}
-.вид-стоп{margin:10px 0 0;padding:14px;border-radius:14px;border:2px solid var(--accent,#4A63D6);background:var(--surface,#fff)}
-.вид-стоп b.в{display:block;margin:0 0 8px}
-.вид-стоп .вар{display:block;width:100%;text-align:left;font:inherit;margin:6px 0;padding:9px 12px;border-radius:10px;border:1px solid var(--line,#ccc);background:var(--surface-2,#f4f4f8);color:inherit;cursor:pointer}
-.вид-стоп .вар.да{background:rgba(31,157,85,.15);border-color:#1f9d55}.вид-стоп .вар.нет{background:rgba(214,69,69,.12);border-color:#d64545}
-.вид-стоп .дальше{font:inherit;font-weight:700;margin-top:8px;padding:8px 16px;border-radius:999px;border:none;background:var(--accent,#4A63D6);color:var(--accent-ink,#fff);cursor:pointer}
-.вид-счёт{font-size:.9em;color:var(--ink-muted,#666);margin:6px 0 0}
-@media(max-width:560px){.вид-ролик{flex-direction:column;align-items:flex-start}.вид-ролик img{width:100%;max-width:100%}.вид-слова{grid-template-columns:1fr}.вид-слова span:nth-child(even){margin-bottom:6px;color:var(--ink-muted,#666)}}
-</style>
-<section class="вид" id="видео">
-  <h2>🎬 Видео к уроку</h2>
-  <p class="вид-шапка">Ещё одна часть домашки: открой ролик, посмотри и сделай задания под ним. Ответы проверяются тут же.</p>
-  
-<div class="вид-карта" id="видео1">
-  <a class="вид-ролик" href="https://youtu.be/_J3uz1E0-Og" target="_blank" rel="noopener">
-    <img src="https://i.ytimg.com/vi/_J3uz1E0-Og/mqdefault.jpg" alt="" loading="lazy">
-    <span><small>Видео 1 из 3</small><b>ErklärungEpikrise</b><small>Deutsch für Ärzte · 4:57</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
-  </a>
-  <button class="вид-плеер-кн" type="button" data-видео="_J3uz1E0-Og">▶ Смотреть здесь, с вопросами</button>
-  <div class="вид-плеер" hidden></div>
-  <script type="application/json" class="вид-данные">{"стопы": [{"t": 55, "кусок": "зачем нужна Epikrise", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}, {"t": 106, "кусок": "схема: анамнез → осмотр → лаборатория → диагностика", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}, {"t": 174, "кусок": "Verlauf и рекомендации", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}, {"t": 200, "кусок": "какие фразы куда", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"]}], "последний": "20 образцовых предложений", "все": ["зачем нужна Epikrise", "схема: анамнез → осмотр → лаборатория → диагностика", "Verlauf и рекомендации", "какие фразы куда", "20 образцовых предложений"], "верно": [], "вопросы": [["Кому чаще всего адресована Epikrise?", "Hausärzte, aber auch Fachärzte — тем, кто лечит дальше."], ["Какой раздел выписки самый объёмный?", "der Verlauf — подробное описание и обсуждение случая."], ["Какие разделы можно писать сокращениями и пунктами?", "Laborwerte, Blutgasanalyse, apparative Untersuchungen, Medikation."], ["Что идёт в самом конце?", "Medikation und Empfehlung für die weitere Behandlung."]]}</script>
-  <p class="вид-зачем">5 минут о выписке (Epikrise): из каких частей она состоит и 20 готовых фраз — wurde stationär aufgenommen, konnte ausgeschlossen werden, sprechen für einen Infekt, in die hausärztliche Betreuung übergeben.</p>
-  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/_J3uz1E0-Og?t=0" target="_blank" rel="noopener">0:00</a> — зачем нужна Epikrise</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=55" target="_blank" rel="noopener">0:55</a> — схема: анамнез → осмотр → лаборатория → диагностика</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=106" target="_blank" rel="noopener">1:46</a> — Verlauf и рекомендации</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=174" target="_blank" rel="noopener">2:54</a> — какие фразы куда</li><li><a href="https://youtu.be/_J3uz1E0-Og?t=200" target="_blank" rel="noopener">3:20</a> — 20 образцовых предложений</li></ul>
-  <div class="вид-зд"><h4>Задание 1. Ответь по видео.</h4><ol><li>Кому чаще всего адресована Epikrise?<details><summary>показать ответ</summary>Hausärzte, aber auch Fachärzte — тем, кто лечит дальше.</details></li><li>Какой раздел выписки самый объёмный?<details><summary>показать ответ</summary>der Verlauf — подробное описание и обсуждение случая.</details></li><li>Какие разделы можно писать сокращениями и пунктами?<details><summary>показать ответ</summary>Laborwerte, Blutgasanalyse, apparative Untersuchungen, Medikation.</details></li><li>Что идёт в самом конце?<details><summary>показать ответ</summary>Medikation und Empfehlung für die weitere Behandlung.</details></li></ol></div><div class="вид-зд" data-соедини><h4>Задание 2. Фраза → раздел выписки.</h4><ol><li>Die Patientin wurde durch den Notarzt eingewiesen. → <select data-ок="Anamnese / Aufnahme"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>Es zeigte sich ein kompletter Verschluss der RCA. → <select data-ок="apparative Diagnostik"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>Ein Myokardinfarkt konnte ausgeschlossen werden. → <select data-ок="Verlauf / Diagnose"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>Der Allgemeinzustand besserte sich deutlich. → <select data-ок="Verlauf"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li><li>In der Folge raten wir zu einer Gabe von Heparin. → <select data-ок="Empfehlung"><option value="">—</option><option>Anamnese / Aufnahme</option><option>Empfehlung</option><option>Verlauf / Diagnose</option><option>Verlauf</option><option>apparative Diagnostik</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 3. Вставь слово из видео.</h4><ol><li data-впиши="aufgenommen" data-почему="aufnehmen — класть в стационар; Partizip II с ge- внутри: auf-ge-nommen.">Der Patient wurde stationär <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sprechen" data-почему="etwas spricht für … — говорит в пользу чего-то.">Die hohen Temperaturen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> für einen Infekt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="ausgeschlossen" data-почему="ausschließen — исключить; konnte … werden = Passiv с модальным.">Ein Myokardinfarkt konnte <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> werden.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="verzichtet" data-почему="verzichten auf + Akk — отказаться от.">Auf die Gabe eines ACE-Hemmers wurde <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="übergeben" data-почему="übergeben — передать (неотделяемая приставка, без ge-).">Die Patientin kann in ihre hausärztliche Betreuung <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> werden.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 4. Напиши 3 предложения выписки о своём пациенте с варикозом: поступление, результат УЗДС, рекомендация.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Die Patientin stellte sich mit Schweregefühl in beiden Beinen vor. In der Duplexsonographie zeigte sich eine Insuffizienz der VSM rechts. Wir empfehlen das Tragen von Kompressionsstrümpfen der Klasse II.</details></div>
-  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Epikrise</span><span>выписной эпикриз</span><span>einweisen</span><span>направить в больницу</span><span>stationär aufnehmen</span><span>госпитализировать</span><span>ausschließen</span><span>исключить</span><span>bestätigen</span><span>подтвердить</span><span>verzichten auf</span><span>отказаться от</span><span>die Eradikationstherapie</span><span>эрадикационная терапия</span><span>die hausärztliche Betreuung</span><span>наблюдение у семейного врача</span><span>pektanginöse Beschwerden</span><span>стенокардитические жалобы</span><span>sich einprägen</span><span>запомнить, врезать в память</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
-</div>
-<div class="вид-карта" id="видео2">
-  <a class="вид-ролик" href="https://youtu.be/_SNT4qa02Ks" target="_blank" rel="noopener">
-    <img src="https://i.ytimg.com/vi/_SNT4qa02Ks/mqdefault.jpg" alt="" loading="lazy">
-    <span><small>Видео 2 из 3</small><b>Simulation Appendizitis | Anamnese &amp; Arztbrief-Training für Medizindeutsch. Typische Fehler</b><small>Fachsprachprüfung Medizin einfach · 9:22</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
-  </a>
-  <button class="вид-плеер-кн" type="button" data-видео="_SNT4qa02Ks">▶ Смотреть здесь, с вопросами</button>
-  <div class="вид-плеер" hidden></div>
-  <script type="application/json" class="вид-данные">{"стопы": [{"t": 90, "кусок": "план симуляции", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["В письме врача можно писать «Der Patient hat Bauchschmerzen».", false, "Жалобы пациента пишут в Konjunktiv I: er habe Bauchschmerzen."]}, {"t": 132, "кусок": "как начать разговор", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["Боль у пациента началась справа внизу и потом ушла к пупку.", false, "Наоборот: от пупка в правую подвздошную область."]}, {"t": 180, "кусок": "вопросы о боли", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["Пациента 5 лет назад оперировали по поводу паховой грыжи справа.", true, "Zustand nach Hernioplastik bei Inguinalhernie rechts."]}, {"t": 228, "кусок": "вегетативный анамнез", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": ["Метод выбора при аппендиците — лапароскопическая аппендэктомия.", true, "laparoskopische Appendektomie, при перфорации — открытая."]}, {"t": 275, "кусок": "перевод на Fachsprache", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}, {"t": 369, "кусок": "ошибки в Arztbrief и Konjunktiv I", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}, {"t": 419, "кусок": "доклад по SOAP", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}, {"t": 470, "кусок": "5 точек при осмотре", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"]}], "последний": "диагностика и лечение", "все": ["план симуляции", "как начать разговор", "вопросы о боли", "вегетативный анамнез", "перевод на Fachsprache", "ошибки в Arztbrief и Konjunktiv I", "доклад по SOAP", "5 точек при осмотре", "диагностика и лечение"], "верно": [], "вопросы": [["Что значит SOAP?", "Subjektiv – Objektiv – Assessment – Plan."], ["Что назначают сразу после поступления?", "stationäre Aufnahme, Nahrungskarenz, i.v. Infusionstherapie."], ["На что смотрят в УЗИ брюшной полости?", "Kokardenphänomen, Wanddicke > 6 mm, freie Flüssigkeit im Douglasraum."]]}</script>
-  <p class="вид-зачем">Симуляция FSP «аппендицит» от начала до конца: анамнез, перевод с языка пациента на медицинский, письмо врача в Konjunktiv I, доклад по SOAP и 5 симптомов (McBurney, Lanz, Blumberg, Rovsing, Psoas).</p>
-  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/_SNT4qa02Ks?t=44" target="_blank" rel="noopener">0:44</a> — план симуляции</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=90" target="_blank" rel="noopener">1:30</a> — как начать разговор</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=132" target="_blank" rel="noopener">2:12</a> — вопросы о боли</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=180" target="_blank" rel="noopener">3:00</a> — вегетативный анамнез</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=228" target="_blank" rel="noopener">3:48</a> — перевод на Fachsprache</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=275" target="_blank" rel="noopener">4:35</a> — ошибки в Arztbrief и Konjunktiv I</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=369" target="_blank" rel="noopener">6:09</a> — доклад по SOAP</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=419" target="_blank" rel="noopener">6:59</a> — 5 точек при осмотре</li><li><a href="https://youtu.be/_SNT4qa02Ks?t=470" target="_blank" rel="noopener">7:50</a> — диагностика и лечение</li></ul>
-  <div class="вид-зд" data-соедини><h4>Задание 1. Слово пациента → термин врача.</h4><ol><li>Blinddarmentzündung → <select data-ок="Appendizitis"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Mandel-OP → <select data-ок="Tonsillektomie"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Leistenbruch → <select data-ок="Inguinalhernie"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Übelkeit und Erbrechen → <select data-ок="Nausea und Vomitus"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>Appetitlosigkeit → <select data-ок="Inappetenz"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li><li>um den Bauchnabel → <select data-ок="periumbilikal"><option value="">—</option><option>Nausea und Vomitus</option><option>Inguinalhernie</option><option>Inappetenz</option><option>Tonsillektomie</option><option>periumbilikal</option><option>Appendizitis</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Верно или нет?</h4><ol><li data-верно="0" data-почему="Жалобы пациента пишут в Konjunktiv I: er habe Bauchschmerzen.">В письме врача можно писать «Der Patient hat Bauchschmerzen». <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="0" data-почему="Наоборот: от пупка в правую подвздошную область.">Боль у пациента началась справа внизу и потом ушла к пупку. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="Zustand nach Hernioplastik bei Inguinalhernie rechts.">Пациента 5 лет назад оперировали по поводу паховой грыжи справа. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li><li data-верно="1" data-почему="laparoskopische Appendektomie, при перфорации — открытая.">Метод выбора при аппендиците — лапароскопическая аппендэктомия. <button class="вид-кн" type="button" data-да="1">верно</button><button class="вид-кн" type="button" data-да="0">неверно</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Перепиши в Konjunktiv I.</h4><ol><li data-впиши="seien" data-почему="sein → er/sie sei, sie seien.">Die Schmerzen sind gewandert. → Die Schmerzen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> gewandert.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="habe" data-почему="haben → er habe.">Er hat Fieber. → Er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> Fieber.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="hätten" data-почему="Konj. I от haben во мн. числе совпадает с индикативом, поэтому берут Konj. II: hätten.">Die Schmerzen haben zugenommen. → …, die an Intensität zugenommen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 4. Ответь по видео.</h4><ol><li>Что значит SOAP?<details><summary>показать ответ</summary>Subjektiv – Objektiv – Assessment – Plan.</details></li><li>Что назначают сразу после поступления?<details><summary>показать ответ</summary>stationäre Aufnahme, Nahrungskarenz, i.v. Infusionstherapie.</details></li><li>На что смотрят в УЗИ брюшной полости?<details><summary>показать ответ</summary>Kokardenphänomen, Wanddicke > 6 mm, freie Flüssigkeit im Douglasraum.</details></li></ol></div>
-  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>sich krümmen</span><span>скрючиться (от боли)</span><span>wandern</span><span>мигрировать (о боли)</span><span>krampfartig</span><span>схваткообразный</span><span>stechend</span><span>колющий</span><span>sich übergeben</span><span>вырвать (рвота)</span><span>der Stuhlgang</span><span>стул</span><span>die Nahrungskarenz</span><span>голод (запрет еды)</span><span>der Loslassschmerz</span><span>боль при отпускании (Блюмберг)</span><span>der Wurmfortsatz</span><span>червеобразный отросток</span><span>aus dem Stegreif</span><span>с ходу, без подготовки</span><span>Hand aufs Herz</span><span>положа руку на сердце</span><span>nachhaken</span><span>дотошно переспрашивать</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
-</div>
-<div class="вид-карта" id="видео3">
-  <a class="вид-ролик" href="https://youtu.be/VyAbC4KOay0" target="_blank" rel="noopener">
-    <img src="https://i.ytimg.com/vi/VyAbC4KOay0/mqdefault.jpg" alt="" loading="lazy">
-    <span><small>Видео 3 из 3</small><b>Simulation Asthma bronchiale | FSP Vorbereitung &amp; Arztbrief-Training. Häufige Grammatikfehler</b><small>Fachsprachprüfung Medizin einfach · 9:38</small><br><span class="вид-смотреть">▶ смотреть на YouTube</span></span>
-  </a>
-  <button class="вид-плеер-кн" type="button" data-видео="VyAbC4KOay0">▶ Смотреть здесь, с вопросами</button>
-  <div class="вид-плеер" hidden></div>
-  <script type="application/json" class="вид-данные">{"стопы": [{"t": 91, "кусок": "план", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 139, "кусок": "анамнез: что говорит Леон", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 189, "кусок": "перевод на Fachsprache", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 233, "кусок": "предыдущие болезни и семья", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 328, "кусок": "Arztbrief и Konjunktiv I", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 426, "кусок": "доклад по SOAP", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}, {"t": 481, "кусок": "дифдиагноз", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"]}], "последний": "диагностика и лечение", "все": ["план", "анамнез: что говорит Леон", "перевод на Fachsprache", "предыдущие болезни и семья", "Arztbrief и Konjunktiv I", "доклад по SOAP", "дифдиагноз", "диагностика и лечение"], "верно": [], "вопросы": [["Какие дифдиагнозы нужно назвать?", "akute Bronchitis, Hyperventilation, Vocal Cord Dysfunction, kardiale Belastungsdyspnoe и обязательно Fremdkörperaspiration."], ["Какие обследования назначают?", "Spirometrie mit Bronchospasmolysetest (Salbutamol), FeNO, Röntgen-Thorax, Pricktest."], ["Чем Reliever отличается от Controller?", "Reliever — по требованию (SABA, Salbutamol); Controller — постоянно (ICS, Budesonid)."]]}</script>
-  <p class="вид-зачем">Вторая симуляция FSP: подросток 15 лет с одышкой (Asthma bronchiale). Как перевести «schlecht Luft bekommen» в Dyspnoe, как писать в Konjunktiv I, дифдиагноз и ступени терапии (SABA, ICS).</p>
-  <p style="margin:10px 0 0"><b>Где что в ролике:</b></p><ul class="вид-тк"><li><a href="https://youtu.be/VyAbC4KOay0?t=45" target="_blank" rel="noopener">0:45</a> — план</li><li><a href="https://youtu.be/VyAbC4KOay0?t=91" target="_blank" rel="noopener">1:31</a> — анамнез: что говорит Леон</li><li><a href="https://youtu.be/VyAbC4KOay0?t=139" target="_blank" rel="noopener">2:19</a> — перевод на Fachsprache</li><li><a href="https://youtu.be/VyAbC4KOay0?t=189" target="_blank" rel="noopener">3:09</a> — предыдущие болезни и семья</li><li><a href="https://youtu.be/VyAbC4KOay0?t=233" target="_blank" rel="noopener">3:53</a> — Arztbrief и Konjunktiv I</li><li><a href="https://youtu.be/VyAbC4KOay0?t=328" target="_blank" rel="noopener">5:28</a> — доклад по SOAP</li><li><a href="https://youtu.be/VyAbC4KOay0?t=426" target="_blank" rel="noopener">7:06</a> — дифдиагноз</li><li><a href="https://youtu.be/VyAbC4KOay0?t=481" target="_blank" rel="noopener">8:01</a> — диагностика и лечение</li></ul>
-  <div class="вид-зд" data-соедини><h4>Задание 1. Как сказал Леон → как пишет врач.</h4><ol><li>schlecht Luft bekommen → <select data-ок="Dyspnoe"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>die Brust schnürt sich zu → <select data-ок="thorakales Engegefühl"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>Husten ohne Schleim → <select data-ок="unproduktiver Husten"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>Neurodermitis in der Kindheit → <select data-ок="atopisches Ekzem"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li><li>Atemnot beim Sport → <select data-ок="Belastungsdyspnoe"><option value="">—</option><option>Belastungsdyspnoe</option><option>thorakales Engegefühl</option><option>unproduktiver Husten</option><option>atopisches Ekzem</option><option>Dyspnoe</option></select></li></ol><button class="вид-кн" type="button" style="margin:0">проверить</button><span class="вид-итог"></span></div><div class="вид-зд"><h4>Задание 2. Вставь слово из видео.</h4><ol><li data-впиши="habe" data-почему="Konjunktiv I от haben.">Der Patient berichtet, er <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> eine Belastungsdyspnoe.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="sei" data-почему="Konjunktiv I от sein.">An Vorerkrankungen <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> ein atopisches Ekzem bekannt.<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li><li data-впиши="auszuschließen" data-почему="um … zu + Infinitiv; zu встаёт внутрь отделяемого глагола.">Ein Röntgen-Thorax ist wichtig, um Fremdkörper sicher <input type="text" autocomplete="off" autocapitalize="off" spellcheck="false"> .<button class="вид-кн" type="button">проверить</button><span class="вид-итог"></span></li></ol></div><div class="вид-зд"><h4>Задание 3. Ответь по видео.</h4><ol><li>Какие дифдиагнозы нужно назвать?<details><summary>показать ответ</summary>akute Bronchitis, Hyperventilation, Vocal Cord Dysfunction, kardiale Belastungsdyspnoe и обязательно Fremdkörperaspiration.</details></li><li>Какие обследования назначают?<details><summary>показать ответ</summary>Spirometrie mit Bronchospasmolysetest (Salbutamol), FeNO, Röntgen-Thorax, Pricktest.</details></li><li>Чем Reliever отличается от Controller?<details><summary>показать ответ</summary>Reliever — по требованию (SABA, Salbutamol); Controller — постоянно (ICS, Budesonid).</details></li></ol></div><div class="вид-зд"><h4>Задание 4. Напиши фразу для письма врача в Konjunktiv I: пациент сообщает, что у него одышка при нагрузке и сухой кашель.</h4><textarea placeholder="пиши здесь…"></textarea><details><summary>образец</summary>Der Patient berichtet, er habe eine Belastungsdyspnoe und leide unter unproduktivem Husten.</details></div>
-  <div class="вид-зд"><h4>Слова из видео</h4><div class="вид-слова"><span>die Atemnot</span><span>одышка</span><span>die Ambulanz</span><span>приёмное отделение / амбулатория</span><span>diensthabend</span><span>дежурный</span><span>nachbohren</span><span>допытываться</span><span>der Schleim</span><span>мокрота</span><span>die Birkenpollenallergie</span><span>аллергия на пыльцу берёзы</span><span>die Fremdkörperaspiration</span><span>аспирация инородного тела</span><span>der Bedarf</span><span>потребность; bei Bedarf — по требованию</span><span>die Dauertherapie</span><span>постоянная терапия</span><span>etwas in der Tasche haben</span><span>дело в шляпе</span></div><p style="margin:8px 0 0;font-size:.9em;color:var(--ink-muted,#666)">Все они есть в ЗУБРе; те, что раньше не встречались, — в разделе «Слова из видео».</p></div>
-</div>
-</section>
-<script>
-(function(){
-  function чисто(s){return (s||'').toLowerCase().replace(/[.,!?;:«»"„“]/g,'').replace(/\s+/g,' ').trim();}
-  document.querySelectorAll('.вид [data-впиши]').forEach(function(li){
-    var поле=li.querySelector('input'),кн=li.querySelector('button'),итог=li.querySelector('.вид-итог');
-    function проверить(){
-      var ответы=li.dataset.впиши.split('|').map(чисто), верно=ответы.indexOf(чисто(поле.value))>=0;
-      // опечатка, а не ошибка: «Ärtzin» вместо «Ärztin» (ядро игр даёт ИГРЫ_ОПЕЧАТКА)
-      var почти=!верно && window.ИГРЫ_ОПЕЧАТКА && ответы.some(function(о){return ИГРЫ_ОПЕЧАТКА(чисто(поле.value),о);});
-      итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-      итог.innerHTML=почти?'≈ почти! Проверь написание — правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>'
-        :(верно?'✓ верно':'✗ правильно: <b>'+li.dataset.впиши.split('|')[0]+'</b>')+(li.dataset.почему?' — '+li.dataset.почему:'');
-    }
-    кн.onclick=проверить; поле.onkeydown=function(e){if(e.key==='Enter')проверить();};
-  });
-  document.querySelectorAll('.вид [data-верно]').forEach(function(li){
-    li.querySelectorAll('button').forEach(function(кн){
-      кн.onclick=function(){
-        var верно=кн.dataset.да===li.dataset.верно, итог=li.querySelector('.вид-итог');
-        итог.className='вид-итог '+(верно?'вид-да':'вид-нет');
-        итог.innerHTML=(верно?'✓ ':'✗ ')+(li.dataset.верно==='1'?'верно':'неверно')+(li.dataset.почему?' — '+li.dataset.почему:'');
-      };
-    });
-  });
-  document.querySelectorAll('.вид [data-соедини]').forEach(function(бл){
-    бл.querySelector('button').onclick=function(){
-      var всего=0,хорошо=0;
-      бл.querySelectorAll('select').forEach(function(с){всего++; var ок=с.value===с.dataset.ок; if(ок)хорошо++; с.style.borderColor=ок?'#1f9d55':'#d64545';});
-      var итог=бл.querySelector('.вид-итог'); итог.className='вид-итог '+(хорошо===всего?'вид-да':'вид-нет');
-      итог.textContent=хорошо+' из '+всего+(хорошо===всего?' — всё верно!':' — красные поправь');
-    };
-  });
-  /* ── видео с вопросами ── */
-  var api=null, ждут=[];
-  function грузиAPI(готово){
-    if(window.YT&&YT.Player){готово();return;}
-    ждут.push(готово); if(api)return;
-    var прежний=window.onYouTubeIframeAPIReady;
-    window.onYouTubeIframeAPIReady=function(){ if(прежний)try{прежний();}catch(e){} ждут.forEach(function(f){f();}); ждут=[]; };
-    api=document.createElement('script'); api.src='https://www.youtube.com/iframe_api'; document.head.appendChild(api);
-  }
-  function перемешать(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t;}return a;}
-  function экр(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
-  document.querySelectorAll('.вид-плеер-кн').forEach(function(кн){
-    кн.onclick=function(){
-      var карта=кн.closest('.вид-карта'), место=карта.querySelector('.вид-плеер');
-      var д=JSON.parse(карта.querySelector('.вид-данные').textContent);
-      кн.hidden=true; место.hidden=false;
-      место.innerHTML='<div class="вид-экран"><div></div></div><div class="вид-счёт">Ролик сам остановится '+(д.стопы.length?д.стопы.length+' раз и спросит, о чём был кусок':'в конце')+'. Если плеер не грузится — открой ролик на YouTube (ссылка выше).</div><div class="вид-стоп" hidden></div>';
-      var стоп=место.querySelector('.вид-стоп'), i=0, верных=0, всего=0, плеер, таймер;
-      function спросить(с, дальше){
-        clearInterval(таймер); плеер.pauseVideo();
-        var шаги=[];
-        if(д.все.length>=3){
-          var чужие=перемешать(д.все.filter(function(x){return x!==с.кусок;})).slice(0,2);
-          шаги.push({в:'О чём был этот кусок?',вар:перемешать([с.кусок].concat(чужие)),ок:с.кусок,почему:''});
-        }
-        if(с.верно) шаги.push({в:'Верно или нет: '+с.верно[0],вар:['верно','неверно'],ок:с.верно[1]?'верно':'неверно',почему:с.верно[2]});
-        function шаг(k){
-          if(k>=шаги.length){стоп.hidden=true; дальше(); return;}
-          var ш=шаги[k]; стоп.hidden=false;
-          стоп.innerHTML='<b class="в">'+экр(ш.в)+'</b>'+ш.вар.map(function(в){return '<button type="button" class="вар">'+экр(в)+'</button>';}).join('');
-          стоп.querySelectorAll('.вар').forEach(function(б){
-            б.onclick=function(){
-              всего++; var да=б.textContent===ш.ок; if(да)верных++;
-              стоп.querySelectorAll('.вар').forEach(function(x){x.onclick=null; if(x.textContent===ш.ок)x.classList.add('да'); else if(x===б)x.classList.add('нет');});
-              стоп.insertAdjacentHTML('beforeend',(ш.почему?'<p style="margin:8px 0 0">'+экр(ш.почему)+'</p>':'')+'<button type="button" class="дальше">'+(k+1<шаги.length?'Ещё вопрос':'Смотреть дальше ▶')+'</button>');
-              стоп.querySelector('.дальше').onclick=function(){шаг(k+1);};
-            };
-          });
-        }
-        шаг(0);
-      }
-      function следить(){
-        clearInterval(таймер);
-        таймер=setInterval(function(){
-          if(i>=д.стопы.length||!плеер.getCurrentTime)return;
-          if(плеер.getCurrentTime()>=д.стопы[i].t){ var с=д.стопы[i]; i++; спросить(с,function(){плеер.playVideo(); следить();}); }
-        },400);
-      }
-      function финал(){
-        clearInterval(таймер);
-        var вопросы=(д.вопросы||[]).map(function(п){return '<li>'+экр(п[0])+'<details><summary>ответ</summary>'+экр(п[1])+'</details></li>';}).join('');
-        стоп.hidden=false;
-        стоп.innerHTML='<b class="в">Ролик досмотрен!'+(всего?' Верно: '+верных+' из '+всего+'.':'')+'</b>'+
-          (вопросы?'<p style="margin:6px 0">Ответь на вопросы (про себя или вслух), потом сверь:</p><ol>'+вопросы+'</ol>':'')+
-          '<p style="margin:6px 0 0">Остальные задания — ниже, под роликом.</p>';
-      }
-      грузиAPI(function(){
-        плеер=new YT.Player(место.querySelector('.вид-экран>div'),{videoId:кн.dataset.видео,
-          playerVars:{rel:0,playsinline:1,modestbranding:1},
-          events:{onReady:function(){плеер.playVideo(); следить();},
-                  onStateChange:function(e){ if(e.data===0)финал(); }}});
-      });
-    };
-  });
-})();
-</script>
-<!--ВИДЕО-END-->
-
 <a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 </body>
 </html>
