@@ -74,6 +74,8 @@
     '.gd-окрашена .de, .gd-окрашена .tr, .gd-окрашена .ru{ color:inherit !important; }' +
     '.gd-окрашена .tr, .gd-окрашена .ru{ opacity:.85; }' +
     '.gd-окрашена .swatch{ display:none; }' +
+    '.gd-фото-фраза{ width:46px; height:46px; flex:0 0 46px; border-radius:10px; object-fit:cover; margin-right:8px; cursor:zoom-in; background:#eceaf0; }' +
+    '.pcard{ align-items:center; }' +
     '.gd-цвет{ border-radius:18px; box-shadow:inset 0 0 0 1px rgba(0,0,0,.12); }';
   document.head.appendChild(стиль);
 
@@ -119,18 +121,51 @@
     });
   }
 
+  /* 27.10.2026, врач: «много названий не экранизированы» — фото и у фраз (.pcard), и у предложений домашки (.hwrow).
+     Берём существительное с фото; в паре «вопрос? ответ» — из ответа (Sind Sie Ingenieur? Nein, ich bin Fernfahrer → Fernfahrer). */
+  function фотоФразы(текст) {
+    var т = String(текст || '').replace(/<[^>]+>/g, ' ');
+    var части = т.split('?'), хвост = части.length > 1 ? части[части.length - 1] : '';
+    function искать(кусок) {
+      var слова = кусок.split(/\s+/);
+      for (var i = 0; i < слова.length; i++) {
+        var с = слова[i].replace(/[^A-Za-zÄÖÜäöüß-]/g, '');
+        if (с.length < 3 || с[0] === с[0].toLowerCase() || /^(Sie|Ihr|Ihnen|Ihre|Ich|Wir|Er|Es)$/.test(с)) continue;
+        var п = путь(с);
+        if (п) return п;
+      }
+      return null;
+    }
+    return (хвост && искать(хвост)) || искать(т);
+  }
+  function фразы(корень) {
+    Array.prototype.forEach.call((корень || document).querySelectorAll('.pcard, .hwrow'), function (к) {
+      if (к.querySelector('.gd-фото, .hw-фото') || к.closest('.иг-экран')) return;
+      var исх = к.classList.contains('hwrow') ? к.querySelector('.q') : к.querySelector('.de');
+      if (!исх) return;
+      var текст = исх.innerHTML.replace(/<span class="hw-tr"[\s\S]*?<\/span>/g, '').replace(/<input[^>]*>/g, ' ');
+      var url = фотоФразы(текст);
+      if (!url) return;
+      var img = document.createElement('img');
+      img.className = 'gd-фото gd-фото-фраза'; img.alt = ''; img.loading = 'lazy'; img.decoding = 'async'; img.src = url;
+      img.onclick = function (e) { e.stopPropagation(); крупно(url); };
+      img.onerror = function () { img.remove(); };
+      к.insertBefore(img, к.firstChild);
+    });
+  }
+
   var готово = Promise.all([
     fetch(база + 'img/slova.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; }),
     fetch(база + 'img/sceny.json').then(function (r) { return r.ok ? r.json() : {}; }).catch(function () { return {}; })
   ]).then(function (о) { слова = о[0] || {}; сцены = о[1] || {}; });
 
-  window.КАРТИНКИ = { готово: готово, путь: путь, крупно: крупно, карточки: карточки, цвет: цвет, образец: образец };
+  window.КАРТИНКИ = { готово: готово, путь: путь, крупно: крупно, карточки: карточки, фразы: фразы, фотоФразы: фотоФразы, цвет: цвет, образец: образец };
 
-  function применить() { обложка(); карточки(); }
+  function применить() { обложка(); карточки(); фразы(); }
   готово.then(function () {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', применить);
     else применить();
     // карточки слов рисует скрипт урока — бывает, позже нас
-    window.addEventListener('load', function () { карточки(); });
+    window.addEventListener('load', function () { карточки(); фразы(); });
   });
 })();

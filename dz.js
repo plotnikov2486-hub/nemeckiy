@@ -263,15 +263,23 @@
         }
       }
 
+      function есть(код) { return !!(window.ИГРЫ && ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть().indexOf(код) >= 0); }
       function финал() {
         try { localStorage.setItem(ключ, JSON.stringify({ верных: верных, всего: задания.length, когда: Date.now() })); } catch (e) {}
         var игр = (window.ИГРЫ && ИГРЫ.какиеЕсть) ? ИГРЫ.какиеЕсть().length : 0;
         корень.innerHTML = '<div class="дз"><div class="дз-карта"><h2>🎉 Вы выполнили все задания!</h2>' +
           '<div class="дз-счёт">' + верных + ' из ' + задания.length + '</div>' +
           '<p class="под" style="text-align:center">' + (игр ? 'Теперь для закрепления — поиграйте в игры на тех же словах.' : 'Отличная работа.') + '</p>' +
-          '<div class="дз-низ">' + (игр ? '<button type="button" class="главная" id="дзВИгры">🎮 Играть</button>' : '') +
+          '<div class="дз-низ">' +
+          // 27.10.2026: две игры «как у Даши на Wordwall» — прямо из домашки
+          (есть('группы') ? '<button type="button" class="главная" data-игра="группы">🗃 Перетащи по группам</button>' : '') +
+          (есть('викторина') ? '<button type="button" class="главная" data-игра="викторина">❓ Викторина на время</button>' : '') +
+          (игр ? '<button type="button" id="дзВИгры">🎮 Все игры</button>' : '') +
           '<button type="button" id="дзЕщё">↻ Новые задания</button></div></div></div>';
         var в = корень.querySelector('#дзВИгры'); if (в) в.onclick = function () { наст.игры && наст.игры(); };
+        Array.prototype.forEach.call(корень.querySelectorAll('[data-игра]'), function (к) {
+          к.onclick = function () { наст.игры && наст.игры(); ИГРЫ.запустить(к.getAttribute('data-игра')); };
+        });
         корень.querySelector('#дзЕщё').onclick = function () { задания = собрать(фразы); i = 0; верных = 0; показать(); };
       }
 

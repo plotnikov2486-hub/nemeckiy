@@ -124,7 +124,7 @@
   .pp-left b{color:var(--ink);}
 
   .pp-levels{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; margin-top:16px;}
-  @media(min-width:680px){ .pp-levels{grid-template-columns:repeat(4,1fr);} }
+  @media(min-width:680px){ .pp-levels{grid-template-columns:repeat(5,1fr);} }
   .lvl{cursor:pointer; border:1px solid transparent; border-radius:10px; padding:8px; transition:all .15s;}
   .lvl:hover{background:var(--bg);}
   .lvl.active{border-color:var(--line); background:var(--bg);}
@@ -789,6 +789,8 @@ if (!Слушалка){
 
 
 
+
+
   <header>
     <h1>🇩🇪 Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
@@ -895,6 +897,7 @@ const LESSONS = [
   {id:'52', title:'Урок 52 — Обследования: анализы, УЗИ, КТ, МРТ', topic:'Шестой медицинский урок B1 — weiterführende Untersuchungen, слова по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 9). Как сказать о результате: im Normbereich, unauffällig, auffällig, erhöht, erniedrigt. Анализы (Blutbild, Gerinnung, D-Dimere, Quickwert, Kreatinin, CRP) и как немцы читают сокращения: цэ-эр-пэ, ха-бэ, эм-эр-тэ. Назначить и заказать: anfordern, anmelden, Blut abnehmen, nüchtern. Слова лучевой диагностики (Schallkopf, echoarm, Kontrastmittel, Schicht). Подготовка к КТ и МРТ: контраст, почки, металл, Platzangst. Описание дуплекса вен: komprimierbar, lässt sich nicht komprimieren, Reflux, Mündungsklappe, Durchmesser beträgt. Ошибки (Analyse, UZI), разговор с пациенткой с тромбозом подколенной вены, домашка с озвученными ответами.', pdf:'lessons/urok52_pdf.pdf', audio:'lessons/urok52_interactive.html', mins:26, hard:'Средне', cards:67, level:'B1'},
   {id:'53', title:'Урок 53 — Трудный разговор: плохая новость', topic:'Седьмой медицинский урок B1 — das schwere Gespräch по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 10.3). Что такое трудный разговор и пять правил: время и порядок, сначала спросить, предупредить (Leider habe ich keine guten Nachrichten), пауза, честность. Четыре фазы с опорными фразами из таблиц учебника: сообщить (hat leider ergeben, dass; Es besteht der Verdacht; Ich wünschte, ich könnte …), выслушать (Ich sehe, Sie sind geschockt; einen Moment Ruhe), что дальше (gemeinsam entscheiden), завершить (Wir haben vereinbart …). Надежда без обмана: честный ответ на «сколько мне осталось?». Ошибки (Das wird schon wieder, Machen Sie sich keine Sorgen), разговор с пациенткой из урока 52, у которой на КТ подозрение на опухоль, домашка с озвученными ответами.', pdf:'lessons/urok53_pdf.pdf', audio:'lessons/urok53_interactive.html', mins:26, hard:'Плотно', cards:61, level:'B1'},
   {id:'59', title:'Урок 59 — Meinung, Diskussion, Kritik: спор на разборе случая', topic:'Четыре темы в одном уроке: мнение, аргументы, спор, критика — на примере разбора пациентки с варикозом. Meiner Meinung nach ist … (глагол сразу), Ich denke, dass … (глагол в конец), halten für. Аргументы: Dafür/Dagegen spricht, dass …, erstens, außerdem, deshalb. Лестница согласия: Da stimme ich Ihnen zu → zwar …, aber → einerseits … andererseits → Ich sehe das etwas anders → Ich gebe zu bedenken. Смягчение Konjunktiv II (Wäre es nicht sinnvoller …?), ход дискуссии (Darf ich ergänzen? Lassen Sie mich ausreden), критика: сказать и принять. Иерархия клиники (Chefarzt/Primar, Oberarzt, Facharzt, Assistenzarzt). Диалог-разбор «лазер или операция», ошибки, домашка.', pdf:'lessons/urok59_pdf.pdf', audio:'lessons/urok59_interactive.html', mins:22, hard:'Средне', cards:71, level:'B1'},
+  {id:'60', title:'Урок 60 — Perfekt со всеми глаголами: «что случилось?»', topic:'Все пять типов глаголов в Perfekt: слабые (gefragt, gearbeitet), сильные со сменой корня (genommen, geholfen, geschrieben), смешанные (gebracht, gewusst), отделяемые приставки (aufgestanden, angerufen, Blut abgenommen) и без ge — be-/ver-/er-/ent- и -ieren (untersucht, verstanden, operiert). haben или sein: движение, смена состояния, sein/bleiben/passieren; 🇦🇹 «ich bin gesessen». Порядок слов (…, dass ich die Tablette genommen habe), модальные — в Präteritum. Диалог в приёмном: пациентка упала на лестнице. Ошибки и домашка.', pdf:'lessons/urok60_pdf.pdf', audio:'lessons/urok60_interactive.html', mins:22, hard:'Средне', cards:125, level:'A2'},
   {id:'58', title:'Урок 58 — Notfall in der Praxis: неотложные состояния', topic:'Неотложка глазами флеболога (факты — Herold, Innere Medizin 2020). Вызов скорой в Австрии (die Rettung, 144; Германия 112), «пять W». Схема ABCDE. Обморок на приёме: Mir wird schwarz vor Augen, Beine hoch. Анафилаксия: степени 0–IV, flach lagern, Adrenalin 0,3–0,5 mg i.m., 24 Stunden Überwachung. Тромбоэмболия: Ich bekomme plötzlich keine Luft, Wells-Score, D-Dimere, CT-Angiographie. Реанимация: 30 : 2, 5–6 cm, 100–120/min, Defibrillator, команды. Передача врачу скорой по ISBAR. Диалог: реакция после склеротерапии. Ошибки (Ruf die Rettung!, allergisch gegen), домашка.', pdf:'lessons/urok58_pdf.pdf', audio:'lessons/urok58_interactive.html', mins:22, hard:'Плотно', cards:79, level:'B1'},
   {id:'57', title:'Урок 57 — Флебология по-немецки: Varikose und CVI', topic:'Своя специальность на немецком (факты — Herold, Innere Medizin 2020). Три системы вен: oberflächlich (große und kleine Rosenvene, Crosse), tief, Perforansvenen; Venenklappen, Muskelpumpe. Varikose, Varizen, Krampfadern; Stammvarikose, Seitenast, retikuläre Varizen, Besenreiser; primär und sekundär. Стадии: Hach I–IV, CEAP C0–C6, CVI по Widmer. Жалобы пациента ↔ термины (Schweregefühl, Knöchelödem, Wadenkrampf), Merke: хуже вечером и стоя, лучше лёжа и при ходьбе. Дуплекс: два вопроса и формулировки Befund. Лечение: Kompression, Crossektomie und Stripping, Laser, RFA, Verödung. Как объяснить пациенту (die Rosenvene ist undicht), диалог с пациентом, доклад старшему врачу, ошибки, домашка.', pdf:'lessons/urok57_pdf.pdf', audio:'lessons/urok57_interactive.html', mins:24, hard:'Плотно', cards:100, level:'B1'},
   {id:'56', title:'Урок 56 — Einen Fachvortrag halten: научный доклад', topic:'Десятый медицинский урок по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 12). Правила хорошего доклада и шесть частей: Einleitung, Fragestellung, Methoden, Ergebnisse, Zusammenfassung, Ausblick. Готовые фразы для каждой части (Ich möchte Ihnen heute … vorstellen, Wie Sie wissen, Es zeigte sich, dass …, Zusammenfassend kann man feststellen …). Пассив — язык науки: konnte gezeigt werden, wurde durchgeführt, kann durchgeführt werden; operieren во всех временах (bin operiert worden). Короткий доклад об ЭВЛК целиком (цифры условные), слова презентации, числа и проценты вслух (null Komma eins Prozent), вопросы после доклада, ошибки, домашка.', pdf:'lessons/urok56_pdf.pdf', audio:'lessons/urok56_interactive.html', mins:22, hard:'Плотно', cards:86, level:'B1'},
@@ -1184,7 +1187,7 @@ const LEVELS = [
     {t:'welcher, dieser, jeder', l:['l23','p17','p18','p19']},
   ]},
   {code:'A2', name:'Базовый', weight:0.20, color:'#1f8fb5', topics:[
-    {t:'Perfekt со всеми глаголами', l:[]},
+    {t:'Perfekt со всеми глаголами', l:['l12','l60']},
     {t:'Präteritum (sein, haben, модальные)', l:['l19']},
     {t:'Präteritum слабых и сильных глаголов', l:['l29']},
     {t:'Возвратные глаголы (sich waschen)', l:['l18']},
@@ -1276,6 +1279,24 @@ const LEVELS = [
     {t:'Критика и возражение', l:['l59']},
     {t:'Понимание беглой речи и диалектов', l:[]},
     {t:'Формальное письмо', l:[]},
+  ]},
+  // 27.10.2026: C1 — медицинский, после B2 (в путь «до B2» не входит, вес 0). План — «ПЛАН САЙТА GlobalDoc», раздел 3.
+  {code:'C1', name:'Медицинский', weight:0, color:'#b8326f', topics:[
+    {t:'Обход с главным врачом: доклад у постели (Nominalstil)', l:[]},
+    {t:'M&M-конференция: разбор осложнений (hätte … müssen)', l:[]},
+    {t:'FSP целиком: анамнез → доклад → документ', l:[]},
+    {t:'Конфликт с пациентом или родственником: деэскалация', l:[]},
+    {t:'Телефон: семейный врач, родственники, передача пациента', l:[]},
+    {t:'Обучение студентов и практикантов', l:[]},
+    {t:'Реанимация: разговор с семьёй о прогнозе', l:[]},
+    {t:'Паллиатив: смена цели лечения, Patientenverfügung', l:[]},
+    {t:'Междисциплинарный разбор с радиологом (Tumorboard)', l:[]},
+    {t:'Ночное дежурство и передача смены (ISBAR)', l:[]},
+    {t:'Обратная связь от старшего врача, разговор о росте', l:[]},
+    {t:'Клиническое исследование и информированное согласие', l:[]},
+    {t:'Эпикриз и выписной Arztbrief на уровне C1', l:[]},
+    {t:'Право врача: Aufklärungspflicht, документация, данные', l:[]},
+    {t:'Своя специальность на конгрессе: доклад и дискуссия', l:[]},
   ]},
 ];
 
@@ -1389,7 +1410,7 @@ function renderFolders(){
     <button class="folder${currentSection==='claude'?' active':''}" data-section="claude">
       <span class="f-ico">🤖</span>
       <span class="f-txt"><span class="f-name">Уроки с Claude</span>
-      <span class="f-sub">${claudeDone} из ${LESSONS.length} пройдено · по уровням A1–B2</span></span>
+      <span class="f-sub">${claudeDone} из ${LESSONS.length} пройдено · по уровням A1–B2 и C1 медицинский</span></span>
     </button>
     <button class="folder dasha${currentSection==='dasha'?' active':''}" data-section="dasha">
       <span class="f-ico">👩‍🏫</span>

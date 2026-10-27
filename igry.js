@@ -646,6 +646,8 @@ var ИГРЫ = {
           звукОтвета: звук,
           рекорд: function (процент, верных, всего) { записатьРекорд(игра.код, процент, верных, всего); },
           меню: меню,
+          вОчереди: !!очередь,                                   // 27.10: игры «как Wordwall» сами рисуют итог
+          дальше: очередь ? дальшеВОчереди : null,
           конец: function (процент, подпись) { итогПростой(игра, процент, подпись); }
         });
       }
@@ -911,85 +913,337 @@ var ФОТО = {
   }
 };
 
-/* 2б. Разложи по группам — как «Die richtige Gruppe» на Wordwall (22.10.2026, Гриша 11).
-   Только по данным страницы: window.ИГРЫ_ГРУППЫ = { имя, группы:['ich','du',…],
-   слова:[['komme','ich','я прихожу'], …] }. Без них игры в списке нет. */
-var ГРУППЫ = {
-  код: 'группы', имя: 'Разложи по группам', значок: '🗃',
-  под: 'Каждое слово — в свою корзинку',
-  хватает: function () { var г = window.ИГРЫ_ГРУППЫ; return !!(г && г.группы && г.слова && г.слова.length >= 4); },
-  задания: function () {
-    var г = window.ИГРЫ_ГРУППЫ;
-    return перемешать(г.слова).slice(0, 20).map(function (с) { return { слово: с[0], группа: с[1], ru: с[2] || '' }; });
-  },
-  раунд: function (ход) {
-    var з = ход.задание(), группы = window.ИГРЫ_ГРУППЫ.группы;
-    ход.рисовать(
-      '<p class="иг-де">' + экр(з.слово) + '</p>' +
-      (з.ru ? '<p class="иг-ру" style="font-size:15px;font-weight:600">' + экр(з.ru) + '</p>' : '') +
-      '<div class="иг-роды" style="grid-template-columns:repeat(' + Math.min(группы.length, 2) + ',1fr)">' +
-      группы.map(function (г) {
-        return '<button class="иг-род иг-корзина" data-г="' + экр(г) + '" style="color:var(--accent,#1f6f8b)">' + экр(г) + '</button>';
-      }).join('') + '</div>' +
-      '<div id="игОтвет"></div>');
-    var кнопки = карта_кнопки('.иг-корзина');
-    кнопки.forEach(function (к) {
-      к.onclick = function () {
-        var верно = к.getAttribute('data-г') === з.группа;
-        кнопки.forEach(function (д) {
-          д.onclick = null;
-          if (д.getAttribute('data-г') === з.группа) д.classList.add('иг-верно');
-          else if (д === к) д.classList.add('иг-мимо');
-        });
-        ход.ответ(верно, верно ? null : { de: з.группа + ' → ' + з.слово, ru: з.ru });
-        document.getElementById('игОтвет').innerHTML =
-          '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' + (верно ? '✓ ' : '✗ Правильно: ') +
-          '<span class="де">' + экр(з.группа + ' — ' + з.слово) + '</span></div>' +
-          '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше</button></div>';
-        document.getElementById('игДальше').onclick = ход.дальше;
-        ход.голос(null, з.слово);
-      };
+/* 2б–2в. Игры «как у Даши на Wordwall» (27.10.2026, врач: «разноцветные квадратики, перетаскиваешь руками,
+   идёт время, в конце квадратики по очереди загораются зелёным или красным, потом статистика на весь экран»;
+   «викторина: вопрос, картинка, четыре цветных блока, неверный зачёркивается, вверху время и счёт, внизу 2 из 36»).
+   Коды прежние — 'группы' и 'викторина': кнопки ИГРЫ.запустить(...) на уже собранных страницах работают.
+   Данные страницы (ИГРЫ_ГРУППЫ / ИГРЫ_ВИКТОРИНА) — если есть; без них игры строятся из слов урока сами. */
+
+var ЦВЕТА_ВВ = ['#2f6fdc', '#e0443e', '#f39c12', '#27ae60', '#8e44ad', '#16a085', '#d35400', '#c2185b', '#00838f', '#5d6d7e'];
+
+var СТИЛЬ_ВВ = ''
++ '.вв-верх{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin:2px 0 12px; font-weight:800; font-size:15px; }'
++ '.вв-время{ font-variant-numeric:tabular-nums; background:var(--surface-2,#f3f4fa); border-radius:999px; padding:6px 12px; }'
++ '.вв-счёт{ display:flex; gap:10px; } .вв-счёт .в{ color:#1f9d55; } .вв-счёт .н{ color:#d64545; }'
++ '.вв-подсказ{ font-size:13.5px; color:var(--ink-muted,#5b615c); margin:0 0 10px; }'
++ '.вв-пул{ display:flex; flex-wrap:wrap; gap:8px; min-height:56px; padding:10px; border-radius:16px;'
++ '  background:var(--surface-2,#f3f4fa); border:2px dashed var(--line,#d9dcea); margin-bottom:14px; }'
++ '.вв-плитка{ display:inline-flex; align-items:center; gap:7px; padding:10px 14px; border-radius:12px; color:#fff;'
++ '  font-weight:800; font-size:16px; cursor:grab; user-select:none; -webkit-user-select:none; touch-action:none;'
++ '  box-shadow:0 3px 0 rgba(0,0,0,.18); transition:transform .15s, opacity .15s; position:relative; }'
++ '.вв-плитка img{ width:30px; height:30px; border-radius:7px; object-fit:cover; pointer-events:none; }'
++ '.вв-плитка.выбрана{ outline:3px solid var(--ink,#1c2242); transform:translateY(-2px); }'
++ '.вв-плитка.тащу{ opacity:.25; }'
++ '.вв-призрак{ position:fixed; z-index:10050; pointer-events:none; transform:scale(1.08) rotate(-2deg); box-shadow:0 12px 26px rgba(0,0,0,.3); }'
++ '.вв-зоны{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }'
++ '.вв-зона{ border-radius:16px; border:2px solid var(--line,#d9dcea); background:var(--surface,#fff); overflow:hidden; transition:border-color .15s, background .15s; }'
++ '.вв-зона.над{ border-color:var(--accent,#1f5f5b); background:var(--surface-2,#f3f4fa); }'
++ '.вв-зона h4{ margin:0; padding:9px 12px; font-size:16px; font-weight:800; color:#fff; text-align:center; }'
++ '.вв-зона .вв-тело{ display:flex; flex-wrap:wrap; gap:7px; padding:10px; min-height:84px; align-content:flex-start; }'
++ '.вв-кнопки{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }'
++ '.вв-кнопки button{ flex:1; min-width:140px; font:inherit; font-size:16px; font-weight:800; padding:14px; border-radius:14px; cursor:pointer; border:none; }'
++ '.вв-главная{ background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); }'
++ '.вв-тихая{ background:var(--surface-2,#f3f4fa); color:var(--ink,#1c2242); border:1px solid var(--line,#d9dcea) !important; }'
++ '@keyframes вв-пульс{ 0%{ transform:scale(1); } 45%{ transform:scale(1.28); } 100%{ transform:scale(1); } }'
++ '.вв-плитка.пульс{ animation:вв-пульс .42s ease-out; z-index:2; }'
++ '.вв-плитка.верно{ background:#1f9d55 !important; box-shadow:0 0 0 3px #b9f0cf, 0 0 18px 4px rgba(31,157,85,.65); }'
++ '.вв-плитка.мимо{ background:#d64545 !important; box-shadow:0 0 0 3px #f6c3c3, 0 0 18px 4px rgba(214,69,69,.6); }'
++ '.вв-плитка .куда{ display:block; font-size:11px; font-weight:700; opacity:.95; }'
++ '.вв-итог{ position:fixed; inset:0; z-index:10040; background:rgba(15,18,35,.72); display:flex; align-items:center; justify-content:center; padding:16px; animation:вв-появ .3s ease-out; }'
++ '@keyframes вв-появ{ from{ opacity:0; transform:scale(.96); } to{ opacity:1; transform:none; } }'
++ '.вв-итог .окно{ background:var(--surface,#fff); color:var(--ink,#1c2242); border-radius:22px; padding:24px 20px; width:min(440px,100%); text-align:center; box-shadow:0 20px 50px rgba(0,0,0,.35); }'
++ '.вв-итог .эмо{ font-size:54px; line-height:1; } .вв-итог h2{ margin:10px 0 4px; font-size:24px; }'
++ '.вв-итог .проц{ font-size:46px; font-weight:900; margin:6px 0; }'
++ '.вв-итог .цифры{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin:14px 0 8px; }'
++ '.вв-итог .цифры div{ background:var(--surface-2,#f3f4fa); border-radius:14px; padding:10px 4px; font-size:12.5px; color:var(--ink-muted,#5b615c); }'
++ '.вв-итог .цифры b{ display:block; font-size:22px; color:var(--ink,#1c2242); }'
++ '.вв-итог .совет{ font-size:14px; color:var(--ink-muted,#5b615c); margin:6px 0 4px; line-height:1.45; }'
++ '.вв-вопрос{ font-size:21px; font-weight:800; line-height:1.35; text-align:center; margin:4px 0 12px; }'
++ '.вв-вопрос .пропуск{ display:inline-block; min-width:70px; border-bottom:3px solid currentColor; margin:0 4px; }'
++ '.вв-фото{ display:block; width:min(100%,280px); aspect-ratio:1/1; object-fit:cover; border-radius:18px; margin:0 auto 14px; box-shadow:0 8px 22px rgba(0,0,0,.15); }'
++ '.вв-ответы{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }'
++ '.вв-ответ{ position:relative; font:inherit; font-size:17px; font-weight:800; color:#fff; border:none; border-radius:14px; padding:16px 12px 16px 44px;'
++ '  min-height:62px; text-align:left; cursor:pointer; box-shadow:0 4px 0 rgba(0,0,0,.2); transition:transform .12s, opacity .2s, filter .2s; }'
++ '.вв-ответ:active{ transform:translateY(2px); }'
++ '.вв-ответ .б{ position:absolute; left:10px; top:50%; transform:translateY(-50%); width:24px; height:24px; border-radius:7px;'
++ '  background:rgba(255,255,255,.25); font-size:13px; display:flex; align-items:center; justify-content:center; }'
++ '.вв-ответ.гаснет{ opacity:.35; filter:grayscale(.6); }'
++ '.вв-ответ.мимо{ background:#d64545 !important; } .вв-ответ.мимо::after{ content:"✗"; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:28px; }'
++ '.вв-ответ.верно{ background:#1f9d55 !important; box-shadow:0 0 0 3px #b9f0cf, 0 0 18px 4px rgba(31,157,85,.55); }'
++ '.вв-ответ.верно::after{ content:"✓"; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:26px; }'
++ '.вв-перевод{ text-align:center; font-size:14.5px; color:var(--ink-muted,#5b615c); margin:10px 0 0; min-height:20px; }'
++ '.вв-низ{ text-align:center; font-weight:800; margin-top:14px; color:var(--ink-muted,#5b615c); }'
++ '@media (max-width:420px){ .вв-ответы{ grid-template-columns:1fr; } .вв-ответ{ min-height:54px; } }';
+
+function стильВВ() {
+  if (document.getElementById('вв-стиль')) return;
+  var s = document.createElement('style'); s.id = 'вв-стиль'; s.textContent = СТИЛЬ_ВВ; document.head.appendChild(s);
+}
+function времяВВ(с) { return Math.floor(с / 60) + ':' + ('0' + (с % 60)).slice(-2); }
+function секундомер(узел) {
+  var старт = Date.now(), т = setInterval(function () {
+    if (!document.body.contains(узел)) { clearInterval(т); return; }
+    узел.textContent = '⏱ ' + времяВВ(Math.floor((Date.now() - старт) / 1000));
+  }, 500);
+  return function () { clearInterval(т); return Math.floor((Date.now() - старт) / 1000); };
+}
+
+/* статистика на весь экран — общая для обеих игр */
+function итогВВ(х, игра, верно, всего, секунд, заново) {
+  var процент = всего ? Math.round(верно / всего * 100) : 0;
+  х.рекорд(процент, верно, всего);
+  var эмо = процент === 100 ? '🏆' : процент >= 80 ? '🎉' : процент >= 50 ? '💪' : '📚';
+  var слово = процент === 100 ? 'Идеально!' : процент >= 80 ? 'Справился!' : процент >= 50 ? 'Почти получилось' : 'Пока не справился';
+  var совет = процент >= 80 ? 'Можно переходить к следующей игре.' :
+              процент >= 50 ? 'Посмотри на красные — и пройди ещё раз, станет лучше.' :
+              'Повтори слова урока и попробуй заново — с каждым разом быстрее.';
+  var о = document.createElement('div');
+  о.className = 'вв-итог';
+  о.innerHTML = '<div class="окно"><div class="эмо">' + эмо + '</div><h2>' + слово + '</h2>' +
+    '<div class="проц">' + процент + '%</div>' +
+    '<div class="цифры"><div><b>' + верно + '</b>верно</div><div><b>' + (всего - верно) + '</b>ошибок</div><div><b>' + времяВВ(секунд) + '</b>время</div></div>' +
+    '<p class="совет">' + совет + '</p>' +
+    '<div class="вв-кнопки">' +
+      '<button class="' + (процент >= 80 ? 'вв-тихая' : 'вв-главная') + '" data-д="ещё">🔁 Ещё раз</button>' +
+      '<button class="' + (процент >= 80 ? 'вв-главная' : 'вв-тихая') + '" data-д="дальше">' + (х.вОчереди ? 'Следующая игра →' : 'Другие игры') + '</button>' +
+      '<button class="вв-тихая" data-д="смотреть">Посмотреть ответы</button>' +
+    '</div></div>';
+  document.body.appendChild(о);
+  о.querySelector('[data-д="ещё"]').onclick = function () { о.remove(); заново(); };
+  о.querySelector('[data-д="дальше"]').onclick = function () { о.remove(); if (х.дальше) х.дальше(); else х.меню(); };
+  о.querySelector('[data-д="смотреть"]').onclick = function () { о.remove(); };
+}
+
+/* ── Перетащи по группам ── */
+function данныеГрупп(д) {
+  var г = window.ИГРЫ_ГРУППЫ;
+  if (г && г.группы && г.слова && г.слова.length >= 4) {
+    // из каждой группы поровну, всего до 16 плиток
+    var по = {}, итог = [];
+    г.слова.forEach(function (с) { (по[с[1]] = по[с[1]] || []).push(с); });
+    var на = Math.max(2, Math.floor(16 / г.группы.length));
+    г.группы.forEach(function (имя) { итог = итог.concat(перемешать(по[имя] || []).slice(0, на)); });
+    return { имя: г.имя || 'Разложи по группам', группы: г.группы,
+             плитки: итог.map(function (с) { return { текст: с[0], группа: с[1], ru: с[2] || '', фото: null }; }) };
+  }
+  // без данных страницы — существительные урока по родам: der / die / das
+  var по2 = { der: [], die: [], das: [] };
+  д.существительные.forEach(function (с) { if (по2[с.род]) по2[с.род].push(с); });
+  var родов = ['der', 'die', 'das'].filter(function (р) { return по2[р].length >= 2; });
+  if (родов.length < 2 || д.существительные.length < 6) return null;
+  var плитки = [];
+  родов.forEach(function (р) {
+    перемешать(по2[р]).slice(0, 5).forEach(function (с) {
+      плитки.push({ текст: с.слово, группа: р, ru: с.ru, фото: window.КАРТИНКИ ? КАРТИНКИ.путь(с.de) : null, ид: с.ид, de: с.de });
     });
+  });
+  return { имя: 'der, die oder das?', группы: родов, плитки: плитки };
+}
+
+var ГРУППЫ = {
+  код: 'группы', имя: 'Перетащи по группам', значок: '🗃', сама: true,
+  под: 'Разноцветные плитки — перетащи каждую в свою группу, на время',
+  хватает: function (д) { return !!данныеГрупп(д); },
+  экран: function (х) {
+    стильВВ();
+    var дан = данныеГрупп(х.данные);
+    var плитки = перемешать(дан.плитки).map(function (п, i) { п.цвет = ЦВЕТА_ВВ[i % ЦВЕТА_ВВ.length]; п.где = null; return п; });
+    var выбрана = null, конец = false;
+    х.рисовать(
+      '<div class="вв-верх"><span class="вв-время" id="ввВремя">⏱ 0:00</span><span>' + экр(дан.имя) + '</span></div>' +
+      '<p class="вв-подсказ">Перетащи плитку в нужную группу. Можно и нажатием: плитка, потом группа. Ошибся — перетащи обратно.</p>' +
+      '<div class="вв-пул" data-зона="" id="ввПул"></div>' +
+      '<div class="вв-зоны">' + дан.группы.map(function (г, i) {
+        return '<div class="вв-зона" data-зона="' + экр(г) + '"><h4 style="background:' + ЦВЕТА_ВВ[(i * 3 + 1) % ЦВЕТА_ВВ.length] + '">' + экр(г) +
+          '</h4><div class="вв-тело"></div></div>';
+      }).join('') + '</div>' +
+      '<div class="вв-кнопки"><button class="вв-главная" id="ввГотово">Завершить</button></div>');
+    var стоп = секундомер(document.getElementById('ввВремя'));
+    var пул = document.getElementById('ввПул');
+
+    function узелПлитки(п, i) {
+      var к = document.createElement('div');
+      к.className = 'вв-плитка'; к.style.background = п.цвет; к.dataset.i = i;
+      к.innerHTML = (п.фото ? '<img alt="" src="' + п.фото + '">' : '') + '<span>' + экр(п.текст) + '</span>';
+      п.узел = к; оживить(к, п); return к;
+    }
+    function тело(зона) { return зона === пул ? пул : зона.querySelector('.вв-тело'); }
+    function положить(п, зона) {
+      п.где = зона === пул ? null : зона.dataset.зона;
+      тело(зона).appendChild(п.узел);
+      п.узел.classList.remove('выбрана'); выбрана = null;
+      if (п.ид || п.de) х.голос(п.ид, п.de);
+    }
+    function зонаВТочке(x, y) {
+      var эл = document.elementFromPoint(x, y);
+      return эл && эл.closest ? эл.closest('[data-зона]') : null;
+    }
+    function оживить(к, п) {
+      к.addEventListener('pointerdown', function (e) {
+        if (конец) return;
+        e.preventDefault();
+        var sx = e.clientX, sy = e.clientY, призрак = null, над = null;
+        try { к.setPointerCapture(e.pointerId); } catch (z) {}
+        function ход(ev) {
+          if (!призрак && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) > 6) {
+            призрак = к.cloneNode(true); призрак.classList.add('вв-призрак'); призрак.classList.remove('выбрана');
+            document.body.appendChild(призрак); к.classList.add('тащу');
+          }
+          if (!призрак) return;
+          призрак.style.left = (ev.clientX - призрак.offsetWidth / 2) + 'px';
+          призрак.style.top = (ev.clientY - призрак.offsetHeight / 2) + 'px';
+          var з = зонаВТочке(ev.clientX, ev.clientY);
+          if (з !== над) { if (над) над.classList.remove('над'); над = з; if (над && над !== пул) над.classList.add('над'); }
+        }
+        function отпустил(ev) {
+          к.removeEventListener('pointermove', ход); к.removeEventListener('pointerup', отпустил); к.removeEventListener('pointercancel', отпустил);
+          if (над) над.classList.remove('над');
+          if (призрак) {
+            призрак.remove(); к.classList.remove('тащу');
+            var з = зонаВТочке(ev.clientX, ev.clientY);
+            if (з) положить(п, з);
+          } else {          // просто нажали — выбрать, потом нажать на группу
+            if (выбрана && выбрана !== п) выбрана.узел.classList.remove('выбрана');
+            выбрана = выбрана === п ? null : п;
+            к.classList.toggle('выбрана', выбрана === п);
+          }
+        }
+        к.addEventListener('pointermove', ход); к.addEventListener('pointerup', отпустил); к.addEventListener('pointercancel', отпустил);
+      });
+    }
+    плитки.forEach(function (п, i) { пул.appendChild(узелПлитки(п, i)); });
+    Array.prototype.forEach.call(document.querySelectorAll('#игКарта [data-зона]'), function (з) {
+      з.addEventListener('click', function (e) {
+        if (конец || !выбрана || e.target.closest('.вв-плитка')) return;
+        положить(выбрана, з);
+      });
+    });
+
+    document.getElementById('ввГотово').onclick = function () {
+      if (конец) return;
+      var осталось = плитки.filter(function (п) { return !п.где; }).length;
+      if (осталось && !confirm('Ещё ' + осталось + ' не разложено — они пойдут в ошибки. Завершить?')) return;
+      конец = true;
+      var секунд = стоп();
+      this.disabled = true;
+      // по очереди сверху вниз: группа за группой, плитка за плиткой
+      var порядок = [];
+      Array.prototype.forEach.call(document.querySelectorAll('#игКарта .вв-зона'), function (з) {
+        Array.prototype.forEach.call(з.querySelectorAll('.вв-плитка'), function (к) { порядок.push(плитки[+к.dataset.i]); });
+      });
+      плитки.forEach(function (п) { if (!п.где) порядок.push(п); });
+      var верно = 0;
+      порядок.forEach(function (п, n) {
+        setTimeout(function () {
+          var ок = п.где === п.группа;
+          if (ок) верно++;
+          п.узел.classList.add('пульс', ок ? 'верно' : 'мимо');
+          if (!ок) п.узел.insertAdjacentHTML('beforeend', '<span class="куда">→ ' + экр(п.группа) + '</span>');
+          х.звукОтвета(ок);
+          п.узел.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }, 200 + n * 420);
+      });
+      setTimeout(function () {
+        итогВВ(х, ГРУППЫ, верно, плитки.length, секунд, function () { ГРУППЫ.экран(х); });
+      }, 600 + порядок.length * 420);
+    };
   }
 };
 
-/* 2в. Выбери ответ — тест «Quiz» с Wordwall. Данные страницы: window.ИГРЫ_ВИКТОРИНА =
-   { имя, вопросы:[['Ich ___ jeden Tag.', ['laufen','laufe','läufst'], 1, 'Я бегаю каждый день.'], …] } */
+/* ── Викторина ── */
+function фотоВВ(текст) {
+  if (!window.КАРТИНКИ) return null;
+  return КАРТИНКИ.фотоФразы ? КАРТИНКИ.фотоФразы(текст) : КАРТИНКИ.путь(текст);
+}
+function вопросыВВ(д) {
+  var в = window.ИГРЫ_ВИКТОРИНА;
+  if (в && в.вопросы && в.вопросы.length >= 4) {
+    return { имя: в.имя || 'Выбери ответ', вопросы: перемешать(в.вопросы).map(function (q) {
+      var целое = q[0].replace(/_{2,}/, q[1][q[2]]);
+      return { текст: q[0], варианты: перемешать(q[1].slice()), верный: q[1][q[2]], ru: q[3] || '', целое: целое, фото: фотоВВ(целое) };
+    }) };
+  }
+  // без данных страницы — смесь из слов урока: «что на картинке», пропуск во фразе, артикль
+  var итог = [];
+  var фото = сФото(д);
+  перемешать(фото).slice(0, 7).forEach(function (к) {
+    var чужие = перемешать(фото.filter(function (х) { return х !== к; })).slice(0, 3).map(function (х) { return х.de; });
+    if (чужие.length < 3) return;
+    итог.push({ текст: 'Что на картинке?', варианты: перемешать([к.de].concat(чужие)), верный: к.de, ru: к.ru, целое: к.de, фото: к._фото, ид: к.ид });
+  });
+  var словаФраз = [];
+  д.фразы.forEach(function (ф) { слова_(ф.de).forEach(function (с) { с = голое(с); if (с.length >= 4) словаФраз.push(с); }); });
+  перемешать(д.фразы).slice(0, 7).forEach(function (ф) {
+    var ч = слова_(ф.de).map(голое), кандидаты = ч.filter(function (с) { return с.length >= 4; });
+    if (!кандидаты.length) return;
+    var верный = кандидаты.sort(function (a, b) { return b.length - a.length; })[0];
+    // похожие слова: та же заглавная/строчная и близкая длина — иначе ответ угадывается по виду
+    var заглавная = верный[0] !== верный[0].toLowerCase();
+    var чужие = перемешать(словаФраз.filter(function (с) {
+      return с !== верный && норм(с) !== норм(верный) && (с[0] !== с[0].toLowerCase()) === заглавная &&
+             Math.abs(с.length - верный.length) <= 4;
+    }));
+    var три = []; чужие.forEach(function (с) { if (три.length < 3 && три.indexOf(с) < 0) три.push(с); });
+    if (три.length < 3) return;
+    итог.push({ текст: чисто(ф.de).replace(верный, '___'), варианты: перемешать([верный].concat(три)), верный: верный, ru: ф.ru,
+                подсказка: ф.ru, целое: чисто(ф.de), фото: фотоВВ(ф.de), ид: ф.ид });
+  });
+  перемешать(д.существительные).slice(0, 6).forEach(function (с) {
+    итог.push({ текст: '___ ' + с.слово, варианты: ['der', 'die', 'das'], верный: с.род, ru: с.ru, подсказка: с.ru, целое: с.de,
+                фото: window.КАРТИНКИ ? КАРТИНКИ.путь(с.de) : null, ид: с.ид });
+  });
+  if (итог.length < 6) return null;
+  return { имя: 'Викторина по уроку', вопросы: перемешать(итог).slice(0, 20) };
+}
+
 var ВИКТОРИНА = {
-  код: 'викторина', имя: 'Выбери ответ', значок: '❓',
-  под: 'Вопрос — и несколько вариантов, верный один',
-  хватает: function () { var в = window.ИГРЫ_ВИКТОРИНА; return !!(в && в.вопросы && в.вопросы.length >= 4); },
-  задания: function () {
-    return перемешать(window.ИГРЫ_ВИКТОРИНА.вопросы).slice(0, 15).map(function (в) {
-      return { текст: в[0], варианты: в[1], верный: в[1][в[2]], ru: в[3] || '' };
-    });
-  },
-  раунд: function (ход) {
-    var з = ход.задание();
-    var целое = з.текст.replace(/_{2,}/, з.верный);
-    ход.рисовать(
-      '<p class="иг-де" style="font-size:21px">' + экр(з.текст).replace(/_{2,}/, '<span style="border-bottom:2px solid currentColor;padding:0 22px"></span>') + '</p>' +
-      '<div class="иг-варианты">' + перемешать(з.варианты.slice()).map(function (в) {
-        return '<button class="иг-вариант" data-в="' + экр(в) + '">' + экр(в) + '</button>';
-      }).join('') + '</div><div id="игОтвет"></div>');
-    var кнопки = карта_кнопки('.иг-вариант');
-    кнопки.forEach(function (к) {
-      к.onclick = function () {
-        var верно = к.getAttribute('data-в') === з.верный;
-        кнопки.forEach(function (д) {
-          д.onclick = null;
-          if (д.getAttribute('data-в') === з.верный) д.classList.add('иг-верно');
-          else if (д === к) д.classList.add('иг-мимо');
-        });
-        ход.ответ(верно, верно ? null : { de: целое, ru: з.ru });
-        document.getElementById('игОтвет').innerHTML =
-          '<div class="иг-ответ ' + (верно ? 'верно' : 'мимо') + '">' + (верно ? '✓ ' : '✗ ') +
-          '<span class="де">' + экр(целое) + '</span>' + (з.ru ? '<br>' + экр(з.ru) : '') + '</div>' +
-          '<div class="иг-низ"><button class="иг-главная" id="игДальше">Дальше</button></div>';
-        document.getElementById('игДальше').onclick = ход.дальше;
-        ход.голос(null, целое);
-      };
-    });
+  код: 'викторина', имя: 'Викторина', значок: '❓', сама: true,
+  под: 'Вопрос, картинка и цветные ответы — на время',
+  хватает: function (д) { return !!вопросыВВ(д); },
+  экран: function (х) {
+    стильВВ();
+    var дан = вопросыВВ(х.данные), в = дан.вопросы, i = 0, верно = 0, ошибок = 0;
+    х.рисовать(
+      '<div class="вв-верх"><span class="вв-время" id="ввВремя">⏱ 0:00</span>' +
+      '<span class="вв-счёт"><span class="в" id="ввВ">✓ 0</span><span class="н" id="ввН">✗ 0</span></span></div>' +
+      '<div id="ввПоле"></div><div class="вв-низ" id="ввНомер"></div>');
+    var стоп = секундомер(document.getElementById('ввВремя'));
+    function вопрос() {
+      var q = в[i];
+      document.getElementById('ввНомер').textContent = (i + 1) + ' из ' + в.length;
+      document.getElementById('ввПоле').innerHTML =
+        '<div class="вв-вопрос">' + экр(q.текст).replace(/_{2,}/, '<span class="пропуск"></span>') + '</div>' +
+        (q.подсказка ? '<p class="вв-перевод" style="margin:-6px 0 12px">' + экр(q.подсказка) + '</p>' : '') +
+        (q.фото ? '<img class="вв-фото" alt="" src="' + q.фото + '">' : '') +
+        '<div class="вв-ответы">' + q.варианты.map(function (о, n) {
+          return '<button class="вв-ответ" data-о="' + экр(о) + '" style="background:' + ЦВЕТА_ВВ[n % 6] + '"><span class="б">' +
+            'ABCDEF'[n] + '</span>' + экр(о) + '</button>';
+        }).join('') + '</div><p class="вв-перевод" id="ввПеревод"></p>';
+      var кнопки = Array.prototype.slice.call(document.querySelectorAll('#ввПоле .вв-ответ'));
+      кнопки.forEach(function (к) {
+        к.onclick = function () {
+          var ок = к.dataset.о === q.верный;
+          кнопки.forEach(function (д) {
+            д.onclick = null;
+            if (д.dataset.о === q.верный) д.classList.add('верно');
+            else if (д === к) д.classList.add('мимо');
+            else д.classList.add('гаснет');
+          });
+          if (ок) верно++; else ошибок++;
+          document.getElementById('ввВ').textContent = '✓ ' + верно;
+          document.getElementById('ввН').textContent = '✗ ' + ошибок;
+          document.getElementById('ввПеревод').innerHTML = '<b>' + экр(q.целое) + '</b>' + (q.ru ? ' — ' + экр(q.ru) : '');
+          х.звукОтвета(ок);
+          х.голос(q.ид || null, q.целое);
+          setTimeout(function () {
+            i++;
+            if (i < в.length) вопрос();
+            else итогВВ(х, ВИКТОРИНА, верно, в.length, стоп(), function () { ВИКТОРИНА.экран(х); });
+          }, ок ? 1300 : 2300);
+        };
+      });
+    }
+    вопрос();
   }
 };
 
@@ -2123,7 +2377,7 @@ var СЦЕНАРИЙ = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ФОТО, ГРУППЫ, ВИКТОРИНА, ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, СЦЕНАРИЙ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
+var ВСЕ_ИГРЫ = [ГРУППЫ, ВИКТОРИНА, ФОТО, ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, СЦЕНАРИЙ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });
