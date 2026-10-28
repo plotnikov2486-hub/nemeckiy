@@ -316,6 +316,13 @@
   :root[data-вид="put"] #secClaude, :root[data-вид="put"] #secDasha{ display:none !important; }
   :root:not([data-вид="home"]) .wrap{ padding-top:10px; }
   :root[data-вид="home"] .wrap{ padding-top:14px; }
+  /* путь к B2 показывается внутри «Статистики» через iframe: index.html?встроено=1#put */
+  :root[data-встроено] .верх, :root[data-встроено] .кто-шапка, :root[data-встроено] .сводка, :root[data-встроено] .разделы,
+  :root[data-встроено] .вход, :root[data-встроено] .пер, :root[data-встроено] .site-search, :root[data-встроено] footer,
+  :root[data-встроено] #secClaude, :root[data-встроено] #secDasha{ display:none !important; }
+  :root[data-встроено] body{ background:transparent; }
+  :root[data-встроено] .wrap{ padding:0 !important; max-width:none; }
+  :root[data-встроено] .progress-panel{ display:block !important; margin:0; }
 </style>
 
 <div class="вход" id="вход" hidden>
@@ -354,9 +361,10 @@
   <a href="testy.html"><i>🩺</i>Тесты врачей</a>
   <a href="itog.html"><i>🎓</i>Итоговый тест</a>
   <a href="stat.html"><i>📊</i>Статистика</a>
-  <a href="#put"><i>🧭</i>Путь к B2</a>
+  <a href="stat.html#put"><i>🧭</i>Путь к B2</a>
 </nav>
 <!--/ВХОД-->
+
 
 
 
@@ -1838,7 +1846,7 @@ render();
       '<a href="#claude"><b>' + claudeDone + '/' + LESSONS.length + '</b>уроков с Claude</a>' +
       '<a href="#dasha"><b>' + dashaDone + '/' + список.length + '</b>занятий с Дашей</a>' +
       '<a href="trenazhyor.html"><b>' + выученоСлов() + '</b>слов выучено</a>' +
-      '<a href="#put"><b>' + (проц || '—') + '</b>путь к B2</a>';
+      '<a href="stat.html#put"><b>' + (проц || '—') + '</b>путь к B2</a>';
   }
   var ЗАГОЛОВКИ = { claude: '🤖 Уроки с Claude', dasha: '👩‍🏫 Уроки с Дашей', put: '🧭 Путь к B2' };
   function показать(вид){
@@ -1863,6 +1871,15 @@ render();
   document.getElementById('ктоСмена').addEventListener('click', function(){ вход.hidden = false; });
   window.addEventListener('hashchange', function(){ показать(location.hash.slice(1)); });
 
+  // встроено в «Статистику»: без входа и меню, только панель пути к B2; высоту сообщаем родителю
+  if (/[?&]встроено=1/.test(location.search) || location.search.indexOf('%D0%B2%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BD%D0%BE') >= 0){
+    document.documentElement.setAttribute('data-встроено', '1');
+    вход.hidden = true; шапка(); render();
+    var сказать = function(){ try { parent.postMessage({ путьВысота: document.querySelector('.progress-panel').offsetHeight + 4 }, '*'); } catch(e){} };
+    if (window.ResizeObserver) new ResizeObserver(сказать).observe(document.querySelector('.progress-panel'));
+    window.addEventListener('load', сказать); setTimeout(сказать, 400);
+    return;
+  }
   var вошёл = false;
   try { вошёл = sessionStorage.getItem('nemeckiy_вошёл') === '1'; } catch(e){}
   // ссылка с уроков «← Все уроки» ведёт на главную без хэша — экран входа показываем только при первом заходе в сессии

@@ -91,10 +91,14 @@
 
   <div class="cards" id="cards"></div>
 
-  <a class="block" href="index.html#put" style="display:block;text-decoration:none;color:inherit;border-left:4px solid var(--accent)">
-    <h2 style="margin-bottom:4px">🎯 Путь к B2 — допуск врача (Approbation)</h2>
-    <p class="sub" style="margin:0">Сколько пройдено по уровням A1 → B2 и C1 медицинский: какие темы закрыты уроками, какие ещё впереди. Открыть →</p>
-  </a>
+  <div class="block" id="put">
+    <iframe id="путьРамка" src="index.html?встроено=1" title="Путь к B2" style="width:100%;height:520px;border:0;display:block;background:transparent" loading="lazy"></iframe>
+  </div>
+  <script>
+    window.addEventListener('message', function(e){
+      if (e.data && e.data.путьВысота) document.getElementById('путьРамка').style.height = e.data.путьВысота + 'px';
+    });
+  </script>
 
   <div class="block">
     <h2>Занятия</h2>
