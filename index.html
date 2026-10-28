@@ -242,6 +242,105 @@
 <!--ТЕМА-JS-END-->
 </head>
 <body>
+<!--ВХОД-->
+<style>
+  /* Экран «кто занимается» + верхнее меню разделов (28.10.2026, просьба врача:
+     «сайт стал огромный, неудобно прокручивать — зашёл как Гриша или как Поля,
+     сверху ссылки на разделы, всё на одном экране»). */
+  .вход{ position:fixed; inset:0; z-index:9000; display:flex; flex-direction:column; background:#0e1024; }
+  .вход[hidden]{ display:none; }
+  .вход-кто{ flex:1; position:relative; border:none; padding:0; margin:0; cursor:pointer; overflow:hidden;
+    font-family:inherit; color:#fff; text-align:left; background:#20264d; }
+  .вход-кто img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 22%;
+    transition:transform .5s ease; }
+  .вход-кто:hover img, .вход-кто:focus-visible img{ transform:scale(1.04); }
+  .вход-кто::after{ content:""; position:absolute; inset:0; pointer-events:none; }
+  .вход-кто.гриша::after{ box-shadow:inset 0 0 0 6px #4A63D6; background:linear-gradient(180deg,rgba(74,99,214,0) 45%,rgba(30,45,140,.85) 100%); }
+  .вход-кто.поля::after{ box-shadow:inset 0 0 0 6px #EC6A86; background:linear-gradient(180deg,rgba(236,106,134,0) 45%,rgba(160,40,80,.85) 100%); }
+  .вход-кто .подпись{ position:absolute; left:22px; bottom:20px; z-index:2; }
+  .вход-кто .имя{ display:block; font-size:clamp(30px,9vw,46px); font-weight:800; letter-spacing:-.02em; line-height:1; }
+  .вход-кто .войти{ display:inline-block; margin-top:8px; font-size:15px; font-weight:700; padding:7px 14px; border-radius:999px;
+    background:rgba(255,255,255,.22); backdrop-filter:blur(4px); }
+  .вход-кто .заглушка{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    font-size:110px; background:linear-gradient(160deg,#F5A0B4,#EC6A86 55%,#B83763); }
+  .вход-кто.гриша .заглушка{ background:linear-gradient(160deg,#7A8FE8,#4A63D6 55%,#2B3C9E); }
+  .вход-заголовок{ position:absolute; top:max(14px, env(safe-area-inset-top)); left:0; right:0; z-index:3; text-align:center;
+    color:#fff; font-weight:800; font-size:15px; text-shadow:0 2px 8px rgba(0,0,0,.5); pointer-events:none; }
+  @media (min-width:760px){ .вход{ flex-direction:row; } }
+
+  .верх{ position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--bg) 88%, transparent);
+    backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px);
+    border-bottom:1px solid var(--line); }
+  .верх-ряд{ max-width:920px; margin:0 auto; display:flex; gap:6px; overflow-x:auto; padding:9px 18px;
+    scrollbar-width:none; -webkit-overflow-scrolling:touch; }
+  .верх-ряд::-webkit-scrollbar{ display:none; }
+  .верх-ряд a{ flex:none; display:inline-flex; align-items:center; gap:5px; padding:8px 13px; border-radius:999px;
+    background:var(--surface); border:1px solid var(--line); color:var(--ink); text-decoration:none;
+    font-size:14px; font-weight:700; white-space:nowrap; }
+  .верх-ряд a.сейчас{ background:var(--accent); border-color:var(--accent); color:#fff; }
+
+  .кто-шапка{ max-width:920px; margin:0 auto; padding:16px 18px 0; display:flex; align-items:center; gap:14px; }
+  .кто-фото{ width:62px; height:62px; border-radius:50%; flex:none; overflow:hidden; border:3px solid var(--accent);
+    background:var(--градиент); display:flex; align-items:center; justify-content:center; font-size:30px; }
+  .кто-фото img{ width:100%; height:100%; object-fit:cover; object-position:center 20%; }
+  .кто-текст{ flex:1; min-width:0; }
+  .кто-текст b{ display:block; font-size:21px; font-weight:800; line-height:1.15; }
+  .кто-текст span{ font-size:13px; color:var(--ink-muted); }
+  .кто-смена{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px;
+    padding:8px 13px; font:inherit; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
+  .сводка{ max-width:920px; margin:12px auto 0; padding:0 18px; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
+  .сводка a, .сводка div{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:9px 6px;
+    text-align:center; text-decoration:none; color:var(--ink-muted); font-size:11.5px; line-height:1.25; }
+  .сводка b{ display:block; color:var(--ink); font-size:19px; font-weight:800; font-variant-numeric:tabular-nums; }
+  @media (max-width:420px){ .сводка{ grid-template-columns:repeat(2,1fr); } }
+
+  /* три вида главной: обзор, уроки с Claude, занятия с Дашей */
+  header, .profile-bar, .folders{ display:none !important; }
+  :root[data-вид="home"] #secClaude, :root[data-вид="home"] #secDasha{ display:none !important; }
+  :root[data-вид="claude"] .пер, :root[data-вид="dasha"] .пер,
+  :root[data-вид="claude"] .site-search, :root[data-вид="dasha"] .site-search,
+  :root[data-вид="claude"] .сводка, :root[data-вид="dasha"] .сводка,
+  :root[data-вид="dasha"] .progress-panel{ display:none !important; }
+  :root[data-вид="claude"] .wrap, :root[data-вид="dasha"] .wrap{ padding-top:10px; }
+</style>
+
+<div class="вход" id="вход" hidden>
+  <div class="вход-заголовок">🇩🇪 Немецкий для врачей · кто занимается?</div>
+  <button class="вход-кто гриша" data-кто="grigoriy" aria-label="Войти как Гриша">
+    <img src="img/kto/grisha.webp" alt="" onerror="this.remove()">
+    <span class="подпись"><span class="имя">Гриша</span><span class="войти">Войти →</span></span>
+  </button>
+  <button class="вход-кто поля" data-кто="polina" aria-label="Войти как Поля">
+    <img src="img/kto/polya.webp" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'заглушка',textContent:'👩‍⚕️'}))">
+    <span class="подпись"><span class="имя">Поля</span><span class="войти">Войти →</span></span>
+  </button>
+</div>
+
+<nav class="верх" aria-label="Разделы сайта"><div class="верх-ряд" id="верхМеню">
+  <a href="#home" data-вид="home">🏠 Главная</a>
+  <a href="#claude" data-вид="claude">🤖 Уроки с Claude</a>
+  <a href="#dasha" data-вид="dasha" id="менюДаша">👩‍🏫 Уроки с Дашей</a>
+  <a href="zubr.html">🐃 ЗУБР</a>
+  <a href="pravila.html">📐 Правила</a>
+  <a href="glagoly.html">⚡ Спряжения</a>
+  <a href="slushat.html">🎧 Слушаем</a>
+  <a href="chitaem.html">📖 Читаем</a>
+  <a href="igry.html">🎮 Игры</a>
+  <a href="trenazhyor.html">★ Тренажёр слов</a>
+  <a href="ekzameny.html">🎯 Экзамены</a>
+  <a href="testy.html">🩺 Тесты</a>
+  <a href="itog.html">🎓 Итоговый тест</a>
+  <a href="stat.html">📊 Статистика</a>
+</div></nav>
+
+<div class="кто-шапка">
+  <div class="кто-фото" id="ктоФото"></div>
+  <div class="кто-текст"><b id="ктоИмя">Привет!</b><span>Немецкий для врачей · путь к Approbation</span></div>
+  <button class="кто-смена" id="ктоСмена">Сменить</button>
+</div>
+<div class="сводка" id="сводка"></div>
+<!--/ВХОД-->
+
 <div class="wrap">
 <!--ПЕРЕВОДЧИК-->
 <script>
@@ -1693,5 +1792,69 @@ render();
 })();
 </script>
 
+<!--ВХОД-СКРИПТ-->
+<script>
+/* Экран входа «Гриша / Поля», верхнее меню и три вида главной (28.10.2026).
+   Опирается на переменные основного скрипта главной: profile, currentSection, render,
+   LESSONS, dashaListFor, progressKey, выученоСлов — они объявлены выше (общая глобальная область). */
+(function(){
+  var ИМЕНА = { grigoriy: 'Гриша', polina: 'Поля' };
+  var ФОТО = { grigoriy: 'img/kto/grisha.webp', polina: 'img/kto/polya.webp' };
+  var вход = document.getElementById('вход');
+
+  function шапка(){
+    document.getElementById('ктоИмя').textContent = 'Привет, ' + ИМЕНА[profile] + '!';
+    var ф = document.getElementById('ктоФото');
+    ф.innerHTML = '<img alt="" src="' + ФОТО[profile] + '">';
+    ф.querySelector('img').onerror = function(){ ф.textContent = profile === 'polina' ? '👩‍⚕️' : '👨‍⚕️'; };
+    document.getElementById('менюДаша').innerHTML = profile === 'polina' ? '👩‍🏫 Занятия Поли с Дашей' : '👩‍🏫 Уроки с Дашей';
+    сводка();
+  }
+  function сводка(){
+    var claudeDone = LESSONS.filter(function(l){ return localStorage.getItem(progressKey(profile, l.id)) === '1'; }).length;
+    var список = dashaListFor(profile);
+    var dashaDone = список.filter(function(l){ return localStorage.getItem(progressKey(profile, l.id)) === '1'; }).length;
+    var проц = (document.getElementById('ppTotal') || {}).textContent || '';
+    document.getElementById('сводка').innerHTML =
+      '<a href="#claude"><b>' + claudeDone + '/' + LESSONS.length + '</b>уроков с Claude</a>' +
+      '<a href="#dasha"><b>' + dashaDone + '/' + список.length + '</b>занятий с Дашей</a>' +
+      '<a href="trenazhyor.html"><b>' + выученоСлов() + '</b>слов выучено</a>' +
+      '<a href="stat.html"><b>' + (проц || '—') + '</b>путь к B2</a>';
+  }
+  function показать(вид){
+    if (['home', 'claude', 'dasha'].indexOf(вид) < 0) вид = 'home';
+    document.documentElement.setAttribute('data-вид', вид);
+    if (вид !== 'home'){ currentSection = вид; localStorage.setItem('nemeckiy_section', вид); render(); }
+    Array.prototype.forEach.call(document.querySelectorAll('#верхМеню a'), function(a){
+      a.classList.toggle('сейчас', a.dataset.вид === вид);
+    });
+    var тек = document.querySelector('#верхМеню a.сейчас');
+    if (тек && тек.scrollIntoView) тек.scrollIntoView({ inline: 'nearest', block: 'nearest' });
+    window.scrollTo(0, 0);
+    сводка();
+  }
+  function войти(кто){
+    profile = кто;
+    localStorage.setItem('nemeckiy_profile', кто);
+    try { sessionStorage.setItem('nemeckiy_вошёл', '1'); } catch(e){}
+    document.documentElement.setAttribute('data-кто', кто);
+    вход.hidden = true;
+    render(); шапка();
+  }
+  Array.prototype.forEach.call(вход.querySelectorAll('[data-кто]'), function(к){
+    к.addEventListener('click', function(){ войти(к.dataset.кто); });
+  });
+  document.getElementById('ктоСмена').addEventListener('click', function(){ вход.hidden = false; });
+  window.addEventListener('hashchange', function(){ показать(location.hash.slice(1)); });
+
+  var вошёл = false;
+  try { вошёл = sessionStorage.getItem('nemeckiy_вошёл') === '1'; } catch(e){}
+  // ссылка с уроков «← Все уроки» ведёт на главную без хэша — экран входа показываем только при первом заходе в сессии
+  if (!вошёл) вход.hidden = false;
+  шапка();
+  показать(location.hash.slice(1) || 'home');
+})();
+</script>
+<!--/ВХОД-СКРИПТ-->
 </body>
 </html>
