@@ -926,20 +926,27 @@ var СТИЛЬ_ВВ = ''
 + '.вв-время{ font-variant-numeric:tabular-nums; background:var(--surface-2,#f3f4fa); border-radius:999px; padding:6px 12px; }'
 + '.вв-счёт{ display:flex; gap:10px; } .вв-счёт .в{ color:#1f9d55; } .вв-счёт .н{ color:#d64545; }'
 + '.вв-подсказ{ font-size:13.5px; color:var(--ink-muted,#5b615c); margin:0 0 10px; }'
-+ '.вв-пул{ display:flex; flex-wrap:wrap; gap:8px; min-height:56px; padding:10px; border-radius:16px;'
-+ '  background:var(--surface-2,#f3f4fa); border:2px dashed var(--line,#d9dcea); margin-bottom:14px; }'
-+ '.вв-плитка{ display:inline-flex; align-items:center; gap:7px; padding:10px 14px; border-radius:12px; color:#fff;'
-+ '  font-weight:800; font-size:16px; cursor:grab; user-select:none; -webkit-user-select:none; touch-action:none;'
-+ '  box-shadow:0 3px 0 rgba(0,0,0,.18); transition:transform .15s, opacity .15s; position:relative; }'
-+ '.вв-плитка img{ width:30px; height:30px; border-radius:7px; object-fit:cover; pointer-events:none; }'
++ '.вв-пул{ display:grid; grid-template-columns:repeat(auto-fill,minmax(68px,1fr)); gap:4px; min-height:44px; padding:6px; border-radius:14px;'
++ '  background:var(--surface-2,#f3f4fa); border:2px dashed var(--line,#d9dcea); margin-bottom:6px; }'
++ '.вв-осталось{ text-align:right; font-size:13px; font-weight:700; color:var(--ink-muted,#5b615c); margin:0 2px 12px; }'
++ '.вв-плитка{ display:flex; align-items:center; justify-content:center; gap:5px; padding:5px 4px; min-height:34px; border-radius:8px; color:#fff;'
++ '  font-weight:800; font-size:13px; line-height:1.15; text-align:center; overflow-wrap:anywhere; cursor:grab; user-select:none; -webkit-user-select:none; touch-action:none;'
++ '  box-shadow:inset 0 -3px 0 rgba(0,0,0,.2); transition:transform .15s, opacity .15s; position:relative; }'
++ '.вв-плитка img{ width:24px; height:24px; border-radius:6px; object-fit:cover; pointer-events:none; flex:none; }'
++ '.вв-слоты{ display:grid; grid-template-columns:repeat(auto-fill,minmax(58px,1fr)); gap:4px; padding:5px; }'
++ '.вв-слот{ min-height:34px; border-radius:8px; border:2px dashed var(--line,#d9dcea); background:var(--surface-2,#f3f4fa); }'
++ '.вв-слот:empty::before{ content:""; }'
++ '.вв-слот .вв-плитка{ width:100%; height:100%; }'
++ '.вв-зона .вв-счётчик{ font-size:12px; font-weight:700; opacity:.9; margin-left:6px; }'
++ '@keyframes вв-тряс{ 0%,100%{ transform:none; } 25%{ transform:translateX(-5px); } 75%{ transform:translateX(5px); } }'
++ '.вв-зона.полна{ animation:вв-тряс .3s; border-color:#d64545; }'
 + '.вв-плитка.выбрана{ outline:3px solid var(--ink,#1c2242); transform:translateY(-2px); }'
 + '.вв-плитка.тащу{ opacity:.25; }'
 + '.вв-призрак{ position:fixed; z-index:10050; pointer-events:none; transform:scale(1.08) rotate(-2deg); box-shadow:0 12px 26px rgba(0,0,0,.3); }'
-+ '.вв-зоны{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; }'
++ '.вв-зоны{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; }'
 + '.вв-зона{ border-radius:16px; border:2px solid var(--line,#d9dcea); background:var(--surface,#fff); overflow:hidden; transition:border-color .15s, background .15s; }'
 + '.вв-зона.над{ border-color:var(--accent,#1f5f5b); background:var(--surface-2,#f3f4fa); }'
-+ '.вв-зона h4{ margin:0; padding:9px 12px; font-size:16px; font-weight:800; color:#fff; text-align:center; }'
-+ '.вв-зона .вв-тело{ display:flex; flex-wrap:wrap; gap:7px; padding:10px; min-height:84px; align-content:flex-start; }'
++ '.вв-зона h4{ margin:0; padding:7px 8px; font-size:15px; font-weight:800; color:#fff; text-align:center; }'
 + '.вв-кнопки{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }'
 + '.вв-кнопки button{ flex:1; min-width:140px; font:inherit; font-size:16px; font-weight:800; padding:14px; border-radius:14px; cursor:pointer; border:none; }'
 + '.вв-главная{ background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); }'
@@ -948,7 +955,8 @@ var СТИЛЬ_ВВ = ''
 + '.вв-плитка.пульс{ animation:вв-пульс .42s ease-out; z-index:2; }'
 + '.вв-плитка.верно{ background:#1f9d55 !important; box-shadow:0 0 0 3px #b9f0cf, 0 0 18px 4px rgba(31,157,85,.65); }'
 + '.вв-плитка.мимо{ background:#d64545 !important; box-shadow:0 0 0 3px #f6c3c3, 0 0 18px 4px rgba(214,69,69,.6); }'
-+ '.вв-плитка .куда{ display:block; font-size:11px; font-weight:700; opacity:.95; }'
++ '.вв-плитка .куда{ position:absolute; left:0; right:0; bottom:-15px; font-size:10.5px; font-weight:800; color:#d64545; white-space:nowrap; text-align:center; }'
++ '.вв-слот:has(.мимо){ margin-bottom:12px; }'
 + '.вв-итог{ position:fixed; inset:0; z-index:10040; background:rgba(15,18,35,.72); display:flex; align-items:center; justify-content:center; padding:16px; animation:вв-появ .3s ease-out; }'
 + '@keyframes вв-появ{ from{ opacity:0; transform:scale(.96); } to{ opacity:1; transform:none; } }'
 + '.вв-итог .окно{ background:var(--surface,#fff); color:var(--ink,#1c2242); border-radius:22px; padding:24px 20px; width:min(440px,100%); text-align:center; box-shadow:0 20px 50px rgba(0,0,0,.35); }'
@@ -973,7 +981,7 @@ var СТИЛЬ_ВВ = ''
 + '.вв-ответ.верно::after{ content:"✓"; position:absolute; right:12px; top:50%; transform:translateY(-50%); font-size:26px; }'
 + '.вв-перевод{ text-align:center; font-size:14.5px; color:var(--ink-muted,#5b615c); margin:10px 0 0; min-height:20px; }'
 + '.вв-низ{ text-align:center; font-weight:800; margin-top:14px; color:var(--ink-muted,#5b615c); }'
-+ '@media (max-width:420px){ .вв-ответы{ grid-template-columns:1fr; } .вв-ответ{ min-height:54px; } }';
++ '@media (max-width:420px){ .вв-ответ{ min-height:64px; font-size:16px; padding:14px 8px 14px 36px; } .вв-ответ .б{ left:7px; width:22px; height:22px; } .вв-фото{ width:min(100%,250px); } }';
 
 function стильВВ() {
   if (document.getElementById('вв-стиль')) return;
@@ -1018,11 +1026,8 @@ function итогВВ(х, игра, верно, всего, секунд, зан
 function данныеГрупп(д) {
   var г = window.ИГРЫ_ГРУППЫ;
   if (г && г.группы && г.слова && г.слова.length >= 4) {
-    // из каждой группы поровну, всего до 16 плиток
-    var по = {}, итог = [];
-    г.слова.forEach(function (с) { (по[с[1]] = по[с[1]] || []).push(с); });
-    var на = Math.max(2, Math.floor(16 / г.группы.length));
-    г.группы.forEach(function (имя) { итог = итог.concat(перемешать(по[имя] || []).slice(0, на)); });
+    // как на Wordwall: все слова сразу (до 48), каждой группе — столько клеток, сколько в ней слов
+    var итог = перемешать(г.слова.slice()).slice(0, 48);
     return { имя: г.имя || 'Разложи по группам', группы: г.группы,
              плитки: итог.map(function (с) { return { текст: с[0], группа: с[1], ru: с[2] || '', фото: null }; }) };
   }
@@ -1033,7 +1038,7 @@ function данныеГрупп(д) {
   if (родов.length < 2 || д.существительные.length < 6) return null;
   var плитки = [];
   родов.forEach(function (р) {
-    перемешать(по2[р]).slice(0, 5).forEach(function (с) {
+    перемешать(по2[р]).slice(0, 8).forEach(function (с) {
       плитки.push({ текст: с.слово, группа: р, ru: с.ru, фото: window.КАРТИНКИ ? КАРТИНКИ.путь(с.de) : null, ид: с.ид, de: с.de });
     });
   });
@@ -1052,10 +1057,12 @@ var ГРУППЫ = {
     х.рисовать(
       '<div class="вв-верх"><span class="вв-время" id="ввВремя">⏱ 0:00</span><span>' + экр(дан.имя) + '</span></div>' +
       '<p class="вв-подсказ">Перетащи плитку в нужную группу. Можно и нажатием: плитка, потом группа. Ошибся — перетащи обратно.</p>' +
-      '<div class="вв-пул" data-зона="" id="ввПул"></div>' +
+      '<div class="вв-пул" data-зона="" id="ввПул"></div><div class="вв-осталось" id="ввОст"></div>' +
       '<div class="вв-зоны">' + дан.группы.map(function (г, i) {
+        var n = плитки.filter(function (п) { return п.группа === г; }).length;
+        var слоты = ''; for (var k = 0; k < n; k++) слоты += '<div class="вв-слот"></div>';
         return '<div class="вв-зона" data-зона="' + экр(г) + '"><h4 style="background:' + ЦВЕТА_ВВ[(i * 3 + 1) % ЦВЕТА_ВВ.length] + '">' + экр(г) +
-          '</h4><div class="вв-тело"></div></div>';
+          '<span class="вв-счётчик">· ' + n + '</span></h4><div class="вв-слоты">' + слоты + '</div></div>';
       }).join('') + '</div>' +
       '<div class="вв-кнопки"><button class="вв-главная" id="ввГотово">Завершить</button></div>');
     var стоп = секундомер(document.getElementById('ввВремя'));
@@ -1067,12 +1074,25 @@ var ГРУППЫ = {
       к.innerHTML = (п.фото ? '<img alt="" src="' + п.фото + '">' : '') + '<span>' + экр(п.текст) + '</span>';
       п.узел = к; оживить(к, п); return к;
     }
-    function тело(зона) { return зона === пул ? пул : зона.querySelector('.вв-тело'); }
+    function остаток() {
+      var н = плитки.filter(function (п) { return !п.где; }).length;
+      document.getElementById('ввОст').textContent = н ? 'Осталось разложить: ' + н + ' из ' + плитки.length : '✓ Всё разложено — жми «Завершить»';
+    }
     function положить(п, зона) {
-      п.где = зона === пул ? null : зона.dataset.зона;
-      тело(зона).appendChild(п.узел);
+      if (зона === пул) {
+        п.где = null; пул.appendChild(п.узел);
+      } else {
+        if (п.где === зона.dataset.зона && п.узел.parentNode.closest('.вв-зона') === зона) { п.узел.classList.remove('выбрана'); выбрана = null; return; }
+        var слот = зона.querySelector('.вв-слот:empty');
+        if (!слот) {                       // клеток не осталось — плитка возвращается
+          зона.classList.remove('полна'); void зона.offsetWidth; зона.classList.add('полна');
+          п.узел.classList.remove('выбрана'); выбрана = null; return;
+        }
+        п.где = зона.dataset.зона; слот.appendChild(п.узел);
+        if (п.ид || п.de) х.голос(п.ид, п.de);
+      }
       п.узел.classList.remove('выбрана'); выбрана = null;
-      if (п.ид || п.de) х.голос(п.ид, п.de);
+      остаток();
     }
     function зонаВТочке(x, y) {
       var эл = document.elementFromPoint(x, y);
@@ -1112,6 +1132,7 @@ var ГРУППЫ = {
       });
     }
     плитки.forEach(function (п, i) { пул.appendChild(узелПлитки(п, i)); });
+    остаток();
     Array.prototype.forEach.call(document.querySelectorAll('#игКарта [data-зона]'), function (з) {
       з.addEventListener('click', function (e) {
         if (конец || !выбрана || e.target.closest('.вв-плитка')) return;
@@ -1151,16 +1172,23 @@ var ГРУППЫ = {
 };
 
 /* ── Викторина ── */
-function фотоВВ(текст) {
+function фотоВВ(текст, запасные) {
   if (!window.КАРТИНКИ) return null;
-  return КАРТИНКИ.фотоФразы ? КАРТИНКИ.фотоФразы(текст) : КАРТИНКИ.путь(текст);
+  var ф = КАРТИНКИ.фотоФразы ? КАРТИНКИ.фотоФразы(текст) : КАРТИНКИ.путь(текст);
+  // как на Wordwall — картинка у каждого вопроса: нет существительного во фразе —
+  // ищем по вариантам ответа (среди них обычно есть начальная форма: basteln, tanzen…)
+  for (var i = 0; !ф && запасные && i < запасные.length; i++) ф = КАРТИНКИ.путь(запасные[i]);
+  return ф;
 }
 function вопросыВВ(д) {
   var в = window.ИГРЫ_ВИКТОРИНА;
   if (в && в.вопросы && в.вопросы.length >= 4) {
     return { имя: в.имя || 'Выбери ответ', вопросы: перемешать(в.вопросы).map(function (q) {
       var целое = q[0].replace(/_{2,}/, q[1][q[2]]);
-      return { текст: q[0], варианты: перемешать(q[1].slice()), верный: q[1][q[2]], ru: q[3] || '', целое: целое, фото: фотоВВ(целое) };
+      // пятое поле — слово для картинки (например, «der Hund» в вопросе «der Hund → die ___»)
+      var фото = q[4] && window.КАРТИНКИ ? (КАРТИНКИ.путь(q[4]) || фотоВВ(q[4])) : null;
+      return { текст: q[0], варианты: перемешать(q[1].slice()), верный: q[1][q[2]], ru: q[3] || '', целое: целое,
+               фото: фото || фотоВВ(целое, q[1]) };
     }) };
   }
   // без данных страницы — смесь из слов урока: «что на картинке», пропуск во фразе, артикль
