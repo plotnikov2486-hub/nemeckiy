@@ -236,6 +236,12 @@
   .card.done label.check{color:var(--done-line); font-weight:600;}
 
   footer{margin-top:34px; color:var(--ink-faint); font-size:0.82rem; text-align:center;}
+  .card.кратко{ padding:14px 16px 12px; }
+  .card.кратко .кратко-ссылка{ display:block; text-decoration:none; color:inherit; }
+  .card.кратко .кратко-ссылка h2{ margin:4px 0 0; font-size:18px; }
+  .card.кратко .кратко-ссылка:hover h2{ color:var(--accent); }
+  .card.кратко .кратко-доп{ display:inline-block; margin-top:8px; font-size:13.5px; font-weight:700; color:var(--accent); text-decoration:none; }
+  .card.кратко .check{ margin-top:10px; }
 </style>
 <!--ТЕМА-JS-START-->
 <script src="tema.js"></script>
@@ -251,7 +257,7 @@
   .вход[hidden]{ display:none; }
   .вход-кто{ flex:1; position:relative; border:none; padding:0; margin:0; cursor:pointer; overflow:hidden;
     font-family:inherit; color:#fff; text-align:left; background:#20264d; }
-  .вход-кто img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 12%;
+  .вход-кто img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 0%;
     transition:transform .5s ease; }
   .вход-кто:hover img, .вход-кто:focus-visible img{ transform:scale(1.04); }
   .вход-кто::after{ content:""; position:absolute; inset:0; pointer-events:none; }
@@ -364,6 +370,7 @@
   <a href="stat.html#put"><i>🧭</i>Путь к B2</a>
 </nav>
 <!--/ВХОД-->
+
 
 
 
@@ -1719,24 +1726,18 @@ function render(){
     const card = document.createElement('div');
     card.className = 'card ' + (profile === 'polina' ? 'polya' : 'dasha') + (done ? ' done' : '');
 
-    const photoLabels = l.photoLabels || [];
-    const photoBtns = (l.photos||[]).map((p,i)=>
-      `<a class="btn photos" href="${p}" target="_blank" rel="noopener">🖼️ ${photoLabels[i] || 'Доска ' + (i+1)}</a>`).join('');
+    // 28.10: врач — «только название, дата и галочка; конспект, PDF, описание, фото — не нужно».
+    // Вся карточка — ссылка на занятие; тренажёр (если есть) — маленькой ссылкой.
+    card.classList.add('кратко');
     const trainerBtn = l.trainer
-      ? `<a class="btn trainer" href="${l.trainer}" target="_blank" rel="noopener">${l.trainerName||'🎯 Тренажёр'}</a>`
+      ? `<a class="кратко-доп" href="${l.trainer}">${l.trainerName||'🎯 Тренажёр'}</a>`
       : '';
-    const extras = (trainerBtn || photoBtns) ? `<div class="actions">${trainerBtn}${photoBtns}</div>` : '';
-
     card.innerHTML = `
-      <span class="num ${profile === 'polina' ? 'polya-num' : 'dasha-num'}">${l.num} · ${l.date}</span>
-      <h2>${l.title}</h2>
-      <p class="topic">${l.topic}</p>
-      ${l.mins ? `<p class="l-мера">⏱ ${l.mins} мин · ${l.hard} · ${l.cards} слов</p>` : ''}
-      <div class="actions">
-        <a class="btn audio" href="${l.audio}" target="_blank" rel="noopener">🔊 Конспект со звуком + домашка</a>
-        <a class="btn pdf" href="${l.pdf}" target="_blank" rel="noopener">📄 PDF для печати</a>
-      </div>
-      ${extras}
+      <a class="кратко-ссылка" href="${l.audio}">
+        <span class="num ${profile === 'polina' ? 'polya-num' : 'dasha-num'}">${l.num} · ${l.date}</span>
+        <h2>${l.title}</h2>
+      </a>
+      ${trainerBtn}
       <label class="check">
         <input type="checkbox" ${done ? 'checked' : ''} data-lesson="${l.id}">
         Занятие разобрано, домашка сделана

@@ -507,6 +507,29 @@ var ИГРЫ = {
     корень.innerHTML = '<div class="иг-карта" id="игКарта"></div>';
     var карта = корень.querySelector('#игКарта');
 
+    /* 28.10.2026, врач: «нажимаешь на игру — она чётко на одну страницу, ничего не листать».
+       Пока идёт игра (есть шапка), карточку уменьшаем zoom-ом, пока она не влезет в экран
+       (не мельче 0,55 — дальше уже не прочитать). Меню игр по-прежнему можно листать. */
+    var вмещаю = 0;
+    function вместить() {
+      if (!карта.querySelector('.иг-шапка')) { карта.style.zoom = ''; return; }
+      var экран = карта.closest('.иг-экран');
+      var верх = экран && экран.querySelector('.иг-экран-верх');
+      var доступно = window.innerHeight - (верх ? верх.getBoundingClientRect().height + 14 : 12) - 10;
+      var z = 1; карта.style.zoom = '';
+      for (var k = 0; k < 14; k++) {
+        var h = карта.getBoundingClientRect().height;
+        if (h <= доступно || z <= 0.56) break;
+        z = Math.max(0.55, z * Math.max(0.85, доступно / h));
+        карта.style.zoom = z;
+      }
+      if (!экран) карта.scrollIntoView({ block: 'start' });
+    }
+    function вместитьПотом() { cancelAnimationFrame(вмещаю); вмещаю = requestAnimationFrame(вместить); }
+    if (window.MutationObserver) new MutationObserver(вместитьПотом).observe(карта, { childList: true, subtree: true });
+    window.addEventListener('resize', вместитьПотом);
+    карта.addEventListener('load', вместитьПотом, true);   // картинки догружаются и растягивают карточку
+
     /* ---------- общие кусочки ---------- */
 
     function рекордКлюч(код) { return 'nemeckiy_igra_' + профиль() + '_' + (урок || 'общий') + '_' + код; }
@@ -922,19 +945,19 @@ var ФОТО = {
 var ЦВЕТА_ВВ = ['#2f6fdc', '#e0443e', '#f39c12', '#27ae60', '#8e44ad', '#16a085', '#d35400', '#c2185b', '#00838f', '#5d6d7e'];
 
 var СТИЛЬ_ВВ = ''
-+ '.вв-верх{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin:2px 0 12px; font-weight:800; font-size:15px; }'
++ '.вв-верх{ display:flex; justify-content:space-between; align-items:center; gap:10px; margin:0 0 8px; font-weight:800; font-size:14px; }'
 + '.вв-время{ font-variant-numeric:tabular-nums; background:var(--surface-2,#f3f4fa); border-radius:999px; padding:6px 12px; }'
 + '.вв-счёт{ display:flex; gap:10px; } .вв-счёт .в{ color:#1f9d55; } .вв-счёт .н{ color:#d64545; }'
-+ '.вв-подсказ{ font-size:13.5px; color:var(--ink-muted,#5b615c); margin:0 0 10px; }'
-+ '.вв-пул{ display:grid; grid-template-columns:repeat(auto-fill,minmax(68px,1fr)); gap:4px; min-height:44px; padding:6px; border-radius:14px;'
++ '.вв-подсказ{ font-size:12.5px; color:var(--ink-muted,#5b615c); margin:0 0 6px; line-height:1.3; }'
++ '.вв-пул{ display:grid; grid-template-columns:repeat(auto-fill,minmax(64px,1fr)); gap:3px; min-height:40px; padding:5px; border-radius:14px;'
 + '  background:var(--surface-2,#f3f4fa); border:2px dashed var(--line,#d9dcea); margin-bottom:6px; }'
-+ '.вв-осталось{ text-align:right; font-size:13px; font-weight:700; color:var(--ink-muted,#5b615c); margin:0 2px 12px; }'
-+ '.вв-плитка{ display:flex; align-items:center; justify-content:center; gap:5px; padding:5px 4px; min-height:34px; border-radius:8px; color:#fff;'
-+ '  font-weight:800; font-size:13px; line-height:1.15; text-align:center; overflow-wrap:anywhere; cursor:grab; user-select:none; -webkit-user-select:none; touch-action:none;'
++ '.вв-осталось{ text-align:right; font-size:12px; font-weight:700; color:var(--ink-muted,#5b615c); margin:0 2px 6px; }'
++ '.вв-плитка{ display:flex; align-items:center; justify-content:center; gap:5px; padding:3px 3px; min-height:30px; border-radius:7px; color:#fff;'
++ '  font-weight:800; font-size:12.5px; line-height:1.15; text-align:center; overflow-wrap:anywhere; cursor:grab; user-select:none; -webkit-user-select:none; touch-action:none;'
 + '  box-shadow:inset 0 -3px 0 rgba(0,0,0,.2); transition:transform .15s, opacity .15s; position:relative; }'
 + '.вв-плитка img{ width:24px; height:24px; border-radius:6px; object-fit:cover; pointer-events:none; flex:none; }'
-+ '.вв-слоты{ display:grid; grid-template-columns:repeat(auto-fill,minmax(58px,1fr)); gap:4px; padding:5px; }'
-+ '.вв-слот{ min-height:34px; border-radius:8px; border:2px dashed var(--line,#d9dcea); background:var(--surface-2,#f3f4fa); }'
++ '.вв-слоты{ display:grid; grid-template-columns:repeat(auto-fill,minmax(56px,1fr)); gap:3px; padding:4px; }'
++ '.вв-слот{ min-height:30px; border-radius:7px; border:2px dashed var(--line,#d9dcea); background:var(--surface-2,#f3f4fa); }'
 + '.вв-слот:empty::before{ content:""; }'
 + '.вв-слот .вв-плитка{ width:100%; height:100%; }'
 + '.вв-зона .вв-счётчик{ font-size:12px; font-weight:700; opacity:.9; margin-left:6px; }'
@@ -943,11 +966,11 @@ var СТИЛЬ_ВВ = ''
 + '.вв-плитка.выбрана{ outline:3px solid var(--ink,#1c2242); transform:translateY(-2px); }'
 + '.вв-плитка.тащу{ opacity:.25; }'
 + '.вв-призрак{ position:fixed; z-index:10050; pointer-events:none; transform:scale(1.08) rotate(-2deg); box-shadow:0 12px 26px rgba(0,0,0,.3); }'
-+ '.вв-зоны{ display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; }'
++ '.вв-зоны{ display:flex; flex-wrap:wrap; gap:6px; } .вв-зоны .вв-зона{ min-width:120px; }'
 + '.вв-зона{ border-radius:16px; border:2px solid var(--line,#d9dcea); background:var(--surface,#fff); overflow:hidden; transition:border-color .15s, background .15s; }'
 + '.вв-зона.над{ border-color:var(--accent,#1f5f5b); background:var(--surface-2,#f3f4fa); }'
-+ '.вв-зона h4{ margin:0; padding:7px 8px; font-size:15px; font-weight:800; color:#fff; text-align:center; }'
-+ '.вв-кнопки{ display:flex; gap:10px; margin-top:16px; flex-wrap:wrap; }'
++ '.вв-зона h4{ margin:0; padding:5px 8px; font-size:14px; font-weight:800; color:#fff; text-align:center; }'
++ '.вв-кнопки{ display:flex; gap:10px; margin-top:10px; flex-wrap:wrap; }'
 + '.вв-кнопки button{ flex:1; min-width:140px; font:inherit; font-size:16px; font-weight:800; padding:14px; border-radius:14px; cursor:pointer; border:none; }'
 + '.вв-главная{ background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); }'
 + '.вв-тихая{ background:var(--surface-2,#f3f4fa); color:var(--ink,#1c2242); border:1px solid var(--line,#d9dcea) !important; }'
@@ -1061,7 +1084,8 @@ var ГРУППЫ = {
       '<div class="вв-зоны">' + дан.группы.map(function (г, i) {
         var n = плитки.filter(function (п) { return п.группа === г; }).length;
         var слоты = ''; for (var k = 0; k < n; k++) слоты += '<div class="вв-слот"></div>';
-        return '<div class="вв-зона" data-зона="' + экр(г) + '"><h4 style="background:' + ЦВЕТА_ВВ[(i * 3 + 1) % ЦВЕТА_ВВ.length] + '">' + экр(г) +
+        // большая группа шире: клеток в ряд больше, рядов меньше — всё влезает крупнее
+        return '<div class="вв-зона" style="flex:' + Math.max(2, n) + ' 1 ' + (n > 9 ? 230 : 120) + 'px" data-зона="' + экр(г) + '"><h4 style="background:' + ЦВЕТА_ВВ[(i * 3 + 1) % ЦВЕТА_ВВ.length] + '">' + экр(г) +
           '<span class="вв-счётчик">· ' + n + '</span></h4><div class="вв-слоты">' + слоты + '</div></div>';
       }).join('') + '</div>' +
       '<div class="вв-кнопки"><button class="вв-главная" id="ввГотово">Завершить</button></div>');
