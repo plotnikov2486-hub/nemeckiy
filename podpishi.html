@@ -37,7 +37,7 @@ h1{ font-size:28px; margin:8px 0 14px; }
 .подсказ{ margin:0 0 10px; text-align:center; color:var(--muted); font-size:14px; font-weight:700; }
 .широкая{ width:100%; margin-top:12px; }
 /* сама картинка */
-.холст{ position:relative; width:min(100%, calc(100vh - 120px)); margin:0 auto; aspect-ratio:1/1; border-radius:16px; overflow:hidden; background:#ddd; }
+.холст{ background:#dcdcdf !important; position:relative; width:min(100%, calc(100vh - 120px)); margin:0 auto; aspect-ratio:1/1; border-radius:16px; overflow:hidden; background:#ddd; }
 .холст img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
 .холст svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
 .точка{ position:absolute; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; background:#fff; border:3px solid var(--accent); box-shadow:0 0 0 2px rgba(0,0,0,.25); }
@@ -75,7 +75,7 @@ h1{ font-size:28px; margin:8px 0 14px; }
 <div class="лист" id="лист"><p>Что это?</p><div class="варианты" id="варианты"></div></div>
 <script src="tema.js"></script>
 <script>
-var РАЗДЕЛЫ = [{"код": "человек", "имя": "Человек", "знак": "🧍", "под": "тело, органы, кости — по уровням", "уровни": [{"код": "тело_спереди", "имя": "Тело целиком", "точки": [{"x": 50, "y": 6, "de": "das Haar", "ru": "волосы"}, {"x": 50, "y": 13, "de": "das Gesicht", "ru": "лицо"}, {"x": 50, "y": 18.5, "de": "der Hals", "ru": "шея"}, {"x": 40, "y": 22, "de": "die Schulter", "ru": "плечо"}, {"x": 55, "y": 28, "de": "die Brust", "ru": "грудь"}, {"x": 37.5, "y": 32, "de": "der Oberarm", "ru": "плечо (верх руки)"}, {"x": 37, "y": 40, "de": "der Ellenbogen", "ru": "локоть"}, {"x": 54, "y": 37, "de": "der Bauch", "ru": "живот"}, {"x": 50, "y": 41.5, "de": "der Bauchnabel", "ru": "пупок"}, {"x": 36.5, "y": 55, "de": "die Hand", "ru": "кисть руки"}, {"x": 58.5, "y": 46, "de": "die Hüfte", "ru": "бедро (таз сбоку)"}, {"x": 45, "y": 61, "de": "der Oberschenkel", "ru": "бедро"}, {"x": 56, "y": 69, "de": "das Knie", "ru": "колено"}, {"x": 44, "y": 79, "de": "der Unterschenkel", "ru": "голень"}, {"x": 57, "y": 95, "de": "der Fuß", "ru": "стопа"}]}]}];
+var РАЗДЕЛЫ = [{"код": "человек", "имя": "Человек", "знак": "🧍", "под": "тело, органы, кости — по уровням", "уровни": [{"код": "тело_спереди", "имя": "Тело целиком", "точки": [{"x": 50, "y": 6, "de": "das Haar", "ru": "волосы"}, {"x": 50, "y": 13, "de": "das Gesicht", "ru": "лицо"}, {"x": 50, "y": 18.5, "de": "der Hals", "ru": "шея"}, {"x": 40, "y": 22, "de": "die Schulter", "ru": "плечо"}, {"x": 55, "y": 28, "de": "die Brust", "ru": "грудь"}, {"x": 37.5, "y": 32, "de": "der Oberarm", "ru": "плечо (верх руки)"}, {"x": 37, "y": 40, "de": "der Ellenbogen", "ru": "локоть"}, {"x": 54, "y": 37, "de": "der Bauch", "ru": "живот"}, {"x": 50, "y": 41.5, "de": "der Bauchnabel", "ru": "пупок"}, {"x": 36.5, "y": 55, "de": "die Hand", "ru": "кисть руки"}, {"x": 58.5, "y": 46, "de": "die Hüfte", "ru": "бедро (таз сбоку)"}, {"x": 45, "y": 61, "de": "der Oberschenkel", "ru": "бедро"}, {"x": 56, "y": 69, "de": "das Knie", "ru": "колено"}, {"x": 44, "y": 79, "de": "der Unterschenkel", "ru": "голень"}, {"x": 57, "y": 95, "de": "der Fuß", "ru": "стопа"}]}, {"код": "тело_сзади", "имя": "Тело сзади", "точки": [{"x": 50, "y": 6, "de": "der Hinterkopf", "ru": "затылок"}, {"x": 45.5, "y": 11, "de": "das Ohr", "ru": "ухо"}, {"x": 50, "y": 16.5, "de": "der Nacken", "ru": "шея сзади, затылочная часть"}, {"x": 39, "y": 21, "de": "die Schulter", "ru": "плечо"}, {"x": 56, "y": 26, "de": "das Schulterblatt", "ru": "лопатка"}, {"x": 50, "y": 30, "de": "die Wirbelsäule", "ru": "позвоночник"}, {"x": 44, "y": 35, "de": "der Rücken", "ru": "спина"}, {"x": 36.5, "y": 38, "de": "der Ellenbogen", "ru": "локоть"}, {"x": 63, "y": 44, "de": "der Unterarm", "ru": "предплечье"}, {"x": 37.5, "y": 51, "de": "das Handgelenk", "ru": "запястье"}, {"x": 54, "y": 48, "de": "das Gesäß", "ru": "ягодицы"}, {"x": 45, "y": 60, "de": "der Oberschenkel", "ru": "бедро"}, {"x": 55.5, "y": 70, "de": "die Kniekehle", "ru": "подколенная ямка"}, {"x": 44, "y": 76, "de": "die Wade", "ru": "икра"}, {"x": 56, "y": 95.5, "de": "die Ferse", "ru": "пятка"}]}, {"код": "голова_лицо", "имя": "Голова и лицо", "точки": [{"x": 50, "y": 8, "de": "das Haar", "ru": "волосы"}, {"x": 50, "y": 25, "de": "die Stirn", "ru": "лоб"}, {"x": 30.5, "y": 36, "de": "die Schläfe", "ru": "висок"}, {"x": 38, "y": 37, "de": "die Augenbraue", "ru": "бровь"}, {"x": 60, "y": 42.5, "de": "das Auge", "ru": "глаз"}, {"x": 50, "y": 53, "de": "die Nase", "ru": "нос"}, {"x": 64, "y": 57, "de": "die Wange", "ru": "щека"}, {"x": 75, "y": 48, "de": "das Ohr", "ru": "ухо"}, {"x": 50, "y": 66, "de": "der Mund", "ru": "рот"}, {"x": 36, "y": 73, "de": "der Unterkiefer", "ru": "нижняя челюсть"}, {"x": 50, "y": 78, "de": "das Kinn", "ru": "подбородок"}, {"x": 50, "y": 90, "de": "der Hals", "ru": "шея"}], "масштаб": 0.6}, {"код": "кисть", "имя": "Кисть руки", "точки": [{"x": 45, "y": 42, "de": "der Daumen", "ru": "большой палец"}, {"x": 34, "y": 22, "de": "der Zeigefinger", "ru": "указательный палец"}, {"x": 25, "y": 20, "de": "der Mittelfinger", "ru": "средний палец"}, {"x": 16, "y": 24, "de": "der Ringfinger", "ru": "безымянный палец"}, {"x": 8, "y": 33, "de": "der kleine Finger", "ru": "мизинец"}, {"x": 25, "y": 52, "de": "die Handfläche", "ru": "ладонь"}, {"x": 25, "y": 77, "de": "das Handgelenk", "ru": "запястье"}, {"x": 75, "y": 16, "de": "der Fingernagel", "ru": "ноготь"}, {"x": 66, "y": 32, "de": "der Fingerknöchel", "ru": "костяшка пальца"}, {"x": 70, "y": 58, "de": "der Handrücken", "ru": "тыльная сторона кисти"}], "масштаб": 0.62}]}];
 (function(){
 "use strict";
 var $ = function(id){ return document.getElementById(id); };
@@ -128,7 +128,10 @@ $('поле').addEventListener('click', function(e){
 var текущий = null;
 function играть(р, очередь, место){
   var у = р.уровни[очередь[место]]; if (!у){ location.hash = 'р=' + р.код; return; }
-  var точки = у.точки.map(function(т, i){ return { т: т, i: i, ок: false, ошибся: false }; });
+  // «масштаб» < 1: картинку уменьшаем к центру, чтобы по бокам было место подписям (лицо, кисть во весь кадр)
+  var м = у.масштаб || 1;
+  var точки = у.точки.map(function(т, i){
+    return { т: { x: 50 + (т.x - 50) * м, y: 50 + (т.y - 50) * м, de: т.de, ru: т.ru }, i: i, ок: false, ошибся: false }; });
   // подписи слева и справа, без наложения по высоте
   var лев = [], прав = [];
   точки.slice().sort(function(a, b){ return a.т.y - b.т.y; }).forEach(function(т){
@@ -143,7 +146,7 @@ function играть(р, очередь, место){
   текущий = { р: р, у: у };
   $('верх').innerHTML = '<a href="#р=' + р.код + '">‹ Уровни</a><span class="имя">' + (очередь[место] + 1) + '. ' + эк(у.имя) + '</span>' +
     '<span class="счёт" id="счёт"></span><button class="конец" id="конец">Закончить</button>';
-  $('поле').innerHTML = '<p class="подсказ">Нажми на «?» и выбери, что это.</p><div class="холст" id="холст"><img alt="" src="img/podpishi/' + у.код + '.webp"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="линии"></svg></div>';
+  $('поле').innerHTML = '<p class="подсказ">Нажми на «?» и выбери, что это.</p><div class="холст" id="холст"><img alt="" src="img/podpishi/' + у.код + '.webp" style="inset:' + ((1 - м) * 50) + '%;width:' + (м * 100) + '%;height:' + (м * 100) + '%;border-radius:12px"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="линии"></svg></div>';
   function рисоватьМетки(){
     var х = $('холст');
     Array.prototype.forEach.call(х.querySelectorAll('.точка,.слот'), function(э){ э.remove(); });
