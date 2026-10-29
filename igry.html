@@ -42,12 +42,18 @@
   body.в-игре .lp > h1, body.в-игре .lp > .eyebrow, body.в-игре .lp > .lede, body.в-игре .подзаг, body.в-игре .выбор,
   body.в-игре .lp > footer, body.в-игре .bb-top{ display:none !important; }
   body.в-игре .lp{ padding-top:10px; }
+  .подпиши-баннер{ display:flex; align-items:center; gap:14px; margin:14px 0 6px; padding:16px; border-radius:18px; text-decoration:none;
+    background:linear-gradient(135deg,#3B82F6,#EC4899); color:#fff; box-shadow:0 4px 0 rgba(0,0,0,.15); }
+  .подпиши-баннер i{ font-style:normal; font-size:34px; } .подпиши-баннер span{ flex:1; } .подпиши-баннер b{ display:block; font-size:18px; }
+  .подпиши-баннер small{ font-size:13px; opacity:.9; } .подпиши-баннер em{ font-style:normal; font-size:24px; font-weight:800; }
+  body.в-игре .подпиши-баннер{ display:none; }
 </style>
 </head>
 <body>
 <div class="lp">
   <h1>Игры</h1>
 
+  <a class="подпиши-баннер" href="podpishi.html"><i>🏷</i><span><b>Подпиши картинку</b><small>Человек, органы, кости · дом, улица, больница</small></span><em>→</em></a>
   <p class="подзаг">Откуда брать слова</p>
   <div class="выбор" id="выборРаздел"></div>
   <div class="выбор" id="выборУрок"></div>
@@ -75,18 +81,18 @@
 })();
 </script>
 <script src="tema.js"></script>
-<script src="igry.js?v=202610291319"></script>
+<script src="igry.js?v=202610291430"></script>
 <script>
 (function () {
   var РАЗДЕЛЫ = [
     { код: 'claude', имя: 'Мои уроки', префикс: 'urok', подпись: 'Урок ' },
     { код: 'dasha',  имя: 'Гриша с Дашей', префикс: 'dasha', подпись: 'Занятие ' },
-    { код: 'polya',  имя: 'Полина с Дашей', префикс: 'polya', подпись: 'Занятие ' },
-    { код: 'сцены',  имя: 'Картинки' }
-  ];
+    { код: 'polya',  имя: 'Полина с Дашей', префикс: 'polya', подпись: 'Занятие ' }
+  ];   // 29.10: старые рисованные «Картинки» (кухня, комната) заменила игра «Подпиши картинку» — podpishi.html
   var СЦЕНЫ = [{ код: 'кухня', имя: 'Кухня' }, { код: 'комната', имя: 'Комната' }];
 
   var индекс = {}, раздел = localStorage.getItem('nemeckiy_igry_раздел') || 'claude';
+  if (раздел === 'сцены') раздел = 'claude';
   var поле = document.getElementById('игры');
 
   function кнопки(куда, список, текущий, клик) {

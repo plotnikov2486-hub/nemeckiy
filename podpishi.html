@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Подпиши картинку</title>
+<link rel="manifest" href="manifest.json">
+<style>
+/* «Подпиши картинку» (29.10.2026). Врач: «человек, к голове стрелочка и пустая строчка; нажал — варианты
+   ответа; уровни от простого к сложному; все подряд или выбрать». Картинки без надписей, стрелки рисует код. */
+:root{ --bg:#f6f3ec; --surface:#fffdf8; --ink:#1d2433; --muted:#6b7280; --line:#e5dfd2; --accent:#3B82F6;
+  --der:#3B82F6; --die:#EC4899; --das:#EAB308; --ok:#16a34a; --bad:#dc2626; }
+@media (prefers-color-scheme: dark){ :root:not([data-theme="light"]){ --bg:#14161c; --surface:#1d2029; --ink:#eef0f6; --muted:#9aa1b2; --line:#2c303c; } }
+:root[data-theme="dark"]{ --bg:#14161c; --surface:#1d2029; --ink:#eef0f6; --muted:#9aa1b2; --line:#2c303c; }
+*{ box-sizing:border-box; } html,body{ margin:0; background:var(--bg); color:var(--ink);
+  font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; -webkit-tap-highlight-color:transparent; }
+.верх{ position:sticky; top:0; z-index:20; display:flex; align-items:center; gap:10px; padding:10px 14px; background:var(--bg); border-bottom:1px solid var(--line); }
+.верх a, .верх button{ font:inherit; font-size:14px; font-weight:700; color:#fff; background:var(--accent); border:none; border-radius:99px; padding:8px 14px; text-decoration:none; cursor:pointer; }
+.верх .имя{ flex:1; font-weight:800; font-size:15px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.верх .счёт{ font-size:13px; font-weight:800; color:var(--muted); white-space:nowrap; }
+.верх .конец{ background:#fee2e2; color:#b91c1c; }
+.поле{ max-width:900px; margin:0 auto; padding:14px 16px 40px; }
+h1{ font-size:28px; margin:8px 0 14px; }
+.плитки{ display:grid; grid-template-columns:repeat(2,1fr); gap:10px; }
+@media (min-width:700px){ .плитки{ grid-template-columns:repeat(3,1fr); } }
+.плитка{ position:relative; display:flex; flex-direction:column; gap:4px; text-align:left; font:inherit; color:var(--ink); text-decoration:none; cursor:pointer;
+  padding:16px 14px; min-height:110px; border-radius:18px; background:var(--surface); border:2px solid var(--line); }
+.плитка i{ font-style:normal; font-size:34px; } .плитка b{ font-size:16px; } .плитка small{ font-size:12.5px; color:var(--muted); margin-top:auto; }
+.плитка .рек{ position:absolute; top:10px; right:12px; font-size:12.5px; font-weight:800; color:var(--ok); }
+.плитка .фото{ width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:12px; margin-bottom:4px; background:#ddd; }
+.плитка.выбор::after{ content:""; position:absolute; top:10px; left:10px; width:26px; height:26px; border-radius:8px; border:2px solid var(--accent); background:var(--surface); }
+.плитка.отмечена{ border-color:var(--accent); } .плитка.отмечена::after{ content:"✓"; background:var(--accent); color:#fff; font-weight:900; text-align:center; line-height:24px; }
+.учить{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:0 0 14px; }
+.кн{ font:inherit; font-size:15px; font-weight:800; color:#fff; border:none; border-radius:16px; padding:14px 8px; cursor:pointer; box-shadow:0 4px 0 rgba(0,0,0,.15); }
+.кн.синяя{ background:#3B82F6; } .кн.розовая{ background:#EC4899; } .кн.зелёная{ background:#16a34a; } .кн.тихая{ background:var(--surface); color:var(--ink); border:2px solid var(--line); box-shadow:none; }
+.кн.вкл{ outline:3px solid #fff; outline-offset:-6px; } .кн:disabled{ opacity:.5; }
+.подсказ{ margin:0 0 10px; text-align:center; color:var(--muted); font-size:14px; font-weight:700; }
+.широкая{ width:100%; margin-top:12px; }
+/* сама картинка */
+.холст{ position:relative; width:min(100%, calc(100vh - 120px)); margin:0 auto; aspect-ratio:1/1; border-radius:16px; overflow:hidden; background:#ddd; }
+.холст img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.холст svg{ position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+.точка{ position:absolute; width:12px; height:12px; margin:-6px 0 0 -6px; border-radius:50%; background:#fff; border:3px solid var(--accent); box-shadow:0 0 0 2px rgba(0,0,0,.25); }
+.точка.ок{ border-color:var(--ok); }
+.слот{ position:absolute; transform:translateY(-50%); width:31%; min-height:26px; padding:4px 6px; border-radius:9px; font:inherit;
+  font-size:clamp(10px, 1.9vw, 15px); font-weight:800; line-height:1.1; text-align:center; cursor:pointer;
+  background:rgba(255,255,255,.93); color:#1d2433; border:2px dashed var(--accent); box-shadow:0 2px 6px rgba(0,0,0,.18); }
+.слот.лев{ left:1%; } .слот.прав{ right:1%; }
+.слот.сейчас{ border-style:solid; background:#fde68a; box-shadow:0 0 0 4px rgba(250,204,21,.55); z-index:3; }
+.слот.ок{ border:2px solid var(--ok); background:#ecfdf5; cursor:default; }
+.слот.тряска{ animation:тряска .35s; border-color:var(--bad); }
+@keyframes тряска{ 25%{ transform:translate(-4px,-50%); } 75%{ transform:translate(4px,-50%); } }
+.арт-der{ color:var(--der); } .арт-die{ color:var(--die); } .арт-das{ color:#b8860b; }
+/* выбор ответа снизу */
+.лист{ position:fixed; left:0; right:0; bottom:0; z-index:50; background:var(--surface); border-radius:20px 20px 0 0; padding:16px 16px calc(16px + env(safe-area-inset-bottom));
+  box-shadow:0 -8px 30px rgba(0,0,0,.25); transform:translateY(110%); transition:transform .22s ease; max-width:640px; margin:0 auto; }
+.лист.открыт{ transform:none; }
+.лист p{ margin:0 0 10px; font-weight:800; color:var(--muted); font-size:14px; }
+.варианты{ display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+.вар{ font:inherit; font-size:16px; font-weight:800; padding:14px 8px; border-radius:14px; border:2px solid var(--line); background:var(--bg); color:var(--ink); cursor:pointer; }
+.вар.мимо{ border-color:var(--bad); background:#fee2e2; color:#991b1b; }
+.затемн{ position:fixed; inset:0; z-index:40; background:transparent; display:none; } .затемн.открыт{ display:block; }
+/* итог */
+.итог{ position:fixed; inset:0; z-index:60; background:rgba(10,12,20,.6); display:flex; align-items:center; justify-content:center; padding:16px; }
+.итог .окно{ background:var(--surface); border-radius:22px; padding:24px 20px; max-width:420px; width:100%; text-align:center; }
+.итог .эмо{ font-size:54px; } .итог h2{ margin:6px 0; } .итог .проц{ font-size:44px; font-weight:900; color:var(--accent); }
+.итог .цифры{ display:flex; justify-content:center; gap:22px; margin:8px 0 14px; color:var(--muted); font-size:13px; } .итог .цифры b{ display:block; font-size:22px; color:var(--ink); }
+.итог .кн{ width:100%; margin-top:8px; }
+</style>
+</head>
+<body>
+<div class="верх" id="верх"></div>
+<div class="поле" id="поле"></div>
+<div class="затемн" id="затемн"></div>
+<div class="лист" id="лист"><p>Что это?</p><div class="варианты" id="варианты"></div></div>
+<script src="tema.js"></script>
+<script>
+var РАЗДЕЛЫ = [{"код": "человек", "имя": "Человек", "знак": "🧍", "под": "тело, органы, кости — по уровням", "уровни": [{"код": "тело_спереди", "имя": "Тело целиком", "точки": [{"x": 50, "y": 6, "de": "das Haar", "ru": "волосы"}, {"x": 50, "y": 13, "de": "das Gesicht", "ru": "лицо"}, {"x": 50, "y": 18.5, "de": "der Hals", "ru": "шея"}, {"x": 40, "y": 22, "de": "die Schulter", "ru": "плечо"}, {"x": 55, "y": 28, "de": "die Brust", "ru": "грудь"}, {"x": 37.5, "y": 32, "de": "der Oberarm", "ru": "плечо (верх руки)"}, {"x": 37, "y": 40, "de": "der Ellenbogen", "ru": "локоть"}, {"x": 54, "y": 37, "de": "der Bauch", "ru": "живот"}, {"x": 50, "y": 41.5, "de": "der Bauchnabel", "ru": "пупок"}, {"x": 36.5, "y": 55, "de": "die Hand", "ru": "кисть руки"}, {"x": 58.5, "y": 46, "de": "die Hüfte", "ru": "бедро (таз сбоку)"}, {"x": 45, "y": 61, "de": "der Oberschenkel", "ru": "бедро"}, {"x": 56, "y": 69, "de": "das Knie", "ru": "колено"}, {"x": 44, "y": 79, "de": "der Unterschenkel", "ru": "голень"}, {"x": 57, "y": 95, "de": "der Fuß", "ru": "стопа"}]}]}];
+(function(){
+"use strict";
+var $ = function(id){ return document.getElementById(id); };
+function эк(с){ return String(с == null ? '' : с).replace(/[&<>"]/g, function(з){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[з]; }); }
+function цвет(de){ var м = /^(der|die|das)\s/.exec(de); return м ? '<span class="арт-' + м[1] + '">' + м[1] + '</span>' + эк(de.slice(3)) : эк(de); }
+function перемешать(м){ м = м.slice(); for (var i = м.length - 1; i > 0; i--){ var j = Math.floor(Math.random() * (i + 1)); var т = м[i]; м[i] = м[j]; м[j] = т; } return м; }
+var КЛ = 'podpishi_' + (localStorage.getItem('nemeckiy_profile') || 'grigoriy') + '_';
+function рекорд(р, у){ try { return +localStorage.getItem(КЛ + р + '_' + у) || 0; } catch(e){ return 0; } }
+function записать(р, у, п){ try { if (п > рекорд(р, у)) localStorage.setItem(КЛ + р + '_' + у, п); } catch(e){} }
+function раздел(код){ return РАЗДЕЛЫ.filter(function(р){ return р.код === код; })[0]; }
+function адрес(){ var о = {}; decodeURIComponent(location.hash.slice(1)).split('&').forEach(function(x){ var п = x.split('='); if (п[0]) о[п[0]] = п[1] || ''; }); return о; }
+var выбор = false, отмечено = {};
+
+function нарисовать(){
+  закрытьЛист(); var и = document.querySelector('.итог'); if (и) и.remove();
+  var а = адрес(); window.scrollTo(0, 0);
+  if (а.р && а.у !== undefined){ return играть(раздел(а.р), а.у.split(',').map(Number), 0); }
+  if (а.р){
+    var р = раздел(а.р); if (!р){ location.hash = ''; return; }
+    $('верх').innerHTML = '<a href="#">‹ Разделы</a><span class="имя">' + р.знак + ' ' + эк(р.имя) + '</span>';
+    $('поле').innerHTML = '<h1>' + р.знак + ' ' + эк(р.имя) + '</h1>' +
+      '<div class="учить"><button class="кн синяя" id="подряд">▶ Все уровни подряд</button>' +
+      '<button class="кн розовая' + (выбор ? ' вкл' : '') + '" id="выбрать">☑ Выбрать уровни</button></div>' +
+      '<div class="плитки">' + р.уровни.map(function(у, i){
+        var рек = рекорд(р.код, у.код);
+        return '<a class="плитка' + (выбор ? ' выбор' : '') + (отмечено[i] ? ' отмечена' : '') + '" data-i="' + i + '" href="#р=' + р.код + '&у=' + i + '">' +
+          '<img class="фото" alt="" loading="lazy" src="img/podpishi/' + у.код + '.webp">' +
+          (рек ? '<span class="рек">' + рек + '%</span>' : '') +
+          '<b>' + (i + 1) + '. ' + эк(у.имя) + '</b><small>' + у.точки.length + ' подписей</small></a>';
+      }).join('') + '</div>' +
+      (выбор ? '<button class="кн синяя широкая" id="выбранные">' + (Object.keys(отмечено).filter(function(к){ return отмечено[к]; }).length ? 'Играть выбранные →' : 'Отметь уровни галочками') + '</button>' : '');
+    $('подряд').onclick = function(){ location.hash = 'р=' + р.код + '&у=' + р.уровни.map(function(_, i){ return i; }).join(','); };
+    $('выбрать').onclick = function(){ выбор = !выбор; нарисовать(); };
+    var вб = $('выбранные'); if (вб) вб.onclick = function(){
+      var к = Object.keys(отмечено).filter(function(к){ return отмечено[к]; }); if (к.length) location.hash = 'р=' + р.код + '&у=' + к.join(','); };
+    return;
+  }
+  выбор = false; отмечено = {};
+  $('верх').innerHTML = '<a href="index.html">‹ Главная</a><span class="имя">🏷 Подпиши картинку</span>';
+  $('поле').innerHTML = '<h1>Подпиши картинку</h1><div class="плитки">' + РАЗДЕЛЫ.map(function(р){
+    return '<a class="плитка" href="#р=' + р.код + '"><i>' + р.знак + '</i><b>' + эк(р.имя) + '</b><small>' + р.уровни.length + ' уровней · ' + эк(р.под) + '</small></a>';
+  }).join('') + '</div>';
+}
+$('поле').addEventListener('click', function(e){
+  var а = e.target.closest('.плитка.выбор'); if (!а) return;
+  e.preventDefault(); var i = а.dataset.i; отмечено[i] = !отмечено[i]; нарисовать();
+});
+
+/* ── уровень ── */
+var текущий = null;
+function играть(р, очередь, место){
+  var у = р.уровни[очередь[место]]; if (!у){ location.hash = 'р=' + р.код; return; }
+  var точки = у.точки.map(function(т, i){ return { т: т, i: i, ок: false, ошибся: false }; });
+  // подписи слева и справа, без наложения по высоте
+  var лев = [], прав = [];
+  точки.slice().sort(function(a, b){ return a.т.y - b.т.y; }).forEach(function(т){
+    (т.т.x < 50 || (т.т.x === 50 && лев.length <= прав.length) ? лев : прав).push(т); });
+  [лев, прав].forEach(function(кол, к){
+    var ш = Math.max(7.6, 92 / Math.max(кол.length, 1)) , пред = -100;
+    кол.forEach(function(т){ т.сторона = к ? 'прав' : 'лев'; т.ys = Math.max(т.т.y, пред + ш); пред = т.ys; });
+    var лишнее = (кол.length ? кол[кол.length - 1].ys : 0) - 96;
+    if (лишнее > 0) кол.forEach(function(т){ т.ys = Math.max(3, т.ys - лишнее); });
+  });
+  var старт = Date.now(), ошибок = 0, ждём = null;
+  текущий = { р: р, у: у };
+  $('верх').innerHTML = '<a href="#р=' + р.код + '">‹ Уровни</a><span class="имя">' + (очередь[место] + 1) + '. ' + эк(у.имя) + '</span>' +
+    '<span class="счёт" id="счёт"></span><button class="конец" id="конец">Закончить</button>';
+  $('поле').innerHTML = '<p class="подсказ">Нажми на «?» и выбери, что это.</p><div class="холст" id="холст"><img alt="" src="img/podpishi/' + у.код + '.webp"><svg viewBox="0 0 100 100" preserveAspectRatio="none" id="линии"></svg></div>';
+  function рисоватьМетки(){
+    var х = $('холст');
+    Array.prototype.forEach.call(х.querySelectorAll('.точка,.слот'), function(э){ э.remove(); });
+    $('линии').innerHTML = точки.map(function(т){
+      var x2 = т.сторона === 'лев' ? 32 : 68;
+      return '<line x1="' + т.т.x + '" y1="' + т.т.y + '" x2="' + x2 + '" y2="' + т.ys + '" stroke="' + (т.ок ? '#16a34a' : '#ffffff') +
+        '" stroke-width="0.5" vector-effect="non-scaling-stroke" style="stroke-width:2px;filter:drop-shadow(0 0 1px rgba(0,0,0,.7))"/>';
+    }).join('');
+    точки.forEach(function(т){
+      var д = document.createElement('span'); д.className = 'точка' + (т.ок ? ' ок' : ''); д.style.left = т.т.x + '%'; д.style.top = т.т.y + '%'; х.appendChild(д);
+      var с = document.createElement('button'); с.className = 'слот ' + т.сторона + (т.ок ? ' ок' : ''); с.style.top = т.ys + '%';
+      с.innerHTML = т.ок ? цвет(т.т.de) : '?'; с.dataset.i = т.i;
+      if (!т.ок) с.onclick = function(){ спросить(т, с); };
+      х.appendChild(с);
+    });
+    var осталось = точки.filter(function(т){ return !т.ок; }).length;
+    $('счёт').textContent = (точки.length - осталось) + ' / ' + точки.length;
+    if (!осталось) setTimeout(конец, 600);
+  }
+  function спросить(т, слот){
+    ждём = т;
+    Array.prototype.forEach.call(document.querySelectorAll('.слот.сейчас'), function(э){ э.classList.remove('сейчас'); });
+    слот.classList.add('сейчас');
+    var чужие = перемешать(у.точки.filter(function(x){ return x.de !== т.т.de; })).slice(0, 3).map(function(x){ return x.de; });
+    var вар = перемешать(чужие.concat([т.т.de]));
+    $('варианты').innerHTML = вар.map(function(в){ return '<button class="вар" data-в="' + эк(в) + '">' + цвет(в) + '</button>'; }).join('');
+    Array.prototype.forEach.call($('варианты').querySelectorAll('.вар'), function(к){
+      к.onclick = function(){
+        if (к.dataset.в === т.т.de){
+          т.ок = true; закрытьЛист(); голос(т.т.de); рисоватьМетки();
+        } else {
+          if (!т.ошибся){ т.ошибся = true; ошибок++; }
+          к.classList.add('мимо'); к.disabled = true;
+          слот.classList.remove('тряска'); void слот.offsetWidth; слот.classList.add('тряска');
+        }
+      };
+    });
+    $('лист').querySelector('p').textContent = 'Что это?';
+    $('лист').classList.add('открыт'); $('затемн').classList.add('открыт');
+  }
+  function конец(досрочно){
+    if (document.querySelector('.итог')) return;
+    var сделано = точки.filter(function(т){ return т.ок; }).length;
+    var всего = досрочно ? Math.max(сделано, 1) : точки.length;
+    var верно = точки.filter(function(т){ return т.ок && !т.ошибся; }).length;
+    var п = Math.round(верно / всего * 100), сек = Math.round((Date.now() - старт) / 1000);
+    if (!досрочно) записать(р.код, у.код, п);
+    var след = место + 1 < очередь.length;
+    var о = document.createElement('div'); о.className = 'итог';
+    о.innerHTML = '<div class="окно"><div class="эмо">' + (п === 100 ? '🏆' : п >= 80 ? '🎉' : п >= 50 ? '💪' : '📚') + '</div>' +
+      '<h2>' + (п === 100 ? 'Идеально!' : п >= 80 ? 'Отлично!' : п >= 50 ? 'Почти получилось' : 'Ещё разок') + '</h2>' +
+      '<div class="проц">' + п + '%</div><div class="цифры"><div><b>' + верно + '</b>с первого раза</div><div><b>' + ошибок + '</b>ошибок</div><div><b>' +
+      Math.floor(сек / 60) + ':' + ('0' + сек % 60).slice(-2) + '</b>время</div></div>' +
+      (след ? '<button class="кн синяя" id="итСлед">Следующий уровень →</button>' : '') +
+      '<button class="кн тихая" id="итЕщё">🔁 Ещё раз</button><button class="кн тихая" id="итУровни">К уровням</button></div>';
+    document.body.appendChild(о);
+    if (след) $('итСлед').onclick = function(){ о.remove(); играть(р, очередь, место + 1); };
+    $('итЕщё').onclick = function(){ о.remove(); играть(р, очередь, место); };
+    $('итУровни').onclick = function(){ о.remove(); location.hash = 'р=' + р.код; };
+  }
+  $('конец').onclick = function(){ конец(true); };
+  рисоватьМетки();
+}
+function закрытьЛист(){ Array.prototype.forEach.call(document.querySelectorAll('.слот.сейчас'), function(э){ э.classList.remove('сейчас'); }); $('лист').classList.remove('открыт'); $('затемн').classList.remove('открыт'); }
+$('затемн').onclick = закрытьЛист;
+function голос(de){
+  try { if (!window.speechSynthesis) return; var р = new SpeechSynthesisUtterance(de); р.lang = 'de-DE'; р.rate = .9; speechSynthesis.cancel(); speechSynthesis.speak(р); } catch(e){}
+}
+window.addEventListener('hashchange', нарисовать);
+нарисовать();
+})();
+</script>
+</body>
+</html>
