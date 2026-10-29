@@ -97,13 +97,43 @@
     text-align:center; padding:10px 0 4px; }
   .шкала { height:8px; border-radius:99px; background:var(--surface-2); overflow:hidden; margin:2px 0 12px; }
   .шкала i { display:block; height:100%; background:var(--accent); transition:width .25s ease; }
+  .спр-верх{ display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0 14px; }
+  .спр-большая{ font:inherit; font-size:15.5px; font-weight:800; border:none; border-radius:16px; padding:15px 10px; cursor:pointer; color:#fff;
+    box-shadow:0 4px 0 rgba(0,0,0,.15); }
+  .спр-большая.синяя{ background:#3B82F6; } .спр-большая.розовая{ background:#EC4899; }
+  .спр-большая.вкл{ outline:3px solid #fff; outline-offset:-6px; }
+  .спр-большая:disabled{ opacity:.5; }
+  .спр-группы{ display:grid; gap:10px; }
+  .спр-группа{ position:relative; display:flex; flex-direction:column; gap:3px; padding:18px 18px 16px 74px; min-height:84px; justify-content:center;
+    border-radius:18px; background:var(--surface); border:2px solid var(--line); color:var(--ink); text-decoration:none; }
+  .спр-группа i{ position:absolute; left:16px; top:50%; transform:translateY(-50%); width:44px; height:44px; border-radius:14px;
+    background:var(--ц); display:flex; align-items:center; justify-content:center; font-style:normal; font-size:24px; }
+  .спр-группа b{ font-size:18px; } .спр-группа small{ font-size:13.5px; color:var(--ink-muted); }
+  .спр-группа.выбор{ padding-right:56px; } .спр-группа.отмечена{ border-color:var(--ц); }
+  .спр-группа .галка{ position:absolute; right:16px; top:50%; transform:translateY(-50%); width:28px; height:28px; border-radius:8px;
+    border:2px solid var(--ц); display:flex; align-items:center; justify-content:center; font-weight:900; color:#fff; }
+  .спр-группа.отмечена .галка{ background:var(--ц); }
+  .спр-выбранные{ width:100%; margin-top:14px; }
+  .спр-старое{ display:block; margin-top:26px; font-size:13px; color:var(--ink-muted); text-align:center; }
 </style>
 </head>
 <body>
 <div class="backbar">
   <a class="bb-link" href="index.html">&#8592; Все уроки</a>
 </div>
-<div class="lp">
+<!-- 29.10 врач: «открываешь спряжение — только обычные, особые, модальные, меняют гласную, больше ничего.
+     Сверху „учить всё подряд“ и „учить несколько“ с галочками. Нажал на группу — сразу таблица, как в ЗУБРе». -->
+<div class="lp спр-оглавление" id="оглавление">
+  <h1>Спряжение</h1>
+  <div class="спр-верх">
+    <button class="спр-большая синяя" id="всеПодряд">▶ Учить всё подряд</button>
+    <button class="спр-большая розовая" id="несколько">☑ Учить несколько</button>
+  </div>
+  <div class="спр-группы" id="спрГруппы"></div>
+  <button class="спр-большая синяя спр-выбранные" id="выбранные" hidden>Учить выбранные</button>
+  <a class="спр-старое" href="?группа=обычные">Другие упражнения: впиши форму, что за глагол, фразы</a>
+</div>
+<div class="lp спр-старый" id="старый" hidden>
   <h1>Спряжения</h1>
 
   <div class="вкладки" id="группы"></div>
@@ -126,6 +156,41 @@
     Результат «Впиши форму» сохраняется по каждому глаголу.
   </footer>
 </div>
+<script>
+(function(){
+  var ГР = [
+    { к:'обычные_формы', з:'🔤', имя:'Обычные глаголы', под:'machen, wohnen, lernen', цвет:'#3B82F6' },
+    { к:'особые_глаголы', з:'⚡', имя:'Особые глаголы', под:'sein, haben, werden, wissen, tun', цвет:'#8B5CF6' },
+    { к:'модальные', з:'🔑', имя:'Модальные глаголы', под:'können, müssen, dürfen, wollen', цвет:'#EC4899' },
+    { к:'сильные_формы', з:'🔀', имя:'Меняют гласную', под:'fahren, sprechen, lesen', цвет:'#F59E0B' }
+  ];
+  var п = new URLSearchParams(location.search);
+  if (п.get('группа') || п.get('режим')) { document.getElementById('оглавление').hidden = true; document.getElementById('старый').hidden = false; return; }
+  function ссылка(ключи){ return 'zubr.html?набор=' + encodeURIComponent(ключи[0]) + '&режим=спряжение' + (ключи.length > 1 ? '&дальше=' + encodeURIComponent(ключи.slice(1).join(',')) : ''); }
+  var выбор = false, отмечено = {};
+  function нарисовать(){
+    document.getElementById('спрГруппы').innerHTML = ГР.map(function(г){
+      return '<a class="спр-группа' + (выбор ? ' выбор' : '') + (отмечено[г.к] ? ' отмечена' : '') + '" data-к="' + г.к + '" href="' + ссылка([г.к]) + '" style="--ц:' + г.цвет + '">' +
+        (выбор ? '<span class="галка">' + (отмечено[г.к] ? '✓' : '') + '</span>' : '') +
+        '<i>' + г.з + '</i><b>' + г.имя + '</b><small>' + г.под + '</small></a>';
+    }).join('');
+    var н = ГР.filter(function(г){ return отмечено[г.к]; }).length, к = document.getElementById('выбранные');
+    к.hidden = !выбор; к.disabled = !н; к.textContent = н ? 'Учить выбранные (' + н + ') →' : 'Отметь группы галочками';
+    document.getElementById('несколько').classList.toggle('вкл', выбор);
+  }
+  document.getElementById('спрГруппы').addEventListener('click', function(e){
+    var а = e.target.closest('.спр-группа'); if (!а || !выбор) return;
+    e.preventDefault(); отмечено[а.dataset.к] = !отмечено[а.dataset.к]; нарисовать();
+  });
+  document.getElementById('всеПодряд').onclick = function(){ location.href = ссылка(ГР.map(function(г){ return г.к; })); };
+  document.getElementById('несколько').onclick = function(){ выбор = !выбор; нарисовать(); };
+  document.getElementById('выбранные').onclick = function(){
+    var к = ГР.filter(function(г){ return отмечено[г.к]; }).map(function(г){ return г.к; });
+    if (к.length) location.href = ссылка(к);
+  };
+  нарисовать();
+})();
+</script>
 
 <a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 
