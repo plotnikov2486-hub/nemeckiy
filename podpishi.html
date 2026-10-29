@@ -98,7 +98,7 @@ var выбор = false, отмечено = {};
 function нарисовать(){
   закрытьЛист(); var и = document.querySelector('.итог'); if (и) и.remove();
   var а = адрес(); window.scrollTo(0, 0);
-  if (а.р && а.у !== undefined){ return играть(раздел(а.р), а.у.split(',').map(Number), 0); }
+  if (а.р && а.у !== undefined){ if (!раздел(а.р)) { location.hash = ''; return; } return играть(раздел(а.р), а.у.split(',').map(Number), 0); }
   if (а.р){
     var р = раздел(а.р); if (!р){ location.hash = ''; return; }
     $('верх').innerHTML = '<a href="#">‹ Разделы</a><span class="имя">' + р.знак + ' ' + эк(р.имя) + '</span>';
