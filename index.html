@@ -284,13 +284,13 @@
   :root[data-вид="home"] .верх{ display:none; }
 
   .разделы{ max-width:920px; margin:14px auto 0; padding:0 18px; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-  .разделы a{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; min-height:78px;
-    padding:9px 4px; border-radius:16px; background:var(--surface); border:1px solid var(--line); color:var(--ink);
-    text-decoration:none; text-align:center; font-size:12.5px; font-weight:700; line-height:1.15; transition:border-color .15s, transform .1s; }
+  .разделы a{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; min-height:96px;
+    padding:10px 4px; border-radius:18px; background:var(--surface); border:1px solid var(--line); color:var(--ink);
+    text-decoration:none; text-align:center; font-size:14px; font-weight:700; line-height:1.15; transition:border-color .15s, transform .1s; }
   .разделы a:hover{ border-color:var(--accent); } .разделы a:active{ transform:scale(.96); }
-  .разделы a i{ font-style:normal; font-size:25px; line-height:1; }
+  .разделы a i{ font-style:normal; font-size:40px; line-height:1; }
   .разделы a.главный{ background:var(--градиент); color:#fff; border-color:transparent; }
-  @media (min-width:700px){ .разделы{ grid-template-columns:repeat(7,1fr); } }
+  @media (min-width:700px){ .разделы{ grid-template-columns:repeat(6,1fr); } .разделы a{ min-height:112px; font-size:15px; } .разделы a i{ font-size:46px; } }
   :root:not([data-вид="home"]) .разделы{ display:none; }
 
   .кто-шапка{ max-width:920px; margin:0 auto; padding:16px 18px 0; display:flex; align-items:center; gap:14px; }
@@ -349,7 +349,7 @@
 
 <div class="кто-шапка">
   <div class="кто-фото" id="ктоФото"></div>
-  <div class="кто-текст"><b id="ктоИмя">Привет!</b><span>Немецкий для врачей · путь к Approbation</span></div>
+  <div class="кто-текст"><b id="ктоИмя">Привет!</b><span>Немецкий для врачей</span></div>
   <button class="кто-смена" id="ктоСмена">Сменить</button>
 </div>
 <div class="сводка" id="сводка"></div>
@@ -362,14 +362,13 @@
   <a href="slushat.html"><i>🎧</i>Слушаем</a>
   <a href="chitaem.html"><i>📖</i>Читаем</a>
   <a href="igry.html"><i>🎮</i>Игры</a>
-  <a href="trenazhyor.html"><i>★</i>Тренажёр слов</a>
   <a href="ekzameny.html"><i>🎯</i>Экзамены</a>
   <a href="testy.html"><i>🩺</i>Тесты врачей</a>
   <a href="itog.html"><i>🎓</i>Итоговый тест</a>
   <a href="stat.html"><i>📊</i>Статистика</a>
-  <a href="stat.html#put"><i>🧭</i>Путь к B2</a>
 </nav>
 <!--/ВХОД-->
+
 
 
 
@@ -1522,7 +1521,7 @@ function renderProgress(){
     `<h4>Уровень ${lv.code} — ${lv.name}: ${lv.ok} из ${lv.total} тем</h4>
      <div class="topic-list">` +
     lv.topics.map(tp=>{
-      const src = tp.l.length ? tp.l.map(x=> x.startsWith('d') ? 'Даша '+x.slice(1) : x.startsWith('p') ? 'Полина '+x.slice(1) : 'Урок '+x.slice(1)).join(', ') : '';
+      const src = tp.l.length ? tp.l.map(x=> x.startsWith('d') ? 'Даша '+x.slice(1) : x.startsWith('p') ? 'Полина '+x.slice(1) : 'Урок '+(Number(x.slice(1))+1)).join(', ') : '';
       return `<div class="topic ${tp.covered?'ok':''}">
         <span class="tick">${tp.covered?'✓':'○'}</span>
         <span class="tt">${tp.t}${src?` <span class="src">— ${src}</span>`:''}</span>
@@ -1683,21 +1682,17 @@ function render(){
     const card = document.createElement('div');
     card.className = 'card' + (done ? ' done' : '');
 
-    const audioBtn = l.audio
-      ? `<a class="btn audio" href="${l.audio}" target="_blank" rel="noopener">🔊 Интерактив со звуком</a>`
-      : `<span class="btn audio disabled">🔊 скоро будет</span>`;
-
+    // 29.10: врач — «вся рамочка одна большая ссылка; интерактив, PDF, минуты, сложность, число слов убрать; нумерация с 1»
+    card.classList.add('кратко');
     const обл = window.ОБЛОЖКИ && ОБЛОЖКИ['urok' + l.id];   // 24.10.2026: фото-обложка урока (Nano Banana)
+    const имя = l.title.split('—')[1] ? l.title.split('—')[1].trim() : l.title;
     card.innerHTML = `
-      ${обл ? `<img class="card-фото" alt="" loading="lazy" decoding="async" src="img/sceny/${обл}">` : ''}
-      <span class="num">${l.title.split('—')[0].trim()}</span>
-      <h2>${l.title.split('—')[1] ? l.title.split('—')[1].trim() : l.title}</h2>
-      <p class="topic">${l.topic}</p>
-      ${l.mins ? `<p class="l-мера">⏱ ${l.mins} мин · ${l.hard} · ${l.cards} слов</p>` : ''}
-      <div class="actions">
-        ${audioBtn}
-        <a class="btn pdf" href="${l.pdf}" target="_blank" rel="noopener">📄 PDF для печати</a>
-      </div>
+      <a class="кратко-ссылка" href="${l.audio}">
+        ${обл ? `<img class="card-фото" alt="" loading="lazy" decoding="async" src="img/sceny/${обл}">` : ''}
+        <span class="num">Урок ${Number(l.id) + 1}</span>
+        <h2>${имя}</h2>
+        <p class="topic">${l.topic}</p>
+      </a>
       <label class="check">
         <input type="checkbox" ${done ? 'checked' : ''} data-lesson="${l.id}">
         Урок пройден
@@ -1850,7 +1845,7 @@ render();
     document.getElementById('сводка').innerHTML =
       '<a href="#claude"><b>' + claudeDone + '/' + LESSONS.length + '</b>уроков с Claude</a>' +
       '<a href="#dasha"><b>' + dashaDone + '/' + список.length + '</b>занятий с Дашей</a>' +
-      '<a href="trenazhyor.html"><b>' + выученоСлов() + '</b>слов выучено</a>' +
+      '<a href="stat.html"><b>' + выученоСлов() + '</b>слов выучено</a>' +
       '<a href="stat.html#put"><b>' + (проц || '—') + '</b>путь к B2</a>';
   }
   var ЗАГОЛОВКИ = { claude: '🤖 Уроки с Claude', dasha: '👩‍🏫 Уроки с Дашей', put: '🧭 Путь к B2' };

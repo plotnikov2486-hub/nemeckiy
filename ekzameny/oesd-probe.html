@@ -30,6 +30,9 @@
   #razbor h3,#texte h3{ margin-top:18px; } #razbor h4,#texte h4{ margin:14px 0 6px; }
   .selbst input{ width:70px; }
   .sticky-itog{ position:sticky; bottom:0; background:var(--bg); border-top:1px solid var(--line); padding:8px 0; font-size:14px; }
+.listalka{ display:flex; gap:10px; overflow-x:auto; scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch; padding-bottom:6px; }
+.listalka .stranica{ flex:0 0 100%; max-height:78vh; object-fit:contain; scroll-snap-align:center; margin:0; }
+.blank-zag{ margin:14px 0 6px; padding:10px 14px; border-radius:12px; background:#fef3c7; color:#92400e; font-weight:800; }
 </style>
 </head>
 <body>
@@ -101,7 +104,11 @@ function zeigen(){
     html += '<div class="karta" id="t-'+t.id+'"><div class="teil-kopf"><h2>'+эк(t.titel)+'</h2><span class="kto">'+t.min+' мин</span>'+
       '<span class="kto">макс. '+t.max+', минимум '+t.mindest+'</span><button class="knopka vtor" data-uhr="'+t.id+'">Старт</button><span class="chasy" id="uhr-'+t.id+'"></span></div>';
     if (t.hinweis) html += '<p class="melko">'+эк(t.hinweis)+'</p>';
-    html += '<details'+(t.selbst?'':' open')+'><summary>Страницы экзамена ('+t.seiten.length+')</summary>'+t.seiten.map(seite).join('')+'</details>';
+    // 29.10 врач: «ничего нельзя отметить» — бланк был под пятью страницами. Теперь страницы листаются вбок
+    // в одном окне, а бланк ответов сразу под ними, с понятной надписью.
+    html += '<details'+(t.selbst?'':' open')+'><summary>Страницы экзамена ('+t.seiten.length+')'+(t.seiten.length>1?' — листай вбок →':'')+'</summary>'+
+      '<div class="listalka">'+t.seiten.map(seite).join('')+'</div></details>';
+    if (t.aufgaben) html += '<p class="blank-zag">✏️ Ответы отмечай здесь, кнопками ниже</p>';
     (t.aufgaben||[]).forEach(function(a, ai){ html += aufgabeHTML(t, a, ai); });
     if (t.selbst){
       html += '<div class="zadanie selbst"><h4>Ваш текст / оценка</h4>'+
