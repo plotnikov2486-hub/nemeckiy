@@ -15,6 +15,13 @@
 
 /* ───────────────────────── мелочи ───────────────────────── */
 
+/* 29.10.2026: картинки игр (книжки, библиотека) лежат рядом с igry.js — путь берём от самого скрипта,
+   чтобы работало и на igry.html, и в уроках (../igry.js) */
+var ИГРЫ_БАЗА = (function () { try { return document.currentScript.src.replace(/igry\.js.*$/, '').replace(/ядро\.js.*$/, ''); } catch (e) { return ''; } })();
+/* книжки корешком (Nano Banana, диснеевский стиль): [файл, ширина, высота, табличка x0, y0, x1, y1 в %],
+   по возрастанию ширины таблички — короткому слову короткую табличку (врач 29.10) */
+var КОРЕШКИ = [["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_2.webp", 925, 324, 33.0, 42.9, 66.5, 64.2], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_1.webp", 999, 266, 27.5, 43.6, 71.3, 72.2], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_5.webp", 982, 420, 26.3, 37.9, 71.1, 58.1], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_7.webp", 959, 222, 25.9, 32.4, 72.2, 64.0], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_4.webp", 967, 285, 23.2, 42.5, 70.2, 68.4], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_6.webp", 907, 356, 24.3, 15.7, 75.0, 37.9], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_3.webp", 944, 337, 24.5, 42.7, 74.8, 65.0], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_8.webp", 965, 362, 27.3, 38.4, 78.3, 67.4]];
+
 function экр(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
     .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
@@ -272,6 +279,23 @@ var СТИЛЬ = ''
 + '.иг-книжки .иг-книга{ font-size:15px; padding:6px 8px 6px 8px; text-align:center; border-left-width:5px; min-height:34px; line-height:1.2;'
 + '  overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto; }'
 + '.иг-книжки .иг-текст{ margin:0; gap:2px; }'
+/* 29.10: книжки-корешки на фоне библиотеки */
++ '.иг-библиотека .иг-книжки{ grid-template-columns:minmax(0,45%) minmax(0,1fr); }'
++ '.иг-библиотека .иг-текст{ min-width:0; overflow-wrap:anywhere; }'
++ '.иг-библиотека{ background-size:cover; background-position:center; border-radius:16px; padding:10px; margin:0 -4px; }'
++ '.иг-библиотека .иг-подсказ, .иг-библиотека .иг-табличка{ background:rgba(255,250,235,.92); color:#2b2118; border-radius:12px; padding:8px 10px; }'
++ '.иг-библиотека .иг-текст{ background:rgba(255,250,235,.93); color:#2b2118; border-radius:12px; padding:6px 10px; }'
++ '.иг-библиотека .иг-текст .ряд{ border-bottom-color:rgba(120,90,50,.25); } .иг-библиотека .иг-текст .ряд small{ color:#6b5a44; }'
++ '.иг-библиотека .иг-полка{ background:rgba(70,40,15,.55); border-color:transparent; }'
++ '.иг-библиотека .иг-полка.пусто::after{ color:#fff3dc; }'
++ '.иг-книга.корешок{ position:relative; display:inline-block; width:100%; max-width:190px; height:auto; min-height:0; padding:0; border:none;'
++ '  border-radius:0; background-color:transparent; background-repeat:no-repeat; background-size:100% 100%; box-shadow:none; line-height:1; }'
++ '.иг-книжки .иг-книга.корешок{ min-height:0; padding:0; border:none; }'
++ '.иг-дырка .иг-книга.корешок, .иг-книжки .иг-дырка .иг-книга.корешок{ width:min(130px,30vw); max-width:100%; min-height:0; padding:0; margin:1px 0; }'
++ '.иг-книга.корешок .надпись{ position:absolute; display:flex; align-items:center; justify-content:center; white-space:nowrap; overflow:hidden;'
++ '  font-family:Georgia,"Iowan Old Style",serif; font-weight:800; color:#3b2a14; line-height:1; pointer-events:none; }'
++ '.иг-книга.корешок.выбрана{ outline:3px solid #facc15; outline-offset:1px; border-radius:6px; }'
++ '.иг-дырка.нет .иг-книга.корешок .надпись{ text-decoration:line-through; color:#991b1b; }'
 + '.иг-книжки .иг-текст .ряд{ font-size:17.5px; line-height:1.95; padding:1px 0 4px; }'
 + '.иг-книжки .иг-дырка{ min-width:58px; min-height:30px; margin:0 2px; }'
 + '.иг-книжки .иг-дырка .иг-книга{ font-size:13.5px; min-height:26px; padding:2px 7px 2px 9px; }'
@@ -1926,6 +1950,11 @@ var КНИЖКИ = {
 
     function заново() {
       книги = перемешать(строки.map(function (с, i) { return { т: String(с[1]).split('|')[0], цвет: i % 6 }; }));
+      // самому короткому слову — книжка с самой короткой табличкой, самому длинному — с самой длинной
+      var поДлине = книги.map(function (_, к) { return к; }).sort(function (a, b) { return книги[a].т.length - книги[b].т.length; });
+      поДлине.forEach(function (к, ранг) {
+        книги[к].корешок = КОРЕШКИ[Math.round(ранг * (КОРЕШКИ.length - 1) / Math.max(поДлине.length - 1, 1))];
+      });
       места = строки.map(function () { return -1; });
       начало = Date.now(); проверено = false; выбрана = -1;
       стоп(); таймер = setInterval(тик, 1000);
@@ -1939,7 +1968,19 @@ var КНИЖКИ = {
     function стоп() { if (таймер) { clearInterval(таймер); таймер = null; } }
     function гдеКнига(к) { return места.indexOf(к); }
     function книжка(к, доп) {
-      return '<span lang="de" class="иг-книга ц' + книги[к].цвет + (доп || '') + '" data-к="' + к + '">' + экр(книги[к].т) + '</span>';
+      var б = книги[к].корешок;
+      if (!б) return '<span lang="de" class="иг-книга ц' + книги[к].цвет + (доп || '') + '" data-к="' + к + '">' + экр(книги[к].т) + '</span>';
+      return '<span lang="de" class="иг-книга корешок' + (доп || '') + '" data-к="' + к + '" style="background-image:url(\'' + ИГРЫ_БАЗА + б[0] +
+        '\');aspect-ratio:' + б[1] + '/' + б[2] + '"><span class="надпись" style="left:' + б[3] + '%;top:' + б[4] + '%;width:' + (б[5] - б[3]) +
+        '%;height:' + (б[6] - б[4]) + '%">' + экр(книги[к].т) + '</span></span>';
+    }
+    // слово должно целиком лечь в табличку: шрифт от высоты таблички, при длинном слове уменьшаем
+    function вписать() {
+      Array.prototype.forEach.call(document.querySelectorAll('#игКарта .надпись'), function (н) {
+        var р = Math.min(н.clientHeight * 1.45, 24);   // заглавные ≈ 0,7 шрифта — остаются внутри таблички
+        н.style.fontSize = р + 'px';
+        while (н.scrollWidth > н.clientWidth && р > 8) { р -= 0.5; н.style.fontSize = р + 'px'; }
+      });
     }
     function верноЛи(н) {
       var к = места[н];
@@ -1963,7 +2004,7 @@ var КНИЖКИ = {
         return '<div class="ряд">' + части[0] + дырка + (части[1] || '') +
           (перевод && с[2] ? '<small>' + экр(с[2]) + '</small>' : '') + '</div>';
       }).join('');
-      х.рисовать(
+      х.рисовать('<div class="иг-библиотека" style="background-image:url(\'' + ИГРЫ_БАЗА + 'img/igry/библиотека.webp\')">' +
         (проверено ? табличка() : '<p class="иг-подсказ"><span class="иг-время" id="игВремя">' + время() + '</span> · ' +
           'перетащи книжку в пропуск — или нажми книжку, потом пропуск. Нажми на поставленную — вернётся на полку.</p>') +
         (проверено ? '' : '<div class="иг-книжки"><div class="иг-полка' + (наПолке.length ? '' : ' пусто') + '" id="игПолка">' +
@@ -1974,7 +2015,8 @@ var КНИЖКИ = {
           ? '<button class="иг-главная" id="игЕщё">↻ Ещё раз</button>' +
             '<button class="иг-тихая" id="игОтветы">' + (показатьОтветы ? 'Ответы показаны' : '👁 Показать ответы') + '</button>'
           : '<button class="иг-главная" id="игПроверить">✓ Проверить</button>') +
-        '<button class="иг-тихая" id="игПеревод">' + (перевод ? 'Без перевода' : 'Перевод') + '</button></div>');
+        '<button class="иг-тихая" id="игПеревод">' + (перевод ? 'Без перевода' : 'Перевод') + '</button></div></div>');
+      вписать();
       var пр = document.getElementById('игПроверить'); if (пр) пр.onclick = проверить;
       var ещё = document.getElementById('игЕщё'); if (ещё) ещё.onclick = заново;
       var отв = document.getElementById('игОтветы'); if (отв) отв.onclick = function () { рисовать(true); };
