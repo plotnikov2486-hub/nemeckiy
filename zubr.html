@@ -523,8 +523,8 @@ h1.большой{ font-size:clamp(26px,7vw,34px); font-weight:800; letter-spaci
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202610291309';</script>
-<script src="kartinki.js?v=202610291309"></script>
+<script>window.ЗУБР_ВЕРСИЯ = '202610291318';</script>
+<script src="kartinki.js?v=202610291318"></script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -3549,6 +3549,10 @@ function таблицаГлаголов(набор){
 
   /* ── победа ── */
   function победа(){
+    // 29.10: «Учить всё подряд» со страницы «Спряжение» — очередь групп в адресе: &дальше=особые_глаголы,модальные
+    var очередьСпр = (new URLSearchParams(location.search).get('дальше') || '').split(',').filter(Boolean);
+    var следСпр = null;
+    for (var н = 0; н < НАБОРЫ.length && очередьСпр.length; н++) if (НАБОРЫ[н].ключ === очередьСпр[0]) следСпр = НАБОРЫ[н];
     $('экран').innerHTML =
       '<div class="салют" id="салют"></div>' +
       '<div class="итоги"><div class="эмо">🏆</div><h2>Все формы взяты!</h2>' +
@@ -3557,11 +3561,16 @@ function таблицаГлаголов(набор){
       (набор.ключ === 'модальные'
         ? '<button class="кн главная широкая" id="кВПредл">🔑 Теперь вставь в предложения</button><div style="height:10px"></div>'
         : '') +
+      (следСпр ? '<button class="кн главная широкая" id="кСледСпр">Дальше: ' + экр(следСпр.имя) + ' →</button><div style="height:10px"></div>' : '') +
       '<button class="кн широкая" id="кЕщёСпр">Пройти ещё раз</button>' +
       '<div style="height:10px"></div>' +
       '<button class="кн лёгкая широкая" id="кКНабору">К колоде</button></div>';
     запустиСалют($('салют'));
     звукПобеды();
+    if ($('кСледСпр')) $('кСледСпр').onclick = function(){
+      var ост = очередьСпр.slice(1).join(',');
+      location.href = 'zubr.html?набор=' + encodeURIComponent(следСпр.ключ) + '&режим=спряжение' + (ост ? '&дальше=' + encodeURIComponent(ост) : '');
+    };
     if ($('кВПредл')) $('кВПредл').onclick = function(){ показать('модальные', набор); };
     $('кЕщёСпр').onclick = function(){ шаг = 0; запомнить(); показатьШаг(); };
     $('кКНабору').onclick = function(){ показать('набор', набор, true); };

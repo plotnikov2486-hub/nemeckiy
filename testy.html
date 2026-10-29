@@ -120,11 +120,27 @@
   .rezhim .zn{ font-size:23px; } .rezhim .nm{ display:block; font-weight:600; font-size:15px; }
   .rezhim .po{ display:block; font-size:12px; color:var(--ink-muted); margin-top:2px; }
   .chasy{ font-variant-numeric:tabular-nums; font-weight:600; color:var(--play); }
+  .ur-kursy, .ur-razdely{ display:grid; gap:10px; margin-top:12px; }
+  .ur-razdely{ grid-template-columns:1fr 1fr; }
+  .ur-plitka{ display:flex; flex-direction:column; align-items:flex-start; gap:4px; text-align:left; font:inherit; cursor:pointer;
+    padding:18px 16px; border-radius:18px; background:var(--surface); border:2px solid var(--line); color:var(--ink); min-height:84px; }
+  .ur-plitka:hover{ border-color:var(--accent); }
+  .ur-plitka i{ font-style:normal; font-size:28px; } .ur-plitka .nm{ font-weight:800; font-size:17px; }
+  .ur-plitka .po{ font-size:13px; color:var(--ink-muted); }
+  .ur-krugi{ display:grid; grid-template-columns:repeat(auto-fill,minmax(48px,1fr)); gap:9px; margin-top:12px; }
+  .ur-krug{ aspect-ratio:1/1; border-radius:50%; border:2px solid var(--line); background:var(--surface-2); color:var(--ink-muted);
+    font:inherit; font-size:14px; font-weight:800; cursor:pointer; font-variant-numeric:tabular-nums; }
+  .ur-krug.idet{ border-color:#F59E0B; color:var(--ink); }
+  .ur-krug.ok{ background:#22c55e; border-color:#22c55e; color:#fff; }
+  .ur-krug.plo{ background:#ef4444; border-color:#ef4444; color:#fff; }
+  .ur-legenda{ display:flex; flex-wrap:wrap; gap:6px 12px; align-items:center; font-size:12.5px; color:var(--ink-muted); }
+  .ur-legenda .k{ display:inline-block; width:14px; height:14px; border-radius:50%; border:2px solid var(--line); background:var(--surface-2); vertical-align:-2px; }
+  .ur-legenda .k.idet{ border-color:#F59E0B; } .ur-legenda .k.ok{ background:#22c55e; border-color:#22c55e; } .ur-legenda .k.plo{ background:#ef4444; border-color:#ef4444; }
 </style>
 </head>
 <body>
 <div class="backbar">
-  <a class="bb-link" href="index.html">‹ Немецкий</a>
+  <a class="bb-link" href="index.html">‹ Главная</a>
   <button class="bb-link" id="knNazad" hidden>‹ К списку</button>
   <span class="ogon" id="ogon" title="дней подряд">🔥 0</span>
 </div>
@@ -143,6 +159,10 @@ var КУРСЫ = [
   { к:'derma', имя:'FRAMKO · Дерматология',под:'Test Yourself, с фото',   папка:'testy/framko/derma/' }
 ];
 var огл = {}, блокКэш = {}, экран = 'Блоки', сеанс = null, текКурс = 'общий';
+/* 29.10 врач: «нажал на тесты — спроси, какие; выбрал курс — блоки, темы, избранное, ошибки, режимы;
+   нажал блоки — кружочки на весь экран, как в МедикТесте: серые, пройденные зелёные, не сданные красные;
+   у тем — поиск и номера». Уровень: 0 — курсы, 1 — разделы курса, 2 — сам раздел. */
+var уровень = 0;
 
 /* ---------- память ---------- */
 function взять(ключ, поум){ try{ var с = localStorage.getItem(ключ); return с ? JSON.parse(с) : поум; }catch(e){ return поум; } }
@@ -182,7 +202,10 @@ function эк(с){ return String(с==null?'':с).replace(/[&<>"]/g, function(з)
 function многострочно(с){ return эк(с).replace(/\n/g, '<br>'); }
 var корн = document.getElementById('korn');
 var кнНазад = document.getElementById('knNazad');
-кнНазад.addEventListener('click', function(){ сеанс = null; кнНазад.hidden = true; рисовать(); });
+кнНазад.addEventListener('click', function(){
+  if (сеанс) сеанс = null; else if (уровень > 0) уровень--;
+  рисовать(); window.scrollTo(0,0);
+});
 
 function кольцо(доля, подпись){
   var r = 17, длина = 2*Math.PI*r, залито = длина*Math.min(1, доля);
@@ -205,40 +228,58 @@ function окончание(н){ var х = н%10, с = н%100;
 
 /* ---------- списки ---------- */
 function рисовать(){
-  кнНазад.hidden = !сеанс;
+  кнНазад.hidden = !сеанс && уровень === 0;
+  кнНазад.textContent = сеанс ? '‹ К списку' : '‹ Назад';
   if (сеанс) return рисоватьСеанс();
-  var о = огл[текКурс];
-  var ч = '<h1>Тесты</h1><p class="lede">Медицинский немецкий · '+
-    о.всего.toLocaleString('ru')+' вопрос'+окончание(о.всего)+' в '+о.блоков+' блоках по '+о.в_блоке+'</p>';
-  ч += '<div class="kursy">' + КУРСЫ.map(function(к){
-      return '<button data-курс="'+к.к+'"'+(текКурс===к.к?' class="on"':'')+
-        '><span class="nm">'+эк(к.имя)+'</span><span class="po">'+эк(к.под)+'</span></button>'; }).join('') + '</div>';
-  ч += '<div class="tabs">' + ['Блоки','Темы','Избранное','Ошибки','Режимы'].map(function(н){
-        return '<button data-эк="'+н+'"'+(экран===н?' class="on"':'')+'>'+н+'</button>'; }).join('') + '</div>';
-
-  var готовых = 0, решено = 0, верных = 0;
-  о.блоки.forEach(function(б){ var р = решеноВБлоке(б.н); решено += р; верных += верноВБлоке(б.н); if (р >= б.n) готовых++; });
-  ч += '<div class="svodka"><div><b>'+готовых+' из '+о.блоков+'</b><span>блоков пройдено</span></div>'+
-       '<div><b>'+решено+'</b><span>вопросов решено</span></div>'+
-       '<div><b>'+(решено ? Math.round(верных/решено*100) : 0)+'%</b><span>верных ответов</span></div></div>';
-
-  if (экран === 'Блоки')          ч += списокБлоков();
-  else if (экран === 'Темы')      ч += списокТем();
-  else if (экран === 'Избранное') ч += списокПодборки(избранное, 'Звёздочкой отмечайте вопросы, к которым хотите вернуться.');
-  else if (экран === 'Ошибки')    ч += списокПодборки(ошибки, 'Сюда сами падают вопросы, где вы ошиблись.');
-  else                            ч += списокРежимов();
+  var о = огл[текКурс], ч = '';
+  if (уровень === 0){
+    ч = '<h1>Тесты для врачей</h1><p class="lede">Какие тесты?</p><div class="ur-kursy">' + КУРСЫ.map(function(к){
+      return '<button class="ur-plitka" data-курс="'+к.к+'"><span class="nm">'+эк(к.имя)+'</span><span class="po">'+эк(к.под)+'</span></button>'; }).join('') + '</div>';
+  } else if (уровень === 1){
+    var готовых = 0, решено = 0, верных = 0;
+    о.блоки.forEach(function(б){ var р = решеноВБлоке(б.н); решено += р; верных += верноВБлоке(б.н); if (р >= б.n) готовых++; });
+    ч = '<h1>'+эк(курс().имя)+'</h1>' +
+      '<div class="svodka"><div><b>'+готовых+' из '+о.блоков+'</b><span>блоков пройдено</span></div>'+
+      '<div><b>'+решено+'</b><span>вопросов решено</span></div>'+
+      '<div><b>'+(решено ? Math.round(верных/решено*100) : 0)+'%</b><span>верных ответов</span></div></div>' +
+      '<div class="ur-razdely">' + [['Блоки','🟢','по '+о.в_блоке+' вопросов, '+о.блоков+' блоков'],['Темы','📚',о.разделы.length+' тем'],
+        ['Избранное','★',избранное.length+' вопросов'],['Ошибки','🔁',ошибки.length+' вопросов'],['Режимы','🎓','экзамен, спринт, марафон']].map(function(м){
+        return '<button class="ur-plitka" data-эк="'+м[0]+'"><i>'+м[1]+'</i><span class="nm">'+м[0]+'</span><span class="po">'+эк(м[2])+'</span></button>'; }).join('') + '</div>';
+  } else {
+    ч = '<h1>'+эк(экран)+'</h1><p class="lede">'+эк(курс().имя)+'</p>';
+    if (экран === 'Блоки')          ч += кружкиБлоков();
+    else if (экран === 'Темы')      ч += списокТем();
+    else if (экран === 'Избранное') ч += списокПодборки(избранное, 'Звёздочкой отмечайте вопросы, к которым хотите вернуться.');
+    else if (экран === 'Ошибки')    ч += списокПодборки(ошибки, 'Сюда сами падают вопросы, где вы ошиблись.');
+    else                            ч += списокРежимов();
+  }
   корн.innerHTML = ч;
 
   корн.querySelectorAll('[data-курс]').forEach(function(к){
-    к.addEventListener('click', function(){ сменитьКурс(к.dataset.курс); }); });
-  корн.querySelectorAll('.tabs button').forEach(function(к){
-    к.addEventListener('click', function(){ экран = к.dataset.эк; рисовать(); window.scrollTo(0,0); }); });
+    к.addEventListener('click', function(){ выбратьКурс(к.dataset.курс); }); });
+  корн.querySelectorAll('[data-эк]').forEach(function(к){
+    к.addEventListener('click', function(){ экран = к.dataset.эк; уровень = 2; рисовать(); window.scrollTo(0,0); }); });
   корн.querySelectorAll('[data-блок]').forEach(function(к){
     к.addEventListener('click', function(){ открытьБлок(+к.dataset.блок); }); });
   корн.querySelectorAll('[data-режим]').forEach(function(к){
     к.addEventListener('click', function(){ запуститьРежим(к.dataset.режим); }); });
   var п = корн.querySelector('#poisk');
   if (п) п.addEventListener('input', function(){ фильтрБлоков(п.value.trim().toLowerCase()); });
+}
+function выбратьКурс(к){
+  if (к === текКурс && огл[к]){ уровень = 1; рисовать(); window.scrollTo(0,0); return; }
+  корн.innerHTML = '<p class="pusto">Загружаю…</p>';
+  взятьОгл(к).then(function(){ текКурс = к; уровень = 1; try{ localStorage.setItem('mt_курс', к); }catch(e){}
+    рисовать(); window.scrollTo(0,0); })
+   .catch(function(){ корн.innerHTML = '<p class="pusto">Этот курс пока не выложен.</p>'; });
+}
+function кружкиБлоков(){
+  return '<div class="ur-legenda"><span class="k"></span>не начат <span class="k idet"></span>начат <span class="k ok"></span>пройден <span class="k plo"></span>меньше 60 %</div>' +
+    '<div class="ur-krugi">' + огл[текКурс].блоки.map(function(б){
+      var р = решеноВБлоке(б.н), в = верноВБлоке(б.н);
+      var кл = !р ? '' : р < б.n ? ' idet' : (в / б.n >= 0.6 ? ' ok' : ' plo');
+      return '<button class="ur-krug'+кл+'" data-блок="'+б.н+'" title="'+эк(б.тема)+'">'+б.н+'</button>';
+    }).join('') + '</div>';
 }
 
 function сменитьКурс(к){
@@ -266,14 +307,14 @@ function фильтрБлоков(что){
 }
 function списокТем(){
   var о = огл[текКурс];
-  return о.разделы.map(function(р){
+  return '<input class="poisk" id="poisk" placeholder="Найти тему…"><div id="спБлоков">' + о.разделы.map(function(р, i){
     var первый = Math.floor((р.от-1)/о.в_блоке)+1, последний = Math.floor((р.до-1)/о.в_блоке)+1;
     var решено = 0;
     for (var н = первый; н <= последний; н++) решено += решеноВБлоке(н);
-    return '<button class="blok" data-блок="'+первый+'">'+кольцо(решено/Math.max(1,р.n), '')+
-      '<span class="tx"><span class="nm">'+эк(р.имя)+'</span>'+
+    return '<button class="blok" data-блок="'+первый+'" data-искать="'+эк((р.имя+' '+(i+1)).toLowerCase())+'">'+кольцо(решено/Math.max(1,р.n), '')+
+      '<span class="tx"><span class="nm">'+(i+1)+'. '+эк(р.имя)+'</span>'+
       '<span class="po">'+р.n+' вопрос'+окончание(р.n)+' · блоки '+первый+'–'+последний+'</span></span></button>';
-  }).join('');
+  }).join('') + '</div>';
 }
 function списокПодборки(массив, подсказка){
   if (!массив.length) return '<p class="pusto">'+подсказка+'</p>';

@@ -73,15 +73,19 @@
   .deck-row .cnt { font-size:12.5px; color:var(--ink-muted); font-variant-numeric:tabular-nums; white-space:nowrap; }
   .empty { color:var(--ink-muted); font-size:14px; padding:22px 0; }
   @media (max-width:520px){ .heat i { width:11px; height:11px; } }
+  details.раскрыв > summary{ list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; }
+  details.раскрыв > summary::-webkit-details-marker{ display:none; }
+  details.раскрыв > summary h2{ margin:0; }
+  details.раскрыв > summary::after{ content:"▾"; font-size:22px; color:var(--accent); transition:transform .2s; }
+  details.раскрыв:not([open]) > summary::after{ transform:rotate(-90deg); }
+  details.раскрыв[open] > summary{ margin-bottom:10px; }
 </style>
 </head>
 <body>
-<a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+<a class="bb-top" href="index.html">&#8592; Главная</a>
 
 <div class="lp">
-  <div class="eyebrow">Курс немецкого · статистика</div>
-  <h1>Как идут дела</h1>
-  <p class="lede">Считается по всем колодам сразу — уроки, занятия с Дашей и ЗУБР. Данные лежат в этом устройстве, поэтому на телефоне и на маке картина будет своя.</p>
+  <h1>Статистика</h1>
 
   <div class="who">
     <span class="lbl">Чья статистика:</span>
@@ -100,24 +104,25 @@
     });
   </script>
 
-  <div class="block">
-    <h2>Занятия</h2>
+  <!-- 29.10 врач: «всё в одном месте; по колодам свернуть под стрелочку». Разделы раскрываются по нажатию. -->
+  <details class="block раскрыв" open>
+    <summary><h2>Занятия по дням</h2></summary>
     <p class="sub">Каждый квадрат — день. Чем темнее, тем больше слов прошло за день.</p>
     <div class="heat" id="heat"></div>
     <div class="heat-legend"><span>реже</span><i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i><span>чаще</span></div>
-  </div>
+  </details>
 
-  <div class="block">
-    <h2>Что ждёт на неделе</h2>
+  <details class="block раскрыв">
+    <summary><h2>Что ждёт на неделе</h2></summary>
     <p class="sub">Сколько слов подойдёт к повторению в ближайшие дни. Новые слова сюда не входят — их количество вы задаёте сами.</p>
     <div class="fore" id="fore"></div>
-  </div>
+  </details>
 
-  <div class="block">
-    <h2>По колодам</h2>
+  <details class="block раскрыв">
+    <summary><h2>По колодам</h2></summary>
     <p class="sub">Сколько слов из каждого урока уже держится в памяти дольше трёх недель.</p>
     <div class="decks" id="decks"></div>
-  </div>
+  </details>
 </div>
 
 <a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>

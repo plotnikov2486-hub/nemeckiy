@@ -39,14 +39,14 @@
   .выбор button.вкл { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
   .подзаг { font-size:12px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-muted);
     font-weight:700; margin:18px 0 0; }
+  body.в-игре .lp > h1, body.в-игре .lp > .eyebrow, body.в-игре .lp > .lede, body.в-игре .подзаг, body.в-игре .выбор,
+  body.в-игре .lp > footer, body.в-игре .bb-top{ display:none !important; }
+  body.в-игре .lp{ padding-top:10px; }
 </style>
 </head>
 <body>
 <div class="lp">
-  <div class="eyebrow">Немецкий</div>
-  <h1>Поиграем</h1>
-  <p class="lede">Слова из уроков, только играть, а не читать: собрать фразу, разложить по родам,
-    вставить пропущенное слово, подписать картинку. Результат сохраняется — видно, где просел.</p>
+  <h1>Игры</h1>
 
   <p class="подзаг">Откуда брать слова</p>
   <div class="выбор" id="выборРаздел"></div>
@@ -62,8 +62,20 @@
 
 <a class="bb-top" href="index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
 
+<script>
+/* 29.10 врач: «игра на весь экран, чтобы уроки 58, 59, 60 сюда не заползали». Пока идёт игра
+   (в поле есть шапка раунда), прячем выбор урока, заголовки и подвал. */
+(function(){
+  var поле = document.getElementById('игры');
+  function проверить(){
+    var в = !!поле.querySelector('.иг-шапка');
+    if (в !== document.body.classList.contains('в-игре')) { document.body.classList.toggle('в-игре', в); if (в) window.scrollTo(0, 0); }
+  }
+  new MutationObserver(проверить).observe(поле, { childList: true, subtree: true });
+})();
+</script>
 <script src="tema.js"></script>
-<script src="igry.js?v=202610291259"></script>
+<script src="igry.js?v=202610291319"></script>
 <script>
 (function () {
   var РАЗДЕЛЫ = [
