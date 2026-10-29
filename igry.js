@@ -20,7 +20,8 @@
 var ИГРЫ_БАЗА = (function () { try { return document.currentScript.src.replace(/igry\.js.*$/, '').replace(/ядро\.js.*$/, ''); } catch (e) { return ''; } })();
 /* книжки корешком (Nano Banana, диснеевский стиль): [файл, ширина, высота, табличка x0, y0, x1, y1 в %],
    по возрастанию ширины таблички — короткому слову короткую табличку (врач 29.10) */
-var КОРЕШКИ = [["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_2.webp", 909, 303, 32.9, 45.9, 67.0, 68.6], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_1.webp", 938, 249, 26.0, 46.6, 72.6, 77.1], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_5.webp", 962, 355, 25.7, 44.5, 71.4, 68.5], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_7.webp", 918, 208, 23.5, 34.6, 71.9, 68.3], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_4.webp", 941, 276, 23.8, 43.8, 72.2, 70.7], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_6.webp", 905, 268, 24.2, 20.9, 75.0, 50.4], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_3.webp", 926, 310, 24.2, 46.5, 75.5, 70.6], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_8.webp", 950, 333, 27.6, 41.7, 79.5, 73.3]];
+var КОРЕШКИ = [["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_3.webp", 925, 177, 27.0, 20.9, 72.8, 78.5], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_7.webp", 986, 283, 26.5, 19.4, 76.7, 79.9], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_5.webp", 928, 220, 21.1, 20.0, 79.1, 80.0], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_2.webp", 950, 238, 23.9, 17.2, 84.9, 81.9], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_8.webp", 926, 189, 27.8, 27.5, 91.8, 83.1], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_6.webp", 920, 302, 14.7, 12.9, 81.6, 40.1], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_1.webp", 904, 178, 18.8, 23.6, 87.1, 78.7], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_4.webp", 940, 145, 17.1, 23.4, 85.1, 75.9]];   // длинные корешки — для одного слова
+var КОРЕШКИ_ТОЛСТЫЕ = [["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_6.webp", 910, 304, 25.4, 21.1, 66.7, 79.9], ["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_3.webp", 922, 332, 28.5, 27.7, 71.5, 84.0], ["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_5.webp", 925, 601, 28.5, 27.1, 71.6, 74.2], ["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_4.webp", 926, 349, 29.4, 29.5, 74.5, 86.2], ["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_1.webp", 927, 477, 25.0, 35.0, 73.9, 82.6], ["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_2.webp", 886, 704, 23.1, 27.1, 75.2, 69.0], ["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_7.webp", 910, 471, 24.0, 26.8, 76.8, 77.7], ["img/igry/\u0442\u043e\u043b\u0441\u0442\u044b\u0439_8.webp", 954, 372, 16.5, 25.0, 68.7, 75.8]];   // толстые — для двух слов, одно под другим
 
 function экр(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -280,7 +281,12 @@ var СТИЛЬ = ''
 + '  overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto; }'
 + '.иг-книжки .иг-текст{ margin:0; gap:2px; }'
 /* 29.10: книжки-корешки на фоне библиотеки */
-+ '.иг-библиотека .иг-книжки{ grid-template-columns:minmax(0,45%) minmax(0,1fr); }'
++ '.иг-библиотека .иг-книжки{ display:block; }'
+/* длинные корешки узкие — полка сверху во всю ширину, по две книжки в ряд, текст под ней */
++ '.иг-библиотека .иг-книжки .иг-полка{ position:static; flex-direction:row; flex-wrap:wrap; justify-content:center; align-items:center; gap:8px 10px; padding:8px; margin:0 0 10px; }'
++ '.иг-библиотека .иг-полка .иг-книга.корешок{ height:44px; width:auto; max-width:92%; }'
++ '.иг-библиотека .иг-текст .ряд{ line-height:2.4; }'
++ '.иг-библиотека .иг-дырка{ min-width:120px; }'
 + '.иг-библиотека .иг-текст{ min-width:0; overflow-wrap:anywhere; }'
 + '.иг-библиотека{ background-size:cover; background-position:center; border-radius:16px; padding:10px; margin:0 -4px; }'
 + '.иг-библиотека .иг-подсказ, .иг-библиотека .иг-табличка{ background:rgba(255,250,235,.92); color:#2b2118; border-radius:12px; padding:8px 10px; }'
@@ -297,8 +303,8 @@ var СТИЛЬ = ''
 + '.иг-книга.корешок{ position:relative; display:inline-block; width:100%; max-width:190px; height:auto; min-height:0; padding:0; border:none;'
 + '  border-radius:0; background-color:transparent; background-repeat:no-repeat; background-size:100% 100%; box-shadow:none; line-height:1; }'
 + '.иг-книжки .иг-книга.корешок{ min-height:0; padding:0; border:none; }'
-+ '.иг-дырка .иг-книга.корешок, .иг-книжки .иг-дырка .иг-книга.корешок{ width:min(130px,30vw); max-width:100%; min-height:0; padding:0; margin:1px 0; }'
-+ '.иг-книга.корешок .надпись{ position:absolute; display:flex; align-items:center; justify-content:center; white-space:nowrap; overflow:hidden;'
++ '.иг-дырка .иг-книга.корешок, .иг-книжки .иг-дырка .иг-книга.корешок{ height:40px; width:auto; max-width:72vw; min-height:0; padding:0; margin:1px 0; }'
++ '.иг-книга.корешок .надпись{ position:absolute; display:flex; align-items:center; justify-content:center; text-align:center; white-space:nowrap; overflow:hidden;'
 + '  font-family:Georgia,"Iowan Old Style",serif; font-weight:800; color:#3b2a14; line-height:1; pointer-events:none; }'
 + '.иг-книга.корешок.выбрана{ outline:3px solid #facc15; outline-offset:1px; border-radius:6px; }'
 + '.иг-дырка.нет .иг-книга.корешок .надпись{ text-decoration:line-through; color:#991b1b; }'
@@ -1959,7 +1965,10 @@ var КНИЖКИ = {
       // самому короткому слову — книжка с самой короткой табличкой, самому длинному — с самой длинной
       var поДлине = книги.map(function (_, к) { return к; }).sort(function (a, b) { return книги[a].т.length - книги[b].т.length; });
       поДлине.forEach(function (к, ранг) {
-        книги[к].корешок = КОРЕШКИ[Math.round(ранг * (КОРЕШКИ.length - 1) / Math.max(поДлине.length - 1, 1))];
+        // 29.10 врач: «для одного слова — длинный корешок, толстый — если вставить два слова одно под другим»
+        var набор = /\s/.test(книги[к].т.trim()) ? КОРЕШКИ_ТОЛСТЫЕ : КОРЕШКИ;
+        книги[к].корешок = набор[Math.round(ранг * (набор.length - 1) / Math.max(поДлине.length - 1, 1))];
+        книги[к].дваСлова = набор === КОРЕШКИ_ТОЛСТЫЕ;
       });
       места = строки.map(function () { return -1; });
       начало = Date.now(); проверено = false; выбрана = -1;
@@ -1978,14 +1987,15 @@ var КНИЖКИ = {
       if (!б) return '<span lang="de" class="иг-книга ц' + книги[к].цвет + (доп || '') + '" data-к="' + к + '">' + экр(книги[к].т) + '</span>';
       return '<span lang="de" class="иг-книга корешок' + (доп || '') + '" data-к="' + к + '" style="background-image:url(\'' + ИГРЫ_БАЗА + б[0] +
         '\');aspect-ratio:' + б[1] + '/' + б[2] + '"><span class="надпись" style="left:' + б[3] + '%;top:' + б[4] + '%;width:' + (б[5] - б[3]) +
-        '%;height:' + (б[6] - б[4]) + '%">' + экр(книги[к].т) + '</span></span>';
+        '%;height:' + (б[6] - б[4]) + '%">' + (книги[к].дваСлова ? экр(книги[к].т).replace(/\s+/, '<br>') : экр(книги[к].т)) + '</span></span>';
     }
     // слово должно целиком лечь в табличку: шрифт от высоты таблички, при длинном слове уменьшаем
     function вписать() {
       Array.prototype.forEach.call(document.querySelectorAll('#игКарта .надпись'), function (н) {
-        var р = Math.min(н.clientHeight * 1.45, 24);   // заглавные ≈ 0,7 шрифта — остаются внутри таблички
+        var строк = н.querySelector('br') ? 2 : 1;
+        var р = Math.min(н.clientHeight * 0.8 / строк, 26);   // слово по высоте таблички, два слова — вдвое мельче
         н.style.fontSize = р + 'px';
-        while (н.scrollWidth > н.clientWidth && р > 8) { р -= 0.5; н.style.fontSize = р + 'px'; }
+        while ((н.scrollWidth > н.clientWidth || н.scrollHeight > н.clientHeight + 1) && р > 8) { р -= 0.5; н.style.fontSize = р + 'px'; }
       });
     }
     function верноЛи(н) {
