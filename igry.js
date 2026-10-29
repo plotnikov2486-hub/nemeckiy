@@ -20,7 +20,7 @@
 var ИГРЫ_БАЗА = (function () { try { return document.currentScript.src.replace(/igry\.js.*$/, '').replace(/ядро\.js.*$/, ''); } catch (e) { return ''; } })();
 /* книжки корешком (Nano Banana, диснеевский стиль): [файл, ширина, высота, табличка x0, y0, x1, y1 в %],
    по возрастанию ширины таблички — короткому слову короткую табличку (врач 29.10) */
-var КОРЕШКИ = [["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_2.webp", 925, 324, 33.0, 42.9, 66.5, 64.2], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_1.webp", 999, 266, 27.5, 43.6, 71.3, 72.2], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_5.webp", 982, 420, 26.3, 37.9, 71.1, 58.1], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_7.webp", 959, 222, 25.9, 32.4, 72.2, 64.0], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_4.webp", 967, 285, 23.2, 42.5, 70.2, 68.4], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_6.webp", 907, 356, 24.3, 15.7, 75.0, 37.9], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_3.webp", 944, 337, 24.5, 42.7, 74.8, 65.0], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_8.webp", 965, 362, 27.3, 38.4, 78.3, 67.4]];
+var КОРЕШКИ = [["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_2.webp", 909, 303, 32.9, 45.9, 67.0, 68.6], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_1.webp", 938, 249, 26.0, 46.6, 72.6, 77.1], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_5.webp", 962, 355, 25.7, 44.5, 71.4, 68.5], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_7.webp", 918, 208, 23.5, 34.6, 71.9, 68.3], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_4.webp", 941, 276, 23.8, 43.8, 72.2, 70.7], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_6.webp", 905, 268, 24.2, 20.9, 75.0, 50.4], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_3.webp", 926, 310, 24.2, 46.5, 75.5, 70.6], ["img/igry/\u043a\u043e\u0440\u0435\u0448\u043e\u043a_8.webp", 950, 333, 27.6, 41.7, 79.5, 73.3]];
 
 function экр(s) {
   return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;')
@@ -284,7 +284,13 @@ var СТИЛЬ = ''
 + '.иг-библиотека .иг-текст{ min-width:0; overflow-wrap:anywhere; }'
 + '.иг-библиотека{ background-size:cover; background-position:center; border-radius:16px; padding:10px; margin:0 -4px; }'
 + '.иг-библиотека .иг-подсказ, .иг-библиотека .иг-табличка{ background:rgba(255,250,235,.92); color:#2b2118; border-radius:12px; padding:8px 10px; }'
-+ '.иг-библиотека .иг-текст{ background:rgba(255,250,235,.93); color:#2b2118; border-radius:12px; padding:6px 10px; }'
++ '.иг-библиотека .иг-текст{ background:rgba(255,250,235,.82); color:#2b2118; border-radius:12px; padding:6px 10px; }'
+/* 29.10 врач: «места под книжки чёрные — сделать полупрозрачными, чтобы через них было видно библиотеку» */
++ '.иг-библиотека .иг-дырка{ background:rgba(255,255,255,.18); border:2px dashed rgba(110,75,35,.65); }'
++ '.иг-библиотека .иг-дырка.цель{ background:rgba(250,204,21,.28); border-color:#b45309; }'
++ '.иг-библиотека .иг-дырка.да{ background:rgba(34,197,94,.18); border:2px solid #16a34a; }'
++ '.иг-библиотека .иг-дырка.нет{ background:rgba(239,68,68,.15); border:2px solid #dc2626; }'
++ '.иг-библиотека .иг-дырка:has(.иг-книга){ background:transparent; border-color:transparent; }'
 + '.иг-библиотека .иг-текст .ряд{ border-bottom-color:rgba(120,90,50,.25); } .иг-библиотека .иг-текст .ряд small{ color:#6b5a44; }'
 + '.иг-библиотека .иг-полка{ background:rgba(70,40,15,.55); border-color:transparent; }'
 + '.иг-библиотека .иг-полка.пусто::after{ color:#fff3dc; }'
