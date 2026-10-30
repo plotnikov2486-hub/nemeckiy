@@ -81,7 +81,7 @@
 })();
 </script>
 <script src="tema.js"></script>
-<script src="igry.js?v=202610292019"></script>
+<script src="igry.js?v=202610301039"></script>
 <script>
 (function () {
   var РАЗДЕЛЫ = [
@@ -130,7 +130,7 @@
     var текущий = localStorage.getItem('nemeckiy_igry_урок_' + раздел) || String(номера[номера.length - 1]);
     if (номера.indexOf(+текущий) < 0) текущий = String(номера[номера.length - 1]);
     кнопки(куда, номера.map(function (н) {
-      return { код: String(н), имя: р.подпись + н };
+      return { код: String(н), имя: р.подпись + (р.код === 'claude' ? н + 1 : н) };   // 29.10: уроки на сайте с 1 (urok0 = «Урок 1»)
     }), текущий, function (к) {
       try { localStorage.setItem('nemeckiy_igry_урок_' + раздел, к); } catch (e) {}
       показатьУроки();

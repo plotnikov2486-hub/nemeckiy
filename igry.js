@@ -18,6 +18,22 @@
 /* 29.10.2026: картинки игр (книжки, библиотека) лежат рядом с igry.js — путь берём от самого скрипта,
    чтобы работало и на igry.html, и в уроках (../igry.js) */
 var ИГРЫ_БАЗА = (function () { try { return document.currentScript.src.replace(/igry\.js.*$/, '').replace(/ядро\.js.*$/, ''); } catch (e) { return ''; } })();
+/* 30.10.2026 врач: диснеевское оформление (картинки Syntx 29.10, нарезка — дисней_нарезать.py):
+   значки игр, сова на итоге, кубок за 100 %, кнопки викторины, рубашки парочек, корзины групп, фоны. */
+var ДИСНЕЙ = ИГРЫ_БАЗА + 'img/igry/дисней/';
+var ИКОНКИ_ИГР = { порядок: 'зн_пазл', группы: 'зн_папки', викторина: 'зн_вопрос', текст: 'зн_книга', парочки: 'зн_карты',
+  колесо: 'зн_колесо', плитки: 'зн_часы', диалог: 'зн_речь', отметь: 'зн_лупа', диктант: 'зн_перо', скажи: 'зн_микрофон', анаграмма: 'зн_кубики' };
+function знакИгры(и) {
+  var ф = и && ИКОНКИ_ИГР[и.код];
+  return ф ? '<img class="иг-иконка" alt="" src="' + ДИСНЕЙ + ф + '.webp">' : ((и && и.значок) || '');
+}
+function картинкаИтога(процент) {
+  var ф = процент === 100 ? 'кубок' : процент >= 80 ? 'сова_рада' : процент >= 50 ? 'сова_указывает' : 'сова_грустит';
+  return '<img class="иг-сова" alt="" src="' + ДИСНЕЙ + ф + '.webp">';
+}
+var КНОПКИ_ДИСНЕЙ = ['кнопка_синяя', 'кнопка_розовая', 'кнопка_жёлтая', 'кнопка_зелёная'];
+var РУБАШКИ = ['рубашка_синяя', 'рубашка_розовая', 'рубашка_жёлтая', 'рубашка_зелёная'];
+var КОРЗИНЫ = ['корзина_синяя', 'корзина_розовая', 'корзина_жёлтая', 'корзина_зелёная'];
 /* книжки корешком (Nano Banana, диснеевский стиль): [файл, ширина, высота, табличка x0, y0, x1, y1 в %],
    по возрастанию ширины таблички — короткому слову короткую табличку (врач 29.10) */
 var КОРЕШКИ = [["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_3.webp", 925, 177, 27.0, 20.9, 72.8, 78.5], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_7.webp", 986, 283, 26.5, 19.4, 76.7, 79.9], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_5.webp", 928, 220, 21.1, 20.0, 79.1, 80.0], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_2.webp", 950, 238, 23.9, 17.2, 84.9, 81.9], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_8.webp", 926, 189, 27.8, 27.5, 91.8, 83.1], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_6.webp", 920, 302, 14.7, 12.9, 81.6, 40.1], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_1.webp", 904, 178, 18.8, 23.6, 87.1, 78.7], ["img/igry/\u0434\u043b\u0438\u043d\u043d\u044b\u0439_4.webp", 940, 145, 17.1, 23.4, 85.1, 75.9]];   // длинные корешки — для одного слова
@@ -499,9 +515,12 @@ function разобрать(сырое) {
     if (!c || !c[1]) continue;
     var de = чисто(c[1]);
     if (!de || de.indexOf('/') >= 0) continue;          // «der Verkäufer / die Verkäuferin»
+    var ru = чисто(String(c[3] || '').split(/\s+→\s+/)[0]);
+    // 30.10: ответы домашки подписаны номером («2.») — перевода у них нет, в игры такие не берём
+    if (/^\d+\.?$/.test(ru)) continue;
     карточки.push({
       ид: c[0], de: de, тр: c[2] || '',
-      ru: чисто(String(c[3] || '').split(/\s+→\s+/)[0]),
+      ru: ru,
       н: слова_(de).length
     });
   }
@@ -614,7 +633,7 @@ var ИГРЫ = {
     var очередь = null, место = 0;
     function найти(код) { for (var i = 0; i < список.length; i++) if (список[i].код === код) return список[i]; return null; }
     function описание() {
-      return список.map(function (и) { return { код: и.код, имя: и.имя, значок: и.значок, под: и.под, рекорд: рекорд(и.код) }; });
+      return список.map(function (и) { return { код: и.код, имя: и.имя, значок: знакИгры(и), под: и.под, рекорд: рекорд(и.код) }; });
     }
     function играть(коды) {
       var игры = (коды || []).map(найти).filter(Boolean);
@@ -631,7 +650,7 @@ var ИГРЫ = {
         '<div class="иг-верх"><div class="иг-знак">🏁</div><div><h2>Все игры пройдены!</h2></div></div>' +
         '<div class="иг-разбор">' + пройдено.map(function (и) {
           var р = рекорд(и.код);
-          return '<div>' + и.значок + ' ' + экр(и.имя) + (р ? ' — <b>' + р.процент + '%</b>' : '') + '</div>';
+          return '<div>' + знакИгры(и) + ' ' + экр(и.имя) + (р ? ' — <b>' + р.процент + '%</b>' : '') + '</div>';
         }).join('') + '</div>' +
         '<div class="иг-низ">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button class="иг-главная" id="игДЗ">📝 Выполнить задания к уроку</button>' : '') +
         '<button class="' + (window.ДОМАШКА_ОТКРЫТЬ ? 'иг-тихая' : 'иг-главная') + '" id="игДругая">К списку игр</button></div>';
@@ -641,7 +660,7 @@ var ИГРЫ = {
     function кнопкиИтога() {
       if (очередь && место < очередь.length - 1) {
         var с = очередь[место + 1];
-        return '<button class="иг-главная" id="игСлед">Дальше: ' + с.значок + ' ' + экр(с.имя) + ' →</button>' +
+        return '<button class="иг-главная" id="игСлед">Дальше: ' + знакИгры(с) + ' ' + экр(с.имя) + ' →</button>' +
           '<button class="иг-тихая" id="игЕщё">Ещё раз</button><button class="иг-тихая" id="игДругая">К списку игр</button>';
       }
       if (очередь) return '<button class="иг-главная" id="игСлед">🏁 Готово</button><button class="иг-тихая" id="игЕщё">Ещё раз</button>';
@@ -666,7 +685,7 @@ var ИГРЫ = {
       var кнопки = список.map(function (и) {
         var р = рекорд(и.код);
         return '<button class="иг-кн" data-код="' + и.код + '">' +
-          '<i>' + и.значок + '</i>' +
+          '<i>' + знакИгры(и) + '</i>' +
           '<span>' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
           (р ? '<b class="иг-рекорд">' + р.процент + '%</b>' : '') +
           '</button>';
@@ -690,8 +709,8 @@ var ИГРЫ = {
     function итогПростой(игра, процент, подпись) {
       записатьРекорд(игра.код, процент, 0, 0);
       карта.innerHTML =
-        '<div class="иг-верх"><div class="иг-знак">' + игра.значок + '</div><div><h2>' + экр(игра.имя) + '</h2></div></div>' +
-        '<div class="иг-итог"><div class="число">' + процент + '%</div>' +
+        '<div class="иг-верх"><div class="иг-знак">' + знакИгры(игра) + '</div><div><h2>' + экр(игра.имя) + '</h2></div></div>' +
+        '<div class="иг-итог">' + картинкаИтога(процент) + '<div class="число">' + процент + '%</div>' +
         '<div class="строка">' + экр(подпись || '') + '</div></div>' +
         '<div class="иг-низ">' + кнопкиИтога() + '</div>';
       оживитьИтог(игра);
@@ -764,8 +783,8 @@ var ИГРЫ = {
             }).join('') + '</div>'
           : '';
         карта.innerHTML =
-          '<div class="иг-верх"><div class="иг-знак">' + игра.значок + '</div><div><h2>' + экр(игра.имя) + '</h2></div></div>' +
-          '<div class="иг-итог"><div class="число">' + процент + '%</div>' +
+          '<div class="иг-верх"><div class="иг-знак">' + знакИгры(игра) + '</div><div><h2>' + экр(игра.имя) + '</h2></div></div>' +
+          '<div class="иг-итог">' + картинкаИтога(процент) + '<div class="число">' + процент + '%</div>' +
           '<div class="строка">' + верных + ' из ' + всего + (досрочно ? ' (закончил на ' + всего + '-м из ' + задания.length + ')' : '') +
           ' · ⏱ ' + времяВВ(сек) + ' · ' + слово + '</div></div>' +
           разбор +
@@ -1080,7 +1099,7 @@ function итогВВ(х, игра, верно, всего, секунд, зан
               'Повтори слова урока и попробуй заново — с каждым разом быстрее.';
   var о = document.createElement('div');
   о.className = 'вв-итог';
-  о.innerHTML = '<div class="окно"><div class="эмо">' + эмо + '</div><h2>' + слово + '</h2>' +
+  о.innerHTML = '<div class="окно"><div class="эмо">' + картинкаИтога(процент) + '</div><h2>' + слово + '</h2>' +
     '<div class="проц">' + процент + '%</div>' +
     '<div class="цифры"><div><b>' + верно + '</b>верно</div><div><b>' + (всего - верно) + '</b>ошибок</div><div><b>' + времяВВ(секунд) + '</b>время</div></div>' +
     '<p class="совет">' + совет + '</p>' +
@@ -1135,7 +1154,7 @@ var ГРУППЫ = {
         var n = плитки.filter(function (п) { return п.группа === г; }).length;
         var слоты = ''; for (var k = 0; k < n; k++) слоты += '<div class="вв-слот"></div>';
         // большая группа шире: клеток в ряд больше, рядов меньше — всё влезает крупнее
-        return '<div class="вв-зона" style="flex:' + Math.max(2, n) + ' 1 ' + (n > 9 ? 230 : 120) + 'px" data-зона="' + экр(г) + '"><h4 style="background:' + ЦВЕТА_ВВ[(i * 3 + 1) % ЦВЕТА_ВВ.length] + '">' + экр(г) +
+        return '<div class="вв-зона" style="flex:' + Math.max(2, n) + ' 1 ' + (n > 9 ? 230 : 120) + 'px" data-зона="' + экр(г) + '"><h4 class="с-корзиной" style="background-image:url(\'' + ДИСНЕЙ + КОРЗИНЫ[i % 4] + '.webp\');background-color:' + ЦВЕТА_ВВ[(i * 3 + 1) % ЦВЕТА_ВВ.length] + '">' + экр(г) +
           '<span class="вв-счётчик">· ' + n + '</span></h4><div class="вв-слоты">' + слоты + '</div></div>';
       }).join('') + '</div>' +
       '<div class="вв-кнопки"><button class="вв-главная" id="ввГотово">Завершить</button></div>');
@@ -1309,7 +1328,7 @@ var ВИКТОРИНА = {
       '<div class="вв-верх"><span class="вв-время" id="ввВремя">⏱ 0:00</span>' +
       '<span class="вв-счёт"><span class="в" id="ввВ">✓ 0</span><span class="н" id="ввН">✗ 0</span></span>' +
       '<button class="вв-конец" id="ввКонец">Закончить</button></div>' +
-      '<div id="ввПоле"></div><div class="вв-низ" id="ввНомер"></div>');
+      '<div id="ввПоле" class="вв-сцена" style="background-image:url(\'' + ДИСНЕЙ + 'фон_сцена_викторины.webp\')"></div><div class="вв-низ" id="ввНомер"></div>');
     var стоп = секундомер(document.getElementById('ввВремя')), кончено = false;
     // 29.10 врач: «моя остановка в метро — нажал „Закончить“, и он всё посчитал»
     document.getElementById('ввКонец').onclick = function () {
@@ -1324,7 +1343,8 @@ var ВИКТОРИНА = {
         (q.подсказка ? '<p class="вв-перевод" style="margin:-6px 0 12px">' + экр(q.подсказка) + '</p>' : '') +
         (q.фото ? '<img class="вв-фото" alt="" src="' + q.фото + '">' : '') +
         '<div class="вв-ответы">' + q.варианты.map(function (о, n) {
-          return '<button class="вв-ответ" data-о="' + экр(о) + '" style="background:' + ЦВЕТА_ВВ[n % 6] + '"><span class="б">' +
+          var фон = n < 4 ? ЦВЕТА_ВВ[n] + ' url(\'' + ДИСНЕЙ + КНОПКИ_ДИСНЕЙ[n] + '.webp\') center/100% 100% no-repeat' : ЦВЕТА_ВВ[n % 6];
+          return '<button class="вв-ответ' + (n < 4 ? ' дисней' : '') + '" data-о="' + экр(о) + '" style="background:' + фон + '"><span class="б">' +
             'ABCDEF'[n] + '</span>' + экр(о) + '</button>';
         }).join('') + '</div><p class="вв-перевод" id="ввПеревод"></p>';
       var кнопки = Array.prototype.slice.call(document.querySelectorAll('#ввПоле .вв-ответ'));
@@ -1567,11 +1587,13 @@ var ПАРОЧКИ = {
     function рисовать() {
       х.рисовать(
         '<p class="иг-подсказ">Найди пару: немецкое слово и его перевод. Пар: 6 · ошибок: ' + ошибок + '</p>' +
+        '<div class="иг-стол" style="background-image:url(\'' + ДИСНЕЙ + 'фон_стол_парочки.webp\')">' +
         '<div class="иг-пары" id="игПоле">' + плитки.map(function (п, i) {
           var видно = п.открыта || п.нашлась;
-          return '<button class="иг-пара' + (п.нашлась ? ' нашлась' : видно ? ' открыта' : '') +
-                 '" data-i="' + i + '">' + (видно ? экр(п.текст) : '?') + '</button>';
-        }).join('') + '</div>');
+          return '<button class="иг-пара' + (п.нашлась ? ' нашлась' : видно ? ' открыта' : ' рубашка') +
+                 '" data-i="' + i + '"' + (видно ? '' : ' style="background-image:url(\'' + ДИСНЕЙ + РУБАШКИ[i % 4] + '.webp\')"') +
+                 '>' + (видно ? экр(п.текст) : '') + '</button>';
+        }).join('') + '</div></div>');
       Array.prototype.forEach.call(document.querySelectorAll('#игПоле .иг-пара'), function (к) {
         к.onclick = function () { нажали(+к.getAttribute('data-i')); };
       });
@@ -1630,6 +1652,7 @@ var КОЛЕСО = {
         '<div class="иг-вкладки"><button class="иг-мини' + (сНемецкого ? ' вкл' : '') + '" id="игСторонаDe">с немецкого</button>' +
         '<button class="иг-мини' + (сНемецкого ? '' : ' вкл') + '" id="игСторонаRu">с русского</button></div>' +
         '<p class="иг-подсказ">Слов пройдено: ' + всего + ' · знал: ' + знал + '</p>' +
+        '<img class="иг-колесо-рис' + (состояние === 'крутится' ? ' крутится' : '') + '" alt="" src="' + ДИСНЕЙ + 'колесо.webp">' +
         '<div class="иг-колесо' + (состояние === 'крутится' ? ' крутится' : '') + '" id="игКолесо">' +
         (к ? экр(лицо) : 'Крути!') + '</div>' +
         (состояние === 'ответ'
@@ -1819,7 +1842,7 @@ var ПЛИТКИ = {
         '<div class="иг-вкладки"><button class="иг-мини' + (лицомRu ? ' вкл' : '') + '" id="игЛицоRu">Сверху русский</button>' +
         '<button class="иг-мини' + (лицомRu ? '' : ' вкл') + '" id="игЛицоDe">Сверху немецкий</button></div>' +
         '<p class="иг-подсказ"><span class="иг-время" id="игВремя">' + время() + '</span> · Нажми плитку, она откроется крупно.</p>' +
-        '<div class="иг-стена" id="игСтена">' + плиты.map(function (п, i) {
+        '<div class="иг-стена" id="игСтена" style="background-image:url(\'' + ДИСНЕЙ + 'фон_стена_плиток.webp\')">' + плиты.map(function (п, i) {
           var з = значок(п.к.de);
           return '<button class="иг-плита ц' + п.цвет + (лицомRu ? '' : ' де') + (п.убрана ? ' убрана' : '') +
             '" data-i="' + i + '">' + (з ? '<i>' + з + '</i>' : '') + экр(лицо(п)) + '</button>';
@@ -2530,5 +2553,33 @@ function карта_кнопки(сел) {
   return Array.prototype.slice.call(document.querySelectorAll('#игКарта ' + сел));
 }
 
+(function () {   // 30.10.2026: стиль диснеевского оформления — один раз на страницу
+  if (typeof document === 'undefined' || document.getElementById('иг-дисней')) return;
+  var с = document.createElement('style'); с.id = 'иг-дисней';
+  с.textContent =
+    '.иг-иконка{ width:1.5em; height:1.5em; object-fit:contain; vertical-align:middle; border-radius:8px; }'
+  + '.иг-знак .иг-иконка{ width:44px; height:44px; } .иг-знак:has(.иг-иконка){ background:none; }'
+  + '.иг-кн i .иг-иконка{ width:46px; height:46px; } .зн .иг-иконка{ width:40px; height:40px; }'
+  + '.иг-сова{ display:block; margin:0 auto 4px; width:132px; height:132px; object-fit:contain; animation:иг-сова-вход .5s ease-out; }'
+  + '.вв-итог .эмо .иг-сова{ width:150px; height:150px; }'
+  + '@keyframes иг-сова-вход{ 0%{ transform:scale(.6) translateY(16px); opacity:0; } 70%{ transform:scale(1.06); opacity:1; } 100%{ transform:none; } }'
+  + '.вв-сцена{ background-size:cover; background-position:center 30%; border-radius:18px; padding:12px 10px 14px; }'
+  + '.вв-сцена .вв-вопрос{ background:rgba(255,251,240,.93); color:#1c2242; border-radius:14px; padding:10px 12px; }'
+  + '.вв-сцена .вв-перевод{ background:rgba(255,251,240,.9); color:#3a3f55; border-radius:10px; padding:4px 10px; }'
+  + '.вв-сцена .вв-перевод:empty{ display:none; }'
+  + '.вв-ответ.дисней{ background-color:transparent !important; box-shadow:none; text-shadow:0 1px 3px rgba(0,0,0,.65), 0 0 2px rgba(0,0,0,.5); min-height:66px; }'
+  + '.иг-стол{ background-size:cover; background-position:center; border-radius:18px; padding:10px; margin:6px 0; }'
+  + '.иг-стол .иг-пары{ margin:0; }'
+  + '.иг-пара.рубашка{ background-color:transparent; background-size:100% 100%; background-repeat:no-repeat; border:none; min-height:96px; box-shadow:0 4px 10px rgba(0,0,0,.25); }'
+  + '.иг-пара.открыта, .иг-пара.нашлась{ min-height:96px; }'
+  + '.иг-стол .иг-пара.открыта{ background:#fff8e7; color:#3b2a14; border:2px solid #c9a24a; box-shadow:0 4px 10px rgba(0,0,0,.25); }'
+  + '.иг-стол .иг-пара.нашлась{ background:#e8f5dd; color:#22421d; border:2px solid #5a9a4a; }'
+  + '.вв-зона h4.с-корзиной{ background-repeat:no-repeat; background-size:auto 92%; background-position:6px center; padding:8px 8px 8px 58px; min-height:44px; display:flex; align-items:center; justify-content:center; }'
+  + '.иг-стена{ background-size:cover; background-position:center; border-radius:16px; padding:10px; }'
+  + '.иг-колесо-рис{ display:block; width:150px; height:150px; object-fit:contain; margin:4px auto -6px; transition:transform .42s cubic-bezier(.2,.8,.3,1); }'
+  + '.иг-колесо-рис.крутится{ transform:rotate(-14deg) scale(.96); }';
+  (document.head || document.documentElement).appendChild(с);
+})();
+window.знакИгры = знакИгры;
 window.ИГРЫ = ИГРЫ;
 })();
