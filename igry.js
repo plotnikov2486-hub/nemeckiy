@@ -2577,7 +2577,13 @@ function карта_кнопки(сел) {
   + '.вв-зона h4.с-корзиной{ background-repeat:no-repeat; background-size:auto 92%; background-position:6px center; padding:8px 8px 8px 58px; min-height:44px; display:flex; align-items:center; justify-content:center; }'
   + '.иг-стена{ background-size:cover; background-position:center; border-radius:16px; padding:10px; }'
   + '.иг-колесо-рис{ display:block; width:150px; height:150px; object-fit:contain; margin:4px auto -6px; transition:transform .42s cubic-bezier(.2,.8,.3,1); }'
-  + '.иг-колесо-рис.крутится{ transform:rotate(-14deg) scale(.96); }';
+  + '.иг-колесо-рис.крутится{ transform:rotate(-14deg) scale(.96); }'
+  /* 31.10 врач: кнопки викторины вылезали за край, текст — за кнопку; плитки — полупрозрачные, чтобы фон было видно */
+  + '.вв-сцена .вв-ответы{ grid-template-columns:repeat(2,minmax(0,1fr)); }'
+  + '.вв-ответ.дисней{ min-width:0; font-size:clamp(13px,3.7vw,17px); line-height:1.15; overflow-wrap:anywhere; hyphens:auto; padding:14px 10px 14px 38px; }'
+  + '.вв-ответ.дисней .б{ left:9px; }'
+  + '.иг-стена .иг-плита{ background:rgba(20,24,40,.45); color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.85); -webkit-backdrop-filter:blur(1.5px); backdrop-filter:blur(1.5px); }'
+  + '.иг-стена .иг-плита.де{ background:rgba(20,24,40,.5); }';
   (document.head || document.documentElement).appendChild(с);
 })();
 window.знакИгры = знакИгры;
