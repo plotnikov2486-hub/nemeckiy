@@ -1654,7 +1654,10 @@ var КОЛЕСО = {
         '<div class="иг-вкладки"><button class="иг-мини' + (сНемецкого ? ' вкл' : '') + '" id="игСторонаDe">с немецкого</button>' +
         '<button class="иг-мини' + (сНемецкого ? '' : ' вкл') + '" id="игСторонаRu">с русского</button></div>' +
         '<p class="иг-подсказ">Слов пройдено: ' + всего + ' · знал: ' + знал + '</p>' +
-        '<img class="иг-колесо-рис' + (состояние === 'крутится' ? ' крутится' : '') + '" alt="" src="' + ДИСНЕЙ + 'колесо.webp">' +
+        // 31.10 врач: колесо должно крутиться — ролик Seedance (первый = последний кадр), играет на «Крутить»
+        (состояние === 'крутится'
+          ? '<video class="иг-колесо-рис видео" id="игКолесоВидео" muted playsinline autoplay preload="auto" poster="' + ДИСНЕЙ + 'колесо_кадр.webp" src="' + ДИСНЕЙ + 'колесо.mp4"></video>'
+          : '<img class="иг-колесо-рис видео" alt="" src="' + ДИСНЕЙ + 'колесо_кадр.webp">') +
         '<div class="иг-колесо' + (состояние === 'крутится' ? ' крутится' : '') + '" id="игКолесо">' +
         (к ? экр(лицо) : 'Крути!') + '</div>' +
         (состояние === 'ответ'
@@ -1667,6 +1670,8 @@ var КОЛЕСО = {
             (к ? '<button class="иг-тихая" id="игЗвук">🔊</button>' : '') +
             '<button class="иг-тихая" id="игХватит">Хватит</button></div>'));
 
+      var вид = document.getElementById('игКолесоВидео');
+      if (вид) { вид.playbackRate = 2.5; var п = вид.play(); if (п && п.catch) п.catch(function () {}); }
       var dE = document.getElementById('игСторонаDe'), dR = document.getElementById('игСторонаRu');
       if (dE) dE.onclick = function () { сНемецкого = true; рисовать(состояние); };
       if (dR) dR.onclick = function () { сНемецкого = false; рисовать(состояние); };
@@ -1687,7 +1692,7 @@ var КОЛЕСО = {
     function крутить() {
       if (i + 1 >= слова.length) { закончить(); return; }
       рисовать('крутится');
-      setTimeout(function () { i++; рисовать(''); }, 420);
+      setTimeout(function () { i++; рисовать(''); }, 2000);   // ролик 5 с × 2,5 = 2 с
     }
     function закончить() {
       if (!всего) { х.конец(0, 'Ни одного слова не пройдено'); return; }
@@ -2580,6 +2585,7 @@ function карта_кнопки(сел) {
   + '.иг-стена{ background-size:cover; background-position:center; border-radius:16px; padding:10px; }'
   + '.иг-колесо-рис{ display:block; width:150px; height:150px; object-fit:contain; margin:4px auto -6px; transition:transform .42s cubic-bezier(.2,.8,.3,1); }'
   + '.иг-колесо-рис.крутится{ transform:rotate(-14deg) scale(.96); }'
+  + '.иг-колесо-рис.видео{ width:190px; height:190px; border-radius:20px; object-fit:cover; transform:none !important; box-shadow:0 6px 18px rgba(0,0,0,.25); margin:6px auto 4px; }'
   /* 31.10 врач: кнопки викторины вылезали за край, текст — за кнопку; плитки — полупрозрачные, чтобы фон было видно */
   + '.вв-сцена .вв-ответы{ grid-template-columns:repeat(2,minmax(0,1fr)); }'
   + '.вв-ответ.дисней{ min-width:0; font-size:clamp(13px,3.7vw,17px); line-height:1.15; overflow-wrap:anywhere; hyphens:auto; padding:14px 10px 14px 38px; }'
