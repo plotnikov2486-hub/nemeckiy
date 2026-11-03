@@ -1020,6 +1020,9 @@ if (!Слушалка){
 
 
 
+
+
+
   <header>
     <h1>🇩🇪 Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
@@ -1170,6 +1173,11 @@ const LESSONS = [
 
 // Занятия с репетитором Дашей (Австрия) — раз в неделю, воскресенье 20:00
 const DASHA = [
+  {id:'d13', num:'Занятие 13', date:'≈02.11.2026', title:'Мебель, описание картинки и цены',
+   topic:'О жизни: в Австрии много платят наличными, такси дорогое, общественный транспорт отличный. ⭐ Мебель: Sofa/Couch, Bett, Lampe, Vase, Fenster, Fernseher (fern + sehen), Teppich, Sessel, Tisch, Tür, Kommode, Stuhl, Schreibtisch, Spiegel, Regal, Bild, Schrank, Kissen. ⭐⭐ Описание картинки: es gibt, ich sehe, auf dem Bild, im Hintergrund/Vordergrund, обратный порядок (Auf dem Bild sehe ich…), stehen/liegen/hängen (das Bild hängt). modern, praktisch, billig = günstig, teuer, zu teuer, Sonderangebot. ⭐ Числа и цены: 1 478 Euro, 119 Euro, сначала hundert, потом tausend; 9,99 € = neun Euro neunundneunzig. Разговор в магазине (Verkäufer/Kundin). Домашка: текст про дом Клары с вопросами, слабые и сильные глаголы, Plural (20), притяжательные, по 3 предложения с fahren/essen/lesen/sehen/helfen/schlafen/tragen.',
+   pdf:'', audio:'dasha/dasha13_interactive.html', mins:77, hard:'Средне', cards:134,
+   photos:['dasha/dasha13_hw_klara.jpg','dasha/dasha13_hw_schwach.jpg','dasha/dasha13_hw_stark.jpg','dasha/dasha13_hw_plural.jpg','dasha/dasha13_hw_possessiv.jpg','dasha/dasha13_hw_zadanie.jpg'],
+   photoLabels:['Текст Klara','Слабые глаголы','Сильные глаголы','Plural','Possessivartikel','Сообщение Даши с домашкой']},
   {id:'d12', num:'Занятие 12', date:'≈27.10.2026', title:'Множественное число: die Plural',
    topic:'Разминка: сильные глаголы с du (fährst, siehst, liest, nimmst, isst; gehen и kommen не меняются), перевод с sprechen/geben/sehen, модальные (Du kannst Deutsch sprechen — второй глагол в конец), 13 вопросительных слов и порядок «W-слово → глагол → кто». Женский род -in → -innen, национальности (Französin, Russin). ⭐⭐ Plural: артикль всегда die, способы — без изменения, -e (мужской), -er (средний, с умлаутом), -n/-en (женский), -nen, -s (заимствованные), только умлаут, умлаут + окончание; учить каждое слово сразу с множественным. Артикли der/ein. Домашка: 40 слов во множественное, 10 предложений, подкаст «Ein Tag mit Anna», текст о семье, 100 главных глаголов; игры «Перетащи по группам» и викторина по Plural.',
    pdf:'', audio:'dasha/dasha12_interactive.html', mins:84, hard:'Средне', cards:159,
@@ -1233,6 +1241,11 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 
 // Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
 const POLYA = [
+  {id:'p22', num:'Занятие 22', date:'≈02.11.2026', title:'Глагольные приставки и транспорт',
+   topic:'Отделяемые приставки: в презенсе — в конец (Ich stehe um sechs auf), с модальным — слитно в конце (Ich will zuhören). ⭐ Семейство hören: zuhören, anhören, aufhören, mithören, abhören (врач слушает), gehören. ⭐⭐ Неотделяемые be-, emp-, ent-, er-, ge-, miss-, ver-, zer- (bekommen, erzählen, gefallen, verstehen). über-/unter-/durch-/um-/wieder- — и так, и так: übersetzen (переправляться / переводить), sitzen–setzen, liegen–legen, stehen–stellen. Пары auf/zu, an/aus, ein/aus. ⭐ Транспорт: einsteigen, aussteigen, umsteigen, ankommen, abholen, abfahren/abfliegen, anrufen + Akk, danken + Dat; Verkehrsmittel (Zug, S-Bahn, Haltestelle, Bahnsteig, Flughafen…). Домашка: предложения в презенсе, перевод с притяжательными (15, есть Genitiv), 10 своих предложений.',
+   pdf:'', audio:'dasha/polya22_interactive.html', mins:55, hard:'Средне', cards:106,
+   photos:['dasha/polya22_hw_pres.jpg','dasha/polya22_hw_prez.jpg','dasha/polya22_hw_perevod.jpg','dasha/polya22_hw_zadanie.jpg'],
+   photoLabels:['Презентация «Приставки»','Предложения в презенсе','Перевод: 15 предложений','Сообщение Даши с домашкой']},
   {id:'p21', num:'Занятие 21', date:'≈27.10.2026', title:'Отрицание: nicht или kein',
    topic:'kein — перед существительным с ein или без артикля (склоняется как ein: keinen, keine); nicht — глаголы, прилагательные, der/die/das, mein; место nicht; sondern; nichts, nie, niemand, nirgends; приставки an-, mit-. Домашка: притяжательные (3 листа), dieser по падежам (1.1–1.5), nicht/kein, 30 предложений, рассказ по своим фото. Запись тихая — разобрана треть.',
    pdf:'', audio:'dasha/polya21_interactive.html', mins:51, hard:'Средне', cards:47},
@@ -1436,7 +1449,7 @@ const LEVELS = [
     {t:'Вопросы да/нет', l:['l3','d6']},
     {t:'Предлоги места (in, auf, unter + Dativ)', l:['l11','l15','p12']},
     {t:'Множественное число существительных', l:['l9','d1','d8','d12']},
-    {t:'Числа 0–1 000 000', l:['l2','l5','d1']},
+    {t:'Числа 0–1 000 000', l:['l2','l5','d1','d13']},
     {t:'Порядковые числительные', l:['l5','d1']},
     {t:'Цвета', l:['l7','d1']},
     {t:'Время суток, распорядок дня', l:['d1']},
@@ -1447,11 +1460,11 @@ const LEVELS = [
     {t:'Профессия и работа', l:['l1','d8','d9','d10']},
     {t:'Модальные глаголы (können, müssen, dürfen)', l:['d2','d9','d12']},
     {t:'Повелительное наклонение (Imperativ)', l:['l13']},
-    {t:'Отделяемые приставки (aufstehen, einkaufen)', l:['l12','l13','d9']},
+    {t:'Отделяемые приставки (aufstehen, einkaufen)', l:['l12','l13','d9','p22']},
     {t:'Прошедшее время Perfekt', l:['l12']},
     {t:'Семья и родственники', l:['d2','p12','d6','d7','d8']},
     {t:'Еда и напитки', l:['l14','p13','p14','p15','p16']},
-    {t:'Квартира и жильё', l:['l15','p11','p12','p16']},
+    {t:'Квартира и жильё', l:['l15','p11','p12','p16','d13']},
     {t:'Погода', l:['l16']},
     {t:'Союзы und, aber, oder, denn, sondern', l:['l23']},
     {t:'Сложные слова (Komposita)', l:['l23']},
@@ -1482,10 +1495,10 @@ const LEVELS = [
     {t:'Глаголы с предлогами', l:['l30']},
     {t:'Медицина: симптомы и жалобы пациента', l:['l47']},
     {t:'Здоровье и самочувствие', l:['l61']},
-    {t:'Покупки и магазины', l:['p12']},
-    {t:'Путешествия и транспорт', l:['p18','p19']},
+    {t:'Покупки и магазины', l:['p12','d13']},
+    {t:'Путешествия и транспорт', l:['p18','p19','p22']},
     {t:'Работа, офис, документы', l:['p17']},
-    {t:'Жильё: аренда, мебель', l:['l15','p12']},
+    {t:'Жильё: аренда, мебель', l:['l15','p12','d13']},
     {t:'Свободное время и хобби', l:['l62']},
     {t:'Чувства и эмоции', l:['l63']},
   ]},
@@ -1530,7 +1543,7 @@ const LEVELS = [
     {t:'Модальность во всех оттенках', l:['l44']},
     {t:'Стилистика: формальный и разговорный регистр', l:['l74']},
     {t:'Идиомы и устойчивые выражения', l:['l75']},
-    {t:'Продвинутые приставки глаголов', l:['l72']},
+    {t:'Продвинутые приставки глаголов', l:['l72','p22']},
     {t:'Функциональные глаголы (Funktionsverbgefüge)', l:['l46']},
     {t:'Типы текстов и их структура', l:['l94']},
     {t:'FSP: сбор анамнеза у пациента', l:['l47']},
