@@ -1037,6 +1037,128 @@ var ФОТО = {
   }
 };
 
+/* 2а. «Картинку — в рамку» (03.11.2026, врач: «как у Даши: слева картинки мебели, справа полупрозрачные
+   подписанные рамочки, перетаскиваешь картинку в рамку»). Картинки — из библиотеки слов (КАРТИНКИ),
+   поэтому игра встаёт сама во все уроки, где набралось хотя бы 4 слова с картинкой. */
+var СТИЛЬ_ПД = ''
++ '.пд-поле{ display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.25fr); gap:12px; align-items:start; }'
++ '@media (max-width:560px){ .пд-поле{ grid-template-columns:1fr; } }'
++ '.пд-пул{ display:grid; grid-template-columns:repeat(auto-fill,minmax(78px,1fr)); gap:8px; padding:8px; border-radius:14px;'
++ '  background:var(--surface-2,#f3f4fa); border:2px dashed var(--line,#d9dcea); min-height:96px; align-content:start; }'
++ '.пд-карт{ aspect-ratio:1/1; border-radius:12px; overflow:hidden; cursor:grab; touch-action:none; user-select:none; -webkit-user-select:none;'
++ '  box-shadow:0 2px 7px rgba(0,0,0,.18); background:#fff; position:relative; }'
++ '.пд-карт img{ width:100%; height:100%; object-fit:cover; pointer-events:none; display:block; }'
++ '.пд-карт.выбрана{ outline:3px solid #2f6fdc; outline-offset:2px; }'
++ '.пд-карт.тащу{ opacity:.35; }'
++ '.пд-призрак{ position:fixed; z-index:9999; width:84px; height:84px; pointer-events:none; transform:rotate(-4deg) scale(1.05); box-shadow:0 10px 24px rgba(0,0,0,.3); }'
++ '.пд-рамки{ display:grid; grid-template-columns:repeat(auto-fill,minmax(112px,1fr)); gap:10px; }'
++ '.пд-рамка{ border-radius:14px; padding:6px; background:rgba(255,255,255,.4); border:2px dashed rgba(47,111,220,.5);'
++ '  -webkit-backdrop-filter:blur(3px); backdrop-filter:blur(3px); text-align:center; cursor:pointer; transition:background .15s, border-color .15s; }'
++ '.пд-рамка.над{ border-color:#2f6fdc; background:rgba(47,111,220,.14); }'
++ '.пд-окно{ aspect-ratio:1/1; border-radius:10px; background:rgba(47,111,220,.07); display:flex; align-items:center; justify-content:center; }'
++ '.пд-окно .пд-карт{ width:100%; height:100%; }'
++ '.пд-подпись{ font-weight:800; font-size:15px; margin-top:6px; color:var(--ink,#1d2330); line-height:1.2; overflow-wrap:anywhere; }'
++ '.пд-рамка.верно{ border:2px solid #1f9d55; background:rgba(31,157,85,.14); }'
++ '.пд-рамка.мимо{ border:2px solid #d64545; background:rgba(214,69,69,.11); }'
++ '.пд-рамка .куда{ display:block; font-size:12px; color:#d64545; font-weight:700; margin-top:3px; }';
+function стильПД() {
+  if (document.getElementById('пд-стиль')) return;
+  var s = document.createElement('style'); s.id = 'пд-стиль'; s.textContent = СТИЛЬ_ПД; document.head.appendChild(s);
+}
+var РАМКИ = {
+  код: 'рамки', имя: 'Картинку — в рамку', значок: '🖼', сама: true,
+  под: 'Слева картинки, справа подписи — перетащи каждую картинку в свою рамку',
+  хватает: function (д) { return сФото(д).length >= 4; },
+  экран: function (х) {
+    стильВВ(); стильПД();
+    var карты = перемешать(сФото(х.данные).slice()).slice(0, 8).map(function (к, i) { return { к: к, i: i, где: null }; });
+    var рамки = перемешать(карты.slice());
+    var выбрана = null, конец = false;
+    х.рисовать(
+      '<div class="вв-верх"><span class="вв-время" id="ввВремя">⏱ 0:00</span><span>Картинку — в рамку</span></div>' +
+      '<p class="вв-подсказ">Перетащи картинку в рамку с её названием. Можно и нажатием: картинка, потом рамка. Ошибся — перетащи обратно или в другую рамку.</p>' +
+      '<div class="пд-поле"><div class="пд-пул" data-зона="" id="пдПул"></div><div class="пд-рамки">' +
+      рамки.map(function (р) {
+        return '<div class="пд-рамка" data-зона="' + р.i + '"><div class="пд-окно"></div><div class="пд-подпись">' + экр(р.к.de) + '</div></div>';
+      }).join('') + '</div></div><div class="вв-осталось" id="ввОст"></div>' +
+      '<div class="вв-кнопки"><button class="вв-главная" id="пдГотово">Проверить</button></div>');
+    var стоп = секундомер(document.getElementById('ввВремя'));
+    var пул = document.getElementById('пдПул');
+    function остаток() {
+      var н = карты.filter(function (к) { return к.где === null; }).length;
+      document.getElementById('ввОст').textContent = н ? 'Осталось: ' + н + ' из ' + карты.length : '✓ Все картинки в рамках — жми «Проверить»';
+    }
+    function положить(к, зона) {
+      if (зона === пул) { к.где = null; пул.appendChild(к.узел); }
+      else {
+        var окно = зона.querySelector('.пд-окно'), был = окно.querySelector('.пд-карт');
+        if (был && был !== к.узел) { var кб = карты[+был.dataset.i]; кб.где = null; пул.appendChild(был); }   // в рамке уже есть — та уходит обратно
+        к.где = +зона.dataset.зона; окно.appendChild(к.узел);
+        var подп = карты[к.где].к; if (подп.ид || подп.de) х.голос(подп.ид, подп.de);   // звучит подпись рамки — ответ не выдаёт
+      }
+      к.узел.classList.remove('выбрана'); выбрана = null; остаток();
+    }
+    function зонаВТочке(x, y) { var э = document.elementFromPoint(x, y); return э && э.closest ? э.closest('[data-зона]') : null; }
+    function оживить(у, к) {
+      у.addEventListener('pointerdown', function (e) {
+        if (конец) return;
+        e.preventDefault();
+        var sx = e.clientX, sy = e.clientY, призрак = null, над = null;
+        try { у.setPointerCapture(e.pointerId); } catch (z) {}
+        function ход(ev) {
+          if (!призрак && Math.abs(ev.clientX - sx) + Math.abs(ev.clientY - sy) > 6) {
+            призрак = у.cloneNode(true); призрак.classList.add('пд-призрак'); призрак.classList.remove('выбрана');
+            document.body.appendChild(призрак); у.classList.add('тащу');
+          }
+          if (!призрак) return;
+          призрак.style.left = (ev.clientX - 42) + 'px'; призрак.style.top = (ev.clientY - 42) + 'px';
+          var з = зонаВТочке(ev.clientX, ev.clientY);
+          if (з !== над) { if (над) над.classList.remove('над'); над = з; if (над && над !== пул) над.classList.add('над'); }
+        }
+        function отпустил(ev) {
+          у.removeEventListener('pointermove', ход); у.removeEventListener('pointerup', отпустил); у.removeEventListener('pointercancel', отпустил);
+          if (над) над.classList.remove('над');
+          if (призрак) { призрак.remove(); у.classList.remove('тащу'); var з = зонаВТочке(ev.clientX, ev.clientY); if (з) положить(к, з); }
+          else {
+            if (выбрана && выбрана !== к) выбрана.узел.classList.remove('выбрана');
+            выбрана = выбрана === к ? null : к; у.classList.toggle('выбрана', выбрана === к);
+          }
+        }
+        у.addEventListener('pointermove', ход); у.addEventListener('pointerup', отпустил); у.addEventListener('pointercancel', отпустил);
+      });
+    }
+    перемешать(карты.slice()).forEach(function (к) {
+      var у = document.createElement('div');
+      у.className = 'пд-карт'; у.dataset.i = к.i;
+      у.innerHTML = '<img alt="" src="' + к.к._фото + '">';
+      к.узел = у; оживить(у, к); пул.appendChild(у);
+    });
+    остаток();
+    Array.prototype.forEach.call(document.querySelectorAll('#игКарта [data-зона]'), function (з) {
+      з.addEventListener('click', function (e) { if (конец || !выбрана || e.target.closest('.пд-карт')) return; положить(выбрана, з); });
+    });
+    document.getElementById('пдГотово').onclick = function () {
+      if (конец) return;
+      var пусто = карты.filter(function (к) { return к.где === null; }).length;
+      if (пусто && !confirm('Ещё ' + пусто + ' картинок не в рамках — они пойдут в ошибки. Проверить?')) return;
+      конец = true; this.disabled = true;
+      var секунд = стоп(), верно = 0;
+      var узлы = Array.prototype.slice.call(document.querySelectorAll('#игКарта .пд-рамка'));
+      узлы.forEach(function (р, n) {
+        setTimeout(function () {
+          var в = р.querySelector('.пд-карт'), i = +р.dataset.зона, ок = !!в && +в.dataset.i === i;
+          if (ок) верно++;
+          р.classList.add(ок ? 'верно' : 'мимо');
+          if (!ок) р.insertAdjacentHTML('beforeend', '<span class="куда">' + (в ? 'здесь: ' + экр(карты[+в.dataset.i].к.ru || карты[+в.dataset.i].к.de) : 'пусто') + '</span>');
+          х.звукОтвета(ок);
+          р.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+        }, 120 + n * 260);
+      });
+      setTimeout(function () { итогВВ(х, РАМКИ, верно, карты.length, секунд, function () { РАМКИ.экран(х); }); }, 500 + узлы.length * 260);
+    };
+  }
+};
+
 /* 2б–2в. Игры «как у Даши на Wordwall» (27.10.2026, врач: «разноцветные квадратики, перетаскиваешь руками,
    идёт время, в конце квадратики по очереди загораются зелёным или красным, потом статистика на весь экран»;
    «викторина: вопрос, картинка, четыре цветных блока, неверный зачёркивается, вверху время и счёт, внизу 2 из 36»).
@@ -2581,7 +2703,7 @@ var СЦЕНАРИЙ = {
   }
 };
 
-var ВСЕ_ИГРЫ = [ГРУППЫ, ВИКТОРИНА, ФОТО, ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, СЦЕНАРИЙ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
+var ВСЕ_ИГРЫ = [ГРУППЫ, РАМКИ, ВИКТОРИНА, ФОТО, ПОРЯДОК, РОДЫ, ПРОПУСК, КНИЖКИ, СКАЖИ, ДИКТАНТ, ОТМЕТЬ, ТЕКСТ, ДИАЛОГ, СЦЕНАРИЙ, КАРТИНКА, АНАГРАММА, ПОСЛЕДОВАТЕЛЬНОСТЬ, ПАРОЧКИ, ПЛИТКИ, КОЛЕСО];
 
 function доступные(д, сцены) {
   return ВСЕ_ИГРЫ.filter(function (и) { return и.хватает(д, сцены); });

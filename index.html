@@ -2032,5 +2032,76 @@ render();
 })();
 </script>
 <!--/ВХОД-СКРИПТ-->
+<!-- ВЫБОР-ГОЛОСА-START (03.11.2026, врач: «два варианта мужской озвучки — голос создателя сайта или носитель, пусть человек выберет») -->
+<style>
+  .гв-фон{ position:fixed; inset:0; z-index:9998; background:rgba(10,14,30,.55); display:flex; align-items:center; justify-content:center; padding:16px; }
+  .гв-окно{ background:var(--surface,#fff); color:var(--ink,#1d2330); border-radius:20px; max-width:520px; width:100%; padding:20px 18px; box-shadow:0 20px 50px rgba(0,0,0,.35); max-height:92vh; overflow:auto; }
+  .гв-окно h2{ margin:0 0 4px; font-size:20px; } .гв-окно p{ margin:0 0 12px; font-size:14px; color:var(--ink-muted,#5b615c); line-height:1.45; }
+  .гв-вар{ display:block; width:100%; text-align:left; border:2px solid var(--line,#d9dcea); background:var(--surface-2,#f6f7fb); border-radius:14px; padding:12px 14px; margin-bottom:10px; cursor:pointer; font:inherit; color:inherit; }
+  .гв-вар.выбран{ border-color:#2f6fdc; background:rgba(47,111,220,.10); }
+  .гв-вар b{ display:block; font-size:16px; margin-bottom:3px; } .гв-вар small{ display:block; font-size:13px; color:var(--ink-muted,#5b615c); line-height:1.4; }
+  .гв-слушать{ margin-top:8px; font:inherit; font-size:13px; font-weight:700; padding:6px 12px; border-radius:99px; border:1px solid var(--line,#d9dcea); background:var(--surface,#fff); color:#2f6fdc; cursor:pointer; }
+  .гв-ок{ width:100%; margin-top:6px; font:inherit; font-weight:800; font-size:15px; padding:12px; border:none; border-radius:12px; background:#2f6fdc; color:#fff; cursor:pointer; }
+  .гв-ссылка{ display:inline-block; margin:8px 0 18px; font-size:14px; font-weight:700; color:var(--accent,#2f6fdc); cursor:pointer; background:none; border:none; font-family:inherit; }
+</style>
+<script>
+(function(){
+  var КЛЮЧ = 'nemeckiy_golos_muzh';            // 'thorsten' | 'grisha'
+  function прочитать(){ try { return localStorage.getItem(КЛЮЧ); } catch(e){ return null; } }
+  function сохранить(в){
+    try {
+      localStorage.setItem(КЛЮЧ, в);
+      // живые фразы Григория в ЗУБРе и играх («Молодец!», «Эх…») — только у тех, кто выбрал его голос
+      localStorage.setItem('nemeckiy_golos_grishi', в === 'grisha' ? '1' : '0');
+    } catch(e){}
+  }
+  var играет = null;
+  function слушать(файл, кн){
+    if (играет) { играет.pause(); }
+    играет = new Audio(файл); кн.textContent = '🔊 звучит…';
+    играет.onended = function(){ кн.textContent = '▶ Послушать'; };
+    играет.play().catch(function(){ кн.textContent = '▶ Послушать'; });
+  }
+  window.выборГолоса = function(){
+    var текущий = прочитать() || 'thorsten';
+    var ф = document.createElement('div'); ф.className = 'гв-фон';
+    ф.innerHTML = '<div class="гв-окно" role="dialog" aria-label="Выбор голоса">' +
+      '<h2>🎙 Каким голосом вам говорить?</h2>' +
+      '<p>На сайте два варианта мужской озвучки. Выберите, какой вам больше нравится — поменять можно в любой момент внизу главной страницы.</p>' +
+      '<button class="гв-вар" data-г="thorsten"><b>🇩🇪 Носитель языка</b><small>Мужские роли в уроках и тренажёрах читает голос носителя немецкого (Thorsten) — чёткое произношение без акцента.</small>' +
+        '<span class="гв-слушать" data-ф="zvuk/golos/thorsten.mp3">▶ Послушать</span></button>' +
+      '<button class="гв-вар" data-г="grisha"><b>🧑‍⚕️ Григорий Андреевич Плотников, создатель сайта</b><small>Живые фразы Григория Андреевича по-русски в ЗУБРе и играх: «Отлично, всё правильно!», «Эх, жаль, не получилось», «Поздравляю, экзамен сдан». Немецкие реплики в уроках по-прежнему читает носитель.</small>' +
+        '<span class="гв-слушать" data-ф="zvuk/otvet/гриша/верно_молодец.mp3">▶ Послушать</span></button>' +
+      '<button class="гв-ок">Готово</button></div>';
+    document.body.appendChild(ф);
+    function отметить(){ ф.querySelectorAll('.гв-вар').forEach(function(b){ b.classList.toggle('выбран', b.dataset.г === текущий); }); }
+    отметить();
+    ф.querySelectorAll('.гв-вар').forEach(function(b){
+      b.onclick = function(e){
+        var с = e.target.closest('.гв-слушать');
+        if (с) { e.stopPropagation(); слушать(с.dataset.ф, с); }
+        текущий = b.dataset.г; отметить();
+      };
+    });
+    ф.querySelector('.гв-ок').onclick = function(){ сохранить(текущий); if (играет) играет.pause(); ф.remove(); };
+  };
+  document.addEventListener('DOMContentLoaded', function(){
+    var низ = document.querySelector('footer');
+    if (низ) {
+      var к = document.createElement('button'); к.className = 'гв-ссылка'; к.textContent = '🎙 Сменить голос озвучки';
+      к.onclick = window.выборГолоса; низ.parentNode.insertBefore(к, низ);
+    }
+    // первый заход — спрашиваем один раз, но после экрана «Кто занимается?» (он поверх всего)
+    if (!прочитать()) {
+      var т = setInterval(function(){
+        var вход = document.querySelector('.вход');
+        var виден = вход && !вход.hidden && getComputedStyle(вход).display !== 'none';   // экран профиля прячется атрибутом hidden
+        if (!виден) { clearInterval(т); setTimeout(window.выборГолоса, 600); }
+      }, 500);
+    }
+  });
+})();
+</script>
+<!-- ВЫБОР-ГОЛОСА-END -->
 </body>
 </html>
