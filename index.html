@@ -3,343 +3,28 @@
 <head>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Немецкий для врачей — курс Григория и Полины</title>
-<style>
-  /* Оформление то же, что в ЗУБРе: лавандовый фон, белые карточки,
-     мягкие тени, Figtree. Акцент разный по профилю — у Григория синий,
-     у Полины розовый, чтобы с одного взгляда было видно, чей это экран. */
-  :root{
-    --bg:#E9EBF6; --surface:#FFFFFF; --surface-2:#F3F4FA;
-    --ink:#1C2242; --ink-muted:#6C7291; --ink-faint:#9AA0BE; --line:#DCE0F0;
-    --accent:#4A63D6; --accent-ink:#FFFFFF; --градиент:linear-gradient(135deg,#4A63D6,#7A8FE8);
-    --play:#E8A33D; --play-ink:#FFFFFF;
-    --done-bg:#E4F7EC; --done-line:#22A06B;
-    --dasha:#7A5AF8; --dasha-bg:#EFEBFF; --polya:#EC6A86; --polya-bg:#FBE6EA;
-    --тень:0 12px 30px rgba(40,50,110,.12);
-    --радиус:22px;
-  }
-  :root[data-кто="polina"]{
-    --accent:#EC6A86; --градиент:linear-gradient(135deg,#EC6A86,#F5A0B4);
-    --dasha:#EC6A86; --dasha-bg:#FBE6EA;
-  }
-  @media (prefers-color-scheme: dark){
-    :root:not([data-theme="light"]){
-      --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
-      --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291; --line:#2A2E52;
-      --accent:#7A8FE8; --accent-ink:#12142A;
-      --done-bg:#16321F; --done-line:#5FD0A0;
-      --dasha:#A78BFA; --dasha-bg:#241C42; --polya:#F5A0B4; --polya-bg:#3A1620;
-      --тень:0 12px 30px rgba(0,0,0,.35);
-    }
-    :root:not([data-theme="light"])[data-кто="polina"]{ --accent:#F5A0B4; }
-  }
-  :root[data-theme="dark"]{
-    --bg:#12142A; --surface:#1E2140; --surface-2:#191C36;
-    --ink:#EDEFF8; --ink-muted:#9AA0BE; --ink-faint:#6C7291; --line:#2A2E52;
-    --accent:#7A8FE8; --accent-ink:#12142A;
-    --done-bg:#16321F; --done-line:#5FD0A0;
-    --dasha:#A78BFA; --dasha-bg:#241C42; --polya:#F5A0B4; --polya-bg:#3A1620;
-    --тень:0 12px 30px rgba(0,0,0,.35);
-  }
-  *{box-sizing:border-box;}
-  body{
-    margin:0; background:var(--bg); color:var(--ink);
-    font-family:Figtree,-apple-system,system-ui,"Segoe UI",Roboto,sans-serif;
-    line-height:1.45;
-  }
-  .wrap{max-width:920px; margin:0 auto; padding:28px 18px 60px;}
-  header{margin-bottom:22px;}
-  header h1{font-size:clamp(26px,7vw,34px); font-weight:800; margin:0 0 4px; letter-spacing:-0.02em;}
-  header p{margin:0; color:var(--ink-muted); font-size:0.95rem;}
-
-  .profile-bar{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    background:var(--surface); border:1px solid var(--line); border-radius:14px;
-    padding:12px 14px; margin:18px 0;
-  }
-  .profile-bar span.label{color:var(--ink-muted); font-size:0.88rem; margin-right:4px;}
-  .profile-btn{
-    border:1px solid var(--line); background:transparent; color:var(--ink);
-    padding:7px 16px; border-radius:999px; font-size:0.92rem; cursor:pointer;
-    transition:all .15s;
-  }
-  .profile-btn.active{background:var(--accent); color:var(--accent-ink); border-color:var(--accent);}
-  .progress-note{margin-left:auto; color:var(--ink-muted); font-size:0.88rem; white-space:nowrap;}
-
-  .folders{display:grid; grid-template-columns:repeat(auto-fit,minmax(178px,1fr)); gap:10px; margin-top:22px;}
-  .folder{display:flex; align-items:center; gap:11px; padding:13px 15px; border:1px solid var(--line);
-    border-radius:var(--радиус); background:var(--surface); color:var(--ink); cursor:pointer; font-family:inherit;
-    text-align:left; transition:box-shadow .15s, border-color .15s;}
-  .folder:hover{border-color:var(--accent);}
-  .folder .f-ico{font-size:21px; flex-shrink:0; line-height:1;}
-  .folder .f-txt{flex:1; min-width:0;}
-  .folder .f-name{font-weight:600; font-size:14.5px;}
-  .folder .f-sub{font-size:11.5px; color:var(--ink-muted); margin-top:2px;}
-  .folder.active{border-color:var(--accent); box-shadow:inset 0 0 0 2px var(--accent);}
-  .folder.trainer,.folder.zubr{text-decoration:none; color:inherit;}
-  .folder.zubr:hover{border-color:var(--play);}
-  .folder.trainer:hover{border-color:var(--play);}
-  .folder.trainer .f-ico{color:var(--accent);}
-  .folder.dasha:hover{border-color:var(--dasha);}
-  .folder.dasha.active{border-color:var(--dasha); box-shadow:inset 0 0 0 2px var(--dasha);}
-  @media(max-width:760px){ .folders{grid-template-columns:1fr;} }
-  .lvl-tabs{display:grid; grid-template-columns:repeat(5,1fr); gap:8px; margin-top:16px;}
-  .lvl-tab{display:flex; flex-direction:column; align-items:center; gap:2px; padding:9px 4px;
-    border:1px solid var(--line); border-top:3px solid var(--lvl); border-radius:12px;
-    background:var(--surface); color:var(--ink); cursor:pointer; font-family:inherit;
-    transition:background .15s, color .15s;}
-  .lvl-tab:hover{border-color:var(--lvl);}
-  .lvl-tab.active{background:var(--lvl); color:#fff; border-color:var(--lvl);}
-  .lvl-tab .lvl-code{font-weight:700; font-size:15px; letter-spacing:.02em;}
-  .lvl-tab .lvl-name{font-size:10.5px; opacity:.72; white-space:nowrap;}
-  .lvl-tab .lvl-badge{font-size:11.5px; font-weight:600; opacity:.9; font-variant-numeric:tabular-nums;}
-  .lvl-tab.locked{opacity:.55;}
-  @media(max-width:520px){ .lvl-tab .lvl-name{display:none;} }
-  .lvl-empty{padding:24px 18px; text-align:center; color:var(--ink-muted); background:var(--surface);
-    border:1px dashed var(--line); border-radius:12px; margin-top:14px; font-size:14px; line-height:1.5;}
-  .grid{display:grid; grid-template-columns:1fr; gap:14px; margin-top:18px;}
-  @media(min-width:680px){ .grid{grid-template-columns:1fr 1fr;} }
-
-  /* ===== панель прогресса по уровням ===== */
-  .progress-panel{
-    background:var(--surface); border:1px solid var(--line); border-radius:var(--радиус);
-    padding:18px 20px; margin:18px 0 4px;
-  }
-  .pp-head{display:flex; align-items:baseline; justify-content:space-between; gap:12px; flex-wrap:wrap;}
-  .pp-title{font-size:1rem; font-weight:600;}
-  .pp-total{font-size:1.65rem; font-weight:700; color:var(--accent); font-variant-numeric:tabular-nums; line-height:1;}
-  .pp-bar-big{
-    height:16px; background:var(--bg); border:1px solid var(--line); border-radius:999px;
-    overflow:hidden; margin-top:12px;
-  }
-  .pp-fill-big{
-    height:100%; width:0%; border-radius:999px; transition:width .5s ease;
-    background:linear-gradient(90deg,#2e9e5b 0%,#1f8fb5 33%,#8a5cc7 66%,#c9552b 100%);
-    background-size:calc(100% * var(--scale,1)) 100%;
-  }
-  .pp-left{margin-top:8px; font-size:0.85rem; color:var(--ink-muted);}
-  .pp-left b{color:var(--ink);}
-
-  .pp-levels{display:grid; grid-template-columns:1fr 1fr; gap:10px 16px; margin-top:16px;}
-  @media(min-width:680px){ .pp-levels{grid-template-columns:repeat(5,1fr);} }
-  .lvl{cursor:pointer; border:1px solid transparent; border-radius:10px; padding:8px; transition:all .15s;}
-  .lvl:hover{background:var(--bg);}
-  .lvl.active{border-color:var(--line); background:var(--bg);}
-  .lvl-top{display:flex; align-items:baseline; justify-content:space-between; gap:6px;}
-  .lvl-code{font-weight:700; font-size:0.95rem;}
-  .lvl-pct{font-size:0.85rem; font-weight:600; font-variant-numeric:tabular-nums; color:var(--ink-muted);}
-  .lvl-name{font-size:0.72rem; color:var(--ink-faint); margin-top:1px;}
-  .lvl-bar{height:7px; background:var(--bg); border:1px solid var(--line); border-radius:999px; overflow:hidden; margin-top:6px;}
-  .lvl.active .lvl-bar{background:var(--surface);}
-  .lvl-fill{height:100%; width:0%; border-radius:999px; transition:width .4s ease;}
-  .lvl-done{font-size:0.72rem; color:var(--ink-faint); margin-top:4px;}
-
-  .pp-toggle{
-    margin-top:14px; border:1px solid var(--line); background:transparent; color:var(--ink-muted);
-    padding:7px 14px; border-radius:999px; font-size:0.85rem; cursor:pointer;
-  }
-  .pp-toggle:hover{background:var(--bg); color:var(--ink);}
-  .pp-topics{margin-top:14px; border-top:1px solid var(--line); padding-top:14px;}
-  .pp-topics h4{margin:0 0 10px; font-size:0.9rem; font-weight:600;}
-  .l-мера{font-size:0.78rem; color:var(--ink-faint); margin:2px 0 0; letter-spacing:.01em;}
-  .topic-list{display:grid; grid-template-columns:1fr; gap:5px;}
-  @media(min-width:680px){ .topic-list{grid-template-columns:1fr 1fr;} }
-  .topic{display:flex; gap:8px; align-items:flex-start; font-size:0.84rem; padding:4px 0;}
-  .topic .tick{flex-shrink:0; width:16px; text-align:center;}
-  .topic.ok .tick{color:var(--done-line); font-weight:700;}
-  .topic.ok span.tt{color:var(--ink);}
-  .topic:not(.ok) .tick{color:var(--ink-faint);}
-  .topic:not(.ok) span.tt{color:var(--ink-faint);}
-  .topic .src{font-size:0.72rem; color:var(--ink-faint);}
-
-  .sec-head{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    font-size:1.1rem; font-weight:600; margin:34px 0 0; padding-bottom:10px;
-    border-bottom:2px solid var(--accent); color:var(--ink);
-  }
-  .sec-head.sec-dasha{border-bottom-color:var(--dasha);}
-  .sec-ico{font-size:1.25rem;}
-  .sec-note{font-size:0.82rem; font-weight:400; color:var(--ink-muted);}
-  /* Поиск по сайту. Просил Григорий 09.09: «вбил — и сразу нашёл, ага,
-     здесь вот урок такой-то, вот мы это проходили». Ищем и по урокам всех
-     трёх линий, и по темам грамматики: вопрос обычно звучит не «какой урок
-     номер шесть», а «где мы проходили Akkusativ». */
-  .site-search{ margin:0 0 18px; }
-  /* цвета только переменными — сайт умеет тёмную тему, а жёсткий белый
-     фон делал находки нечитаемыми */
-  .site-search input{ width:100%; box-sizing:border-box; padding:13px 15px;
-    border:2px solid var(--line); border-radius:14px; background:var(--surface);
-    font-size:16px; font-family:inherit; color:var(--ink); outline:none;
-    transition:border-color .16s ease; -webkit-appearance:none; }
-  .site-search input::placeholder{ color:var(--ink-faint); }
-  .site-search input:focus{ border-color:var(--accent, #4A63D6); }
-  #siteFound{ margin-top:10px; }
-  .sf-group{ font-size:12px; font-weight:800; letter-spacing:.06em;
-    text-transform:uppercase; color:var(--ink-muted); margin:12px 0 6px; }
-  .sf-item{ display:block; background:var(--surface); border:1px solid var(--line);
-    border-radius:12px; padding:11px 14px; margin-bottom:7px;
-    text-decoration:none; color:var(--ink); }
-  .sf-item:hover{ border-color:var(--accent, #4A63D6); }
-  .sf-item b{ display:block; font-size:15px; color:var(--ink); }
-  .sf-item span{ display:block; font-size:13px; color:var(--ink-muted); margin-top:2px; }
-  .sf-empty{ text-align:center; color:var(--ink-muted); font-size:14px; padding:14px; }
-
-  .next-lesson{
-    display:flex; align-items:center; gap:10px; flex-wrap:wrap;
-    background:var(--dasha-bg); border:1px solid var(--dasha); border-radius:12px;
-    padding:12px 16px; margin-top:16px; font-size:0.92rem;
-  }
-  .next-lesson b{color:var(--dasha);}
-  .card.dasha{border-left:4px solid var(--dasha);}
-  .card.dasha.done{border-left-color:var(--done-line);}
-  .card .num.dasha-num{color:var(--dasha);}
-  .btn.photos{color:var(--ink-muted);}
-  .sec-head.sec-polya{border-bottom-color:var(--polya);}
-  .next-lesson.next-polya{background:var(--polya-bg); border-color:var(--polya);}
-  .next-lesson.next-polya b{color:var(--polya);}
-  .card.polya{border-left:4px solid var(--polya);}
-  .card.polya.done{border-left-color:var(--done-line);}
-  .card .num.polya-num{color:var(--polya);}
-  .btn.trainer{background:var(--dasha); border-color:var(--dasha); color:#fff; font-weight:600;}
-  @media (prefers-color-scheme: dark){ .btn.trainer{color:#1a1020;} }
-
-  .card-фото{ display:block; width:100%; margin:0 0 12px; aspect-ratio:16/9; object-fit:cover; border-radius:14px; }
-  .card{
-    background:var(--surface); border:1px solid var(--line); border-radius:var(--радиус);
-    padding:16px 18px; transition:border-color .15s;
-  }
-  .card.done{background:var(--done-bg); border-color:var(--done-line);}
-  .card .num{
-    display:inline-block; font-size:0.72rem; font-weight:700; color:var(--accent);
-    letter-spacing:.04em; text-transform:uppercase; margin-bottom:4px;
-  }
-  .card h2{margin:0 0 6px; font-size:1.08rem;}
-  .card p.topic{margin:0 0 12px; color:var(--ink-muted); font-size:0.88rem;}
-  .card .actions{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px;}
-  .btn{
-    display:inline-flex; align-items:center; gap:6px; text-decoration:none;
-    font-size:0.85rem; padding:7px 12px; border-radius:10px; border:1px solid var(--line);
-    color:var(--ink); background:var(--bg);
-  }
-  .btn.audio{background:var(--play); border-color:var(--play); color:var(--play-ink); font-weight:600;}
-  .btn.pdf{color:var(--ink-muted);}
-  .btn.disabled{opacity:.45; pointer-events:none;}
-
-  label.check{
-    display:flex; align-items:center; gap:8px; font-size:0.86rem; color:var(--ink-muted);
-    cursor:pointer; user-select:none;
-  }
-  label.check input{width:16px; height:16px; accent-color:var(--accent);}
-  .card.done label.check{color:var(--done-line); font-weight:600;}
-
-  footer{margin-top:34px; color:var(--ink-faint); font-size:0.82rem; text-align:center;}
-  .card.кратко{ padding:14px 16px 12px; }
-  .card.кратко .кратко-ссылка{ display:block; text-decoration:none; color:inherit; }
-  .card.кратко .кратко-ссылка h2{ margin:4px 0 0; font-size:18px; }
-  .card.кратко .кратко-ссылка:hover h2{ color:var(--accent); }
-  .card.кратко .кратко-доп{ display:inline-block; margin-top:8px; font-size:13.5px; font-weight:700; color:var(--accent); text-decoration:none; }
-  .card.кратко .check{ margin-top:10px; }
-</style>
+<title>Немецкий для врачей: курс Григория и Полины</title>
+<meta name="description" content="Немецкий для врачей, которые переезжают в Австрию: уроки, тренажёр слов ЗУБР, игры и экзамены.">
+<link rel="stylesheet" href="css/home.css">
 <!--ТЕМА-JS-START-->
 <script src="tema.js"></script>
 <!--ТЕМА-JS-END-->
 </head>
 <body>
 <!--ВХОД-->
-<style>
-  /* Экран «кто занимается» + верхнее меню разделов (28.10.2026, просьба врача:
-     «сайт стал огромный, неудобно прокручивать — зашёл как Гриша или как Поля,
-     сверху ссылки на разделы, всё на одном экране»). */
-  .вход{ position:fixed; inset:0; z-index:9000; display:flex; flex-direction:column; background:#0e1024; }
-  .вход[hidden]{ display:none; }
-  .вход-кто{ flex:1; position:relative; border:none; padding:0; margin:0; cursor:pointer; overflow:hidden;
-    font-family:inherit; color:#fff; text-align:left; background:#20264d; }
-  .вход-кто img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; object-position:center 0%;
-    transition:transform .5s ease; }
-  .вход-кто:hover img, .вход-кто:focus-visible img{ transform:scale(1.04); }
-  .вход-кто::after{ content:""; position:absolute; inset:0; pointer-events:none; }
-  .вход-кто.гриша::after{ box-shadow:inset 0 0 0 6px #4A63D6; background:linear-gradient(180deg,rgba(74,99,214,0) 45%,rgba(30,45,140,.85) 100%); }
-  .вход-кто.поля::after{ box-shadow:inset 0 0 0 6px #EC6A86; background:linear-gradient(180deg,rgba(236,106,134,0) 45%,rgba(160,40,80,.85) 100%); }
-  .вход-кто .подпись{ position:absolute; left:22px; bottom:20px; z-index:2; }
-  .вход-кто .имя{ display:block; font-size:clamp(30px,9vw,46px); font-weight:800; letter-spacing:-.02em; line-height:1; }
-  .вход-кто .войти{ display:inline-block; margin-top:8px; font-size:15px; font-weight:700; padding:7px 14px; border-radius:999px;
-    background:rgba(255,255,255,.22); backdrop-filter:blur(4px); }
-  .вход-кто .заглушка{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    font-size:110px; background:linear-gradient(160deg,#F5A0B4,#EC6A86 55%,#B83763); }
-  .вход-кто.гриша .заглушка{ background:linear-gradient(160deg,#7A8FE8,#4A63D6 55%,#2B3C9E); }
-  .вход-заголовок{ position:absolute; top:max(14px, env(safe-area-inset-top)); left:0; right:0; z-index:3; text-align:center;
-    color:#fff; font-weight:800; font-size:15px; text-shadow:0 2px 8px rgba(0,0,0,.5); pointer-events:none; }
-  @media (min-width:760px){ .вход{ flex-direction:row; } }
-
-  .верх{ position:sticky; top:0; z-index:50; background:color-mix(in srgb, var(--bg) 88%, transparent);
-    backdrop-filter:saturate(1.4) blur(10px); -webkit-backdrop-filter:saturate(1.4) blur(10px);
-    border-bottom:1px solid var(--line); }
-  .верх-ряд{ max-width:920px; margin:0 auto; display:flex; align-items:center; gap:10px; padding:9px 18px; }
-  .верх-ряд a{ display:inline-flex; align-items:center; gap:5px; padding:8px 14px; border-radius:999px; background:var(--accent);
-    color:#fff; text-decoration:none; font-size:14px; font-weight:800; white-space:nowrap; }
-  .верх-ряд b{ font-size:16px; font-weight:800; }
-  :root[data-вид="home"] .верх{ display:none; }
-
-  .разделы{ max-width:920px; margin:14px auto 0; padding:0 18px; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-  .разделы a{ display:flex; flex-direction:column; align-items:center; justify-content:center; gap:7px; min-height:96px;
-    padding:10px 4px; border-radius:18px; background:var(--surface); border:1px solid var(--line); color:var(--ink);
-    text-decoration:none; text-align:center; font-size:14px; font-weight:700; line-height:1.15; transition:border-color .15s, transform .1s; }
-  .разделы a:hover{ border-color:var(--accent); } .разделы a:active{ transform:scale(.96); }
-  .разделы a i{ font-style:normal; font-size:40px; line-height:1; }
-  .разделы a.главный{ background:var(--градиент); color:#fff; border-color:transparent; }
-  @media (min-width:700px){ .разделы{ grid-template-columns:repeat(6,1fr); } .разделы a{ min-height:112px; font-size:15px; } .разделы a i{ font-size:46px; } }
-  :root:not([data-вид="home"]) .разделы{ display:none; }
-
-  .кто-шапка{ max-width:920px; margin:0 auto; padding:16px 18px 0; display:flex; align-items:center; gap:14px; }
-  .кто-фото{ width:62px; height:62px; border-radius:50%; flex:none; overflow:hidden; border:3px solid var(--accent);
-    background:var(--градиент); display:flex; align-items:center; justify-content:center; font-size:30px; }
-  .кто-фото img{ width:100%; height:100%; object-fit:cover; object-position:center 8%; }
-  :root[data-кто="polina"] .кто-фото img{ object-position:62% 8%; }
-  .вход-кто.поля img{ object-position:62% 10%; }
-  .кто-текст{ flex:1; min-width:0; }
-  .кто-текст b{ display:block; font-size:21px; font-weight:800; line-height:1.15; }
-  .кто-текст span{ font-size:13px; color:var(--ink-muted); }
-  .кто-смена{ border:1px solid var(--line); background:var(--surface); color:var(--ink); border-radius:999px;
-    padding:8px 13px; font:inherit; font-size:13px; font-weight:700; cursor:pointer; white-space:nowrap; }
-  .сводка{ max-width:920px; margin:12px auto 0; padding:0 18px; display:grid; grid-template-columns:repeat(4,1fr); gap:8px; }
-  .сводка a, .сводка div{ background:var(--surface); border:1px solid var(--line); border-radius:14px; padding:9px 6px;
-    text-align:center; text-decoration:none; color:var(--ink-muted); font-size:11.5px; line-height:1.25; }
-  .сводка b{ display:block; color:var(--ink); font-size:19px; font-weight:800; font-variant-numeric:tabular-nums; }
-  @media (max-width:420px){ .сводка{ gap:5px; } .сводка a, .сводка div{ padding:7px 3px; font-size:10.5px; } .сводка b{ font-size:16px; } }
-
-  /* три вида главной: обзор, уроки с Claude, занятия с Дашей */
-  header, .profile-bar, .folders{ display:none !important; }
-  :root[data-вид="home"] #secClaude, :root[data-вид="home"] #secDasha{ display:none !important; }
-  :root[data-вид="claude"] .пер, :root[data-вид="dasha"] .пер,
-  :root[data-вид="claude"] .site-search, :root[data-вид="dasha"] .site-search,
-  :root[data-вид="claude"] .сводка, :root[data-вид="dasha"] .сводка,
-  :root[data-вид="dasha"] .progress-panel{ display:none !important; }
-  :root[data-вид="home"] .progress-panel, :root[data-вид="claude"] .progress-panel{ display:none !important; }
-  :root[data-вид="put"] .пер, :root[data-вид="put"] .site-search, :root[data-вид="put"] .сводка,
-  :root[data-вид="put"] #secClaude, :root[data-вид="put"] #secDasha{ display:none !important; }
-  :root:not([data-вид="home"]) .wrap{ padding-top:10px; }
-  :root[data-вид="home"] .wrap{ padding-top:14px; }
-  /* путь к B2 показывается внутри «Статистики» через iframe: index.html?встроено=1#put */
-  :root[data-встроено] .верх, :root[data-встроено] .кто-шапка, :root[data-встроено] .сводка, :root[data-встроено] .разделы,
-  :root[data-встроено] .вход, :root[data-встроено] .пер, :root[data-встроено] .site-search, :root[data-встроено] footer,
-  :root[data-встроено] #secClaude, :root[data-встроено] #secDasha{ display:none !important; }
-  :root[data-встроено] body{ background:transparent; }
-  :root[data-встроено] .wrap{ padding:0 !important; max-width:none; }
-  :root[data-встроено] .progress-panel{ display:block !important; margin:0; }
-</style>
 
 <div class="вход" id="вход" hidden>
-  <div class="вход-заголовок">🇩🇪 Немецкий для врачей · кто занимается?</div>
+  <div class="вход-заголовок">Кто сегодня занимается?</div>
   <button class="вход-кто гриша" data-кто="grigoriy" aria-label="Войти как Гриша">
     <img src="img/kto/grisha.webp" alt="" onerror="this.remove()">
-    <span class="подпись"><span class="имя">Гриша</span><span class="войти">Войти →</span></span>
+    <span class="подпись"><span class="имя">Гриша</span><span class="войти">Войти</span></span>
   </button>
   <button class="вход-кто поля" data-кто="polina" aria-label="Войти как Поля">
-    <img src="img/kto/polya.webp" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'заглушка',textContent:'👩‍⚕️'}))">
-    <span class="подпись"><span class="имя">Поля</span><span class="войти">Войти →</span></span>
+    <img src="img/kto/polya.webp" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'заглушка',textContent:'П'}))">
+    <span class="подпись"><span class="имя">Поля</span><span class="войти">Войти</span></span>
   </button>
 </div>
 
@@ -354,18 +39,18 @@
 </div>
 <div class="сводка" id="сводка"></div>
 <nav class="разделы" id="разделы" aria-label="Разделы сайта">
-  <a href="#claude" class="главный"><i>🤖</i>Уроки с Claude</a>
-  <a href="#dasha" class="главный" id="менюДаша"><i>👩‍🏫</i>Уроки с Дашей</a>
-  <a href="zubr.html"><i>🐃</i>ЗУБР</a>
-  <a href="pravila.html"><i>📐</i>Правила</a>
-  <a href="glagoly.html"><i>⚡</i>Спряжения</a>
-  <a href="slushat.html"><i>🎧</i>Слушаем</a>
-  <a href="chitaem.html"><i>📖</i>Читаем</a>
-  <a href="igry.html"><i>🎮</i>Игры</a>
-  <a href="ekzameny.html"><i>🎯</i>Экзамены</a>
-  <a href="testy.html"><i>🩺</i>Тесты врачей</a>
-  <a href="itog.html"><i>🎓</i>Итоговый тест</a>
-  <a href="stat.html"><i>📊</i>Статистика</a>
+  <a href="#claude" class="главный"><i>A1 bis C1</i>Уроки с Claude</a>
+  <a href="#dasha" class="главный" id="менюДаша"><i>Hallo!</i>Уроки с Дашей</a>
+  <a href="zubr.html"><i><span class="der">der</span> <span class="die">die</span> <span class="das">das</span></i>ЗУБР</a>
+  <a href="pravila.html"><i>Regeln</i>Правила</a>
+  <a href="glagoly.html"><i>ich bin</i>Спряжения</a>
+  <a href="slushat.html"><i>Hör zu!</i>Слушаем</a>
+  <a href="chitaem.html"><i>Lies!</i>Читаем</a>
+  <a href="igry.html"><i>Spiel!</i>Игры</a>
+  <a href="ekzameny.html"><i>ÖSD B2</i>Экзамены</a>
+  <a href="testy.html"><i>FSP</i>Тесты врачей</a>
+  <a href="itog.html"><i>Test</i>Итоговый тест</a>
+  <a href="stat.html"><i>Wie viel?</i>Статистика</a>
 </nav>
 <!--/ВХОД-->
 
@@ -505,55 +190,17 @@ return { слово: слово, текст: текст };
 })();
 
 </script>
-<style>
-  .пер{ background:var(--surface,#fff); border-radius:var(--радиус,22px);
-    box-shadow:var(--тень,0 12px 30px rgba(40,50,110,.12)); padding:18px 18px 16px; margin-bottom:18px; }
-  .пер-верх{ display:flex; align-items:center; gap:10px; margin-bottom:12px; }
-  .пер-знак{ width:38px; height:38px; border-radius:11px; flex-shrink:0; font-size:19px;
-    background:var(--градиент,linear-gradient(135deg,#4A63D6,#EC6A86)); display:flex;
-    align-items:center; justify-content:center; box-shadow:0 5px 12px rgba(74,99,214,.28); }
-  .пер-верх b{ font-size:16px; font-weight:800; flex:1; }
-  .пер-смена{ border:none; background:var(--surface-2,#F3F4FA); color:var(--ink,#1C2242);
-    border-radius:999px; padding:8px 14px; font-size:13px; font-weight:700; cursor:pointer;
-    font-family:inherit; white-space:nowrap; }
-  .пер-смена:active{ transform:scale(.95); }
-  .пер-поле{ position:relative; }
-  .пер-поле textarea{ width:100%; min-height:74px; resize:vertical; background:var(--surface-2,#F3F4FA);
-    border:2px solid transparent; border-radius:14px; padding:14px 52px 14px 14px; font-size:17px;
-    font-family:inherit; color:var(--ink,#1C2242); line-height:1.35; }
-  .пер-поле textarea:focus{ outline:none; border-color:var(--accent,#4A63D6); }
-  .пер-микро{ position:absolute; right:8px; top:8px; width:38px; height:38px; border-radius:50%;
-    border:none; background:var(--surface,#fff); box-shadow:var(--тень,0 4px 12px rgba(40,50,110,.14));
-    font-size:17px; cursor:pointer; color:var(--ink,#1C2242); }
-  .пер-микро.слушает{ background:#E0455E; color:#fff; animation:пульс 1s ease-in-out infinite; }
-  @keyframes пульс{ 0%,100%{transform:scale(1)} 50%{transform:scale(1.12)} }
-  .пер-кн{ display:flex; gap:9px; margin-top:11px; }
-  .пер-кн button{ flex:1; border:none; border-radius:14px; padding:13px; font-size:15px; font-weight:700;
-    font-family:inherit; cursor:pointer; min-height:48px; }
-  .пер-главная{ background:var(--градиент,linear-gradient(135deg,#4A63D6,#EC6A86)); color:#fff;
-    box-shadow:0 8px 20px rgba(74,99,214,.3); }
-  .пер-простая{ background:var(--surface-2,#F3F4FA); color:var(--ink,#1C2242); }
-  .пер-итог{ margin-top:14px; padding:15px; border-radius:14px; background:var(--surface-2,#F3F4FA); display:none; }
-  .пер-итог.видно{ display:block; }
-  .пер-итог .слово{ font-size:21px; font-weight:800; line-height:1.3; }
-  .пер-итог .транс{ color:var(--accent,#4A63D6); font-size:15px; margin-top:6px; font-weight:600; }
-  .пер-итог .низ{ display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
-  .пер-итог .низ button{ border:none; background:var(--surface,#fff); color:var(--ink,#1C2242);
-    border-radius:999px; padding:9px 15px; font-size:13px; font-weight:700; cursor:pointer;
-    font-family:inherit; box-shadow:0 3px 10px rgba(40,50,110,.1); }
-  .пер-ошибка{ color:#E0455E; font-size:13.5px; margin-top:10px; }
-  .пер-ждём{ color:var(--ink-muted,#6C7291); font-size:13.5px; margin-top:10px; }
-</style>
+
 
 <section class="пер" id="пер">
   <div class="пер-верх">
-    <div class="пер-знак">🌐</div>
+    <div class="пер-знак" aria-hidden="true">DE</div>
     <b id="перНазвание">Немецкий → русский</b>
-    <button class="пер-смена" id="перСмена">⇄ поменять</button>
+    <button class="пер-смена" id="перСмена">Поменять</button>
   </div>
   <div class="пер-поле">
     <textarea id="перВвод" placeholder="Введи слово или фразу…" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
-    <button class="пер-микро" id="перМикро" title="Сказать голосом">🎙</button>
+    <button class="пер-микро" id="перМикро" title="Сказать голосом" aria-label="Сказать голосом"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
   </div>
   <div class="пер-кн">
     <button class="пер-простая" id="перОчистить">Очистить</button>
@@ -632,9 +279,9 @@ function пуск(){
       '<div class="слово">' + экр(перевод) + '</div>' +
       (транс ? '<div class="транс">[' + экр(сНемецкого ? window.Транскрипция.текст(текст) : транс) + ']</div>' : '') +
       '<div class="низ">' +
-        '<button id="перСлушать">🔊 Послушать по-немецки</button>' +
+        '<button id="перСлушать">Послушать по-немецки</button>' +
         '<button id="перКопия">Скопировать</button>' +
-        '<button id="перВЗубр">➕ В мой словарик</button>' +
+        '<button id="перВЗубр">В мой словарик</button>' +
       '</div>';
 
     $('перСлушать').onclick = function(){ озвучить(немецкое); };
@@ -660,7 +307,7 @@ function вЗубр(немецкое, русское, кнопка){
   if (есть){ кнопка.textContent = 'уже в словарике'; return; }
   список.push({ de: немецкое, ru: русское, t: Date.now() });
   try{ localStorage.setItem(ключ, JSON.stringify(список)); }catch(e){}
-  кнопка.textContent = '✓ добавлено в ЗУБР';
+  кнопка.textContent = 'Добавлено в ЗУБР';
   if (window.ЗУБР_обновить) window.ЗУБР_обновить();
 }
 
@@ -1060,8 +707,8 @@ if (!Слушалка){
 
 
   <header>
-    <h1>🇩🇪 Немецкий для врачей</h1>
-    <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
+    <h1>Немецкий для врачей</h1>
+    <p>Личный курс Григория и Полины на пути к Approbation: все уроки в одном месте.</p>
   </header>
 
   <div class="profile-bar">
@@ -1079,7 +726,7 @@ if (!Слушалка){
 
   <div class="progress-panel">
     <div class="pp-head">
-      <span class="pp-title">🎯 Путь к B2 — допуск врача (Approbation)</span>
+      <span class="pp-title">Путь к B2: допуск врача (Approbation)</span>
       <span class="pp-total" id="ppTotal">0%</span>
     </div>
     <div class="pp-bar-big"><div class="pp-fill-big" id="ppFillBig"></div></div>
@@ -1094,13 +741,13 @@ if (!Слушалка){
   <div class="folders" id="folders"></div>
 
   <section id="secClaude">
-    <h2 class="sec-head"><span class="sec-ico">🤖</span> Уроки с Claude <span class="sec-note">— ежедневно, между занятиями</span></h2>
+    <h2 class="sec-head">Уроки с Claude <span class="sec-note">каждый день, между занятиями</span></h2>
     <div class="lvl-tabs" id="lvlTabs"></div>
     <div class="grid" id="grid"></div>
   </section>
 
   <section id="secDasha" hidden>
-    <h2 class="sec-head sec-dasha"><span class="sec-ico">👩‍🏫</span> <span id="dashaTitle">Занятия с Дашей</span> <span class="sec-note" id="dashaNote"></span></h2>
+    <h2 class="sec-head sec-dasha"><span id="dashaTitle">Занятия с Дашей</span> <span class="sec-note" id="dashaNote"></span></h2>
     <div class="next-lesson" id="nextLesson"></div>
     <div class="grid" id="gridDasha"></div>
   </section>
@@ -1210,51 +857,51 @@ const LESSONS = [
 // Занятия с репетитором Дашей (Австрия) — раз в неделю, воскресенье 20:00
 const DASHA = [
   {id:'d13', num:'Занятие 13', date:'≈02.11.2026', title:'Мебель, описание картинки и цены',
-   topic:'О жизни: в Австрии много платят наличными, такси дорогое, общественный транспорт отличный. ⭐ Мебель: Sofa/Couch, Bett, Lampe, Vase, Fenster, Fernseher (fern + sehen), Teppich, Sessel, Tisch, Tür, Kommode, Stuhl, Schreibtisch, Spiegel, Regal, Bild, Schrank, Kissen. ⭐⭐ Описание картинки: es gibt, ich sehe, auf dem Bild, im Hintergrund/Vordergrund, обратный порядок (Auf dem Bild sehe ich…), stehen/liegen/hängen (das Bild hängt). modern, praktisch, billig = günstig, teuer, zu teuer, Sonderangebot. ⭐ Числа и цены: 1 478 Euro, 119 Euro, сначала hundert, потом tausend; 9,99 € = neun Euro neunundneunzig. Разговор в магазине (Verkäufer/Kundin). Домашка: текст про дом Клары с вопросами, слабые и сильные глаголы, Plural (20), притяжательные, по 3 предложения с fahren/essen/lesen/sehen/helfen/schlafen/tragen.',
+   topic:'О жизни: в Австрии много платят наличными, такси дорогое, общественный транспорт отличный. Мебель: Sofa/Couch, Bett, Lampe, Vase, Fenster, Fernseher (fern + sehen), Teppich, Sessel, Tisch, Tür, Kommode, Stuhl, Schreibtisch, Spiegel, Regal, Bild, Schrank, Kissen. Описание картинки: es gibt, ich sehe, auf dem Bild, im Hintergrund/Vordergrund, обратный порядок (Auf dem Bild sehe ich…), stehen/liegen/hängen (das Bild hängt). modern, praktisch, billig = günstig, teuer, zu teuer, Sonderangebot. Числа и цены: 1 478 Euro, 119 Euro, сначала hundert, потом tausend; 9,99 € = neun Euro neunundneunzig. Разговор в магазине (Verkäufer/Kundin). Домашка: текст про дом Клары с вопросами, слабые и сильные глаголы, Plural (20), притяжательные, по 3 предложения с fahren/essen/lesen/sehen/helfen/schlafen/tragen.',
    pdf:'', audio:'dasha/dasha13_interactive.html', mins:77, hard:'Средне', cards:134,
    photos:['dasha/dasha13_hw_klara.jpg','dasha/dasha13_hw_schwach.jpg','dasha/dasha13_hw_stark.jpg','dasha/dasha13_hw_plural.jpg','dasha/dasha13_hw_possessiv.jpg','dasha/dasha13_hw_zadanie.jpg'],
    photoLabels:['Текст Klara','Слабые глаголы','Сильные глаголы','Plural','Possessivartikel','Сообщение Даши с домашкой']},
   {id:'d12', num:'Занятие 12', date:'≈27.10.2026', title:'Множественное число: die Plural',
-   topic:'Разминка: сильные глаголы с du (fährst, siehst, liest, nimmst, isst; gehen и kommen не меняются), перевод с sprechen/geben/sehen, модальные (Du kannst Deutsch sprechen — второй глагол в конец), 13 вопросительных слов и порядок «W-слово → глагол → кто». Женский род -in → -innen, национальности (Französin, Russin). ⭐⭐ Plural: артикль всегда die, способы — без изменения, -e (мужской), -er (средний, с умлаутом), -n/-en (женский), -nen, -s (заимствованные), только умлаут, умлаут + окончание; учить каждое слово сразу с множественным. Артикли der/ein. Домашка: 40 слов во множественное, 10 предложений, подкаст «Ein Tag mit Anna», текст о семье, 100 главных глаголов; игры «Перетащи по группам» и викторина по Plural.',
+   topic:'Разминка: сильные глаголы с du (fährst, siehst, liest, nimmst, isst; gehen и kommen не меняются), перевод с sprechen/geben/sehen, модальные (Du kannst Deutsch sprechen — второй глагол в конец), 13 вопросительных слов и порядок «W-слово → глагол → кто». Женский род -in → -innen, национальности (Französin, Russin). Plural: артикль всегда die, способы — без изменения, -e (мужской), -er (средний, с умлаутом), -n/-en (женский), -nen, -s (заимствованные), только умлаут, умлаут + окончание; учить каждое слово сразу с множественным. Артикли der/ein. Домашка: 40 слов во множественное, 10 предложений, подкаст «Ein Tag mit Anna», текст о семье, 100 главных глаголов; игры «Перетащи по группам» и викторина по Plural.',
    pdf:'', audio:'dasha/dasha12_interactive.html', mins:84, hard:'Средне', cards:159,
    photos:['dasha/dasha12_hw_slova.jpg','dasha/dasha12_hw_semya.jpg','dasha/dasha12_hw_zadanie.jpg'],
    photoLabels:['40 слов во множественное','Текст о семье','Сообщение Даши с домашкой']},
   {id:'d11', num:'Занятие 11', date:'≈21.10.2026', title:'Профессии: читаем, слушаем, угадываем',
-   topic:'Текст «Mein Beruf» — пекарь Леон (arbeiten als, sie = die Arbeit). ⭐ Уменьшительное -chen: Brot → Brötchen, всегда das и часто умлаут; stolz auf, sich gegenseitig unterstützen, ins Gespräch kommen, erschöpft = sehr müde. ⭐⭐ Первое аудирование «Beruf raten»: 6 сценок — официант, продавщица (Wechselgeld), врач (Grippe, dreimal täglich), турагентство (inklusive Flug und Frühstück), секретарь, техник (Heizung); цепляться за знакомые слова. ⭐⭐ Лист Даши: sein (aus = откуда, профессии, Sind Sie / ist sie), haben (viel Zeit ≠ viel zu tun, Glück, Geige, ein/eine). Домашка: «Wie sind die Leute?», 40 сильных глаголов с переводом, текст Шарлотты о семье, игры «Разложи по группам» и «Выбери ответ» (как Wordwall у Даши).',
+   topic:'Текст «Mein Beruf» — пекарь Леон (arbeiten als, sie = die Arbeit). Уменьшительное -chen: Brot → Brötchen, всегда das и часто умлаут; stolz auf, sich gegenseitig unterstützen, ins Gespräch kommen, erschöpft = sehr müde. Первое аудирование «Beruf raten»: 6 сценок — официант, продавщица (Wechselgeld), врач (Grippe, dreimal täglich), турагентство (inklusive Flug und Frühstück), секретарь, техник (Heizung); цепляться за знакомые слова. Лист Даши: sein (aus = откуда, профессии, Sind Sie / ist sie), haben (viel Zeit ≠ viel zu tun, Glück, Geige, ein/eine). Домашка: «Wie sind die Leute?», 40 сильных глаголов с переводом, текст Шарлотты о семье, игры «Разложи по группам» и «Выбери ответ» (как Wordwall у Даши).',
    pdf:'', audio:'dasha/dasha11_interactive.html', mins:75, hard:'Средне', cards:155,
    photos:['dasha/dasha11_hw_blatt.jpg','dasha/dasha11_hw_verben.jpg','dasha/dasha11_hw_text.jpg'],
    photoLabels:['Лист sein / haben','Starke Verben im Präsens','Текст Шарлотты о семье']},
   {id:'d10', num:'Занятие 10', date:'≈11.10.2026', title:'haben и sein — «быть» и «иметь»',
-   topic:'⭐⭐ Главное правило: в русском нет глагола («ей 36 лет», «уже поздно») — в немецком появляется sein. Анкета второй женщины из видео Menschen — Герда Никкельс (Sekretärin, 36, verheiratet; geschieden — разведён). ⭐ Чьё? — Opas Brille, Gerdas Familienname (просто -s). Весь лист Даши: sein, haben, «Was ist richtig?», текст «haben oder sein?»; болезнь «имеют» (Sie hat Grippe, Wo hast du Schmerzen?), состояние — sein (krank, erkältet, müde); doch, Lust haben, Das ist mir egal. Домашка: лист с самопроверкой, игра «Вставь в текст» (как Wordwall у Даши), профессии с сайта ZUM, перевод 18 предложений.',
+   topic:'Главное правило: в русском нет глагола («ей 36 лет», «уже поздно») — в немецком появляется sein. Анкета второй женщины из видео Menschen — Герда Никкельс (Sekretärin, 36, verheiratet; geschieden — разведён). Чьё? — Opas Brille, Gerdas Familienname (просто -s). Весь лист Даши: sein, haben, «Was ist richtig?», текст «haben oder sein?»; болезнь «имеют» (Sie hat Grippe, Wo hast du Schmerzen?), состояние — sein (krank, erkältet, müde); doch, Lust haben, Das ist mir egal. Домашка: лист с самопроверкой, игра «Вставь в текст» (как Wordwall у Даши), профессии с сайта ZUM, перевод 18 предложений.',
    pdf:'', audio:'dasha/dasha10_interactive.html', mins:87, hard:'Средне', cards:150,
    photos:['dasha/dasha10_hw_blatt.jpg','dasha/dasha10_hw_aufgabe.jpg'],
    photoLabels:['Лист haben / sein','Домашка от Даши (14.10)']},
   {id:'d9', num:'Занятие 9', date:'07.10.2026', title:'Спряжение глаголов и «кто что делает»',
-   topic:'⭐ Повторение спряжения: неправильные haben, werden, sein, tun, wissen (wir/sie/Sie — всегда инфинитив; tun или machen) и обычные spielen, machen, trainieren, lernen. ⭐⭐ Профессии и что они делают — 18 предложений: Die Krankenschwester hilft dem Arzt (helfen e → i + Dativ), Die Friseurin arbeitet (основа на -t → +e), Die Hausfrau räumt auf, Die Sekretärin ruft an (отделяемые приставки), aufräumen ≠ putzen, kaufen ≠ verkaufen, феминитивы обязательны. arbeiten als (кем) / bei (на кого) / in (где), рассказ Барбары Майнхардт, Steckbrief Несли. Домашка: предложения с профессиями, рассказ о семье, игра «Плитки», лист «Welche Berufe sind das?» на 35 профессий, видео «Berufe», перевод с модальными глаголами.',
+   topic:'Повторение спряжения: неправильные haben, werden, sein, tun, wissen (wir/sie/Sie — всегда инфинитив; tun или machen) и обычные spielen, machen, trainieren, lernen. Профессии и что они делают — 18 предложений: Die Krankenschwester hilft dem Arzt (helfen e → i + Dativ), Die Friseurin arbeitet (основа на -t → +e), Die Hausfrau räumt auf, Die Sekretärin ruft an (отделяемые приставки), aufräumen ≠ putzen, kaufen ≠ verkaufen, феминитивы обязательны. arbeiten als (кем) / bei (на кого) / in (где), рассказ Барбары Майнхардт, Steckbrief Несли. Домашка: предложения с профессиями, рассказ о семье, игра «Плитки», лист «Welche Berufe sind das?» на 35 профессий, видео «Berufe», перевод с модальными глаголами.',
    pdf:'', audio:'dasha/dasha9_interactive.html', mins:85, hard:'Средне', cards:114,
    photos:['dasha/dasha9_hw_wordwall.jpg','dasha/dasha9_hw_berufe.jpg','dasha/dasha9_hw_modal.jpg'],
    photoLabels:['Профессии — что делают','Лист «Welche Berufe sind das?»','Перевод с модальными глаголами']},
   {id:'d8', num:'Занятие 8', date:'30.09.2026', title:'Женский род, национальности и профессии',
-   topic:'⭐ Richtig oder falsch по текстам про Пако, Мигеля, Патрицию, Николь и Флориана — новые слова arbeitslos (-los = без), geschieden, Fremdsprachen. Вопросы про Хайди Клум: von Beruf ИЛИ arbeitet als — не вместе. Фотоистория «Das ist meine Familie» — семья Тины (Tinas Vater, seine Frau, ihr Mann). ⭐⭐ Женский род: der → die + -in, множественное всегда -innen (Lehrerinnen), Arzt → Ärztin. Национальности (исключение der/die Deutsche), профессии из учебника (Kellner — официант, не повар) и 24 карточки Даши. Домашка: глаголы gehen/hören/sehen/suchen/wissen/werden, национальности, 24 профессии, видео про папу-механика, текст «Meine Familie» + 7 вопросов.',
+   topic:'Richtig oder falsch по текстам про Пако, Мигеля, Патрицию, Николь и Флориана — новые слова arbeitslos (-los = без), geschieden, Fremdsprachen. Вопросы про Хайди Клум: von Beruf ИЛИ arbeitet als — не вместе. Фотоистория «Das ist meine Familie» — семья Тины (Tinas Vater, seine Frau, ihr Mann). Женский род: der → die + -in, множественное всегда -innen (Lehrerinnen), Arzt → Ärztin. Национальности (исключение der/die Deutsche), профессии из учебника (Kellner — официант, не повар) и 24 карточки Даши. Домашка: глаголы gehen/hören/sehen/suchen/wissen/werden, национальности, 24 профессии, видео про папу-механика, текст «Meine Familie» + 7 вопросов.',
    pdf:'', audio:'dasha/dasha8_interactive.html', mins:77, hard:'Средне', cards:96,
    photos:['dasha/dasha8_hw_spisok.png','dasha/dasha8_hw_karten1.jpg','dasha/dasha8_hw_karten2.jpg','dasha/dasha8_hw_familie.jpg','dasha/dasha8_plural.pdf'],
    photoLabels:['Список заданий','Карточки профессий (1)','Карточки профессий (2)','Текст «Meine Familie»','Plural — презентация (PDF)']},
   {id:'d7', num:'Занятие 7', date:'21.09.2026', title:'Вопросительные слова, семья Марка и тексты о людях',
-   topic:'⭐⭐ Упражнение «вставь вопросительное слово» в 14 предложений. Путаница wann ≠ wenn ≠ wen: wenn — «когда» в значении «если», wen — «кого» (форма wer). Семейное древо Марка — кто кому кем приходится (sein/seine), и прослушанный рассказ Марка о родителях: richtig или falsch (ловушка Freiburg ≠ Frankfurt). Два текста «Das bin ich» — про Пако Родригеса и Николь Мосер, с вопросами по содержанию. Домашка: перевод девяти диалогов, семейное древо Хайди Клум по тексту, свой рассказ о себе, знаменитость по образцу, 10 общих вопросов.',
+   topic:'Упражнение «вставь вопросительное слово» в 14 предложений. Путаница wann ≠ wenn ≠ wen: wenn — «когда» в значении «если», wen — «кого» (форма wer). Семейное древо Марка — кто кому кем приходится (sein/seine), и прослушанный рассказ Марка о родителях: richtig или falsch (ловушка Freiburg ≠ Frankfurt). Два текста «Das bin ich» — про Пако Родригеса и Николь Мосер, с вопросами по содержанию. Домашка: перевод девяти диалогов, семейное древо Хайди Клум по тексту, свой рассказ о себе, знаменитость по образцу, 10 общих вопросов.',
    pdf:'', audio:'dasha/dasha7_interactive.html', mins:83, hard:'Плотно', cards:143,
    photos:['dasha/dasha7_hw_spisok1.png','dasha/dasha7_hw_spisok2.png','dasha/dasha7_hw_teksty.jpg','dasha/dasha7_hw_stammbaum.jpg','dasha/dasha7_hw_dialogi.jpg'],
    photoLabels:['Список заданий (1)','Список заданий (2)','Тексты Пако и Николь','Хайди Клум и древо','Девять диалогов']},
   {id:'d6', num:'Занятие 6', date:'13.09.2026', title:'Sein или haben, вопросительные слова и вопрос к ответу',
-   topic:'Игра на Wordwall: 15 предложений, где надо выбрать sein или haben — ⚠️ ловушки ihr seid, «дети = они → haben», голод и жажда через haben (Hast du Hunger?). Новые слова: schwer/leicht, richtig/falsch, ledig, fleißig, schon ≠ schön, die Geschwister, die Ferien. ⭐ Все вопросительные слова разом: wann ≠ wo, warum, wen/wem, wie viel или wie viele, welcher/welche/welches, wie или welcher. Упражнение по ответам, диалог Анны и Петера и ⭐⭐ самое трудное — придумать вопрос к готовому ответу: после W-слова сразу глагол. Домашка: sein/haben/werden/wissen, переводы, Verben mit Vokalwechsel, модальные, текст «meine Familie» — с пояснениями к ответам.',
+   topic:'Игра на Wordwall: 15 предложений, где надо выбрать sein или haben — ловушки ihr seid, «дети = они → haben», голод и жажда через haben (Hast du Hunger?). Новые слова: schwer/leicht, richtig/falsch, ledig, fleißig, schon ≠ schön, die Geschwister, die Ferien. Все вопросительные слова разом: wann ≠ wo, warum, wen/wem, wie viel или wie viele, welcher/welche/welches, wie или welcher. Упражнение по ответам, диалог Анны и Петера и самое трудное — придумать вопрос к готовому ответу: после W-слова сразу глагол. Домашка: sein/haben/werden/wissen, переводы, Verben mit Vokalwechsel, модальные, текст «meine Familie» — с пояснениями к ответам.',
    pdf:'', audio:'dasha/dasha6_interactive.html', mins:80, hard:'Плотно', cards:174,
    photos:['dasha/dasha6_hw_spisok.png','dasha/dasha6_hw_sein.jpg','dasha/dasha6_hw_haben.jpg','dasha/dasha6_hw_verben4.jpg','dasha/dasha6_hw_vokalwechsel.jpg','dasha/dasha6_hw_modal.jpg','dasha/dasha6_hw_familie.jpg'],
    photoLabels:['Список заданий','Перевод: sein','Перевод: haben','Verben 4','Verben mit Vokalwechsel','Перевод: модальные','meine Familie']},
   {id:'d5', num:'Занятие 5', date:'07.09.2026', title:'Sein, haben и как строить вопросы',
-   topic:'Выбор между sein и haben по смыслу предложения (у меня есть → haben, я нахожусь/я какой-то → sein) — спряжение обоих глаголов целиком и большое упражнение. Отрицательный артикль kein/keine. Описание картинки из учебника: auf dem Bild, im Hintergrund/Vordergrund, es gibt, glauben. ⭐⭐ Вторая половина — вопросы: два вида (общий с ответом да/нет и специальный со словом на W), все вопросительные слова, и главная ловушка — с модальным глаголом в вопрос выносится только он, смысловой глагол остаётся в конце.',
+   topic:'Выбор между sein и haben по смыслу предложения (у меня есть → haben, я нахожусь/я какой-то → sein) — спряжение обоих глаголов целиком и большое упражнение. Отрицательный артикль kein/keine. Описание картинки из учебника: auf dem Bild, im Hintergrund/Vordergrund, es gibt, glauben. Вторая половина — вопросы: два вида (общий с ответом да/нет и специальный со словом на W), все вопросительные слова, и главная ловушка — с модальным глаголом в вопрос выносится только он, смысловой глагол остаётся в конце.',
    pdf:'', audio:'dasha/dasha5_interactive.html', mins:35, hard:'Плотно', cards:103,
    photos:[]},
   {id:'d4', num:'Занятие 4', date:'31.08.2026', title:'Спряжение глаголов на практике',
-   topic:'Всё занятие — одно большое упражнение: 25 предложений, в каждом надо поставить глагол в правильную форму. Заодно Даша собрала всю систему в кучу: три категории глаголов (правильные 90–95%, с изменяемой гласной, пять исключений sein/haben/werden/wissen/tun). ⚠️ Разобрали, почему у arbeiten добавляется e, а у tanzen выбрасывается s; как отличить sie «она» от sie «они» и вежливого Sie; почему mögen больше не модальный и его заменяет gern. Плюс: spielen и sprechen без предлогов, mit dem Zug («с поездом»), spazieren gehen, Urlaub machen, обращение Herr/Frau и первая встреча с отделяемой приставкой (fernsehen).',
+   topic:'Всё занятие — одно большое упражнение: 25 предложений, в каждом надо поставить глагол в правильную форму. Заодно Даша собрала всю систему в кучу: три категории глаголов (правильные 90–95%, с изменяемой гласной, пять исключений sein/haben/werden/wissen/tun). Разобрали, почему у arbeiten добавляется e, а у tanzen выбрасывается s; как отличить sie «она» от sie «они» и вежливого Sie; почему mögen больше не модальный и его заменяет gern. Плюс: spielen и sprechen без предлогов, mit dem Zug («с поездом»), spazieren gehen, Urlaub machen, обращение Herr/Frau и первая встреча с отделяемой приставкой (fernsehen).',
    pdf:'', audio:'dasha/dasha4_interactive.html', mins:35, hard:'Плотно', cards:92,
    photos:['dasha/dasha4_praesentation.pdf','dasha/dasha4_hw_sein_haben.jpg','dasha/dasha4_hw_sein.jpg','dasha/dasha4_hw_uebung3.jpg'],
    photoLabels:['Презентация Verb-Konjugation (PDF)','Домашка: sein oder haben','Домашка: спряжение sein','Домашка: Übung 3']},
@@ -1266,7 +913,7 @@ const DASHA = [
   {id:'d2', num:'Занятие 2', date:'17.08.2026', title:'Модальные глаголы + семья',
    topic:'Шесть модальных глаголов (müssen, sollen, können, dürfen, wollen, möchten) — все формы и правило «смысловой глагол в конец, в инфинитиве». Повторение местоимений, старт темы «семья».',
    pdf:'dasha/dasha2_pdf.pdf', audio:'dasha/dasha2_interactive.html', mins:25, hard:'Средне', cards:57,
-   trainer:'dasha/trainer_modal.html', trainerName:'🎯 Тренажёр: 60 предложений',
+   trainer:'dasha/trainer_modal.html', trainerName:'Тренажёр: 60 предложений',
    photos:[]},
   {id:'d1', num:'Занятие 1', date:'12.08.2026', title:'Числа, местоимения, базовая лексика',
    topic:'Числа «задом наперёд» и порядковые, личные + притяжательные (правило -e), артикли, цвета, время суток, месяцы (im), дни недели (am), наречия частотности.',
@@ -1278,12 +925,12 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 // Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
 const POLYA = [
   {id:'p23', num:'Занятие 23', date:'≈03.11.2026', title:'Глаголы с приставками в действии',
-   topic:'Отделяемая или нет — по ударению (einschlafen, verstehen, vorlesen, erklären, mitnehmen, vorbereiten, bemalen, anziehen…). ⭐⭐ kommen: mitkommen, herauskommen, herkommen, vorbeikommen, ankommen, abholen. ⭐⭐ gehen: heimgehen 🇦🇹, losgehen («погнали»), weggehen (грубо!), ausgehen, angehen. ziehen: anziehen/ausziehen/sich umziehen, einziehen/umziehen — der Umzug; aufmachen/zumachen, einschlafen, aufwachen. nach Köln, aber in die Stadt. Menschen S. 70 «Mein Weg ins Büro», doch. Домашка: приставки 21–29, местоимения Akkusativ/Dativ (28), сильные глаголы, trennbare Verben, Partizip II, 100 глаголов из Quizlet Даши, 10 своих предложений, фильм и подкаст про Reisen.',
+   topic:'Отделяемая или нет — по ударению (einschlafen, verstehen, vorlesen, erklären, mitnehmen, vorbereiten, bemalen, anziehen…). kommen: mitkommen, herauskommen, herkommen, vorbeikommen, ankommen, abholen. gehen: heimgehen 🇦🇹, losgehen («погнали»), weggehen (грубо!), ausgehen, angehen. ziehen: anziehen/ausziehen/sich umziehen, einziehen/umziehen — der Umzug; aufmachen/zumachen, einschlafen, aufwachen. nach Köln, aber in die Stadt. Menschen S. 70 «Mein Weg ins Büro», doch. Домашка: приставки 21–29, местоимения Akkusativ/Dativ (28), сильные глаголы, trennbare Verben, Partizip II, 100 глаголов из Quizlet Даши, 10 своих предложений, фильм и подкаст про Reisen.',
    pdf:'', audio:'dasha/polya23_interactive.html', mins:51, hard:'Средне', cards:178,
    photos:['dasha/polya23_hw_prist.jpg','dasha/polya23_hw_akkdat.jpg','dasha/polya23_hw_akkdat2.jpg','dasha/polya23_hw_trenn.jpg','dasha/polya23_hw_partizip.jpg','dasha/polya23_hw_zadanie.jpg'],
    photoLabels:['Приставки 21–29','Местоимения 4.1–4.2','Местоимения 4.3','Отделяемые','Partizip II','Сообщение Даши с домашкой']},
   {id:'p22', num:'Занятие 22', date:'≈02.11.2026', title:'Глагольные приставки и транспорт',
-   topic:'Отделяемые приставки: в презенсе — в конец (Ich stehe um sechs auf), с модальным — слитно в конце (Ich will zuhören). ⭐ Семейство hören: zuhören, anhören, aufhören, mithören, abhören (врач слушает), gehören. ⭐⭐ Неотделяемые be-, emp-, ent-, er-, ge-, miss-, ver-, zer- (bekommen, erzählen, gefallen, verstehen). über-/unter-/durch-/um-/wieder- — и так, и так: übersetzen (переправляться / переводить), sitzen–setzen, liegen–legen, stehen–stellen. Пары auf/zu, an/aus, ein/aus. ⭐ Транспорт: einsteigen, aussteigen, umsteigen, ankommen, abholen, abfahren/abfliegen, anrufen + Akk, danken + Dat; Verkehrsmittel (Zug, S-Bahn, Haltestelle, Bahnsteig, Flughafen…). Домашка: предложения в презенсе, перевод с притяжательными (15, есть Genitiv), 10 своих предложений.',
+   topic:'Отделяемые приставки: в презенсе — в конец (Ich stehe um sechs auf), с модальным — слитно в конце (Ich will zuhören). Семейство hören: zuhören, anhören, aufhören, mithören, abhören (врач слушает), gehören. Неотделяемые be-, emp-, ent-, er-, ge-, miss-, ver-, zer- (bekommen, erzählen, gefallen, verstehen). über-/unter-/durch-/um-/wieder- — и так, и так: übersetzen (переправляться / переводить), sitzen–setzen, liegen–legen, stehen–stellen. Пары auf/zu, an/aus, ein/aus. Транспорт: einsteigen, aussteigen, umsteigen, ankommen, abholen, abfahren/abfliegen, anrufen + Akk, danken + Dat; Verkehrsmittel (Zug, S-Bahn, Haltestelle, Bahnsteig, Flughafen…). Домашка: предложения в презенсе, перевод с притяжательными (15, есть Genitiv), 10 своих предложений.',
    pdf:'', audio:'dasha/polya22_interactive.html', mins:55, hard:'Средне', cards:106,
    photos:['dasha/polya22_hw_pres.jpg','dasha/polya22_hw_prez.jpg','dasha/polya22_hw_perevod.jpg','dasha/polya22_hw_zadanie.jpg'],
    photoLabels:['Презентация «Приставки»','Предложения в презенсе','Перевод: 15 предложений','Сообщение Даши с домашкой']},
@@ -1291,32 +938,32 @@ const POLYA = [
    topic:'kein — перед существительным с ein или без артикля (склоняется как ein: keinen, keine); nicht — глаголы, прилагательные, der/die/das, mein; место nicht; sondern; nichts, nie, niemand, nirgends; приставки an-, mit-. Домашка: притяжательные (3 листа), dieser по падежам (1.1–1.5), nicht/kein, 30 предложений, рассказ по своим фото. Запись тихая — разобрана треть.',
    pdf:'', audio:'dasha/polya21_interactive.html', mins:51, hard:'Средне', cards:47},
   {id:'p20', num:'Занятие 20', date:'23.10.2026', title:'derselbe, derjenige и первый день в отеле',
-   topic:'Почти час. ⭐ Лист на dieser с предлогами: auf diesen Stuhl (куда?), neben diesem Tisch (где?), es gibt + Akkusativ (Diesen Spiegel gibt es im Flur), durch + Akk, brauchen и mögen + Akk, mit + Dativ. ⭐⭐ derselbe и derjenige: внутри склоняется артикль (demselben, derselben, denselben), «Das ist derjenige, der alles weiß». Текст про кафе: dasselbe Café, aber denselben Kaffee. derselbe ≠ der gleiche. ⭐ Reisen в формате экзамена: Empfangsdame, Reservierung, Zimmerschlüssel, Frühstück von halb sieben bis halb zehn, вопросы студентке, телефон 84 37 09 на слух. Домашка: dieser (26 предложений про одежду — с фото), derselbe (9), jener/dieser/derjenige (11), solcher (10), 10 предложений про Reisen. Два видео с заданиями.',
+   topic:'Почти час. Лист на dieser с предлогами: auf diesen Stuhl (куда?), neben diesem Tisch (где?), es gibt + Akkusativ (Diesen Spiegel gibt es im Flur), durch + Akk, brauchen и mögen + Akk, mit + Dativ. derselbe и derjenige: внутри склоняется артикль (demselben, derselben, denselben), «Das ist derjenige, der alles weiß». Текст про кафе: dasselbe Café, aber denselben Kaffee. derselbe ≠ der gleiche. Reisen в формате экзамена: Empfangsdame, Reservierung, Zimmerschlüssel, Frühstück von halb sieben bis halb zehn, вопросы студентке, телефон 84 37 09 на слух. Домашка: dieser (26 предложений про одежду — с фото), derselbe (9), jener/dieser/derjenige (11), solcher (10), 10 предложений про Reisen. Два видео с заданиями.',
    pdf:'', audio:'dasha/polya20_interactive.html', mins:54, hard:'Средне', cards:167,
    photos:['dasha/polya20_hw_aufgabe.jpg','dasha/polya20_hw_dieser.jpg','dasha/polya20_hw_derselbe.jpg'],
    photoLabels:['Домашка Даши 23.10','Лист: dieser','Лист: derselbe']},
   {id:'p19', num:'Занятие 19', date:'16.10.2026', title:'Вокзал, текст «Wandern», n-Deklination и man',
-   topic:'Час. Описываем фото: der Mann ist am Flughafen, eine Tasche und einen Koffer in der Hand. Слова вокзала по группам (Gepäck, Verkehrsmittel, im Bahnhof), S-Bahn = Schnellbahn, Haupt- (Hauptbahnhof, Hauptplatz), der Schalter, abfahren, abholen, «Was bedeutet …?». Ситуации к фото: Wo fährt der Zug nach München ab? Kannst du mich vom Bahnhof abholen? ⭐⭐ Текст «Wandern»: länger und anstrengender als, gleichzeitig, sich entspannen, Wanderwege, ausgeben, einkehren. ⭐ man — «можно, говорят». Большая домашка: 7 вопросов к тексту, dieser/jener/solcher, 35 слов презентации «Reisen», текст «Öffentliche Verkehrsmittel» с вопросами, Kaufhaus Alexa (Goethe A1), лист mit + Dativ и fahren/fliegen/gehen, загадки, видео Easy German. Добавка 17.10: n-Deklination, Genitiv -s/-es, Dativ Plural -n, das Herz и der Name, man — с видео и упражнениями.',
+   topic:'Час. Описываем фото: der Mann ist am Flughafen, eine Tasche und einen Koffer in der Hand. Слова вокзала по группам (Gepäck, Verkehrsmittel, im Bahnhof), S-Bahn = Schnellbahn, Haupt- (Hauptbahnhof, Hauptplatz), der Schalter, abfahren, abholen, «Was bedeutet …?». Ситуации к фото: Wo fährt der Zug nach München ab? Kannst du mich vom Bahnhof abholen? Текст «Wandern»: länger und anstrengender als, gleichzeitig, sich entspannen, Wanderwege, ausgeben, einkehren. man — «можно, говорят». Большая домашка: 7 вопросов к тексту, dieser/jener/solcher, 35 слов презентации «Reisen», текст «Öffentliche Verkehrsmittel» с вопросами, Kaufhaus Alexa (Goethe A1), лист mit + Dativ и fahren/fliegen/gehen, загадки, видео Easy German. Добавка 17.10: n-Deklination, Genitiv -s/-es, Dativ Plural -n, das Herz и der Name, man — с видео и упражнениями.',
    pdf:'', audio:'dasha/polya19_interactive.html', mins:61, hard:'Средне', cards:206,
    photos:['dasha/polya19_hw_aufgabe1.jpg','dasha/polya19_hw_blatt.jpg','dasha/polya19_hw_extra1.jpg'],
    photoLabels:['Домашка Даши 16.10','Arbeitsblatt: mit + Dativ, fahren/fliegen/gehen','Добавка 17.10: n-Deklination']},
   {id:'p18', num:'Занятие 18', date:'14.10.2026', title:'dieser, jener, solcher в тексте и транспорт',
-   topic:'Сорок пять минут. Вопрос по прошлой домашке: «seins» — притяжательное вместо опущенного существительного (Der kleine Otto hat seins zu Hause vergessen) и притяжательное в Genitiv (Die Farbe ihres Kleides ist blau — сначала вопрос wessen?, потом форма как у артикля). ⭐⭐ dieser, jener, solcher в тексте про книжный магазин и кафе (dieses Buch, von jenem Autor, diese Zeitschrift, in diesem Café, jenen Kuchen). ⭐ von, mit, nach — всегда Dativ. Новая тема — транспорт и путешествия: das Gepäck, der Koffer, die Haltestelle, der Bahnsteig, die U-Bahn, die Straßenbahn, das Flugzeug; steigen ≠ wachsen. Домашка: два видео (Wortschatz Reisen, Eine Reise um die Welt), «Was kann man in Deutschland, Österreich, der Schweiz und Ägypten machen?», карточки Stadt & Verkehr.',
+   topic:'Сорок пять минут. Вопрос по прошлой домашке: «seins» — притяжательное вместо опущенного существительного (Der kleine Otto hat seins zu Hause vergessen) и притяжательное в Genitiv (Die Farbe ihres Kleides ist blau — сначала вопрос wessen?, потом форма как у артикля). dieser, jener, solcher в тексте про книжный магазин и кафе (dieses Buch, von jenem Autor, diese Zeitschrift, in diesem Café, jenen Kuchen). von, mit, nach — всегда Dativ. Новая тема — транспорт и путешествия: das Gepäck, der Koffer, die Haltestelle, der Bahnsteig, die U-Bahn, die Straßenbahn, das Flugzeug; steigen ≠ wachsen. Домашка: два видео (Wortschatz Reisen, Eine Reise um die Welt), «Was kann man in Deutschland, Österreich, der Schweiz und Ägypten machen?», карточки Stadt & Verkehr.',
    pdf:'', audio:'dasha/polya18_interactive.html', mins:45, hard:'Средне', cards:71,
    photos:['dasha/polya18_hw_aufgabe.jpg'],
    photoLabels:['Сообщение Даши с домашкой']},
   {id:'p17', num:'Занятие 17', date:'11.10.2026', title:'Указательные местоимения: dieser, jener, solcher',
-   topic:'Пятьдесят минут. История из учебника: Кристиан Шмидт работает у озера, а ему звонят коллега, Эва и шеф — слова офиса (der Schlüssel, Stifte, Briefpapier, Rechnungen, Formulare, telefonieren, anrufen), ответы на задания 3 и 4. Как устроено письмо: обращение с запятой, текст с маленькой буквы, прощание и подпись. Повтор склонения mein. ⭐⭐ Новая тема — указательные местоимения dieser, jener, solcher, derselbe, derjenige: окончание есть уже в Nominativ, склонение как у der; 16 предложений на все падежи. Мелочи: Kollegin von, Kollegen (n-Deklination), kaufen ≠ einkaufen, zustimmen и vertrauen + Dativ. Домашка: ответы по учебнику Menschen A1.1, с. 29–37 (уроки 5 и 6: ein/kein, очки и материалы, заказ часов, офис, множественное число, Akkusativ, телефон, Lesemagazin) и с. 48, задание 8 (письмо-отказ), выражения из видео про официальное письмо (Гёте A1–A2), письмо Лауре на 50–60 слов с образцом, таблица dieser по памяти.',
+   topic:'Пятьдесят минут. История из учебника: Кристиан Шмидт работает у озера, а ему звонят коллега, Эва и шеф — слова офиса (der Schlüssel, Stifte, Briefpapier, Rechnungen, Formulare, telefonieren, anrufen), ответы на задания 3 и 4. Как устроено письмо: обращение с запятой, текст с маленькой буквы, прощание и подпись. Повтор склонения mein. Новая тема — указательные местоимения dieser, jener, solcher, derselbe, derjenige: окончание есть уже в Nominativ, склонение как у der; 16 предложений на все падежи. Мелочи: Kollegin von, Kollegen (n-Deklination), kaufen ≠ einkaufen, zustimmen и vertrauen + Dativ. Домашка: ответы по учебнику Menschen A1.1, с. 29–37 (уроки 5 и 6: ein/kein, очки и материалы, заказ часов, офис, множественное число, Akkusativ, телефон, Lesemagazin) и с. 48, задание 8 (письмо-отказ), выражения из видео про официальное письмо (Гёте A1–A2), письмо Лауре на 50–60 слов с образцом, таблица dieser по памяти.',
    pdf:'', audio:'dasha/polya17_interactive.html', mins:52, hard:'Средне', cards:203,
    photos:['dasha/polya17_hw_aufgabe.png'],
    photoLabels:['Список заданий и письмо Лауры']},
   {id:'p16', num:'Занятие 16', date:'08.10.2026', title:'Притяжательные местоимения, отрицание и еда (домашка)',
-   topic:'Записи занятия нет — Даша забыла её включить, поэтому страница собрана по домашке. Памятки: ⭐⭐ притяжательные mein, dein, sein, ihr, unser, euer (в немецком нет «свой» — всегда говорим, чей), окончания как у ein, Akkusativ meinen; ⭐ отрицание nicht / kein / nichts / niemand (niemanden, niemandem). Домашка с ответами и пояснениями: 5 предложений (seins, eurer, entlang seines Hauses), 21 предложение, Симпсоны (sein / ihr), письмо Лизы маме и пересказ мамы папе (mein → ihr), 15 предложений на отрицание, текст «Klaras Haus» с 5 вопросами, Arbeitsblatt «Lebensmittel 2» — что лишнее (упаковки, глаголы кухни, блюда Австрии, Германии и Швейцарии), аналогии и сложные слова.',
+   topic:'Записи занятия нет — Даша забыла её включить, поэтому страница собрана по домашке. Памятки: притяжательные mein, dein, sein, ihr, unser, euer (в немецком нет «свой» — всегда говорим, чей), окончания как у ein, Akkusativ meinen; отрицание nicht / kein / nichts / niemand (niemanden, niemandem). Домашка с ответами и пояснениями: 5 предложений (seins, eurer, entlang seines Hauses), 21 предложение, Симпсоны (sein / ihr), письмо Лизы маме и пересказ мамы папе (mein → ihr), 15 предложений на отрицание, текст «Klaras Haus» с 5 вопросами, Arbeitsblatt «Lebensmittel 2» — что лишнее (упаковки, глаголы кухни, блюда Австрии, Германии и Швейцарии), аналогии и сложные слова.',
    pdf:'', audio:'dasha/polya16_interactive.html', mins:0, hard:'Средне', cards:60,
    photos:['dasha/polya16_hw_list.png','dasha/polya16_hw_poss2.jpg','dasha/polya16_hw_simpsons.jpg','dasha/polya16_hw_brief.jpg','dasha/polya16_hw_negation.jpg','dasha/polya16_hw_klara.jpg','dasha/polya16_hw_lebensmittel.jpg'],
    photoLabels:['Список заданий','21 предложение','Симпсоны','Письмо Лизы','Отрицание','Текст Клары','Lebensmittel 2']},
   {id:'p15', num:'Занятие 15', date:'24.09.2026', title:'Склонение личных местоимений',
-   topic:'Сорок минут. Разминка на неопределённый артикль: helfen и glauben — с Dativ (einem Mann, einer Frau), brauchen — всегда Akkusativ (einen Arzt). Текст, где надо выбрать определённый, неопределённый или нулевой артикль: впервые — eine Katze, потом die Katze, вообще — Obst без артикля; город — с артиклем, название города — без. Отступление про приставки (spielen → verspielt). ⭐⭐ Новая тема: личные местоимения в Dativ и Akkusativ — mir/mich, dir/dich, ihm/ihn, ihr/sie, uns, euch, ihnen/Ihnen. Четыре правила: sie и es в Akkusativ не меняются, у wir и ihr одна форма, es склоняется как er, sie «она» и «они» в Dativ разные (ihr / ihnen). Ловушки: anrufen + Akkusativ (ich rufe ihn an), danken и gefallen + Dativ. Домашка: таблица по памяти, 12 предложений на три падежа, перевод текста про еду, два вопроса о завтраке, 8 предложений на местоимения.',
+   topic:'Сорок минут. Разминка на неопределённый артикль: helfen и glauben — с Dativ (einem Mann, einer Frau), brauchen — всегда Akkusativ (einen Arzt). Текст, где надо выбрать определённый, неопределённый или нулевой артикль: впервые — eine Katze, потом die Katze, вообще — Obst без артикля; город — с артиклем, название города — без. Отступление про приставки (spielen → verspielt). Новая тема: личные местоимения в Dativ и Akkusativ — mir/mich, dir/dich, ihm/ihn, ihr/sie, uns, euch, ihnen/Ihnen. Четыре правила: sie и es в Akkusativ не меняются, у wir и ihr одна форма, es склоняется как er, sie «она» и «они» в Dativ разные (ihr / ihnen). Ловушки: anrufen + Akkusativ (ich rufe ihn an), danken и gefallen + Dativ. Домашка: таблица по памяти, 12 предложений на три падежа, перевод текста про еду, два вопроса о завтраке, 8 предложений на местоимения.',
    pdf:'', audio:'dasha/polya15_interactive.html', mins:38, hard:'Средне', cards:72,
    photos:['dasha/polya15_hw_tabelle.jpg','dasha/polya15_hw_text.jpg','dasha/polya15_hw_aufgabe.png'],
    photoLabels:['Таблица местоимений','Текст для перевода','Список заданий']},
@@ -1326,32 +973,32 @@ const POLYA = [
    photos:['dasha/polya14_hw_kein.jpg','dasha/polya14_hw_keinnicht.jpg','dasha/polya14_hw_perevod.jpg','dasha/polya14_hw_email.jpg','dasha/polya14_hw_fragen.jpg'],
    photoLabels:['Вставить kein','kein или nicht','Перевод на немецкий','Письмо Марии','Вопросы 11–15']},
   {id:'p13', num:'Занятие 13', date:'16.09.2026', title:'Описываем предметы и неопределённый артикль',
-   topic:'Разминка по картинкам: назвать посуду и описать её — цвет, форма, из чего сделана (aus Keramik, aus Metall, aus Glas — материал всегда без артикля), для чего нужна (benutzen für + вещь, zum + действие). Красивая находка: die Pfanne → der Pfannkuchen. Доделали упражнение на склонение ОПРЕДЕЛЁННОГО артикля: gehören + Dativ, bringen/zeigen — кому Dativ и что Akkusativ, после mögen всегда Akkusativ. ⭐⭐ Новая тема: склонение НЕОПРЕДЕЛЁННОГО артикля — ein, eine, einen, einem, einer, eines; окончания те же, что у определённого, основа другая. Железное правило: после haben, brauchen и es gibt — неопределённый артикль в Akkusativ. Разобрали, чем dem отличается от den. Одним глазком заглянули в окончания прилагательных (-en после неопределённого артикля). Домашка: две таблицы по памяти, 15 предложений на артикль, F6 про вкус еды и три словарных листа — фрукты, овощи, ягоды.',
+   topic:'Разминка по картинкам: назвать посуду и описать её — цвет, форма, из чего сделана (aus Keramik, aus Metall, aus Glas — материал всегда без артикля), для чего нужна (benutzen für + вещь, zum + действие). Красивая находка: die Pfanne → der Pfannkuchen. Доделали упражнение на склонение ОПРЕДЕЛЁННОГО артикля: gehören + Dativ, bringen/zeigen — кому Dativ и что Akkusativ, после mögen всегда Akkusativ. Новая тема: склонение НЕОПРЕДЕЛЁННОГО артикля — ein, eine, einen, einem, einer, eines; окончания те же, что у определённого, основа другая. Железное правило: после haben, brauchen и es gibt — неопределённый артикль в Akkusativ. Разобрали, чем dem отличается от den. Одним глазком заглянули в окончания прилагательных (-en после неопределённого артикля). Домашка: две таблицы по памяти, 15 предложений на артикль, F6 про вкус еды и три словарных листа — фрукты, овощи, ягоды.',
    pdf:'', audio:'dasha/polya13_interactive.html', mins:56, hard:'Плотно', cards:216,
    photos:['dasha/polya13_hw_artikel.jpg','dasha/polya13_hw_f6.jpg','dasha/polya13_hw_obst.jpg','dasha/polya13_hw_gemuese.jpg','dasha/polya13_hw_beeren.jpg'],
    photoLabels:['Вставить неопределённый артикль','F6: Wie schmeckt das Essen?','Фрукты','Овощи','Ягоды']},
   {id:'p12', num:'Занятие 12', date:'10.09.2026', title:'Мебельный магазин, цены и падежи',
-   topic:'Разбор домашки про семью: Schwiegersohn и Schwiegertochter (зять и невестка), Stiefschwester, Pflegeeltern, собака — Familienmitglied. Учебник: диалог в мебельном магазине — billig, günstig, sehr teuer или zu teuer, Sonderangebot. Как читать цены вслух (9,99 € = neun Euro neunundneunzig), своё мнение через Ich finde es … и почему лампа — sie, а кровать — es. ⭐⭐ Повтор падежей (wohin — Akkusativ, woher — Dativ) и упражнение на артикли. ⭐⭐ liegen или legen: Das Buch liegt auf dem Tisch / Ich lege das Buch auf den Tisch. Вся домашка от Даши — с переводом и пояснениями к ответам.',
+   topic:'Разбор домашки про семью: Schwiegersohn и Schwiegertochter (зять и невестка), Stiefschwester, Pflegeeltern, собака — Familienmitglied. Учебник: диалог в мебельном магазине — billig, günstig, sehr teuer или zu teuer, Sonderangebot. Как читать цены вслух (9,99 € = neun Euro neunundneunzig), своё мнение через Ich finde es … и почему лампа — sie, а кровать — es. Повтор падежей (wohin — Akkusativ, woher — Dativ) и упражнение на артикли. liegen или legen: Das Buch liegt auf dem Tisch / Ich lege das Buch auf den Tisch. Вся домашка от Даши — с переводом и пояснениями к ответам.',
    pdf:'', audio:'dasha/polya12_interactive.html', mins:58, hard:'Плотно', cards:243,
    photos:['dasha/polya12_hw_spisok.png','dasha/polya12_hw_artikel.jpg','dasha/polya12_hw_tisch.jpg','dasha/polya12_hw_c9.jpg','dasha/polya12_hw_c2.jpg','dasha/polya12_hw_c6.jpg'],
    photoLabels:['Список заданий','Вставить артикль','Картинка со столом','C9: Was/Wer ist wo?','C2: Frau Müller kauft Möbel','C6: Ich suche eine Wohnung']},
   {id:'p11', num:'Занятие 11', date:'07.09.2026', title:'Описание картинки, посуда и падежи',
-   topic:'Новая картинка из учебника — кафе: es gibt, im Vordergrund/Hintergrund, auf dem Tisch steht, an der Wand hängt. ⭐ Главное правило: глагол всегда второй — «Auf dem Bild gibt es», а не «es gibt». Текст «Mein Zimmer», наречия abends/montags, посуда и приборы (Geschirr, Besteck, Teller, Topf, Schüssel ≠ Schlüssel). ⭐⭐ Большая тема: четыре падежа и их вопросы, склонение определённого артикля (der → den → dem → des), ins или im. Вся домашка от Даши — с переводом и пояснениями к ответам.',
+   topic:'Новая картинка из учебника — кафе: es gibt, im Vordergrund/Hintergrund, auf dem Tisch steht, an der Wand hängt. Главное правило: глагол всегда второй — «Auf dem Bild gibt es», а не «es gibt». Текст «Mein Zimmer», наречия abends/montags, посуда и приборы (Geschirr, Besteck, Teller, Topf, Schüssel ≠ Schlüssel). Большая тема: четыре падежа и их вопросы, склонение определённого артикля (der → den → dem → des), ins или im. Вся домашка от Даши — с переводом и пояснениями к ответам.',
    pdf:'', audio:'dasha/polya11_interactive.html', mins:55, hard:'Плотно', cards:127,
    photos:['dasha/polya11_hw_spisok.png','dasha/polya11_hw_wochenende.jpg','dasha/polya11_hw_meinzimmer.jpg','dasha/polya11_hw_wochentage.jpg','dasha/polya11_hw_perevod.jpg'],
    photoLabels:['Список заданий','Ein Wochenende auf dem Land','Mein Zimmer','F8: дни недели','Текст на перевод']},
   {id:'p10', num:'Занятие 10', date:'05.09.2026', title:'Артикли целиком, мебель и описание картинки',
-   topic:'Девятое занятие не записалось на диктофон — это прямое продолжение: доразобрали правило артиклей (когда der/die/das, когда ein/eine, когда вообще без артикля) на примерах с яблоком, машиной, газетой и котом. ⚠️ Честно предупредили: без контекста нередко подходят оба варианта. Новая большая тема — мебель и комната (Tisch, Schreibtisch, Bett, Regal, Spiegel, Sofa, Teppich, Kommode, Sessel, Schrank и другие). Разобрали описание картинки из учебника (im Hintergrund/Vordergrund, hängen, es gibt), конструкцию über + винительный и коротко повторили числа.',
+   topic:'Девятое занятие не записалось на диктофон — это прямое продолжение: доразобрали правило артиклей (когда der/die/das, когда ein/eine, когда вообще без артикля) на примерах с яблоком, машиной, газетой и котом. Честно предупредили: без контекста нередко подходят оба варианта. Новая большая тема — мебель и комната (Tisch, Schreibtisch, Bett, Regal, Spiegel, Sofa, Teppich, Kommode, Sessel, Schrank и другие). Разобрали описание картинки из учебника (im Hintergrund/Vordergrund, hängen, es gibt), конструкцию über + винительный и коротко повторили числа.',
    pdf:'', audio:'dasha/polya10_interactive.html', mins:30, hard:'Плотно', cards:82,
    photos:['dasha/polya10_hw_artikel.jpg','dasha/polya10_hw_arbeitsblatt.jpg'],
    photoLabels:['Домашка: вставить артикли','Arbeitsblatt: дом и мебель']},
   {id:'p8', num:'Занятие 8', date:'31.08.2026', title:'Профессии, национальности и множественное число',
-   topic:'Продолжение женского рода: 16 профессий из учебника (стр. 14–15) и 9 национальностей — везде одно правило der→die и суффикс -in. ⚠️ Ловушки: der Arzt→die Ärztin и der Koch→die Köchin (меняется гласная), а der Deutsche/die Deutsche вообще исключение. Разобрали разницу aufräumen (навести порядок) и putzen (помыть), отделяемую приставку (räumt auf, ruft an) и нулевой артикль — когда артикль не нужен вовсе. ⭐⭐ Новая большая тема: множественное число — артикль всегда die, а форма слова меняется четырьмя способами.',
+   topic:'Продолжение женского рода: 16 профессий из учебника (стр. 14–15) и 9 национальностей — везде одно правило der→die и суффикс -in. Ловушки: der Arzt→die Ärztin и der Koch→die Köchin (меняется гласная), а der Deutsche/die Deutsche вообще исключение. Разобрали разницу aufräumen (навести порядок) и putzen (помыть), отделяемую приставку (räumt auf, ruft an) и нулевой артикль — когда артикль не нужен вовсе. Новая большая тема: множественное число — артикль всегда die, а форма слова меняется четырьмя способами.',
    pdf:'', audio:'dasha/polya8_interactive.html', mins:45, hard:'Плотно', cards:138,
    photos:['dasha/polya8_hw_berufe1.jpg','dasha/polya8_hw_berufe2.jpg','dasha/polya8_hw_taetigkeiten.jpg'],
    photoLabels:['Профессии, лист 1','Профессии, лист 2','Кто чем занимается']},
   {id:'p7', num:'Занятие 7', date:'26.08.2026', title:'Разбор текста и феминитивы',
-   topic:'Дочитали текст про изучение языков (vor allem, Spaß machen, aufschreiben), ловушка vor/nach во времени («vor zwei Tagen» = два дня НАЗАД), почему у «Kinderbücher haben viele Bilder» нет артикля. ⭐ Новая тема: женский род профессий (-in) и его множественное (-innen) — единственное железное правило множественного в немецком. ✍️ Внутри: оригинал текста целиком с озвучкой, 12 наречий времени по шкале частоты и вся домашка с полями.',
+   topic:'Дочитали текст про изучение языков (vor allem, Spaß machen, aufschreiben), ловушка vor/nach во времени («vor zwei Tagen» = два дня НАЗАД), почему у «Kinderbücher haben viele Bilder» нет артикля. Новая тема: женский род профессий (-in) и его множественное (-innen) — единственное железное правило множественного в немецком. ✍️ Внутри: оригинал текста целиком с озвучкой, 12 наречий времени по шкале частоты и вся домашка с полями.',
    pdf:'dasha/polya7_pdf.pdf', audio:'dasha/polya7_interactive.html', mins:25, hard:'Средне', cards:66,
    photos:['dasha/polya7_hw_text.jpg','dasha/polya7_hw_adverbien.jpg'],
    photoLabels:['Текст Deutsch lernen (A1)','Карта наречий времени']},
@@ -1701,12 +1348,12 @@ function renderProgress(){
 
   const lv = levels.find(l=>l.code===activeLevel) || levels[0];
   document.getElementById('ppTopics').innerHTML =
-    `<h4>Уровень ${lv.code} — ${lv.name}: ${lv.ok} из ${lv.total} тем</h4>
+    `<h4>Уровень ${lv.code}: ${lv.name}: ${lv.ok} из ${lv.total} тем</h4>
      <div class="topic-list">` +
     lv.topics.map(tp=>{
       const src = tp.l.length ? tp.l.map(x=> x.startsWith('d') ? 'Даша '+x.slice(1) : x.startsWith('p') ? 'Полина '+x.slice(1) : 'Урок '+(Number(x.slice(1))+1)).join(', ') : '';
       return `<div class="topic ${tp.covered?'ok':''}">
-        <span class="tick">${tp.covered?'✓':'○'}</span>
+        <span class="tick">${tp.covered?'✓':'·'}</span>
         <span class="tt">${tp.t}${src?` <span class="src">— ${src}</span>`:''}</span>
       </div>`;
     }).join('') + '</div>';
@@ -1826,7 +1473,7 @@ function renderLevelTabs(){
     const done = list.filter(l => localStorage.getItem(progressKey(profile, l.id)) === '1').length;
     const badge = list.length ? `${done}/${list.length}` : '—';
     return `<button class="lvl-tab${code === currentLevel ? ' active' : ''}${list.length ? '' : ' locked'}"
-      data-level="${code}" style="--lvl:${lv.color || '#888888'}">
+      data-level="${code}" style="--lvl:${lv.color || 'var(--color-muted)'}">
       <span class="lvl-code">${code}</span>
       <span class="lvl-name">${lv.name || ''}</span>
       <span class="lvl-badge">${badge}</span>
@@ -1895,7 +1542,7 @@ function render(){
   document.getElementById('dashaNote').textContent =
     profile === 'polina' ? '— её собственная линия, она идёт впереди по программе' : '— репетитор, раз в неделю по воскресеньям';
   document.getElementById('nextLesson').innerHTML = dashaNext
-    ? `📅 Следующее занятие: <b>${dashaNext.date}, ${dashaNext.time}</b>`
+    ? `Следующее занятие: <b>${dashaNext.date}, ${dashaNext.time}</b>`
     : '';
 
   gridDasha.innerHTML = '';
@@ -1913,7 +1560,7 @@ function render(){
     // Вся карточка — ссылка на занятие; тренажёр (если есть) — маленькой ссылкой.
     card.classList.add('кратко');
     const trainerBtn = l.trainer
-      ? `<a class="кратко-доп" href="${l.trainer}">${l.trainerName||'🎯 Тренажёр'}</a>`
+      ? `<a class="кратко-доп" href="${l.trainer}">${(l.trainerName||'Тренажёр').replace(/^\S*🎯\s*/,'')}</a>`
       : '';
     card.innerHTML = `
       <a class="кратко-ссылка" href="${l.audio}">
@@ -2017,8 +1664,8 @@ render();
     document.getElementById('ктоИмя').textContent = 'Привет, ' + ИМЕНА[profile] + '!';
     var ф = document.getElementById('ктоФото');
     ф.innerHTML = '<img alt="" src="' + ФОТО[profile] + '">';
-    ф.querySelector('img').onerror = function(){ ф.textContent = profile === 'polina' ? '👩‍⚕️' : '👨‍⚕️'; };
-    document.getElementById('менюДаша').innerHTML = '<i>👩‍🏫</i>' + (profile === 'polina' ? 'Занятия Поли с Дашей' : 'Уроки с Дашей');
+    ф.querySelector('img').onerror = function(){ ф.textContent = profile === 'polina' ? 'П' : 'Г'; };
+    document.getElementById('менюДаша').innerHTML = '<i>Hallo!</i>' + (profile === 'polina' ? 'Занятия Поли с Дашей' : 'Уроки с Дашей');
     сводка();
   }
   function сводка(){
@@ -2032,12 +1679,12 @@ render();
       '<a href="stat.html"><b>' + выученоСлов() + '</b>слов выучено</a>' +
       '<a href="stat.html#put"><b>' + (проц || '—') + '</b>путь к B2</a>';
   }
-  var ЗАГОЛОВКИ = { claude: '🤖 Уроки с Claude', dasha: '👩‍🏫 Уроки с Дашей', put: '🧭 Путь к B2' };
+  var ЗАГОЛОВКИ = { claude: 'Уроки с Claude', dasha: 'Уроки с Дашей', put: 'Путь к B2' };
   function показать(вид){
     if (['home', 'claude', 'dasha', 'put'].indexOf(вид) < 0) вид = 'home';
     document.documentElement.setAttribute('data-вид', вид);
     if (вид === 'claude' || вид === 'dasha'){ currentSection = вид; localStorage.setItem('nemeckiy_section', вид); render(); }
-    document.getElementById('верхИмя').textContent = вид === 'dasha' && profile === 'polina' ? '👩‍🏫 Занятия Поли с Дашей' : (ЗАГОЛОВКИ[вид] || '');
+    document.getElementById('верхИмя').textContent = вид === 'dasha' && profile === 'polina' ? 'Занятия Поли с Дашей' : (ЗАГОЛОВКИ[вид] || '');
     window.scrollTo(0, 0);
     сводка();
   }
@@ -2074,19 +1721,7 @@ render();
 </script>
 <!--/ВХОД-СКРИПТ-->
 <!-- ВЫБОР-ГОЛОСА-START (03.11.2026, врач: «два варианта мужской озвучки — голос создателя сайта или носитель, пусть человек выберет») -->
-<style>
-  .гв-фон{ position:fixed; inset:0; z-index:9998; background:rgba(10,14,30,.55); display:flex; align-items:center; justify-content:center; padding:16px; }
-  .гв-окно{ background:var(--surface,#fff); color:var(--ink,#1d2330); border-radius:20px; max-width:520px; width:100%; padding:20px 18px; box-shadow:0 20px 50px rgba(0,0,0,.35); max-height:92vh; overflow:auto; }
-  .гв-окно h2{ margin:0 0 4px; font-size:20px; } .гв-окно p{ margin:0 0 12px; font-size:14px; color:var(--ink-muted,#5b615c); line-height:1.45; }
-  .гв-вар{ display:block; width:100%; text-align:left; border:2px solid var(--line,#d9dcea); background:var(--surface-2,#f6f7fb); border-radius:14px; padding:12px 14px; margin-bottom:10px; cursor:pointer; font:inherit; color:inherit; }
-  .гв-вар.выбран{ border-color:#2f6fdc; background:rgba(47,111,220,.10); }
-  .гв-вар b{ display:block; font-size:16px; margin-bottom:3px; } .гв-вар small{ display:block; font-size:13px; color:var(--ink-muted,#5b615c); line-height:1.4; }
-  .гв-слушать{ margin-top:8px; font:inherit; font-size:13px; font-weight:700; padding:6px 12px; border-radius:99px; border:1px solid var(--line,#d9dcea); background:var(--surface,#fff); color:#2f6fdc; cursor:pointer; }
-  .гв-ок{ width:100%; margin-top:6px; font:inherit; font-weight:800; font-size:15px; padding:12px; border:none; border-radius:12px; background:#2f6fdc; color:#fff; cursor:pointer; }
-  .гв-галка{ display:flex; gap:10px; align-items:flex-start; font-size:13.5px; line-height:1.4; margin:2px 2px 10px; cursor:pointer; }
-  .гв-галка input{ width:20px; height:20px; margin-top:1px; flex:none; }
-  .гв-ссылка{ display:inline-block; margin:8px 0 18px; font-size:14px; font-weight:700; color:var(--accent,#2f6fdc); cursor:pointer; background:none; border:none; font-family:inherit; }
-</style>
+
 <script>
 (function(){
   var КЛЮЧ = 'nemeckiy_golos_muzh';            // 'thorsten' | 'grisha'
@@ -2100,20 +1735,20 @@ render();
   var играет = null;
   function слушать(файл, кн){
     if (играет) { играет.pause(); }
-    играет = new Audio(файл); кн.textContent = '🔊 звучит…';
-    играет.onended = function(){ кн.textContent = '▶ Послушать'; };
-    играет.play().catch(function(){ кн.textContent = '▶ Послушать'; });
+    играет = new Audio(файл); кн.textContent = 'Звучит…';
+    играет.onended = function(){ кн.textContent = 'Послушать'; };
+    играет.play().catch(function(){ кн.textContent = 'Послушать'; });
   }
   window.выборГолоса = function(){
     var текущий = прочитать() || 'thorsten';
     var ф = document.createElement('div'); ф.className = 'гв-фон';
     ф.innerHTML = '<div class="гв-окно" role="dialog" aria-label="Выбор голоса">' +
-      '<h2>🎙 Каким голосом вам говорить?</h2>' +
+      '<h2>Каким голосом вам говорить?</h2>' +
       '<p>На сайте два варианта мужской озвучки. Выберите, какой вам больше нравится — поменять можно в любой момент внизу главной страницы.</p>' +
-      '<button class="гв-вар" data-г="thorsten"><b>🇩🇪 Носитель языка</b><small>Мужские роли в уроках и тренажёрах читает голос носителя немецкого (Thorsten) — чёткое произношение без акцента.</small>' +
-        '<span class="гв-слушать" data-ф="zvuk/golos/thorsten.mp3">▶ Послушать</span></button>' +
-      '<button class="гв-вар" data-г="grisha"><b>🧑‍⚕️ Григорий Андреевич Плотников, создатель сайта</b><small>Голос создателя сайта — его живые фразы по-русски. Немецкие реплики в уроках читает носитель.</small>' +
-        '<span class="гв-слушать" data-ф="zvuk/otvet/гриша/верно_молодец.mp3">▶ Послушать</span></button>' +
+      '<button class="гв-вар" data-г="thorsten"><b>Носитель языка</b><small>Мужские роли в уроках и тренажёрах читает голос носителя немецкого (Thorsten) — чёткое произношение без акцента.</small>' +
+        '<span class="гв-слушать" data-ф="zvuk/golos/thorsten.mp3">Послушать</span></button>' +
+      '<button class="гв-вар" data-г="grisha"><b>Григорий Андреевич Плотников, создатель сайта</b><small>Голос создателя сайта — его живые фразы по-русски. Немецкие реплики в уроках читает носитель.</small>' +
+        '<span class="гв-слушать" data-ф="zvuk/otvet/гриша/верно_молодец.mp3">Послушать</span></button>' +
       '<label class="гв-галка"><input type="checkbox" id="гвВозгл"' + (возгласыВкл() ? ' checked' : '') + '> <span><b>Подбадривания Григория Андреевича</b> в ЗУБРе и играх — «Молодец!», «Эх, жаль…» (работает при любом голосе)</span></label>' +
       '<button class="гв-ок">Готово</button></div>';
     document.body.appendChild(ф);
@@ -2135,7 +1770,7 @@ render();
   document.addEventListener('DOMContentLoaded', function(){
     var низ = document.querySelector('footer');
     if (низ) {
-      var к = document.createElement('button'); к.className = 'гв-ссылка'; к.textContent = '🎙 Сменить голос озвучки';
+      var к = document.createElement('button'); к.className = 'гв-ссылка'; к.textContent = 'Сменить голос озвучки';
       к.onclick = window.выборГолоса; низ.parentNode.insertBefore(к, низ);
     }
     // первый заход — спрашиваем один раз, но после экрана «Кто занимается?» (он поверх всего)
