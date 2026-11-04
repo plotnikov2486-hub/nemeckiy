@@ -47,7 +47,7 @@
 /* ── основа ─────────────────────────────────────────────────────────────── */
 html, body { overflow-x: clip; }
 body { background: var(--grain), var(--color-paper); color: var(--color-ink); }
-body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar, .wcard, .pcard, .de, .ru, .tr, button, input, textarea, select {
+body, .lp, .lp h1, h1, h2, h3, h4, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar, .wcard, .pcard, .de, .ru, .tr, button, input, textarea, select {
   font-family: var(--font-display) !important;
 }
 :where(button, a, input, textarea, select, summary):focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 2px; }
@@ -62,7 +62,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar, .wcard, .pcard
 /* заголовок урока: сплошные чернила, без градиентной заливки */
 .lp h1 { background: none !important; -webkit-background-clip: border-box; background-clip: border-box; color: var(--color-ink) !important;
   -webkit-text-fill-color: currentColor; font-weight: 600; letter-spacing: -0.025em; text-wrap: balance; }
-.eyebrow { letter-spacing: 0 !important; text-transform: none !important; font-size: var(--text-sm) !important; font-weight: 500; color: var(--color-muted) !important; }
+/* надстрочная подпись «Курс · имя · урок» повторяет шапку — убрана (Hallmark: никаких «бровей» над заголовком) */
+.eyebrow { display: none !important; }
 
 /* разделы урока — карточки из картона */
 .block { background: var(--grain), var(--color-card) !important; border-radius: var(--radius-card); padding: 20px 18px; margin-bottom: 16px;
@@ -96,3 +97,8 @@ body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar, .wcard, .pcard
 /* блок «В ЗУБРе» внизу урока */
 .взубр-знак { background: var(--color-own) !important; color: var(--color-own-ink) !important; box-shadow: none !important; }
 .взубр-кн a { background: var(--grain), var(--color-accent) !important; color: var(--color-accent-ink) !important; box-shadow: 0 5px 0 0 var(--color-accent-deep) !important; }
+
+/* длинные немецкие слова в узких карточках: Rubik шире прежнего шрифта — чуть меньше кегль, перенос только по слогам */
+.wcard .de, .pcard .de { font-size: 0.95em; letter-spacing: -0.01em; overflow-wrap: break-word; word-break: normal; }
+.bb-title { color: var(--color-ink) !important; font-weight: 500; }
+.grid2 { grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)) !important; }
