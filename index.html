@@ -1057,6 +1057,8 @@ if (!Слушалка){
 
 
 
+
+
   <header>
     <h1>🇩🇪 Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation — все уроки в одном месте.</p>
@@ -1275,6 +1277,11 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 
 // Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
 const POLYA = [
+  {id:'p23', num:'Занятие 23', date:'≈03.11.2026', title:'Глаголы с приставками в действии',
+   topic:'Отделяемая или нет — по ударению (einschlafen, verstehen, vorlesen, erklären, mitnehmen, vorbereiten, bemalen, anziehen…). ⭐⭐ kommen: mitkommen, herauskommen, herkommen, vorbeikommen, ankommen, abholen. ⭐⭐ gehen: heimgehen 🇦🇹, losgehen («погнали»), weggehen (грубо!), ausgehen, angehen. ziehen: anziehen/ausziehen/sich umziehen, einziehen/umziehen — der Umzug; aufmachen/zumachen, einschlafen, aufwachen. nach Köln, aber in die Stadt. Menschen S. 70 «Mein Weg ins Büro», doch. Домашка: приставки 21–29, местоимения Akkusativ/Dativ (28), сильные глаголы, trennbare Verben, Partizip II, 100 глаголов из Quizlet Даши, 10 своих предложений, фильм и подкаст про Reisen.',
+   pdf:'', audio:'dasha/polya23_interactive.html', mins:51, hard:'Средне', cards:178,
+   photos:['dasha/polya23_hw_prist.jpg','dasha/polya23_hw_akkdat.jpg','dasha/polya23_hw_akkdat2.jpg','dasha/polya23_hw_trenn.jpg','dasha/polya23_hw_partizip.jpg','dasha/polya23_hw_zadanie.jpg'],
+   photoLabels:['Приставки 21–29','Местоимения 4.1–4.2','Местоимения 4.3','Отделяемые','Partizip II','Сообщение Даши с домашкой']},
   {id:'p22', num:'Занятие 22', date:'≈02.11.2026', title:'Глагольные приставки и транспорт',
    topic:'Отделяемые приставки: в презенсе — в конец (Ich stehe um sechs auf), с модальным — слитно в конце (Ich will zuhören). ⭐ Семейство hören: zuhören, anhören, aufhören, mithören, abhören (врач слушает), gehören. ⭐⭐ Неотделяемые be-, emp-, ent-, er-, ge-, miss-, ver-, zer- (bekommen, erzählen, gefallen, verstehen). über-/unter-/durch-/um-/wieder- — и так, и так: übersetzen (переправляться / переводить), sitzen–setzen, liegen–legen, stehen–stellen. Пары auf/zu, an/aus, ein/aus. ⭐ Транспорт: einsteigen, aussteigen, umsteigen, ankommen, abholen, abfahren/abfliegen, anrufen + Akk, danken + Dat; Verkehrsmittel (Zug, S-Bahn, Haltestelle, Bahnsteig, Flughafen…). Домашка: предложения в презенсе, перевод с притяжательными (15, есть Genitiv), 10 своих предложений.',
    pdf:'', audio:'dasha/polya22_interactive.html', mins:55, hard:'Средне', cards:106,
@@ -1494,7 +1501,7 @@ const LEVELS = [
     {t:'Профессия и работа', l:['l1','d8','d9','d10']},
     {t:'Модальные глаголы (können, müssen, dürfen)', l:['d2','d9','d12']},
     {t:'Повелительное наклонение (Imperativ)', l:['l13']},
-    {t:'Отделяемые приставки (aufstehen, einkaufen)', l:['l12','l13','d9','p22']},
+    {t:'Отделяемые приставки (aufstehen, einkaufen)', l:['l12','l13','d9','p22','p23']},
     {t:'Прошедшее время Perfekt', l:['l12']},
     {t:'Семья и родственники', l:['d2','p12','d6','d7','d8']},
     {t:'Еда и напитки', l:['l14','p13','p14','p15','p16']},
@@ -1530,7 +1537,7 @@ const LEVELS = [
     {t:'Медицина: симптомы и жалобы пациента', l:['l47']},
     {t:'Здоровье и самочувствие', l:['l61']},
     {t:'Покупки и магазины', l:['p12','d13']},
-    {t:'Путешествия и транспорт', l:['p18','p19','p22']},
+    {t:'Путешествия и транспорт', l:['p18','p19','p22','p23']},
     {t:'Работа, офис, документы', l:['p17']},
     {t:'Жильё: аренда, мебель', l:['l15','p12','d13']},
     {t:'Свободное время и хобби', l:['l62']},
@@ -1577,7 +1584,7 @@ const LEVELS = [
     {t:'Модальность во всех оттенках', l:['l44']},
     {t:'Стилистика: формальный и разговорный регистр', l:['l74']},
     {t:'Идиомы и устойчивые выражения', l:['l75']},
-    {t:'Продвинутые приставки глаголов', l:['l72','p22']},
+    {t:'Продвинутые приставки глаголов', l:['l72','p22','p23']},
     {t:'Функциональные глаголы (Funktionsverbgefüge)', l:['l46']},
     {t:'Типы текстов и их структура', l:['l94']},
     {t:'FSP: сбор анамнеза у пациента', l:['l47']},
@@ -2076,17 +2083,18 @@ render();
   .гв-вар b{ display:block; font-size:16px; margin-bottom:3px; } .гв-вар small{ display:block; font-size:13px; color:var(--ink-muted,#5b615c); line-height:1.4; }
   .гв-слушать{ margin-top:8px; font:inherit; font-size:13px; font-weight:700; padding:6px 12px; border-radius:99px; border:1px solid var(--line,#d9dcea); background:var(--surface,#fff); color:#2f6fdc; cursor:pointer; }
   .гв-ок{ width:100%; margin-top:6px; font:inherit; font-weight:800; font-size:15px; padding:12px; border:none; border-radius:12px; background:#2f6fdc; color:#fff; cursor:pointer; }
+  .гв-галка{ display:flex; gap:10px; align-items:flex-start; font-size:13.5px; line-height:1.4; margin:2px 2px 10px; cursor:pointer; }
+  .гв-галка input{ width:20px; height:20px; margin-top:1px; flex:none; }
   .гв-ссылка{ display:inline-block; margin:8px 0 18px; font-size:14px; font-weight:700; color:var(--accent,#2f6fdc); cursor:pointer; background:none; border:none; font-family:inherit; }
 </style>
 <script>
 (function(){
   var КЛЮЧ = 'nemeckiy_golos_muzh';            // 'thorsten' | 'grisha'
   function прочитать(){ try { return localStorage.getItem(КЛЮЧ); } catch(e){ return null; } }
+  function возгласыВкл(){ try { return localStorage.getItem('nemeckiy_vozglasy') !== '0'; } catch(e){ return true; } }
   function сохранить(в){
     try {
       localStorage.setItem(КЛЮЧ, в);
-      // живые фразы Григория в ЗУБРе и играх («Молодец!», «Эх…») — только у тех, кто выбрал его голос
-      localStorage.setItem('nemeckiy_golos_grishi', в === 'grisha' ? '1' : '0');
     } catch(e){}
   }
   var играет = null;
@@ -2104,8 +2112,9 @@ render();
       '<p>На сайте два варианта мужской озвучки. Выберите, какой вам больше нравится — поменять можно в любой момент внизу главной страницы.</p>' +
       '<button class="гв-вар" data-г="thorsten"><b>🇩🇪 Носитель языка</b><small>Мужские роли в уроках и тренажёрах читает голос носителя немецкого (Thorsten) — чёткое произношение без акцента.</small>' +
         '<span class="гв-слушать" data-ф="zvuk/golos/thorsten.mp3">▶ Послушать</span></button>' +
-      '<button class="гв-вар" data-г="grisha"><b>🧑‍⚕️ Григорий Андреевич Плотников, создатель сайта</b><small>Живые фразы Григория Андреевича по-русски в ЗУБРе и играх: «Отлично, всё правильно!», «Эх, жаль, не получилось», «Поздравляю, экзамен сдан». Немецкие реплики в уроках по-прежнему читает носитель.</small>' +
+      '<button class="гв-вар" data-г="grisha"><b>🧑‍⚕️ Григорий Андреевич Плотников, создатель сайта</b><small>Голос создателя сайта — его живые фразы по-русски. Немецкие реплики в уроках читает носитель.</small>' +
         '<span class="гв-слушать" data-ф="zvuk/otvet/гриша/верно_молодец.mp3">▶ Послушать</span></button>' +
+      '<label class="гв-галка"><input type="checkbox" id="гвВозгл"' + (возгласыВкл() ? ' checked' : '') + '> <span><b>Подбадривания Григория Андреевича</b> в ЗУБРе и играх — «Молодец!», «Эх, жаль…» (работает при любом голосе)</span></label>' +
       '<button class="гв-ок">Готово</button></div>';
     document.body.appendChild(ф);
     function отметить(){ ф.querySelectorAll('.гв-вар').forEach(function(b){ b.classList.toggle('выбран', b.dataset.г === текущий); }); }
@@ -2117,7 +2126,11 @@ render();
         текущий = b.dataset.г; отметить();
       };
     });
-    ф.querySelector('.гв-ок').onclick = function(){ сохранить(текущий); if (играет) играет.pause(); ф.remove(); };
+    ф.querySelector('.гв-ок').onclick = function(){
+      сохранить(текущий);
+      try { localStorage.setItem('nemeckiy_vozglasy', ф.querySelector('#гвВозгл').checked ? '1' : '0'); } catch(e){}
+      if (играет) играет.pause(); ф.remove();
+    };
   };
   document.addEventListener('DOMContentLoaded', function(){
     var низ = document.querySelector('footer');

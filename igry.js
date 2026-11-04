@@ -137,7 +137,7 @@ var ФРАЗЫ_ГРИШИ = {
 };
 var _ошибокПодряд = 0, _прошлаяФраза = '', _фразаДо = 0;
 function голосГриши() {
-  try { return localStorage.getItem('nemeckiy_golos_grishi') !== '0'; } catch (e) { return true; }
+  try { return localStorage.getItem('nemeckiy_vozglasy') !== '0'; } catch (e) { return true; }   // 04.11: отдельно от выбора голоса
 }
 function фразаГриши(ф) {
   _прошлаяФраза = ф[0]; _фразаДо = Date.now() + ф[1] * 1000 + 150;
