@@ -14,7 +14,8 @@
 var КЛЮЧ = 'nemeckiy_тема';
 var ПОРЯДОК = ['авто', 'light', 'dark'];
 var ПОДПИСЬ = { 'авто': 'как в системе', 'light': 'светлая', 'dark': 'тёмная' };
-var ЗНАК    = { 'авто': '🌗', 'light': '☀️', 'dark': '🌙' };
+// 04.11 Hallmark: значки нарисованы (SVG), а не эмодзи
+var ЗНАК    = { 'авто': '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"8\"/><path d=\"M12 4a8 8 0 0 1 0 16z\" fill=\"currentColor\"/></svg>', 'light': '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"4\"/><path d=\"M12 2v3M12 19v3M2 12h3M19 12h3M5 5l2 2M17 17l2 2M5 19l2-2M17 7l2-2\"/></svg>', 'dark': '<svg width=\"18\" height=\"18\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" aria-hidden=\"true\"><path d=\"M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z\"/></svg>' };
 
 function выбранная(){
   try{
@@ -36,7 +37,7 @@ function применить(тема){
     мета.name = 'theme-color';
     document.head && document.head.appendChild(мета);
   }
-  мета.content = тёмная ? '#12142A' : '#E9EBF6';
+  мета.content = тёмная ? 'oklch(19% 0.016 255)' : 'oklch(97% 0.012 95)';
 }
 function k_set(к, тема){ к.setAttribute('data-theme', тема); }
 
@@ -68,14 +69,14 @@ function кнопку(){
     '#переклТемы{position:fixed; right:14px; bottom:16px; z-index:9999;' +
     'display:flex; align-items:center; gap:7px; padding:10px 14px; border:none;' +
     'border-radius:99px; cursor:pointer; font:inherit; font-size:14px; font-weight:600;' +
-    'background:#FFFFFF; color:#1C2242; box-shadow:0 6px 20px rgba(40,50,110,.22);' +
+    'background:var(--color-card, oklch(98.8% 0.007 95)); color:var(--color-ink, oklch(20% 0.014 255)); box-shadow:inset 0 0 0 1px var(--color-rule, oklch(87% 0.016 95)), 0 4px 0 0 var(--color-edge, oklch(83% 0.04 88));' +
     '-webkit-backdrop-filter:blur(6px); backdrop-filter:blur(6px);}' +
-    '#переклТемы:active{transform:scale(.95);}' +
+    '#переклТемы:active{translate:0 3px;} #переклТемы span{display:inline-flex;align-items:center;}' +
     '#переклТемы .птп{font-size:12.5px; opacity:.7; font-weight:500;}' +
-    ':root[data-theme="dark"] #переклТемы{background:#1E2140; color:#EDEFF8;' +
-    'box-shadow:0 6px 20px rgba(0,0,0,.45);}' +
+    ':root[data-theme="dark"] #переклТемы{background:oklch(25% 0.018 255); color:oklch(95% 0.014 95);' +
+    'box-shadow:inset 0 0 0 1px oklch(33% 0.018 255), 0 4px 0 0 oklch(14% 0.016 255);}' +
     '@media (prefers-color-scheme: dark){:root:not([data-theme="light"]) #переклТемы{' +
-    'background:#1E2140; color:#EDEFF8; box-shadow:0 6px 20px rgba(0,0,0,.45);}}' +
+    'background:oklch(25% 0.018 255); color:oklch(95% 0.014 95); box-shadow:inset 0 0 0 1px oklch(33% 0.018 255), 0 4px 0 0 oklch(14% 0.016 255);}}' +
     '@media (max-width:560px){#переклТемы .птп{display:none;} #переклТемы{padding:11px 13px;}}' +
     '@media print{#переклТемы{display:none;}}';
   document.head.appendChild(стиль);
