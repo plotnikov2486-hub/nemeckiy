@@ -1,0 +1,98 @@
+/* Hallmark · checked: 2026-11-04 · genre: playful · theme: Hum (как главная, css/home.css)
+ * redesign: restyle · built: the project (уроки, занятия с Дашей, справочник) · layout kept: разметка урока и есть его содержание
+ * display: Rubik вместо Chillax (нет кириллицы) · own colours: Гриша синий, Поля коралл · v2.0.0 */
+@import url("./tokens.css");
+
+/* ── старые переменные уроков → токены Hum ─────────────────────────────── */
+:root {
+  --font-display: "Rubik", ui-rounded, ui-sans-serif, system-ui, sans-serif; --font-body: var(--font-display);
+  --color-own: var(--color-accent-2); --color-own-ink: var(--color-paper);
+  --color-der: oklch(50% 0.17 250); --color-die: oklch(60% 0.2 0); --color-das: oklch(66% 0.15 80);
+  --grain: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .1 0 0 0 0 .1 0 0 0 0 .1 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+  --bg: var(--color-paper); --surface: var(--color-card); --surface-2: var(--color-paper-2);
+  --ink: var(--color-ink); --ink-muted: var(--color-muted); --ink-faint: var(--color-muted);
+  --accent: var(--color-own); --accent-ink: var(--color-own-ink);
+  --play: var(--color-own); --play-ink: var(--color-own-ink);
+  --line: var(--color-rule);
+  --warn: var(--color-accent-3); --warn-bg: color-mix(in oklab, var(--color-accent-3) 13%, var(--color-card));
+  --hb: var(--color-own); --hb-bg: color-mix(in oklab, var(--color-own) 10%, var(--color-card));
+  --sn: var(--color-mint-deep); --sn-bg: color-mix(in oklab, var(--color-mint) 18%, var(--color-card));
+  --tr: var(--color-muted);
+  --der: var(--color-der); --die: var(--color-die); --das: var(--color-das);
+  --bubble-a: var(--color-paper-2); --bubble-m: color-mix(in oklab, var(--color-accent) 22%, var(--color-card));
+  --shadow: var(--shadow-card); --radius: var(--radius-stock);
+}
+:root[data-кто="polina"] { --color-own: var(--color-accent-3); --color-own-ink: var(--color-ink); }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --color-paper: oklch(19% 0.016 255); --color-paper-2: oklch(23% 0.018 255); --color-paper-3: oklch(27% 0.02 255);
+    --color-card: oklch(25% 0.018 255); --color-ink: oklch(95% 0.014 95); --color-ink-2: oklch(88% 0.014 95);
+    --color-muted: oklch(74% 0.014 255); --color-rule: oklch(33% 0.018 255); --color-edge: oklch(14% 0.016 255);
+    --color-accent-2: oklch(72% 0.13 250); --color-accent-3: oklch(75% 0.16 22); --color-mint-deep: oklch(78% 0.13 155);
+    --color-focus: oklch(78% 0.12 250); --color-own-ink: var(--color-paper);
+    --color-der: oklch(72% 0.13 250); --color-die: oklch(76% 0.16 0); --color-das: oklch(84% 0.14 88);
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-paper: oklch(19% 0.016 255); --color-paper-2: oklch(23% 0.018 255); --color-paper-3: oklch(27% 0.02 255);
+  --color-card: oklch(25% 0.018 255); --color-ink: oklch(95% 0.014 95); --color-ink-2: oklch(88% 0.014 95);
+  --color-muted: oklch(74% 0.014 255); --color-rule: oklch(33% 0.018 255); --color-edge: oklch(14% 0.016 255);
+  --color-accent-2: oklch(72% 0.13 250); --color-accent-3: oklch(75% 0.16 22); --color-mint-deep: oklch(78% 0.13 155);
+  --color-focus: oklch(78% 0.12 250); --color-own-ink: var(--color-paper);
+  --color-der: oklch(72% 0.13 250); --color-die: oklch(76% 0.16 0); --color-das: oklch(84% 0.14 88);
+}
+
+/* ── основа ─────────────────────────────────────────────────────────────── */
+html, body { overflow-x: clip; }
+body { background: var(--grain), var(--color-paper); color: var(--color-ink); }
+body, .lp, .block, .desc, .lede, .eyebrow, .hint, .toc, .backbar, .wcard, .pcard, .de, .ru, .tr, button, input, textarea, select {
+  font-family: var(--font-display) !important;
+}
+:where(button, a, input, textarea, select, summary):focus-visible { outline: 2px solid var(--color-focus) !important; outline-offset: 2px; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; } }
+
+/* шапка: сплошная бумага вместо «стекла» */
+.backbar { position: sticky; top: 0; z-index: 50; background: var(--grain), var(--color-paper) !important;
+  -webkit-backdrop-filter: none; backdrop-filter: none; border-bottom: 1px solid var(--color-rule); box-shadow: none; }
+.backbar a.bb-link, .bb-link { color: var(--color-ink) !important; font-weight: 600; background: var(--color-card) !important;
+  box-shadow: inset 0 0 0 1px var(--color-rule), 0 3px 0 0 var(--color-edge); border-radius: var(--radius-stock) !important; }
+
+/* заголовок урока: сплошные чернила, без градиентной заливки */
+.lp h1 { background: none !important; -webkit-background-clip: border-box; background-clip: border-box; color: var(--color-ink) !important;
+  -webkit-text-fill-color: currentColor; font-weight: 600; letter-spacing: -0.025em; text-wrap: balance; }
+.eyebrow { letter-spacing: 0 !important; text-transform: none !important; font-size: var(--text-sm) !important; font-weight: 500; color: var(--color-muted) !important; }
+
+/* разделы урока — карточки из картона */
+.block { background: var(--grain), var(--color-card) !important; border-radius: var(--radius-card); padding: 20px 18px; margin-bottom: 16px;
+  box-shadow: var(--shadow-card); border: 0; }
+.block h2 { display: flex; align-items: center; gap: 2px; flex-wrap: wrap; font-weight: 600; letter-spacing: -0.02em; text-wrap: balance; }
+.block h2 .num { display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; border-radius: 12px; margin-right: 9px;
+  background: var(--color-own) !important; color: var(--color-own-ink) !important; font-size: 16px; font-weight: 600; box-shadow: none; }
+
+/* оглавление и врезки */
+.toc, .grammar-box, .warn-box, .link-box { border-radius: var(--radius-stock); box-shadow: none; }
+.toc { background: var(--color-paper-2) !important; border: 0 !important; }
+.grammar-box { background: var(--hb-bg) !important; border: 0 !important; border-left: 0 !important; }
+.warn-box { background: var(--warn-bg) !important; border: 0 !important; }
+.link-box { background: var(--sn-bg) !important; border: 0 !important; }
+
+/* карточки слов и фраз */
+.wcard, .pcard { border-radius: var(--radius-stock); background: var(--color-card) !important; border: 0 !important;
+  box-shadow: inset 0 0 0 1px var(--color-rule), 0 4px 0 0 var(--color-edge); transition: translate var(--dur-micro) var(--ease-snap), box-shadow var(--dur-micro) var(--ease-snap); }
+.wcard:active, .pcard:active { translate: 0 3px; box-shadow: inset 0 0 0 1px var(--color-rule), 0 1px 0 0 var(--color-edge); }
+
+/* кнопка звука: свой цвет профиля, без градиента */
+.play { background: var(--color-own) !important; color: var(--color-own-ink) !important; border: 0 !important; box-shadow: 0 3px 0 0 var(--color-edge) !important; }
+.play.playing { background: var(--color-accent) !important; color: var(--color-accent-ink) !important; }
+
+/* нижняя ссылка «ко всем урокам» — главная кнопка из картона */
+.bb-top { --edge: 5px; display: block; text-align: center; margin: 22px auto 30px; max-width: 520px; padding: 15px 22px; border-radius: var(--radius-stock) !important;
+  text-decoration: none; background: var(--grain), var(--color-accent) !important; color: var(--color-accent-ink) !important; font-weight: 600;
+  box-shadow: 0 var(--edge) 0 0 var(--color-accent-deep) !important; transition: translate var(--dur-micro) var(--ease-spring), box-shadow var(--dur-micro) var(--ease-spring); }
+.bb-top:hover { --edge: 7px; translate: 0 -2px; } .bb-top:active { --edge: 1px; translate: 0 4px; }
+
+/* блок «В ЗУБРе» внизу урока */
+.взубр-знак { background: var(--color-own) !important; color: var(--color-own-ink) !important; box-shadow: none !important; }
+.взубр-кн a { background: var(--grain), var(--color-accent) !important; color: var(--color-accent-ink) !important; box-shadow: 0 5px 0 0 var(--color-accent-deep) !important; }
