@@ -1,0 +1,1792 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>/*ОБРАЗЕЦ-ПРОФИЛЬ*/try{sessionStorage.setItem('nemeckiy_вошёл','1');if(!localStorage.getItem('nemeckiy_profile'))localStorage.setItem('nemeckiy_profile','grigoriy');if(!localStorage.getItem('nemeckiy_golos_muzh'))localStorage.setItem('nemeckiy_golos_muzh','thorsten');}catch(e){}</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Немецкий для врачей: курс Григория и Полины</title>
+<meta name="description" content="Немецкий для врачей, которые переезжают в Австрию: уроки, тренажёр слов ЗУБР, игры и экзамены.">
+<link rel="stylesheet" href="css/home.css">
+<!--ТЕМА-JS-START-->
+<script src="tema.js"></script>
+<!--ТЕМА-JS-END-->
+<link rel="stylesheet" href="css/вариант-стекло.css">
+<meta name="robots" content="noindex">
+</head>
+<body>
+<!--ВХОД-->
+
+<div class="вход" id="вход" hidden>
+  <div class="вход-заголовок">Кто сегодня занимается?</div>
+  <button class="вход-кто гриша" data-кто="grigoriy" aria-label="Войти как Гриша">
+    <img src="img/kto/grisha.webp" alt="" onerror="this.remove()">
+    <span class="подпись"><span class="имя">Гриша</span><span class="войти">Войти</span></span>
+  </button>
+  <button class="вход-кто поля" data-кто="polina" aria-label="Войти как Поля">
+    <img src="img/kto/polya.webp" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'заглушка',textContent:'П'}))">
+    <span class="подпись"><span class="имя">Поля</span><span class="войти">Войти</span></span>
+  </button>
+</div>
+
+<nav class="верх" aria-label="Назад"><div class="верх-ряд">
+  <a href="#home">← Главная</a><b id="верхИмя"></b>
+</div></nav>
+
+<div class="кто-шапка">
+  <div class="кто-фото" id="ктоФото"></div>
+  <div class="кто-текст"><b id="ктоИмя">Привет!</b><span>Немецкий для врачей</span></div>
+  <button class="кто-смена" id="ктоСмена">Сменить</button>
+</div>
+<div class="сводка" id="сводка"></div>
+<nav class="разделы" id="разделы" aria-label="Разделы сайта">
+  <a href="#claude" class="главный"><i>A1 bis C1</i>Уроки с Claude</a>
+  <a href="#dasha" class="главный" id="менюДаша"><i>Hallo!</i>Уроки с Дашей</a>
+  <a href="zubr.html"><i><span class="der">der</span> <span class="die">die</span> <span class="das">das</span></i>ЗУБР</a>
+  <a href="pravila.html"><i>Regeln</i>Правила</a>
+  <a href="glagoly.html"><i>ich bin</i>Спряжения</a>
+  <a href="slushat.html"><i>Hör zu!</i>Слушаем</a>
+  <a href="chitaem.html"><i>Lies!</i>Читаем</a>
+  <a href="igry.html"><i>Spiel!</i>Игры</a>
+  <a href="ekzameny.html"><i>ÖSD B2</i>Экзамены</a>
+  <a href="testy.html"><i>FSP</i>Тесты врачей</a>
+  <a href="itog.html"><i>Test</i>Итоговый тест</a>
+  <a href="stat.html"><i>Wie viel?</i>Статистика</a>
+</nav>
+<!--/ВХОД-->
+
+
+
+
+
+
+<div class="wrap">
+<!--ПЕРЕВОДЧИК-->
+<script>
+/* Транскрипция немецкого русскими буквами.
+   Точной её не сделать — русских букв не хватает на немецкие звуки,
+   но задача не в точности, а в том, чтобы врач мог прочитать слово
+   вслух и его поняли. Правила идут от длинных сочетаний к коротким:
+   иначе «sch» распадётся на «s» + «ch» и получится ерунда. */
+window.Транскрипция = (function(){
+"use strict";
+
+var ГЛАСНЫЕ = 'aeiouäöüy';
+
+// Короткие служебные слова проще выписать руками, чем выводить правилами:
+// на них общие правила как раз и спотыкаются («der» → «да» вместо «дэа»).
+var СЛОВАРЬ = {
+  der:'дэа', die:'ди', das:'дас', den:'дэн', dem:'дэм', des:'дэс',
+  ein:'айн', eine:'айнэ', einen:'айнэн', einem:'айнэм', einer:'айнэа',
+  er:'эа', sie:'зи', es:'эс', wir:'виа', ihr:'иа', ich:'ихь', du:'ду',
+  wer:'вэа', wie:'ви', wo:'во', was:'вас', und:'унт', oder:'одэа',
+  mehr:'мэа', sehr:'зэа', hier:'хиа', vier:'фиа', mir:'миа', dir:'диа',
+  nicht:'нихьт', auch:'аух', aber:'абэа', immer:'иммэа', wieder:'видэа',
+  über:'юба', unter:'унтэа', vor:'фоа', für:'фюа', durch:'дурхь',
+  bei:'бай', mit:'мит', nach:'нах', von:'фон', zu:'цу', aus:'аус',
+  seit:'зайт', ist:'ист', sind:'зинт', war:'вар', hat:'хат', habe:'хабэ'
+};
+
+function слово(w){
+  var чистое = w.toLowerCase();
+  if (СЛОВАРЬ[чистое]) return СЛОВАРЬ[чистое];
+
+  var s = ' ' + чистое + ' ';
+
+  // --- заимствования на -tion, -tient: ti читается как «ци» ---
+  s = s.replace(/tion/g, '§цион');
+  s = s.replace(/tient/g, '§циэнт');
+  s = s.replace(/tiell/g, '§циэль');
+
+  // --- длинные сочетания, их разбирать первыми ---
+  // Греческие корни: h после r не читается — Rhinitis → ринитис,
+  // Arrhythmie → арютми, Diarrhö → диарё (а не «архютми» и «диархё»).
+  // rrh — всегда греческое; одиночное rh — только в начале слова, иначе
+  // пострадают составные: Vorhaut → форхаут, vorher → форхэа.
+  s = s.replace(/rrhoe/g, '§рё');   // Amenorrhoe → амэнорё, Diarrhoe → диарё
+  s = s.replace(/rrh/g, '§р');
+  s = s.replace(/(^|\s)rh/g, '$1§р');
+  s = s.replace(/tsch/g, '§ч');      // Deutsch → дойч, а не «дойтш»
+  s = s.replace(/dsch/g, '§дж');
+  s = s.replace(/sch/g, '§ш');
+  s = s.replace(/chs/g, '§кс');
+
+  // st и sp в начале слова читаются «шт» и «шп»
+  s = s.replace(/(^|\s|-)st/g, '$1§шт');
+  s = s.replace(/(^|\s|-)sp/g, '$1§шп');
+
+  // ch: после a, o, u, au — твёрдое «х», в остальных случаях мягкое «хь»
+  s = s.replace(/([aou])ch/g, '$1§х');
+  s = s.replace(/auch/g, 'ау§х');
+  s = s.replace(/ch/g, '§хь');
+
+  s = s.replace(/ck/g, '§к');
+  s = s.replace(/ph/g, '§ф');
+  s = s.replace(/th/g, '§т');
+  s = s.replace(/qu/g, '§кв');
+
+  // --- гласные сочетания ---
+  s = s.replace(/eu/g, '§ой');
+  s = s.replace(/äu/g, '§ой');
+  s = s.replace(/ei/g, '§ай');
+  s = s.replace(/ai/g, '§ай');
+  s = s.replace(/ie/g, '§и');
+  s = s.replace(/aa/g, '§а');
+  s = s.replace(/ee/g, '§э');
+  s = s.replace(/oo/g, '§о');
+
+  // h после гласной не читается, а только удлиняет её
+  s = s.replace(new RegExp('([' + ГЛАСНЫЕ + '])h(?![' + ГЛАСНЫЕ + '])', 'g'), '$1');
+
+  // --- окончания ---
+  s = s.replace(/er(\s|$)/g, '§а$1');      // Vater → фата
+  s = s.replace(/ig(\s|$)/g, '§ихь$1');    // richtig → рихьтихь
+  s = s.replace(/ung(\s|$)/g, '§унг$1');
+
+  // В конце слова звонкие оглушаются: Hund → хунт, Tag → так, halb → хальп.
+  // Идёт ПОСЛЕ -ig/-ung: иначе «richtig» превратится в «рихьтик».
+  s = s.replace(/b(\s|$)/g, '§п$1');
+  s = s.replace(/d(\s|$)/g, '§т$1');
+  s = s.replace(/g(\s|$)/g, '§к$1');
+
+  // --- согласные ---
+  s = s.replace(/ß/g, '§с');
+  s = s.replace(/ss/g, '§с');
+  // s перед гласной звучит звонко — но только в начале слова, после гласной
+  // и после l, m, n, r: Nase → назэ, Linse → линзэ. После p, t, k, f оно
+  // остаётся глухим: Sepsis → зэпсис, Erbse → эрпсэ (а не «зэпзис»).
+  s = s.replace(new RegExp('(^|\\s|[' + ГЛАСНЫЕ + 'lmnr])s(?=[' + ГЛАСНЫЕ + '])', 'g'), '$1§з');
+  s = s.replace(/s/g, '§с');
+  // tz звучит как «ц» только после гласной: Katze → кацэ, jetzt → ецт.
+  // На стыке слов t остаётся: achtzehn → ахтцэн, hundertzwei → хундэртцвай.
+  s = s.replace(new RegExp('([' + ГЛАСНЫЕ + '])tz', 'g'), '$1§ц');
+  s = s.replace(/tz/g, '§тц');
+  s = s.replace(/z/g, '§ц');
+  s = s.replace(/w/g, '§в');
+  s = s.replace(/v/g, '§ф');
+  s = s.replace(/j/g, '§й');
+  s = s.replace(/h/g, '§х');
+  s = s.replace(/x/g, '§кс');
+
+  // --- одиночные буквы ---
+  var буквы = {
+    a:'а', b:'б', c:'к', d:'д', e:'э', f:'ф', g:'г', i:'и', k:'к', l:'л',
+    m:'м', n:'н', o:'о', p:'п', r:'р', t:'т', u:'у',
+    'ä':'э', 'ö':'ё', 'ü':'ю', y:'ю'
+  };
+  s = s.replace(/[a-zäöü]/g, function(б){ return буквы[б] || б; });
+
+  s = s.replace(/§/g, '').trim();
+  // двойная согласная в немецком не удваивает звук, а укорачивает гласную
+  return s.replace(/([бвгджзклмнпрстфхцчшщ])\1/g, '$1');
+}
+
+function текст(t){
+  return (t || '').split(/(\s+|[.,!?;:()«»"'-])/).map(function(ч){
+    return /^[a-zA-ZäöüÄÖÜß]+$/.test(ч) ? слово(ч) : ч;
+  }).join('').replace(/\s+/g, ' ').trim();
+}
+
+return { слово: слово, текст: текст };
+})();
+
+</script>
+<!-- 04.11 Hallmark: стили переводчика — в публикация/css/home.css -->
+
+<section class="пер" id="пер">
+  <div class="пер-верх">
+    <div class="пер-знак" aria-hidden="true">DE</div>
+    <b id="перНазвание">Немецкий → русский</b>
+    <button class="пер-смена" id="перСмена">Поменять</button>
+  </div>
+  <div class="пер-поле">
+    <textarea id="перВвод" placeholder="Введи слово или фразу…" autocomplete="off" autocorrect="off" spellcheck="false"></textarea>
+    <button class="пер-микро" id="перМикро" title="Сказать голосом" aria-label="Сказать голосом"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="3" width="6" height="12" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg></button>
+  </div>
+  <div class="пер-кн">
+    <button class="пер-простая" id="перОчистить">Очистить</button>
+    <button class="пер-главная" id="перПеревести">Перевести</button>
+  </div>
+  <div class="пер-итог" id="перИтог"></div>
+</section>
+
+<script>
+(function(){
+"use strict";
+var $ = function(id){ return document.getElementById(id); };
+var сНемецкого = true;                    // куда переводим
+var последний = null;                     // {исходник, перевод, немецкое}
+
+function обновитьПодпись(){
+  $('перНазвание').textContent = сНемецкого ? 'Немецкий → русский' : 'Русский → немецкий';
+  $('перВвод').placeholder = сНемецкого ? 'Введи немецкое слово или фразу…' : 'Введи русское слово или фразу…';
+}
+обновитьПодпись();
+
+$('перСмена').onclick = function(){
+  сНемецкого = !сНемецкого;
+  обновитьПодпись();
+  $('перИтог').classList.remove('видно');
+};
+$('перОчистить').onclick = function(){
+  $('перВвод').value = '';
+  $('перИтог').classList.remove('видно');
+  $('перВвод').focus();
+};
+
+/* ---- перевод ----
+   Основной путь — открытый эндпойнт Google Translate: он даёт лучшее
+   качество и отвечает за секунду. Запасной — MyMemory, он бесплатный
+   и без ключа, но переводит заметно хуже. */
+function перевести(текст, откуда, куда){
+  var гугл = 'https://translate.googleapis.com/translate_a/single?client=gtx&sl=' +
+             откуда + '&tl=' + куда + '&dt=t&q=' + encodeURIComponent(текст);
+  return fetch(гугл)
+    .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(j){ return j[0].map(function(ч){ return ч[0]; }).join(''); })
+    .catch(function(){
+      var память = 'https://api.mymemory.translated.net/get?q=' +
+                   encodeURIComponent(текст) + '&langpair=' + откуда + '|' + куда;
+      return fetch(память).then(function(r){ return r.json(); })
+        .then(function(j){
+          if (!j.responseData || !j.responseData.translatedText) throw 0;
+          return j.responseData.translatedText;
+        });
+    });
+}
+
+$('перПеревести').onclick = пуск;
+$('перВвод').onkeydown = function(e){
+  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) пуск();
+};
+
+function пуск(){
+  var текст = $('перВвод').value.trim();
+  if (!текст) return;
+  var итог = $('перИтог');
+  итог.className = 'пер-итог видно';
+  итог.innerHTML = '<div class="пер-ждём">Перевожу…</div>';
+
+  var откуда = сНемецкого ? 'de' : 'ru';
+  var куда = сНемецкого ? 'ru' : 'de';
+
+  перевести(текст, откуда, куда).then(function(перевод){
+    var немецкое = сНемецкого ? текст : перевод;
+    var русское = сНемецкого ? перевод : текст;
+    последний = { немецкое: немецкое, русское: русское };
+
+    var транс = window.Транскрипция ? window.Транскрипция.текст(немецкое) : '';
+    итог.innerHTML =
+      '<div class="слово">' + экр(перевод) + '</div>' +
+      (транс ? '<div class="транс">[' + экр(сНемецкого ? window.Транскрипция.текст(текст) : транс) + ']</div>' : '') +
+      '<div class="низ">' +
+        '<button id="перСлушать">Послушать по-немецки</button>' +
+        '<button id="перКопия">Скопировать</button>' +
+        '<button id="перВЗубр">В мой словарик</button>' +
+      '</div>';
+
+    $('перСлушать').onclick = function(){ озвучить(немецкое); };
+    $('перКопия').onclick = function(){
+      (navigator.clipboard ? navigator.clipboard.writeText(перевод) : Promise.reject())
+        .catch(function(){ prompt('Скопируй:', перевод); });
+    };
+    $('перВЗубр').onclick = function(){ вЗубр(немецкое, русское, this); };
+    озвучить(немецкое);
+  }).catch(function(){
+    итог.innerHTML = '<div class="пер-ошибка">Не получилось перевести. Проверь интернет и попробуй ещё раз.</div>';
+  });
+}
+
+function экр(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+/* ---- добавить в свой словарик ЗУБРа ---- */
+function вЗубр(немецкое, русское, кнопка){
+  var профиль = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+  var ключ = 'nemeckiy_zubr_' + профиль, список = [];
+  try{ список = JSON.parse(localStorage.getItem(ключ) || '[]'); }catch(e){}
+  var есть = список.some(function(c){ return c.de.toLowerCase() === немецкое.toLowerCase(); });
+  if (есть){ кнопка.textContent = 'уже в словарике'; return; }
+  список.push({ de: немецкое, ru: русское, t: Date.now() });
+  try{ localStorage.setItem(ключ, JSON.stringify(список)); }catch(e){}
+  кнопка.textContent = 'Добавлено в ЗУБР';
+  if (window.ЗУБР_обновить) window.ЗУБР_обновить();
+}
+
+/* ---- озвучка немецкого ---- */
+var голос;
+function озвучить(текст){
+  if (!window.speechSynthesis || !текст) return;
+  if (голос === undefined){
+    var все = [];
+    try{ все = speechSynthesis.getVoices() || []; }catch(e){}
+    var нем = все.filter(function(v){ return (v.lang||'').toLowerCase().indexOf('de') === 0; });
+    голос = нем.filter(function(v){ return /anna/i.test(v.name); })[0] || нем[0] || null;
+    if (!все.length) голос = undefined;
+  }
+  if (!голос) return;
+  try{
+    var у = new SpeechSynthesisUtterance(текст);
+    у.voice = голос; у.lang = голос.lang || 'de-DE'; у.rate = .88;
+    speechSynthesis.cancel(); speechSynthesis.speak(у);
+  }catch(e){}
+}
+if (window.speechSynthesis){
+  try{ speechSynthesis.onvoiceschanged = function(){ голос = undefined; }; }catch(e){}
+}
+
+/* ---- голосовой ввод ---- */
+var Слушалка = window.SpeechRecognition || window.webkitSpeechRecognition;
+if (!Слушалка){
+  $('перМикро').style.display = 'none';
+} else {
+  var слушает = false, узнавалка = null;
+  $('перМикро').onclick = function(){
+    if (слушает){ if (узнавалка) узнавалка.stop(); return; }
+    узнавалка = new Слушалка();
+    узнавалка.lang = сНемецкого ? 'de-DE' : 'ru-RU';
+    узнавалка.interimResults = true;
+    узнавалка.continuous = false;
+
+    узнавалка.onstart = function(){
+      слушает = true;
+      $('перМикро').classList.add('слушает');
+      $('перВвод').placeholder = 'Говори…';
+    };
+    узнавалка.onresult = function(e){
+      var текст = '';
+      for (var i = 0; i < e.results.length; i++) текст += e.results[i][0].transcript;
+      $('перВвод').value = текст;
+    };
+    узнавалка.onerror = function(){
+      $('перИтог').className = 'пер-итог видно';
+      $('перИтог').innerHTML = '<div class="пер-ошибка">Микрофон не сработал. Разреши доступ к микрофону в настройках браузера.</div>';
+    };
+    узнавалка.onend = function(){
+      слушает = false;
+      $('перМикро').classList.remove('слушает');
+      обновитьПодпись();
+      if ($('перВвод').value.trim()) пуск();
+    };
+    try{ узнавалка.start(); }catch(e){}
+  };
+}
+})();
+</script>
+
+<!--/ПЕРЕВОДЧИК-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <header>
+    <h1>Немецкий для врачей</h1>
+    <p>Личный курс Григория и Полины на пути к Approbation: все уроки в одном месте.</p>
+  </header>
+
+  <div class="profile-bar">
+    <span class="label">Кто занимается:</span>
+    <button class="profile-btn" data-profile="grigoriy">Григорий</button>
+    <button class="profile-btn" data-profile="polina">Полина</button>
+    <span class="progress-note" id="progressNote"></span>
+  </div>
+
+  <div class="site-search">
+    <input id="siteSearch" type="search" autocomplete="off"
+           placeholder="Найти урок или тему — например, Akkusativ или числа">
+    <div id="siteFound"></div>
+  </div>
+
+  <div class="progress-panel">
+    <div class="pp-head">
+      <span class="pp-title">Путь к B2: допуск врача (Approbation)</span>
+      <span class="pp-total" id="ppTotal">0%</span>
+    </div>
+    <div class="pp-bar-big"><div class="pp-fill-big" id="ppFillBig"></div></div>
+    <div class="pp-left" id="ppLeft"></div>
+
+    <div class="pp-levels" id="ppLevels"></div>
+
+    <button class="pp-toggle" id="ppToggle">Показать темы уровня ▾</button>
+    <div class="pp-topics" id="ppTopics" hidden></div>
+  </div>
+
+  <div class="folders" id="folders"></div>
+
+  <section id="secClaude">
+    <h2 class="sec-head">Уроки с Claude <span class="sec-note">каждый день, между занятиями</span></h2>
+    <div class="lvl-tabs" id="lvlTabs"></div>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <section id="secDasha" hidden>
+    <h2 class="sec-head sec-dasha"><span id="dashaTitle">Занятия с Дашей</span> <span class="sec-note" id="dashaNote"></span></h2>
+    <div class="next-lesson" id="nextLesson"></div>
+    <div class="grid" id="gridDasha"></div>
+  </section>
+
+  <footer>Прогресс хранится в этом браузере отдельно для каждого профиля и не синхронизируется между устройствами.</footer>
+</div>
+
+<script>
+const LESSONS = [
+  {id:'0', title:'Урок 0 — Алфавит и правила чтения', topic:'Алфавит со звуком, дифтонги, долгие/краткие, оглушение — база произношения.', pdf:'lessons/urok0_pdf.pdf', audio:'lessons/urok0_interactive.html', mins:20, hard:'Средне', cards:45, level:'A1'},
+  {id:'1', title:'Урок 1 — Приветствие и знакомство', topic:'Sich vorstellen, глагол sein, du vs Sie (с пациентами — Sie).', pdf:'lessons/urok1_pdf.pdf', audio:'lessons/urok1_interactive.html', mins:15, hard:'Легко', cards:23, level:'A1'},
+  {id:'2', title:'Урок 2 — Wie geht\'s, числа, артикли', topic:'Числа 0–20, der/die/das, возраст пациента, диалог на ресепшене.', pdf:'lessons/urok2_pdf.pdf', audio:'lessons/urok2_interactive.html', mins:15, hard:'Легко', cards:14, level:'A1'},
+  {id:'3', title:'Урок 3 — Глаголы Präsens, порядок слов', topic:'Спряжение в настоящем времени, глагол на 2-й позиции, вопросы.', pdf:'lessons/urok3_pdf.pdf', audio:'lessons/urok3_interactive.html', mins:15, hard:'Легко', cards:16, level:'A1'},
+  {id:'4', title:'Урок 4 — haben, Akkusativ, отрицание', topic:'«У меня есть/болит», винительный падеж, kein vs nicht, приём у врача.', pdf:'lessons/urok4_pdf.pdf', audio:'lessons/urok4_interactive.html', mins:15, hard:'Легко', cards:21, level:'A1'},
+  {id:'5', title:'Урок 5 — Все числа + порядковые', topic:'0–1000, ловушка «задом наперёд», порядковые (1-й, 2-й…), давление/пульс/дата.', pdf:'lessons/urok5_pdf.pdf', audio:'lessons/urok5_interactive.html', mins:30, hard:'Средне', cards:70, level:'A1'},
+  {id:'6', title:'Урок 6 — Времена года и месяцы', topic:'Времена года, 12 месяцев, im + месяц, дата рождения, запись на приём.', pdf:'lessons/urok6_pdf.pdf', audio:'lessons/urok6_interactive.html', mins:15, hard:'Легко', cards:16, level:'A1'},
+  {id:'7', title:'Урок 7 — Цвета (die Farben)', topic:'Цвета, оттенки hell-/dunkel-, цвет симптома (bleiche Haut, blauer Fleck).', pdf:'lessons/urok7_pdf.pdf', audio:'lessons/urok7_interactive.html', mins:15, hard:'Легко', cards:13, level:'A1'},
+  {id:'8', title:'Урок 8 — Неправильные глаголы и W-Fragen', topic:'sein/haben, глаголы-хамелеоны (du sprichst), все вопросы на W у врача.', pdf:'lessons/urok8_pdf.pdf', audio:'lessons/urok8_interactive.html', mins:15, hard:'Легко', cards:21, level:'A1'},
+  {id:'9', title:'Урок 9 — Части тела (der Körper)', topic:'Части тела с артиклями (der/die/das цветом), «где болит?», жалобы на ноги/вены.', pdf:'lessons/urok9_pdf.pdf', audio:'lessons/urok9_interactive.html', mins:15, hard:'Легко', cards:24, level:'A1'},
+  {id:'10', title:'Урок 10 — Дни недели и время (Uhrzeit)', topic:'Дни недели, часы, ловушка halb (9:30!), официальное 24ч, запись пациента на приём.', pdf:'lessons/urok10_pdf.pdf', audio:'lessons/urok10_interactive.html', mins:20, hard:'Легко', cards:40, level:'A1'},
+  {id:'11', title:'Урок 11 — Предлоги места (Wo? + Dativ)', topic:'9 предлогов места, падеж Dativ (dem/der/den), im/am/zum/zur, где болит/где аптека. Новый голос Yannick.', pdf:'lessons/urok11_pdf.pdf', audio:'lessons/urok11_interactive.html', mins:20, hard:'Легко', cards:35, level:'A1'},
+  {id:'12', title:'Урок 12 — Прошедшее время (Perfekt)', topic:'Язык анамнеза: haben/sein + Partizip II, сильные глаголы, когда без ge-, «когда начались боли».', pdf:'lessons/urok12_pdf.pdf', audio:'lessons/urok12_interactive.html', mins:25, hard:'Средне', cards:59, level:'A1'},
+  {id:'13', title:'Урок 13 — Повелительное наклонение (Imperativ)', topic:'Язык осмотра: «лягте на спину», «дышите глубоко», «покажите ногу». Форма на Sie, du, ihr, смягчение bitte/mal/doch, 15 команд приёма.', pdf:'lessons/urok13_pdf.pdf', audio:'lessons/urok13_interactive.html', mins:30, hard:'Средне', cards:70, level:'A1'},
+  {id:'14', title:'Урок 14 — Еда и напитки (Essen und Trinken)', topic:'Продукты и напитки с артиклями (род цветом), essen-хамелеон, gern/mögen/schmecken, кафе, «вы натощак?» и советы по питанию.', pdf:'lessons/urok14_pdf.pdf', audio:'lessons/urok14_interactive.html', mins:35, hard:'Плотно', cards:93, level:'A1'},
+  {id:'15', title:'Урок 15 — Квартира и жильё (Wohnung und Haus)', topic:'Снять квартиру в Германии: комнаты и мебель, три денежные ловушки (счёт комнат, этажи, Kalt- vs Warmmiete), вопросы маклеру, жильё в анамнезе.', pdf:'lessons/urok15_pdf.pdf', audio:'lessons/urok15_interactive.html', mins:30, hard:'Плотно', cards:78, level:'A1'},
+  {id:'16', title:'Урок 16 — Погода (das Wetter)', topic:'Безличное «es», прилагательные и явления, градусы, прогноз через werden, small talk — и жара как клинический фактор для вен. Закрывает A1.', pdf:'lessons/urok16_pdf.pdf', audio:'lessons/urok16_interactive.html', mins:25, hard:'Средне', cards:67, level:'A1'},
+  {id:'17', title:'Урок 17 — Куда? Wohin? + Akkusativ', topic:'Первый урок A2. Девять предлогов-переключателей, Wo?→Dativ vs Wohin?→Akkusativ, слияния ins/ans/aufs, глаголы-близнецы stehen/stellen, команды «куда» на осмотре.', pdf:'lessons/urok17_pdf.pdf', audio:'lessons/urok17_interactive.html', mins:25, hard:'Средне', cards:65, level:'A2'},
+  {id:'18', title:'Урок 18 — Возвратные глаголы (sich waschen)', topic:'Немецкое «-ся» отдельным словом: шесть местоимений, ловушка mich/mir, русское «-ся» не подсказчик, 14 глаголов осмотра и главный вопрос Wie fühlen Sie sich?', pdf:'lessons/urok18_pdf.pdf', audio:'lessons/urok18_interactive.html', mins:25, hard:'Средне', cards:56, level:'A2'},
+  {id:'19', title:'Урок 19 — Präteritum: war, hatte, модальные', topic:'Долг с урока 12. Слова, которые в разговоре НЕ ставят в Perfekt: war, hatte и модальные (умляут исчезает). Ловушка konnte/könnte, 13 фраз анамнеза, язык Arztbrief.', pdf:'lessons/urok19_pdf.pdf', audio:'lessons/urok19_interactive.html', mins:25, hard:'Средне', cards:55, level:'A2'},
+  {id:'20', title:'Урок 20 — Предлоги с Akkusativ и Dativ', topic:'Тема из стандартного списка A1, которой у нас не было. Предлоги-однолюбы: DOGFU (für, ohne, gegen, durch, um) всегда с Akkusativ, aus-bei-mit-nach-seit-von-zu всегда с Dativ. nach или zu, aus или von, «на автобусе» = mit dem Bus. Для врача: bei Fieber, nach dem Essen, beim Gehen oder beim Stehen.', pdf:'lessons/urok20_pdf.pdf', audio:'lessons/urok20_interactive.html', mins:25, hard:'Легко', cards:80, level:'A1'},
+  {id:'21', title:'Урок 21 — Местоимения mich/mir и глаголы с Dativ', topic:'Тема из стандартного A1. Кто — кого — кому: ich/mich/mir … Sie/Sie/Ihnen. Глаголы с Dativ и ловушки: danken и gratulieren (по-русски «кого»), anrufen (по-русски «кому»). Mir ist schwindelig, Wie geht es Ihnen? Для врача: Was fehlt Ihnen? Ich verschreibe Ihnen …', pdf:'lessons/urok21_pdf.pdf', audio:'lessons/urok21_interactive.html', mins:25, hard:'Средне', cards:68, level:'A1'},
+  {id:'22', title:'Урок 22 — Сравнение: größer, am größten', topic:'Тема из стандартного A1. klein — kleiner — am kleinsten, умляут у коротких (alt — älter), исключения gut/besser, viel/mehr, gern/lieber, als и so … wie. Для врача: сильнее или слабее, чем вчера; левая нога толще правой; шкала боли; je mehr, desto besser.', pdf:'lessons/urok22_pdf.pdf', audio:'lessons/urok22_interactive.html', mins:20, hard:'Легко', cards:51, level:'A1'},
+  {id:'23', title:'Урок 23 — Союзы, сложные слова, welcher / dieser / jeder', topic:'Последние темы стандартного A1. und, aber, oder, denn, sondern — порядок слов не меняют (denn против weil). aber или sondern. Сложные слова: род по последнему (die Krampfader, der Kompressionsstrumpf). welcher / dieser / jeder (jeden Tag). Без артикля: Ich bin Arzt, aus der Schweiz.', pdf:'lessons/urok23_pdf.pdf', audio:'lessons/urok23_interactive.html', mins:25, hard:'Легко', cards:59, level:'A1'},
+  {id:'24', title:'Урок 24 — Окончания прилагательных', topic:'Первый урок уровня A2. Почему gut то guter, то gute, то guten. Правило одного сигнала: род и падеж должен показать кто-то один — либо артикль, либо прилагательное. Три случая: после der/die/das (слабое, только -e и -en), после ein/kein/mein (прилагательное договаривает за артикль: -er у мужского, -es у среднего) и без артикля вообще (окончание артикля переходит к прилагательному: guter Wein, gutes Bier). Врачебный блок: starke Schmerzen, mit starken Schmerzen, am linken Bein, bei einer älteren Patientin, hoher Blutdruck. Частые ошибки, два диалога на приёме и домашка с ответами.', pdf:'lessons/urok24_pdf.pdf', audio:'lessons/urok24_interactive.html', mins:30, hard:'Плотно', cards:112, level:'A2'},
+  {id:'25', title:'Урок 25 — Придаточные: weil, dass, wenn, als', topic:'Главный шаг к живой речи: связывать предложения. weil (потому что), dass (что), wenn (если/когда, повторяется), als (когда — один раз в прошлом). Железное правило: во второй части глагол уезжает в самый конец; с модальным последним встаёт модальный, в Perfekt — haben или sein, отделяемая приставка склеивается обратно (abfährt). Если придаточное стоит впереди, дальше сразу глагол: «глагол, запятая, глагол». Ловушка wenn или als, сравнение weil и denn. Врачебный блок: Weil Sie Krampfadern haben…, Es ist wichtig, dass Sie…, Wenn das Bein anschwillt… Шесть частых ошибок парами на слух, два диалога на приёме и домашка с озвученными ответами.', pdf:'lessons/urok25_pdf.pdf', audio:'lessons/urok25_interactive.html', mins:30, hard:'Плотно', cards:92, level:'A2'},
+  {id:'26', title:'Урок 26 — Вежливость: hätte, wäre, könnte, würde', topic:'Самый практичный урок A2: по-немецки вежливость — это не «пожалуйста», а особая форма глагола. Ich will einen Termin звучит как требование, Ich hätte gern einen Termin — как воспитанный человек. Четыре формы наизусть (hätte, wäre, könnte, würde) плюс уже знакомое möchte; würde + инфинитив как универсальный способ, но НЕ с haben и sein. Вежливые просьбы (Könnten Sie bitte…? Wäre es möglich…?), шкала вежливости, мягкий совет (An Ihrer Stelle würde ich… / Es wäre besser, wenn…) и нереальное условие — прямое продолжение урока 25: Wenn ich Zeit hätte, würde ich kommen. Врачебные диалоги: запись на приём и рекомендация операции. Ошибки парами на слух, домашка с озвученными ответами.', pdf:'lessons/urok26_pdf.pdf', audio:'lessons/urok26_interactive.html', mins:28, hard:'Средне', cards:76, level:'A2'},
+  {id:'27', title:'Урок 27 — Пассив в настоящем времени', topic:'Первая тема второй половины A2. Почти вся речь врача про пациента — в пассиве: не «медсестра меряет давление», а «давление меряют». Формула та же, что в Perfekt: werden (спрягается) + Partizip II (в конец) — только вместо haben/sein берётся werden. Повтор трёх правил Partizip II на девяти новых врачебных глаголах (messen, wechseln, operieren, untersuchen, abnehmen…), спряжение по лицам целиком на одном глаголе, von + Dativ («кем сделано» — необязательная часть), man как более разговорный синоним. Врачебный блок: Der Blutdruck wird gemessen, Es wird empfohlen, viel zu trinken. Частые ошибки, два диалога (обход и разговор с пациентом перед обследованием), домашка с озвученными ответами.', pdf:'lessons/urok27_pdf.pdf', audio:'lessons/urok27_interactive.html', mins:28, hard:'Средне', cards:77, level:'A2'},
+  {id:'28', title:'Урок 28 — Глагол lassen', topic:'Вторая тема второй половины A2. Один глагол — три значения: поручить сделать за себя (Ich lasse mein Auto reparieren), позволить (Lassen Sie mich durch) и оставить, не трогать (Lassen Sie das!). Формула та же, что у модальных: lassen на втором месте, тот, с кем это делают, — в Akkusativ, второй глагол в инфинитиве без zu уезжает в конец. Спряжение с изменением гласной (a→ä). Самое врачебное — причинная конструкция sich … lassen: Ich lasse mich impfen, Ich lasse mir das Bein röntgen. Отдельно — тонкое сравнение с пассивом из урока 27: кто был инициатором действия. Врачебный блок, частые ошибки, два диалога (обход и разговор перед прививкой), домашка с озвученными ответами.', pdf:'lessons/urok28_pdf.pdf', audio:'lessons/urok28_interactive.html', mins:25, hard:'Средне', cards:67, level:'A2'},
+  {id:'29', title:'Урок 29 — Präteritum: обычные и сильные глаголы', topic:'Третья тема второй половины A2. В уроке 19 были только war, hatte и модальные — здесь полная система прошедшего описательного времени. Слабые глаголы: основа + -te + окончания (fragte, fragtest…). Сильные глаголы меняют корень, у каждого своя гласная — таблица на десять врачебных глаголов (nehmen→nahm, kommen→kam, sprechen→sprach…). Смешанные глаголы берут и то, и другое (brachte, wusste, dachte). Главный крючок: врачебные выписки и эпикризы в Германии пишут целиком в Präteritum, а не в Perfekt — читаем настоящий отрывок из Arztbrief про пациента с тромбозом. Бонус: wurde + Partizip II — пассив в прошлом, продолжение урока 27. Частые ошибки, домашка с озвученными ответами.', pdf:'lessons/urok29_pdf.pdf', audio:'lessons/urok29_interactive.html', mins:25, hard:'Средне', cards:57, level:'A2'},
+  {id:'30', title:'Урок 30 — Управляемые глаголы', topic:'Четвёртая тема второй половины A2. У немецкого глагола есть свой намертво приклеенный предлог и падеж после него — и логика русского языка тут не помощник: «интересоваться чем-то» по-русски без предлога, а по-немецки sich interessieren FÜR + Akkusativ. 12 самых ходовых глаголов на каждый день (warten auf, denken an, sich freuen auf/über, Angst haben vor, leiden an, sich kümmern um, achten auf, sich gewöhnen an, warnen vor, sich verlassen auf). Отдельно — da-/wo- слова: о человеке говорят предлог + местоимение (an ihn), о вещи или событии — слитное da(r)-слово (daran, darauf). Врачебный блок: Der Patient leidet an Diabetes, Wir müssen auf die Symptome achten. Ошибки, два диалога — второй нарочно связывает lassen, Konjunktiv II и besprechen из прошлых уроков, домашка с озвученными ответами.', pdf:'lessons/urok30_pdf.pdf', audio:'lessons/urok30_interactive.html', mins:25, hard:'Средне', cards:56, level:'A2'},
+  {id:'31', title:'Урок 31 — Косвенный вопрос: ob', topic:'Пятая и последняя тема второй половины A2 — после неё уровень закрыт целиком. Как вставить вопрос внутрь своей фразы: «я не знаю, придёт ли он». Если в прямом вопросе не было своего слова (да/нет вопрос) — вводим через ob, глагол уезжает в конец, как во всех придаточных из урока 25. Если слово было (wann, wo, warum, was, wer, wie) — оно и остаётся союзом. Путаница dass (уверенность, «что») и ob (неуверенность, «ли»). Вежливые вводные для приёма: Können Sie mir sagen, ob…? Диалоги нарочно тянут за собой abhängen von из ЗУБРа, wenn из урока 25 и Konjunktiv Dürfte из урока 26. Частые ошибки, домашка с озвученными ответами.', pdf:'lessons/urok31_pdf.pdf', audio:'lessons/urok31_interactive.html', mins:25, hard:'Средне', cards:50, level:'A2'},
+  {id:'32', title:'Урок 32 — Plusquamperfekt', topic:'Первая тема уровня B1 — «прошлое перед прошлым». Когда в рассказе два события в прошлом и нужно показать, какое случилось раньше, берут Plusquamperfekt: hatte/war (Präteritum) + Partizip II — та же формула, что у Perfekt, и то же правило выбора haben/sein. nachdem («после того как») и bevor («прежде чем») задают порядок событий — прямое применение в сборе анамнеза: «у пациента уже год назад были похожие боли», «прежде чем прийти к нам, он был у другого врача». Бонус: пассив в Plusquamperfekt (operiert worden war) — синтез уроков 27 и 29. Ошибки, два диалога (сбор анамнеза, обход), домашка с озвученными ответами.', pdf:'lessons/urok32_pdf.pdf', audio:'lessons/urok32_interactive.html', mins:22, hard:'Средне', cards:44, level:'B1'},
+  {id:'33', title:'Урок 33 — Konjunktiv II в прошлом', topic:'Вторая тема уровня B1 — сожаление и «если бы» о том, что уже случилось. Формула hätte/wäre + Partizip II точь-в-точь как в Plusquamperfekt, различает только смысл: факт или «могло бы быть». Главный случай — модальные: Ich hätte das machen sollen (мне следовало), Wir hätten früher kommen können (мы могли бы); модальный глагол стоит последним и остаётся инфинитивом. Нереальное условие: Wenn ich das gewusst hätte, wäre ich früher gekommen. Сравнение с würde-формой из урока 26 — «сделал бы сейчас» и «сделал бы тогда». Прямое применение: разбор случая на обходе и разговор с пациентом, опоздавшим с обращением. Ошибки, два диалога, домашка с озвученными ответами.', pdf:'lessons/urok33_pdf.pdf', audio:'lessons/urok33_interactive.html', mins:22, hard:'Плотно', cards:49, level:'B1'},
+  {id:'34', title:'Урок 34 — Futur I', topic:'Третья тема уровня B1 — будущее время. Формула проста: werden (на втором месте) + Infinitiv (в самом конце); неправильные только du wirst и er wird. Чаще будущее выражают Präsens со словом времени (morgen, bald), а Futur нужен для обещаний, прогнозов и когда слова времени нет. Второе значение — догадка о настоящем: Er wird wohl zu Hause sein. Порядок слов с модальным (werden … laufen können) и в придаточном (werden в самом конце). Как отличить Futur от Passiv (урок 27): Infinitiv в конце — Futur, Partizip II — Passiv. Прямое применение — прогноз и обещания врача. Ошибки, два диалога (перед операцией, обход), домашка с озвученными ответами.', pdf:'lessons/urok34_pdf.pdf', audio:'lessons/urok34_interactive.html', mins:24, hard:'Средне', cards:55, level:'B1'},
+  {id:'35', title:'Урок 35 — Пассив во всех временах', topic:'Продолжение урока 27: пассив в прошедшем, с модальными и в выписке. Главное правило — Partizip II не меняется, время показывает только werden. Präteritum: wurde operiert (самая частая форма на письме). Perfekt: ist operiert worden — всегда с sein и worden без ge- (geworden значит «стал»). Plusquamperfekt и Futur кратко. С модальными: muss operiert werden, konnte entlassen werden, dürfen nicht eingenommen werden. Главное применение — Arztbrief: связный текст о пациенте с тромбозом глубоких вен, почти целиком в пассиве (Es wurde eine Duplexsonographie durchgeführt). Ошибки, два диалога (анамнез прошлых операций, обход), домашка с озвученными ответами.', pdf:'lessons/urok35_pdf.pdf', audio:'lessons/urok35_interactive.html', mins:26, hard:'Плотно', cards:61, level:'B1'},
+  {id:'36', title:'Урок 36 — n-Deklination', topic:'Слабые существительные мужского рода — те, что в работе врача звучат каждый день: der Patient → den/dem/des Patienten. Правило: -en во всех падежах, кроме Nominativ единственного числа, и в Genitiv без -s. Три группы: мужчины на -e (Kollege, Junge, Russe), заимствованные профессии на -ent/-ant/-ist/-oge/-urg (Patient, Praktikant, Spezialist, Kardiologe, Chirurg), особые слова (Mensch, Herr, Nachbar). Ловушка: der Arzt, der Pfleger склоняются обычно. Herrn + фамилия, перевод к специалисту (zum Kardiologen), особые das Herz (des Herzens) и der Name. Ошибки, два диалога (передача дежурства, звонок в практику), домашка с озвученными ответами.', pdf:'lessons/urok36_pdf.pdf', audio:'lessons/urok36_interactive.html', mins:22, hard:'Средне', cards:62, level:'B1'},
+  {id:'37', title:'Урок 37 — Genitiv', topic:'Падеж выписки: «чей? чего?». Артикли des/der (eines/einer, meines/meiner), у мужского и среднего окончание -s или -es у самого слова (des Fußes, des Oberschenkels), у женского и множественного — только der. Исключения: des Patienten, des Herzens, des Meniskus. Предлоги с Genitiv: wegen, trotz, während, innerhalb, aufgrund, statt. Как говорят (von + Dativ, wegen dem) и как надо писать. Язык Arztbrief: Fraktur des rechten Oberschenkels, Schwellung des linken Beines, Funktion der Niere, Kontrolle der Laborwerte. Ошибки, два диалога (приём с болью в колене, обход), домашка с озвученными ответами.', pdf:'lessons/urok37_pdf.pdf', audio:'lessons/urok37_interactive.html', mins:24, hard:'Плотно', cards:68, level:'B1'},
+  {id:'38', title:'Урок 38 — Относительные придаточные', topic:'«Пациент, который…», «препарат, который вы принимаете», «коллега, с которым я работаю». Два предложения в одно: местоимение сразу после слова, запятые, глагол в конец. Таблица почти совпадает с определённым артиклем — отличаются только denen и dessen/deren. Как выбрать форму: род и число от слова, падеж от роли внутри придаточного (der Patient, der / den / dem / dessen …). С предлогами: mit dem, in dem, auf den, vor der; was после alles и nichts. Врачебный блок: вопросы анамнеза и передача дежурства. Ошибки, два диалога, домашка с озвученными ответами.', pdf:'lessons/urok38_pdf.pdf', audio:'lessons/urok38_interactive.html', mins:24, hard:'Плотно', cards:50, level:'B1'},
+  {id:'39', title:'Урок 39 — Инфинитивные обороты', topic:'Язык рекомендаций пациенту: «важно принимать регулярно», «не забудьте позвонить», «делаем УЗИ, чтобы исключить тромбоз». zu + Infinitiv в конце после versuchen, vergessen, es ist wichtig (после модальных zu нет). У отделяемых zu внутри: anzurufen, einzunehmen, hochzulegen. um … zu — «чтобы»; когда вместо него нужен damit (разные люди). ohne … zu — «не сделав», statt … zu — «вместо того чтобы». Врачебный блок — рекомендации при выписке. Ошибки, два диалога (выписка, с коллегой про КТ), домашка с озвученными ответами.', pdf:'lessons/urok39_pdf.pdf', audio:'lessons/urok39_interactive.html', mins:24, hard:'Средне', cards:55, level:'B1'},
+  {id:'40', title:'Урок 40 — obwohl, trotzdem, deshalb', topic:'Слова, которыми врач объясняет решения: «хотя», «поэтому», «если», «иначе». Главное — два типа связок: после союзов придаточного (weil, obwohl, falls, da, sodass) глагол уходит в конец, после слов-связок на первом месте (deshalb, deswegen, darum, trotzdem, sonst) глагол стоит сразу. Пары по смыслу: weil ↔ deshalb, obwohl ↔ trotzdem, falls ↔ sonst; da, so … dass, sodass. Врачебный блок: «Da die Werte normal sind…», «Falls Sie Atemnot bekommen…», «Bewegen Sie sich, sonst steigt das Risiko…». Ошибки, два диалога (пациент пришёл поздно, выписка откладывается), домашка с озвученными ответами.', pdf:'lessons/urok40_pdf.pdf', audio:'lessons/urok40_interactive.html', mins:22, hard:'Средне', cards:47, level:'B1'},
+  {id:'41', title:'Урок 41 — Двойные союзы', topic:'Союзы из двух частей: sowohl … als auch («и … и», глагол во множественном), nicht nur … sondern auch («не только … но и»), entweder … oder («либо … либо»), weder … noch («ни … ни» — уже отрицание, без nicht и kein), je … desto («чем … тем»: je — глагол в конец, desto + сравнительная + глагол), zwar … aber. Врачебный блок: «weder Allergien noch Vorerkrankungen», «entweder Kompression oder Operation», «Je früher eine Thrombose erkannt wird, desto besser…». Ошибки, два диалога (приём с варикозом, разбор УЗИ — große und kleine Rosenvene), домашка с озвученными ответами.', pdf:'lessons/urok41_pdf.pdf', audio:'lessons/urok41_interactive.html', mins:22, hard:'Средне', cards:49, level:'B1'},
+  {id:'42', title:'Урок 42 — Партиципы как определение', topic:'«Прооперированный пациент», «кровоточащая рана», «лечащий врач», «при нарастающем отёке». Partizip II (форма из Perfekt) — действие уже совершено над предметом: der operierte Patient, die genähte Wunde. Partizip I (инфинитив + d) — предмет делает сам сейчас: die blutende Wunde, steigendes Fieber. Пара behandelnd/behandelt, замена относительного придаточного (der gestern operierte Patient), партиципы-существительные (der Verletzte, der Betroffene). Язык Arztbrief: bei zunehmender Schwellung, bei anhaltenden Schmerzen, in gebessertem Allgemeinzustand, die betroffene Vene wurde verödet. Ошибки, два диалога, домашка с озвученными ответами.', pdf:'lessons/urok42_pdf.pdf', audio:'lessons/urok42_interactive.html', mins:24, hard:'Плотно', cards:58, level:'B1'},
+  {id:'43', title:'Урок 43 — Косвенная речь', topic:'Как пересказать слова пациента — от разговора до выписки. Три способа: dass + обычная форма, без dass, Konjunktiv I (Der Patient gibt an, er habe Schmerzen). Смена местоимения ich → er/sie, вопросы через ob и W-слова, просьбы через sollen (Der Arzt sagt, ich soll mehr trinken). Формы Konjunktiv I: er habe, sei, könne, müsse, nehme; где форма совпадает — Konjunktiv II (sie hätten). Прошлое: er habe … gehabt, sie sei … gestürzt. Анамнез в выписке: berichten, angeben, verneinen. Ошибки, два диалога (доклад старшему врачу, пациент пересказывает жене), домашка с озвученными ответами.', pdf:'lessons/urok43_pdf.pdf', audio:'lessons/urok43_interactive.html', mins:24, hard:'Плотно', cards:57, level:'B1'},
+  {id:'44', title:'Урок 44 — Модальные глаголы как догадка', topic:'Второе значение модальных глаголов — догадка и чужие слова. Одна форма — два смысла: Der Patient muss operiert werden (нужно) и Das muss eine Thrombose sein (наверняка). Шкала уверенности врача: muss → dürfte → wird wohl → kann/könnte → kann nicht. sollen — «говорят, что» (Der Oberarzt soll streng sein), wollen — «утверждает, что сам» (Er will nichts getrunken haben). Догадка о прошлом: модальный в настоящем + Partizip II + haben/sein (Er muss gestürzt sein). Врач рассуждает о диагнозе вслух: рожа или тромбоз. Ошибки, два диалога (обход, ординаторская), домашка с озвученными ответами.', pdf:'lessons/urok44_pdf.pdf', audio:'lessons/urok44_interactive.html', mins:24, hard:'Средне', cards:65, level:'B1'},
+  {id:'45', title:'Урок 45 — bevor, nachdem, während', topic:'Союзы времени: как рассказать, что за чем было, и дать рекомендации до и после процедуры. bevor (перед тем как), nachdem (после того как), während (пока) — глагол в конец, «глагол, запятая, глагол». Главная тонкость — время после nachdem на шаг раньше: Perfekt при настоящем (Nachdem Sie die Tablette genommen haben, warten Sie…), Plusquamperfekt при прошедшем (Nachdem er gestürzt war, konnte er nicht laufen); после bevor и während — то же время. Ещё sobald, bis, seit/seitdem, solange. Ловушка: bevor/vor, nachdem/nach, während — союз или предлог. Рекомендации после ЭВЛК, анамнез «перелёт → боли → отёк», ошибки, два диалога, домашка с озвученными ответами.', pdf:'lessons/urok45_pdf.pdf', audio:'lessons/urok45_interactive.html', mins:24, hard:'Средне', cards:64, level:'B1'},
+  {id:'46', title:'Урок 46 — Устойчивые пары: eine Entscheidung treffen', topic:'Nomen-Verb-Verbindungen — пары «существительное + глагол», где глагол нельзя угадать по-русски: решение не «принимают», а treffen (eine Entscheidung treffen), вопрос «ставят» (eine Frage stellen), помощь leisten. Семейства по глаголам: stellen (Diagnose, Antrag), treffen (Maßnahmen), nehmen (Rücksicht, Stellung), geben (Bescheid, Auskunft), führen (Gespräch), halten (Vortrag), Kontakt aufnehmen, Termin vereinbaren, in Betracht ziehen. Пара или один глагол (entscheiden, beantragen) — письменный стиль выписки. Пары с предлогом: in Frage kommen, zur Verfügung stehen, in Anspruch nehmen, unter Kontrolle bringen, in Kauf nehmen. Врачебный блок (разъяснительная беседа, Arztbrief), ошибки (Entscheidung machen, Frage fragen), два диалога, домашка с озвученными ответами.', pdf:'lessons/urok46_pdf.pdf', audio:'lessons/urok46_interactive.html', mins:24, hard:'Средне', cards:63, level:'B1'},
+  {id:'47', title:'Урок 47 — Сбор анамнеза', topic:'Первый медицинский урок B1 — весь Aufnahmegespräch по порядку, по схеме учебника для врачей Deutsch für Ärztinnen und Ärzte (Springer): 8 частей анамнеза (Vorstellung, aktuelle Anamnese, Vorerkrankungen, Medikamente und Allergien, vegetative Anamnese, Familien-, Sozialanamnese, Verabschiedung). Как представиться иностранным врачом и попросить говорить медленнее, семь вопросов о боли (wo, seit wann, wie, wie stark, Ausstrahlung, was lindert, Begleitsymptome), тромбоз, гормоны и аллергии, наследственность и работа стоя. Связки, которые оценивают на экзамене: переход, ссылка на сказанное, переспрос, деликатный вопрос, резюме, предварительный диагноз. Ошибки (Was ist mit Ihnen los?), полный диалог с пациенткой с варикозом, домашка с пересказом в Konjunktiv I.', pdf:'lessons/urok47_pdf.pdf', audio:'lessons/urok47_interactive.html', mins:28, hard:'Плотно', cards:67, level:'B1'},
+  {id:'48', title:'Урок 48 — Осмотр пациента', topic:'Второй медицинский урок B1 — körperliche Untersuchung по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 6). Лестница вежливости из пяти ступеней: от Hinlegen! до Ich würde Sie bitten, sich hinzulegen (Konjunktiv II и zu внутри отделяемого глагола). Объявлять каждое действие (Ich taste jetzt … ab). Команды по системам: начало и конец осмотра (freimachen, anbehalten, sich anziehen), голова и шея, сердце и лёгкие (einatmen, die Luft anhalten), живот (Loslassschmerz), и главный для флеболога — осмотр ног стоя, отёк с ямкой, пульс на стопах, икра, УЗИ с пробой. Два языка: с пациентом abtasten, в выписке Palpation; запись находок (AZ, EZ, o. B., beidseits). Ошибки (Legen Sie bitte hin), диалог — продолжение урока 47, домашка с озвученными ответами.', pdf:'lessons/urok48_pdf.pdf', audio:'lessons/urok48_interactive.html', mins:28, hard:'Плотно', cards:83, level:'B1'},
+  {id:'49', title:'Урок 49 — Объяснить диагноз пациенту', topic:'Третий медицинский урок B1 — разговор после осмотра и УЗИ, по учебнику Deutsch für Ärztinnen und Ärzte (Springer). Схема из пяти шагов: что пациент уже знает → назвать диагноз → причина через сравнение → что дальше → проверить понимание. Термин простыми словами (also, das heißt, das bedeutet, dass …): Thrombose, Erysipel, Lymphödem, Vena saphena magna = die große Rosenvene, insuffizient = undicht; таблица «для коллег — для пациента». Сравнения (клапаны как вентили, Man kann sich das so vorstellen). Семь техник активного слушания из учебника: offene Frage, Nachfragen, Echoing, Ermutigung, Pausen, Paraphrasieren, Zusammenfassen. Habe ich mich verständlich ausgedrückt? вместо Haben Sie mich verstanden?, ответ на тревогу, ошибки, полный разговор с пациенткой из уроков 47–48, домашка с озвученными ответами.', pdf:'lessons/urok49_pdf.pdf', audio:'lessons/urok49_interactive.html', mins:26, hard:'Средне', cards:67, level:'B1'},
+  {id:'50', title:'Урок 50 — Доклад коллеге', topic:'Четвёртый медицинский урок B1 — Patientenvorstellung, вторая часть FSP (Arzt-Arzt-Gespräch), по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 8). Схема SOAP: subjektiv, objektiv, Assessment, Plan. Первая фраза: eine 46-jährige Patientin, die sich wegen … vorstellt. Пересказ слов пациента (berichtet, klagt über, gibt an; устно Präsens, письменно Konjunktiv I), анамнез одной строкой (unauffällig bis auf, ergab, wird verneint), находки в Präteritum, оценка и дифференциальный диагноз по убыванию вероятности (deutet am ehesten auf … hin, dafür/dagegen spricht, kommt in Betracht), план через würde и Sollte …, würde ich. Звонок старшему врачу, ошибки, полный доклад той же пациентки из уроков 47–49 Oberärztin по телефону, домашка с озвученными ответами.', pdf:'lessons/urok50_pdf.pdf', audio:'lessons/urok50_interactive.html', mins:26, hard:'Плотно', cards:59, level:'B1'},
+  {id:'51', title:'Урок 51 — Беседа перед вмешательством', topic:'Пятый медицинский урок B1 — Aufklärungsgespräch по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 10.1). Правила в Германии: кто разъясняет, когда, что обязательно сказать, без давления, документация (бланк без беседы не считается), дети, Betreuer, Vorsorgevollmacht, Patientenverfügung; пометка про Австрию. Пять частей беседы: диагноз, ход вмешательства (пассив), риски, альтернативы, что после. Главная формула Es kann zu + Dativ + kommen и частота: häufig, gelegentlich, selten, sehr selten, bei einem von hundert. Решение без давления: Die Entscheidung liegt bei Ihnen, Bedenkzeit, widerrufen. Ошибки (Es kann eine Thrombose kommen), полная беседа об ЭВЛК с пациенткой из уроков 47–50, домашка с озвученными ответами.', pdf:'lessons/urok51_pdf.pdf', audio:'lessons/urok51_interactive.html', mins:28, hard:'Плотно', cards:66, level:'B1'},
+  {id:'52', title:'Урок 52 — Обследования: анализы, УЗИ, КТ, МРТ', topic:'Шестой медицинский урок B1 — weiterführende Untersuchungen, слова по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 9). Как сказать о результате: im Normbereich, unauffällig, auffällig, erhöht, erniedrigt. Анализы (Blutbild, Gerinnung, D-Dimere, Quickwert, Kreatinin, CRP) и как немцы читают сокращения: цэ-эр-пэ, ха-бэ, эм-эр-тэ. Назначить и заказать: anfordern, anmelden, Blut abnehmen, nüchtern. Слова лучевой диагностики (Schallkopf, echoarm, Kontrastmittel, Schicht). Подготовка к КТ и МРТ: контраст, почки, металл, Platzangst. Описание дуплекса вен: komprimierbar, lässt sich nicht komprimieren, Reflux, Mündungsklappe, Durchmesser beträgt. Ошибки (Analyse, UZI), разговор с пациенткой с тромбозом подколенной вены, домашка с озвученными ответами.', pdf:'lessons/urok52_pdf.pdf', audio:'lessons/urok52_interactive.html', mins:26, hard:'Средне', cards:67, level:'B1'},
+  {id:'53', title:'Урок 53 — Трудный разговор: плохая новость', topic:'Седьмой медицинский урок B1 — das schwere Gespräch по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 10.3). Что такое трудный разговор и пять правил: время и порядок, сначала спросить, предупредить (Leider habe ich keine guten Nachrichten), пауза, честность. Четыре фазы с опорными фразами из таблиц учебника: сообщить (hat leider ergeben, dass; Es besteht der Verdacht; Ich wünschte, ich könnte …), выслушать (Ich sehe, Sie sind geschockt; einen Moment Ruhe), что дальше (gemeinsam entscheiden), завершить (Wir haben vereinbart …). Надежда без обмана: честный ответ на «сколько мне осталось?». Ошибки (Das wird schon wieder, Machen Sie sich keine Sorgen), разговор с пациенткой из урока 52, у которой на КТ подозрение на опухоль, домашка с озвученными ответами.', pdf:'lessons/urok53_pdf.pdf', audio:'lessons/urok53_interactive.html', mins:26, hard:'Плотно', cards:61, level:'B1'},
+  {id:'59', title:'Урок 59 — Meinung, Diskussion, Kritik: спор на разборе случая', topic:'Четыре темы в одном уроке: мнение, аргументы, спор, критика — на примере разбора пациентки с варикозом. Meiner Meinung nach ist … (глагол сразу), Ich denke, dass … (глагол в конец), halten für. Аргументы: Dafür/Dagegen spricht, dass …, erstens, außerdem, deshalb. Лестница согласия: Da stimme ich Ihnen zu → zwar …, aber → einerseits … andererseits → Ich sehe das etwas anders → Ich gebe zu bedenken. Смягчение Konjunktiv II (Wäre es nicht sinnvoller …?), ход дискуссии (Darf ich ergänzen? Lassen Sie mich ausreden), критика: сказать и принять. Иерархия клиники (Chefarzt/Primar, Oberarzt, Facharzt, Assistenzarzt). Диалог-разбор «лазер или операция», ошибки, домашка.', pdf:'lessons/urok59_pdf.pdf', audio:'lessons/urok59_interactive.html', mins:22, hard:'Средне', cards:71, level:'B1'},
+  {id:'60', title:'Урок 60 — Perfekt со всеми глаголами: «что случилось?»', topic:'Все пять типов глаголов в Perfekt: слабые (gefragt, gearbeitet), сильные со сменой корня (genommen, geholfen, geschrieben), смешанные (gebracht, gewusst), отделяемые приставки (aufgestanden, angerufen, Blut abgenommen) и без ge — be-/ver-/er-/ent- и -ieren (untersucht, verstanden, operiert). haben или sein: движение, смена состояния, sein/bleiben/passieren; 🇦🇹 «ich bin gesessen». Порядок слов (…, dass ich die Tablette genommen habe), модальные — в Präteritum. Диалог в приёмном: пациентка упала на лестнице. Ошибки и домашка.', pdf:'lessons/urok60_pdf.pdf', audio:'lessons/urok60_interactive.html', mins:22, hard:'Средне', cards:125, level:'A2'},
+  {id:'61', title:'Урок 61 — Здоровье и самочувствие: «Wie geht es Ihnen?»', topic:'Как рассказать о самочувствии и что болит: Wie geht es Ihnen?, sich fühlen, Mir ist schlecht / schwindlig / kalt (Dativ ощущений), wehtun + Dativ и Schmerzen, бытовые болезни с артиклями, seit / vor + Dativ, советы врача через sollten, больничный (🇦🇹 Krankenstand). Диалог у семейного врача.', pdf:'lessons/urok61_pdf.pdf', audio:'lessons/urok61_interactive.html', mins:25, hard:'Средне', cards:83, level:'A2'},
+  {id:'62', title:'Урок 62 — Свободное время и хобби: «Was machen Sie gern?»', topic:'Досуг и хобби: Freizeit-глаголы, Sport treiben / Tennis spielen / Rad fahren, gern → lieber → am liebsten, частотность nie–selten–manchmal–oft–immer, sich interessieren für, Lust haben, Spaß machen, пригласить и вежливо отказаться. Медицина: хобби в анамнезе и какое движение советовать при варикозе.', pdf:'lessons/urok62_pdf.pdf', audio:'lessons/urok62_interactive.html', mins:22, hard:'Легко', cards:68, level:'A2'},
+  {id:'63', title:'Урок 63 — Чувства и эмоции: «Ich habe Angst vor der Operation»', topic:'Слова чувств (froh, traurig, nervös, besorgt, enttäuscht, erleichtert), Angst haben vor + Dativ, sich freuen auf и über — разница, sich ärgern über, sich Sorgen machen um (mir!), причина через weil. Медицина: как врач называет и успокаивает страх пациента; диалог перед лазерной операцией.', pdf:'lessons/urok63_pdf.pdf', audio:'lessons/urok63_interactive.html', mins:24, hard:'Средне', cards:57, level:'A2'},
+  {id:'64', title:'Урок 64 — Телефонные разговоры: «Könnten Sie mich bitte verbinden?»', topic:'Телефон по-деловому: представиться с названием места, вежливые просьбы Konjunktiv II (Könnten Sie…? Ich hätte gern…), косвенные вопросы (Können Sie mir sagen, wann…? Wissen Sie, ob…?), соединить, перезвонить, оставить сообщение, продиктовать по буквам и цифрам, записать пациента. Диалог: звонок в рентгенологию.', pdf:'lessons/urok64_pdf.pdf', audio:'lessons/urok64_interactive.html', mins:25, hard:'Средне', cards:57, level:'B1'},
+  {id:'65', title:'Урок 65 — Учреждения и бюрократия: «Welche Unterlagen brauche ich?»', topic:'Австрийские ведомства (Magistrat, Meldeamt, MA 35, ÖGK, Finanzamt), документы для переезда (Meldezettel, Geburtsurkunde, Apostille, beglaubigte Übersetzung, Unterlagen), анкета, язык ведомств — пассив с модальными (muss ausgefüllt werden), um … zu / damit, Ich bräuchte…, нострификация. Диалог: прописка в Граце.', pdf:'lessons/urok65_pdf.pdf', audio:'lessons/urok65_interactive.html', mins:26, hard:'Средне', cards:67, level:'B1'},
+  {id:'66', title:'Урок 66 — Резюме и собеседование: «Erzählen Sie etwas über sich»', topic:'Lebenslauf и Bewerbung врача (Studium der Humanmedizin, Facharztausbildung, Zeugnis), сроки von … bis / seit / nach / während, рассказ о себе в Perfekt, сильные и слабые стороны (belastbar, teamfähig, sorgfältig), мотивация, свои вопросы работодателю. 🇦🇹 Basisausbildung, Nachtdienst. Диалог: собеседование в LKH Graz.', pdf:'lessons/urok66_pdf.pdf', audio:'lessons/urok66_interactive.html', mins:26, hard:'Средне', cards:53, level:'B1'},
+  {id:'67', title:'Урок 67 — Рассказ о событиях в прошлом: «Und dann ist es passiert»', topic:'Как рассказать, что случилось: Perfekt в разговоре и Präteritum в тексте (war, hatte, konnte), als — один раз / wenn — каждый раз, связки zuerst, dann, plötzlich, schließlich, damals, früher, nachdem + Plusquamperfekt. Медицина: рассказ пациента → анамнез в выписке (berichtete, gab an, verneint). Диалог: одышка ночью.', pdf:'lessons/urok67_pdf.pdf', audio:'lessons/urok67_interactive.html', mins:24, hard:'Средне', cards:47, level:'B1'},
+  {id:'68', title:'Урок 68 — Описание процессов: «Zuerst wird die Haut desinfiziert»', topic:'Как описать процедуру по шагам: пассив wird + Partizip II (Die Haut wird desinfiziert), с модальными (muss getragen werden), слова порядка zuerst – anschließend – zum Schluss, инструкции (Imperativ и инфинитив в памятке), цель um … zu / damit. Медицина: забор крови и ЭВЛК 1940 нм шаг за шагом для пациента.', pdf:'lessons/urok68_pdf.pdf', audio:'lessons/urok68_interactive.html', mins:24, hard:'Средне', cards:48, level:'B1'},
+  {id:'69', title:'Урок 69 — Понимание сложных текстов: Beipackzettel und Zeitungsartikel', topic:'Как читать сложный текст: стратегии (überfliegen, gezielt suchen), длинные слова — с конца (Blutdrucksenker, Wechselwirkung), именной стиль → глагол (bei Einnahme = wenn man einnimmt), связки jedoch, daher, außerdem, sofern, bzw. Медицина: Packungsbeilage — показания, противопоказания, взаимодействия, дозировка, побочные; заметка о венах.', pdf:'lessons/urok69_pdf.pdf', audio:'lessons/urok69_interactive.html', mins:25, hard:'Средне', cards:52, level:'B1'},
+  {id:'70', title:'Урок 70 — Расширенные определения: «der seit drei Tagen über Schmerzen klagende Patient»', topic:'Расширенные определения и партиципиальные обороты: der seit Tagen klagende Patient = der Patient, der seit Tagen klagt; алгоритм чтения (артикль → существительное → середина справа налево), Partizip I и II, zu + Partizip I (die zu untersuchende Probe), обособленные обороты (Im Krankenhaus angekommen, …). Медицина: фразы из выписки и рекомендаций — читаем и упрощаем для пациента.', pdf:'lessons/urok70_pdf.pdf', audio:'lessons/urok70_interactive.html', mins:26, hard:'Сложно', cards:33, level:'B2'},
+  {id:'71', title:'Урок 71 — Номинализация: «Nach Aufnahme erfolgte die Einleitung einer Antibiose»', topic:'Номинализация: глагол → существительное (-ung, -tion, das + инфинитив), семь пар «союз ↔ предлог» (weil → wegen, wenn → bei, nachdem → nach, bevor → vor, während, um … zu → zur, obwohl → trotz), дополнение в Genitiv, исполнитель через durch, глаголы erfolgen / durchführen / es kam zu. Медицина: язык выписки — и как пересказать её пациенту просто.', pdf:'lessons/urok71_pdf.pdf', audio:'lessons/urok71_interactive.html', mins:25, hard:'Сложно', cards:42, level:'B2'},
+  {id:'72', title:'Урок 72 — Приставки глаголов: «Blut abnehmen, Tabletten einnehmen, krankschreiben»', topic:'Приставки глаголов: семья nehmen (Blut abnehmen, Tabletten einnehmen, stationär aufnehmen, eine Probe entnehmen, annehmen, übernehmen), смысл неотделяемых be- ver- ent- er- zer-, двойные über- um- unter- durch- wieder- (ударение решает: übersetzen / übersetzen), семья schreiben (verschreiben, krankschreiben, sich verschreiben). Диалог перед склеротерапией.', pdf:'lessons/urok72_pdf.pdf', audio:'lessons/urok72_interactive.html', mins:24, hard:'Сложно', cards:48, level:'B2'},
+  {id:'73', title:'Урок 73 — Сложные коннекторы: «sobald, indem, sodass, es sei denn»', topic:'Коннекторы B2 и где после них глагол: время (sobald, solange), способ (indem, dadurch dass), следствие (sodass, so … dass, folglich, infolgedessen), условие (sofern, es sei denn), контраст и уступка (zumal, wohingegen, ohne dass, anstatt dass). Медицина: связно объясняем план ЭВЛК и рекомендации после операции.', pdf:'lessons/urok73_pdf.pdf', audio:'lessons/urok73_interactive.html', mins:24, hard:'Сложно', cards:31, level:'B2'},
+  {id:'74', title:'Урок 74 — Регистр: «Wasser in den Beinen» = «Ödeme» — как говорят пациент, врач и выписка', topic:'Три языка врача: как говорит пациент (Umgangssprache: ich hab’, ’nen, halt, total, keinen Bock), как врач объясняет пациенту (Laiensprache: Blutgerinnsel, Blutverdünnung) и как пишет коллеге (Fachsprache: Ödeme, Varikosis bds.). Sie и du, формальное письмо и сообщение, 🇦🇹 Grüß Gott и Passt, пять ступеней вежливости. Ядро устной FSP.', pdf:'lessons/urok74_pdf.pdf', audio:'lessons/urok74_interactive.html', mins:24, hard:'Средне', cards:34, level:'B2'},
+  {id:'75', title:'Урок 75 — Идиомы: «Mir ist eine Laus über die Leber gelaufen» — и это не про печень', topic:'Идиомы для врача: ловушки с органами, которые не про болезнь (Laus über die Leber, geht an die Nieren, die Nase voll, Kloß im Hals), как пациент описывает самочувствие (wie gerädert, hundeelend, nicht auf dem Damm, wieder auf den Beinen), выражения для разговора с коллегами (auf der Hand liegen, nicht in Stein gemeißelt, ein dickes Fell, die Daumen drücken) и 🇦🇹 eh, Wurscht, geht sich aus.', pdf:'lessons/urok75_pdf.pdf', audio:'lessons/urok75_interactive.html', mins:22, hard:'Средне', cards:38, level:'B2'},
+  {id:'76', title:'Урок 76 — Формальное письмо: «Ich wende mich an Sie, weil …»', topic:'Деловое письмо по-немецки: шесть частей (Betreff, Anrede, Einleitung, Hauptteil, Schluss, Gruß), запятая и строчная после обращения, Redemittel для просьбы, вопроса, приложения, переноса и жалобы (Ich wäre Ihnen dankbar, wenn …; Anbei sende ich …; Wäre es möglich, …), прощания по шкале. Два образца: письмо в университет о признании диплома и коллеге за заключением.', pdf:'lessons/urok76_pdf.pdf', audio:'lessons/urok76_interactive.html', mins:22, hard:'Средне', cards:33, level:'B2'},
+  {id:'77', title:'Урок 77 — Переговоры: «Ich wäre bereit, …, wenn …»', topic:'Переговоры врача: предложить (Wie wäre es, wenn …; Was halten Sie davon, …), согласиться, засомневаться или отказать (Das kommt für mich nicht in Frage), компромисс через условие (Ich wäre bereit, …, wenn …; unter der Bedingung, dass …; Können wir uns darauf einigen …), взять паузу. Три ситуации: пациентка не хочет носить чулок, обмен дежурствами, разговор о зарплате.', pdf:'lessons/urok77_pdf.pdf', audio:'lessons/urok77_interactive.html', mins:22, hard:'Средне', cards:33, level:'B2'},
+  {id:'78', title:'Урок 78 — Беглая речь и диалекты: «Mir tut der Fuß weh» — а болит вся нога', topic:'Беглая речь и 🇦🇹 Австрия: как сжимается живая речь (i, net, des, gemma, schau ma — для узнавания на слух), австрийская больница (Ordination, Spital, Krankenstand, Rettung, Primar, e-card, Kreuzweh), ловушка флеболога «Fuß» = вся нога, Haxen и Wadl, и как вежливо переспросить (Habe ich richtig verstanden, dass …?). Диалог: приём в Вене.', pdf:'lessons/urok78_pdf.pdf', audio:'lessons/urok78_interactive.html', mins:22, hard:'Средне', cards:34, level:'B2'},
+  {id:'79', title:'Урок 79 — Обход: «Die Patientin gibt an, die Schmerzen hätten nachgelassen»', topic:'Первый урок C1. Доклад на обходе на 3-й день (Verlaufsvorstellung): пять шагов от рамки до Procedere, слова пациентки в Konjunktiv I (sie habe, die Schmerzen hätten nachgelassen) и свои находки в Indikativ, язык динамики (rückläufig, regredient, afebril, kreislaufstabil), осторожные формулировки (am ehesten, kommt in Betracht), честный ответ «посмотрю и сообщу» и переход на простую речь с пациенткой. Случай — рожа голени.', pdf:'lessons/urok79_pdf.pdf', audio:'lessons/urok79_interactive.html', mins:26, hard:'Сложно', cards:36, level:'C1'},
+  {id:'80', title:'Урок 80 — M&M-конференция: «Rückblickend hätte eine Duplexsonographie durchgeführt werden müssen»', topic:'Разбор осложнения на M&M-конференции: Konjunktiv II прошедшего (hätte / wäre + Partizip II), с модальным — двойной инфинитив (hätte durchführen müssen), в придаточном hätte перед ним, пассив (hätte durchgeführt werden müssen). Структура разбора от случая до Lernpunkte, язык без поиска виноватых, меры: SOP, чек-лист, CIRS. Случай — пропущенный ТГВ и ТЭЛА.', pdf:'lessons/urok80_pdf.pdf', audio:'lessons/urok80_interactive.html', mins:26, hard:'Сложно', cards:34, level:'C1'},
+  {id:'81', title:'Урок 81 — FSP целиком: один пациент — три части экзамена', topic:'Fachsprachprüfung целиком на одной пациентке с ТГВ: формат из трёх частей, порядок анамнеза по чек-листу (жалобы по схеме, вегетативный анамнез, лекарства, аллергии, Noxen, семья и быт), ответ пациентке простым языком, запись в документацию (Konjunktiv I, Nominalstil, py, V. a.), доклад экзаменатору, дифдиагнозы и «объясните термин».', pdf:'lessons/urok81_pdf.pdf', audio:'lessons/urok81_interactive.html', mins:30, hard:'Сложно', cards:38, level:'C1'},
+  {id:'82', title:'Урок 82 — Конфликт: «Ich kann gut nachvollziehen, dass Sie verärgert sind»', topic:'Деэскалация: сначала эмоция, потом факты — пять шагов NURSE (Ich merke, dass Sie verärgert sind; Ich kann gut nachvollziehen …), извинение без признания вины, фразы, которые только злят, и чем их заменить, границы через Ich-Botschaft, трудные требования (интернет, антибиотик, МРТ, второе мнение), куда направить жалобу. Диалог: дочь пациента в приёмном в 3 часа ночи.', pdf:'lessons/urok82_pdf.pdf', audio:'lessons/urok82_interactive.html', mins:24, hard:'Сложно', cards:32, level:'C1'},
+  {id:'83', title:'Урок 83 — Телефон врача: «Ich wiederhole: vierzig Milligramm, einmal täglich»', topic:'Телефон врача на C1: звонок коллеге (имя, должность, отделение, пациент и повод — в первой фразе), цифры и фамилии (zwo, по цифрам, обратное повторение дозы, алфавит 🇩🇪 по городам и 🇦🇹 по именам), родственники и врачебная тайна (что можно и нельзя без согласия), перевод пациента в другую клинику. Диалог: звонок семейному врачу за старым заключением.', pdf:'lessons/urok83_pdf.pdf', audio:'lessons/urok83_interactive.html', mins:24, hard:'Средне', cards:32, level:'C1'},
+  {id:'84', title:'Урок 84 — Учим студентку: «Ich zeige es dir einmal, dann machst du es»', topic:'Как учить по-немецки: кто такие Famulant, KPJ и Basisausbildung, переход на du, объяснение по шагам (Ich zeige es dir einmal, dann machst du es; Achte darauf, dass …), открытые вопросы, которые учат клиническому мышлению, проверка «своими словами», обратная связь в три шага. Диалог: учим студентку компрессионному УЗИ вен.', pdf:'lessons/urok84_pdf.pdf', audio:'lessons/urok84_interactive.html', mins:24, hard:'Средне', cards:34, level:'C1'},
+  {id:'85', title:'Урок 85 — Тяжёлый разговор: «Ich muss Ihnen leider eine schlechte Nachricht überbringen»', topic:'Тяжёлый разговор с родственниками по схеме SPIKES: место и начало (Was wissen Sie bisher?), «предупредительный выстрел», короткие фразы без латыни и эвфемизмов (verstorben, не eingeschlafen), пауза и сочувствие, честный прогноз и неопределённость (надежда + опасение, «через три дня будем знать больше»), предполагаемая воля пациента (Was hätte Ihr Mann gewollt?). Случай — первые сутки после реанимации.', pdf:'lessons/urok85_pdf.pdf', audio:'lessons/urok85_interactive.html', mins:26, hard:'Сложно', cards:34, level:'C1'},
+  {id:'86', title:'Урок 86 — Паллиатив: «Wir können noch viel für Sie tun»', topic:'Паллиативный разговор: смена цели лечения без «мы ничего не можем» (nicht mehr die Heilung, sondern die Lebensqualität), вопросы о том, что важно пациенту, контроль симптомов (lindern, морфин и одышка, mobiles Palliativteam), документы: Patientenverfügung, Vorsorgevollmacht, DNR/DNI, «в сомнении — за жизнь», этическая консультация. Диалог: пациентка выбирает лечение дома.', pdf:'lessons/urok86_pdf.pdf', audio:'lessons/urok86_interactive.html', mins:26, hard:'Сложно', cards:33, level:'C1'},
+  {id:'87', title:'Урок 87 — Tumorboard: «Es zeigt sich ein Tumorthrombus bis unterhalb der Lebervenen»', topic:'Междисциплинарный консилиум: представить случай и Fragestellung за три фразы, понимать язык радиологического описания (Es zeigt sich …, glatt begrenzt, KM-aufnehmend, kein Anhalt für …, vereinbar mit …), задавать радиологу вопросы под своё решение, формулировать консенсус и рекомендацию с условием (Sollte sich … zeigen, wäre … zu erwägen). Случай — рак почки с тромбом в нижней полой вене.', pdf:'lessons/urok87_pdf.pdf', audio:'lessons/urok87_interactive.html', mins:26, hard:'Сложно', cards:31, level:'C1'},
+  {id:'88', title:'Урок 88 — Ночное дежурство: «Ich brauche Ihre Einschätzung — bitte kommen Sie»', topic:'Дежурство на C1: ISBAR по буквам (Identify, Situation, Background, Assessment, Recommendation), прямая просьба к старшему врачу (Bitte kommen Sie / Was soll ich anordnen? / Ich brauche Ihre Einschätzung), обратное повторение, утренняя передача смены (offene Punkte, ausstehend, im Auge behalten) и критерии звонка (Rufen Sie mich an, wenn …). Случай — ночное кровотечение из паха после кроссэктомии.', pdf:'lessons/urok88_pdf.pdf', audio:'lessons/urok88_interactive.html', mins:24, hard:'Сложно', cards:30, level:'C1'},
+  {id:'89', title:'Урок 89 — Обратная связь: «Können Sie mir ein konkretes Beispiel nennen?»', topic:'Критика и рост: принять критику в четыре шага (Danke … Können Sie mir ein konkretes Beispiel nennen? … Ich werde …), ответить на справедливую (Das hätte ich früher melden sollen) и вежливо возразить на несправедливую, ежегодная беседа по частям (Rückblick, Stärken, Entwicklungsfelder, Ziele, Unterstützung), цели со сроком (Mein Ziel ist es, bis … zu …), просьбы о курсах и ротации, 🇩🇪 Logbuch и 🇦🇹 Rasterzeugnis.', pdf:'lessons/urok89_pdf.pdf', audio:'lessons/urok89_interactive.html', mins:24, hard:'Средне', cards:33, level:'C1'},
+  {id:'90', title:'Урок 90 — Исследование: «Die Teilnahme ist freiwillig — Sie können jederzeit aussteigen»', topic:'Исследования на C1: словарь (randomisiert, doppelblind, Placebo, primärer Endpunkt, signifikant, Metaanalyse, Dosis-Wirkungs-Beziehung) и как сказать то же пациенту (per Zufall, wie beim Münzwurf), права участника (freiwillig, jederzeit ohne Nachteile aussteigen, pseudonymisiert, Ethikkommission, Bedenkzeit), без обещаний пользы, проверка понимания teach-back. Диалог: приглашение в исследование компрессии после ЭВЛК.', pdf:'lessons/urok90_pdf.pdf', audio:'lessons/urok90_interactive.html', mins:24, hard:'Сложно', cards:32, level:'C1'},
+  {id:'91', title:'Урок 91 — Arztbrief C1: «Die Beschwerden sind am ehesten auf … zurückzuführen»', topic:'Выписка на C1: структура письма и логика эпикриза, академические обороты носителей (am ehesten auf … zurückzuführen, zum Ausschluss, anhand, bei Vorhandensein, eine Indikation darstellen, nach Nutzen-Risiko-Abwägung, aufweisen), лекарства при выписке с пометками neu / abgesetzt и сроками, конкретные рекомендации семейному врачу, правка черновика старшим врачом. Случай — выписка пациентки с рожей из урока 80.', pdf:'lessons/urok91_pdf.pdf', audio:'lessons/urok91_interactive.html', mins:26, hard:'Сложно', cards:30, level:'C1'},
+  {id:'92', title:'Урок 92 — Право врача: «Was nicht dokumentiert ist, gilt als nicht gemacht»', topic:'Право в ежедневных фразах: разъяснение перед вмешательством (устно, своевременно, понятно, риски, альтернативы, время подумать — бланк не заменяет разговор), документация (zeitnah, nachvollziehbar, хранение от 10 лет, «не задокументировано — значит, не сделано», право пациента на карту), отказ от лечения и способность к согласию, врачебная тайна и защита данных, соцсети врача. Не юридическая консультация.', pdf:'lessons/urok92_pdf.pdf', audio:'lessons/urok92_interactive.html', mins:24, hard:'Сложно', cards:34, level:'C1'},
+  {id:'93', title:'Урок 93 — Доклад на конгрессе: «Unsere Daten deuten darauf hin, dass …»', topic:'Доклад на конгрессе по-немецки: вступление и обязательный слайд о конфликте интересов, как вести зал по слайдам (Wie Sie hier sehen …, Damit komme ich zu …, Zusammenfassend lässt sich sagen …), осторожная подача результатов и ограничений (deuten darauf hin, retrospektiv, monozentrisch), ответы на вопросы из зала по схеме, вежливое возражение и знакомство в перерыве. Пример — доклад об ЭВЛК 1940 нм.', pdf:'lessons/urok93_pdf.pdf', audio:'lessons/urok93_interactive.html', mins:24, hard:'Сложно', cards:32, level:'C1'},
+  {id:'94', title:'Урок 94 — Типы текстов: «Für … spricht, dass … Dagegen lässt sich einwenden, dass …»', topic:'Типы немецких текстов и их схемы: Bericht, Erörterung, Stellungnahme, Zusammenfassung, Packungsbeilage, Abstract. Рассуждение по схеме pro → contra → Fazit со связками (Für … spricht, dass …; Dagegen lässt sich einwenden …; Daraus lässt sich schließen …), резюме чужого текста в Präsens без своего мнения, разделы вкладыша и точные частоты побочных эффектов (häufig = до 1 из 10), структура абстракта. Для письменной части экзаменов B2/C1.', pdf:'lessons/urok94_pdf.pdf', audio:'lessons/urok94_interactive.html', mins:24, hard:'Средне', cards:29, level:'B2'},
+  {id:'58', title:'Урок 58 — Notfall in der Praxis: неотложные состояния', topic:'Неотложка глазами флеболога (факты — Herold, Innere Medizin 2020). Вызов скорой в Австрии (die Rettung, 144; Германия 112), «пять W». Схема ABCDE. Обморок на приёме: Mir wird schwarz vor Augen, Beine hoch. Анафилаксия: степени 0–IV, flach lagern, Adrenalin 0,3–0,5 mg i.m., 24 Stunden Überwachung. Тромбоэмболия: Ich bekomme plötzlich keine Luft, Wells-Score, D-Dimere, CT-Angiographie. Реанимация: 30 : 2, 5–6 cm, 100–120/min, Defibrillator, команды. Передача врачу скорой по ISBAR. Диалог: реакция после склеротерапии. Ошибки (Ruf die Rettung!, allergisch gegen), домашка.', pdf:'lessons/urok58_pdf.pdf', audio:'lessons/urok58_interactive.html', mins:22, hard:'Плотно', cards:79, level:'B1'},
+  {id:'57', title:'Урок 57 — Флебология по-немецки: Varikose und CVI', topic:'Своя специальность на немецком (факты — Herold, Innere Medizin 2020). Три системы вен: oberflächlich (große und kleine Rosenvene, Crosse), tief, Perforansvenen; Venenklappen, Muskelpumpe. Varikose, Varizen, Krampfadern; Stammvarikose, Seitenast, retikuläre Varizen, Besenreiser; primär und sekundär. Стадии: Hach I–IV, CEAP C0–C6, CVI по Widmer. Жалобы пациента ↔ термины (Schweregefühl, Knöchelödem, Wadenkrampf), Merke: хуже вечером и стоя, лучше лёжа и при ходьбе. Дуплекс: два вопроса и формулировки Befund. Лечение: Kompression, Crossektomie und Stripping, Laser, RFA, Verödung. Как объяснить пациенту (die Rosenvene ist undicht), диалог с пациентом, доклад старшему врачу, ошибки, домашка.', pdf:'lessons/urok57_pdf.pdf', audio:'lessons/urok57_interactive.html', mins:24, hard:'Плотно', cards:100, level:'B1'},
+  {id:'56', title:'Урок 56 — Einen Fachvortrag halten: научный доклад', topic:'Десятый медицинский урок по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 12). Правила хорошего доклада и шесть частей: Einleitung, Fragestellung, Methoden, Ergebnisse, Zusammenfassung, Ausblick. Готовые фразы для каждой части (Ich möchte Ihnen heute … vorstellen, Wie Sie wissen, Es zeigte sich, dass …, Zusammenfassend kann man feststellen …). Пассив — язык науки: konnte gezeigt werden, wurde durchgeführt, kann durchgeführt werden; operieren во всех временах (bin operiert worden). Короткий доклад об ЭВЛК целиком (цифры условные), слова презентации, числа и проценты вслух (null Komma eins Prozent), вопросы после доклада, ошибки, домашка.', pdf:'lessons/urok56_pdf.pdf', audio:'lessons/urok56_interactive.html', mins:22, hard:'Плотно', cards:86, level:'B1'},
+  {id:'55', title:'Урок 55 — Interkulturelle Kommunikation: пациент из другой культуры', topic:'Девятый медицинский урок B1 по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 11). Четыре стороны сообщения Шульца фон Туна (Sachinhalt, Selbstoffenbarung, Beziehung, Appell): «Du, da vorne ist grün» и «Herr Doktor, es tut immer noch weh». Истории «чай» и «пианино», случаи из немецких больниц по Рафику Шами, Herr H. (вегетарианец, а не «мусульманин без свинины») и фрау Айдоган («болит печень» = тоска). Фразы врача: спросить, а не решить за пациента (Dolmetscherin, Ärztin, Ernährung, Religion), Dolmetscher ≠ Übersetzer. Русские ловушки: Mein Herz tut weh, Ich habe Druck, Ich habe Temperatur. Австрия: Grüß Gott, Primar, Spital, Ambulanz. Два диалога (флебоприём на Sie, медсестра на du), ошибки, домашка.', pdf:'lessons/urok55_pdf.pdf', audio:'lessons/urok55_interactive.html', mins:24, hard:'Средне', cards:113, level:'B1'},
+  {id:'54', title:'Урок 54 — Arztbrief: врачебное письмо', topic:'Восьмой медицинский урок B1 — письменная часть FSP по учебнику Deutsch für Ärztinnen und Ärzte (Springer, гл. 13). Оформление (шапка, Nachrichtlich, Sehr geehrte Frau Kollegin, wir berichten über unsere gemeinsame Patientin …, Mit freundlichen kollegialen Grüßen) и шесть разделов письма. Главное — три правила времён: до поступления Präteritum, слова пациента Konjunktiv I (sie habe, sei aufgetreten), находки Präsens; лечение — Präteritum (Wir führten … durch), рекомендация — Präsens. Формы Konjunktiv I, телеграфный стиль (wird verneint, kein Fieber), сокращения (Z. n., V. a., bds., o. B., WV, TLA). Целое письмо о пациентке после ЭВЛК — по абзацам со звуком. Ошибки, домашка: написать письмо о пациентке с тромбозом.', pdf:'lessons/urok54_pdf.pdf', audio:'lessons/urok54_interactive.html', mins:26, hard:'Плотно', cards:53, level:'B1'},
+];
+
+// Занятия с репетитором Дашей (Австрия) — раз в неделю, воскресенье 20:00
+const DASHA = [
+  {id:'d13', num:'Занятие 13', date:'≈02.11.2026', title:'Мебель, описание картинки и цены',
+   topic:'О жизни: в Австрии много платят наличными, такси дорогое, общественный транспорт отличный. Мебель: Sofa/Couch, Bett, Lampe, Vase, Fenster, Fernseher (fern + sehen), Teppich, Sessel, Tisch, Tür, Kommode, Stuhl, Schreibtisch, Spiegel, Regal, Bild, Schrank, Kissen. Описание картинки: es gibt, ich sehe, auf dem Bild, im Hintergrund/Vordergrund, обратный порядок (Auf dem Bild sehe ich…), stehen/liegen/hängen (das Bild hängt). modern, praktisch, billig = günstig, teuer, zu teuer, Sonderangebot. Числа и цены: 1 478 Euro, 119 Euro, сначала hundert, потом tausend; 9,99 € = neun Euro neunundneunzig. Разговор в магазине (Verkäufer/Kundin). Домашка: текст про дом Клары с вопросами, слабые и сильные глаголы, Plural (20), притяжательные, по 3 предложения с fahren/essen/lesen/sehen/helfen/schlafen/tragen.',
+   pdf:'', audio:'dasha/dasha13_interactive.html', mins:77, hard:'Средне', cards:134,
+   photos:['dasha/dasha13_hw_klara.jpg','dasha/dasha13_hw_schwach.jpg','dasha/dasha13_hw_stark.jpg','dasha/dasha13_hw_plural.jpg','dasha/dasha13_hw_possessiv.jpg','dasha/dasha13_hw_zadanie.jpg'],
+   photoLabels:['Текст Klara','Слабые глаголы','Сильные глаголы','Plural','Possessivartikel','Сообщение Даши с домашкой']},
+  {id:'d12', num:'Занятие 12', date:'≈27.10.2026', title:'Множественное число: die Plural',
+   topic:'Разминка: сильные глаголы с du (fährst, siehst, liest, nimmst, isst; gehen и kommen не меняются), перевод с sprechen/geben/sehen, модальные (Du kannst Deutsch sprechen — второй глагол в конец), 13 вопросительных слов и порядок «W-слово → глагол → кто». Женский род -in → -innen, национальности (Französin, Russin). Plural: артикль всегда die, способы — без изменения, -e (мужской), -er (средний, с умлаутом), -n/-en (женский), -nen, -s (заимствованные), только умлаут, умлаут + окончание; учить каждое слово сразу с множественным. Артикли der/ein. Домашка: 40 слов во множественное, 10 предложений, подкаст «Ein Tag mit Anna», текст о семье, 100 главных глаголов; игры «Перетащи по группам» и викторина по Plural.',
+   pdf:'', audio:'dasha/dasha12_interactive.html', mins:84, hard:'Средне', cards:159,
+   photos:['dasha/dasha12_hw_slova.jpg','dasha/dasha12_hw_semya.jpg','dasha/dasha12_hw_zadanie.jpg'],
+   photoLabels:['40 слов во множественное','Текст о семье','Сообщение Даши с домашкой']},
+  {id:'d11', num:'Занятие 11', date:'≈21.10.2026', title:'Профессии: читаем, слушаем, угадываем',
+   topic:'Текст «Mein Beruf» — пекарь Леон (arbeiten als, sie = die Arbeit). Уменьшительное -chen: Brot → Brötchen, всегда das и часто умлаут; stolz auf, sich gegenseitig unterstützen, ins Gespräch kommen, erschöpft = sehr müde. Первое аудирование «Beruf raten»: 6 сценок — официант, продавщица (Wechselgeld), врач (Grippe, dreimal täglich), турагентство (inklusive Flug und Frühstück), секретарь, техник (Heizung); цепляться за знакомые слова. Лист Даши: sein (aus = откуда, профессии, Sind Sie / ist sie), haben (viel Zeit ≠ viel zu tun, Glück, Geige, ein/eine). Домашка: «Wie sind die Leute?», 40 сильных глаголов с переводом, текст Шарлотты о семье, игры «Разложи по группам» и «Выбери ответ» (как Wordwall у Даши).',
+   pdf:'', audio:'dasha/dasha11_interactive.html', mins:75, hard:'Средне', cards:155,
+   photos:['dasha/dasha11_hw_blatt.jpg','dasha/dasha11_hw_verben.jpg','dasha/dasha11_hw_text.jpg'],
+   photoLabels:['Лист sein / haben','Starke Verben im Präsens','Текст Шарлотты о семье']},
+  {id:'d10', num:'Занятие 10', date:'≈11.10.2026', title:'haben и sein — «быть» и «иметь»',
+   topic:'Главное правило: в русском нет глагола («ей 36 лет», «уже поздно») — в немецком появляется sein. Анкета второй женщины из видео Menschen — Герда Никкельс (Sekretärin, 36, verheiratet; geschieden — разведён). Чьё? — Opas Brille, Gerdas Familienname (просто -s). Весь лист Даши: sein, haben, «Was ist richtig?», текст «haben oder sein?»; болезнь «имеют» (Sie hat Grippe, Wo hast du Schmerzen?), состояние — sein (krank, erkältet, müde); doch, Lust haben, Das ist mir egal. Домашка: лист с самопроверкой, игра «Вставь в текст» (как Wordwall у Даши), профессии с сайта ZUM, перевод 18 предложений.',
+   pdf:'', audio:'dasha/dasha10_interactive.html', mins:87, hard:'Средне', cards:150,
+   photos:['dasha/dasha10_hw_blatt.jpg','dasha/dasha10_hw_aufgabe.jpg'],
+   photoLabels:['Лист haben / sein','Домашка от Даши (14.10)']},
+  {id:'d9', num:'Занятие 9', date:'07.10.2026', title:'Спряжение глаголов и «кто что делает»',
+   topic:'Повторение спряжения: неправильные haben, werden, sein, tun, wissen (wir/sie/Sie — всегда инфинитив; tun или machen) и обычные spielen, machen, trainieren, lernen. Профессии и что они делают — 18 предложений: Die Krankenschwester hilft dem Arzt (helfen e → i + Dativ), Die Friseurin arbeitet (основа на -t → +e), Die Hausfrau räumt auf, Die Sekretärin ruft an (отделяемые приставки), aufräumen ≠ putzen, kaufen ≠ verkaufen, феминитивы обязательны. arbeiten als (кем) / bei (на кого) / in (где), рассказ Барбары Майнхардт, Steckbrief Несли. Домашка: предложения с профессиями, рассказ о семье, игра «Плитки», лист «Welche Berufe sind das?» на 35 профессий, видео «Berufe», перевод с модальными глаголами.',
+   pdf:'', audio:'dasha/dasha9_interactive.html', mins:85, hard:'Средне', cards:114,
+   photos:['dasha/dasha9_hw_wordwall.jpg','dasha/dasha9_hw_berufe.jpg','dasha/dasha9_hw_modal.jpg'],
+   photoLabels:['Профессии — что делают','Лист «Welche Berufe sind das?»','Перевод с модальными глаголами']},
+  {id:'d8', num:'Занятие 8', date:'30.09.2026', title:'Женский род, национальности и профессии',
+   topic:'Richtig oder falsch по текстам про Пако, Мигеля, Патрицию, Николь и Флориана — новые слова arbeitslos (-los = без), geschieden, Fremdsprachen. Вопросы про Хайди Клум: von Beruf ИЛИ arbeitet als — не вместе. Фотоистория «Das ist meine Familie» — семья Тины (Tinas Vater, seine Frau, ihr Mann). Женский род: der → die + -in, множественное всегда -innen (Lehrerinnen), Arzt → Ärztin. Национальности (исключение der/die Deutsche), профессии из учебника (Kellner — официант, не повар) и 24 карточки Даши. Домашка: глаголы gehen/hören/sehen/suchen/wissen/werden, национальности, 24 профессии, видео про папу-механика, текст «Meine Familie» + 7 вопросов.',
+   pdf:'', audio:'dasha/dasha8_interactive.html', mins:77, hard:'Средне', cards:96,
+   photos:['dasha/dasha8_hw_spisok.png','dasha/dasha8_hw_karten1.jpg','dasha/dasha8_hw_karten2.jpg','dasha/dasha8_hw_familie.jpg','dasha/dasha8_plural.pdf'],
+   photoLabels:['Список заданий','Карточки профессий (1)','Карточки профессий (2)','Текст «Meine Familie»','Plural — презентация (PDF)']},
+  {id:'d7', num:'Занятие 7', date:'21.09.2026', title:'Вопросительные слова, семья Марка и тексты о людях',
+   topic:'Упражнение «вставь вопросительное слово» в 14 предложений. Путаница wann ≠ wenn ≠ wen: wenn — «когда» в значении «если», wen — «кого» (форма wer). Семейное древо Марка — кто кому кем приходится (sein/seine), и прослушанный рассказ Марка о родителях: richtig или falsch (ловушка Freiburg ≠ Frankfurt). Два текста «Das bin ich» — про Пако Родригеса и Николь Мосер, с вопросами по содержанию. Домашка: перевод девяти диалогов, семейное древо Хайди Клум по тексту, свой рассказ о себе, знаменитость по образцу, 10 общих вопросов.',
+   pdf:'', audio:'dasha/dasha7_interactive.html', mins:83, hard:'Плотно', cards:143,
+   photos:['dasha/dasha7_hw_spisok1.png','dasha/dasha7_hw_spisok2.png','dasha/dasha7_hw_teksty.jpg','dasha/dasha7_hw_stammbaum.jpg','dasha/dasha7_hw_dialogi.jpg'],
+   photoLabels:['Список заданий (1)','Список заданий (2)','Тексты Пако и Николь','Хайди Клум и древо','Девять диалогов']},
+  {id:'d6', num:'Занятие 6', date:'13.09.2026', title:'Sein или haben, вопросительные слова и вопрос к ответу',
+   topic:'Игра на Wordwall: 15 предложений, где надо выбрать sein или haben — ловушки ihr seid, «дети = они → haben», голод и жажда через haben (Hast du Hunger?). Новые слова: schwer/leicht, richtig/falsch, ledig, fleißig, schon ≠ schön, die Geschwister, die Ferien. Все вопросительные слова разом: wann ≠ wo, warum, wen/wem, wie viel или wie viele, welcher/welche/welches, wie или welcher. Упражнение по ответам, диалог Анны и Петера и самое трудное — придумать вопрос к готовому ответу: после W-слова сразу глагол. Домашка: sein/haben/werden/wissen, переводы, Verben mit Vokalwechsel, модальные, текст «meine Familie» — с пояснениями к ответам.',
+   pdf:'', audio:'dasha/dasha6_interactive.html', mins:80, hard:'Плотно', cards:174,
+   photos:['dasha/dasha6_hw_spisok.png','dasha/dasha6_hw_sein.jpg','dasha/dasha6_hw_haben.jpg','dasha/dasha6_hw_verben4.jpg','dasha/dasha6_hw_vokalwechsel.jpg','dasha/dasha6_hw_modal.jpg','dasha/dasha6_hw_familie.jpg'],
+   photoLabels:['Список заданий','Перевод: sein','Перевод: haben','Verben 4','Verben mit Vokalwechsel','Перевод: модальные','meine Familie']},
+  {id:'d5', num:'Занятие 5', date:'07.09.2026', title:'Sein, haben и как строить вопросы',
+   topic:'Выбор между sein и haben по смыслу предложения (у меня есть → haben, я нахожусь/я какой-то → sein) — спряжение обоих глаголов целиком и большое упражнение. Отрицательный артикль kein/keine. Описание картинки из учебника: auf dem Bild, im Hintergrund/Vordergrund, es gibt, glauben. Вторая половина — вопросы: два вида (общий с ответом да/нет и специальный со словом на W), все вопросительные слова, и главная ловушка — с модальным глаголом в вопрос выносится только он, смысловой глагол остаётся в конце.',
+   pdf:'', audio:'dasha/dasha5_interactive.html', mins:35, hard:'Плотно', cards:103,
+   photos:[]},
+  {id:'d4', num:'Занятие 4', date:'31.08.2026', title:'Спряжение глаголов на практике',
+   topic:'Всё занятие — одно большое упражнение: 25 предложений, в каждом надо поставить глагол в правильную форму. Заодно Даша собрала всю систему в кучу: три категории глаголов (правильные 90–95%, с изменяемой гласной, пять исключений sein/haben/werden/wissen/tun). Разобрали, почему у arbeiten добавляется e, а у tanzen выбрасывается s; как отличить sie «она» от sie «они» и вежливого Sie; почему mögen больше не модальный и его заменяет gern. Плюс: spielen и sprechen без предлогов, mit dem Zug («с поездом»), spazieren gehen, Urlaub machen, обращение Herr/Frau и первая встреча с отделяемой приставкой (fernsehen).',
+   pdf:'', audio:'dasha/dasha4_interactive.html', mins:35, hard:'Плотно', cards:92,
+   photos:['dasha/dasha4_praesentation.pdf','dasha/dasha4_hw_sein_haben.jpg','dasha/dasha4_hw_sein.jpg','dasha/dasha4_hw_uebung3.jpg'],
+   photoLabels:['Презентация Verb-Konjugation (PDF)','Домашка: sein oder haben','Домашка: спряжение sein','Домашка: Übung 3']},
+  {id:'d3', num:'Занятие 3', date:'27.08.2026', title:'Спряжение глаголов: три категории',
+   topic:'Главная механика немецкого глагола. Все глаголы делятся на три группы: правильные (90–95%!), с изменяемой гласной и пять исключений. Плюс правило «буква меняется только у du и er/sie/es», разборы kennen/können, wohnen/leben, studieren/lernen, zu Hause / nach Hause и мелкие исключения в письме.',
+   pdf:'dasha/dasha3_pdf.pdf', audio:'dasha/dasha3_interactive.html', mins:40, hard:'Плотно', cards:117,
+   photos:['dasha/dasha3_praesentation.pdf','dasha/dasha3_hw_modal.jpg','dasha/dasha3_hw_modal2.jpg','dasha/dasha3_hw_verben.jpg'],
+   photoLabels:['Презентация Даши (PDF)','Домашка: модальные','Домашка: модальные 2','Домашка: Verben 1']},
+  {id:'d2', num:'Занятие 2', date:'17.08.2026', title:'Модальные глаголы + семья',
+   topic:'Шесть модальных глаголов (müssen, sollen, können, dürfen, wollen, möchten) — все формы и правило «смысловой глагол в конец, в инфинитиве». Повторение местоимений, старт темы «семья».',
+   pdf:'dasha/dasha2_pdf.pdf', audio:'dasha/dasha2_interactive.html', mins:25, hard:'Средне', cards:57,
+   trainer:'dasha/trainer_modal.html', trainerName:'Тренажёр: 60 предложений',
+   photos:[]},
+  {id:'d1', num:'Занятие 1', date:'12.08.2026', title:'Числа, местоимения, базовая лексика',
+   topic:'Числа «задом наперёд» и порядковые, личные + притяжательные (правило -e), артикли, цвета, время суток, месяцы (im), дни недели (am), наречия частотности.',
+   pdf:'dasha/dasha1_pdf.pdf', audio:'dasha/dasha1_interactive.html', mins:40, hard:'Плотно', cards:125,
+   photos:['dasha/dasha1_foto1.jpg','dasha/dasha1_foto2.jpg','dasha/dasha1_foto3.jpg']},
+];
+const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
+
+// Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
+const POLYA = [
+  {id:'p23', num:'Занятие 23', date:'≈03.11.2026', title:'Глаголы с приставками в действии',
+   topic:'Отделяемая или нет — по ударению (einschlafen, verstehen, vorlesen, erklären, mitnehmen, vorbereiten, bemalen, anziehen…). kommen: mitkommen, herauskommen, herkommen, vorbeikommen, ankommen, abholen. gehen: heimgehen 🇦🇹, losgehen («погнали»), weggehen (грубо!), ausgehen, angehen. ziehen: anziehen/ausziehen/sich umziehen, einziehen/umziehen — der Umzug; aufmachen/zumachen, einschlafen, aufwachen. nach Köln, aber in die Stadt. Menschen S. 70 «Mein Weg ins Büro», doch. Домашка: приставки 21–29, местоимения Akkusativ/Dativ (28), сильные глаголы, trennbare Verben, Partizip II, 100 глаголов из Quizlet Даши, 10 своих предложений, фильм и подкаст про Reisen.',
+   pdf:'', audio:'dasha/polya23_interactive.html', mins:51, hard:'Средне', cards:178,
+   photos:['dasha/polya23_hw_prist.jpg','dasha/polya23_hw_akkdat.jpg','dasha/polya23_hw_akkdat2.jpg','dasha/polya23_hw_trenn.jpg','dasha/polya23_hw_partizip.jpg','dasha/polya23_hw_zadanie.jpg'],
+   photoLabels:['Приставки 21–29','Местоимения 4.1–4.2','Местоимения 4.3','Отделяемые','Partizip II','Сообщение Даши с домашкой']},
+  {id:'p22', num:'Занятие 22', date:'≈02.11.2026', title:'Глагольные приставки и транспорт',
+   topic:'Отделяемые приставки: в презенсе — в конец (Ich stehe um sechs auf), с модальным — слитно в конце (Ich will zuhören). Семейство hören: zuhören, anhören, aufhören, mithören, abhören (врач слушает), gehören. Неотделяемые be-, emp-, ent-, er-, ge-, miss-, ver-, zer- (bekommen, erzählen, gefallen, verstehen). über-/unter-/durch-/um-/wieder- — и так, и так: übersetzen (переправляться / переводить), sitzen–setzen, liegen–legen, stehen–stellen. Пары auf/zu, an/aus, ein/aus. Транспорт: einsteigen, aussteigen, umsteigen, ankommen, abholen, abfahren/abfliegen, anrufen + Akk, danken + Dat; Verkehrsmittel (Zug, S-Bahn, Haltestelle, Bahnsteig, Flughafen…). Домашка: предложения в презенсе, перевод с притяжательными (15, есть Genitiv), 10 своих предложений.',
+   pdf:'', audio:'dasha/polya22_interactive.html', mins:55, hard:'Средне', cards:106,
+   photos:['dasha/polya22_hw_pres.jpg','dasha/polya22_hw_prez.jpg','dasha/polya22_hw_perevod.jpg','dasha/polya22_hw_zadanie.jpg'],
+   photoLabels:['Презентация «Приставки»','Предложения в презенсе','Перевод: 15 предложений','Сообщение Даши с домашкой']},
+  {id:'p21', num:'Занятие 21', date:'≈27.10.2026', title:'Отрицание: nicht или kein',
+   topic:'kein — перед существительным с ein или без артикля (склоняется как ein: keinen, keine); nicht — глаголы, прилагательные, der/die/das, mein; место nicht; sondern; nichts, nie, niemand, nirgends; приставки an-, mit-. Домашка: притяжательные (3 листа), dieser по падежам (1.1–1.5), nicht/kein, 30 предложений, рассказ по своим фото. Запись тихая — разобрана треть.',
+   pdf:'', audio:'dasha/polya21_interactive.html', mins:51, hard:'Средне', cards:47},
+  {id:'p20', num:'Занятие 20', date:'23.10.2026', title:'derselbe, derjenige и первый день в отеле',
+   topic:'Почти час. Лист на dieser с предлогами: auf diesen Stuhl (куда?), neben diesem Tisch (где?), es gibt + Akkusativ (Diesen Spiegel gibt es im Flur), durch + Akk, brauchen и mögen + Akk, mit + Dativ. derselbe и derjenige: внутри склоняется артикль (demselben, derselben, denselben), «Das ist derjenige, der alles weiß». Текст про кафе: dasselbe Café, aber denselben Kaffee. derselbe ≠ der gleiche. Reisen в формате экзамена: Empfangsdame, Reservierung, Zimmerschlüssel, Frühstück von halb sieben bis halb zehn, вопросы студентке, телефон 84 37 09 на слух. Домашка: dieser (26 предложений про одежду — с фото), derselbe (9), jener/dieser/derjenige (11), solcher (10), 10 предложений про Reisen. Два видео с заданиями.',
+   pdf:'', audio:'dasha/polya20_interactive.html', mins:54, hard:'Средне', cards:167,
+   photos:['dasha/polya20_hw_aufgabe.jpg','dasha/polya20_hw_dieser.jpg','dasha/polya20_hw_derselbe.jpg'],
+   photoLabels:['Домашка Даши 23.10','Лист: dieser','Лист: derselbe']},
+  {id:'p19', num:'Занятие 19', date:'16.10.2026', title:'Вокзал, текст «Wandern», n-Deklination и man',
+   topic:'Час. Описываем фото: der Mann ist am Flughafen, eine Tasche und einen Koffer in der Hand. Слова вокзала по группам (Gepäck, Verkehrsmittel, im Bahnhof), S-Bahn = Schnellbahn, Haupt- (Hauptbahnhof, Hauptplatz), der Schalter, abfahren, abholen, «Was bedeutet …?». Ситуации к фото: Wo fährt der Zug nach München ab? Kannst du mich vom Bahnhof abholen? Текст «Wandern»: länger und anstrengender als, gleichzeitig, sich entspannen, Wanderwege, ausgeben, einkehren. man — «можно, говорят». Большая домашка: 7 вопросов к тексту, dieser/jener/solcher, 35 слов презентации «Reisen», текст «Öffentliche Verkehrsmittel» с вопросами, Kaufhaus Alexa (Goethe A1), лист mit + Dativ и fahren/fliegen/gehen, загадки, видео Easy German. Добавка 17.10: n-Deklination, Genitiv -s/-es, Dativ Plural -n, das Herz и der Name, man — с видео и упражнениями.',
+   pdf:'', audio:'dasha/polya19_interactive.html', mins:61, hard:'Средне', cards:206,
+   photos:['dasha/polya19_hw_aufgabe1.jpg','dasha/polya19_hw_blatt.jpg','dasha/polya19_hw_extra1.jpg'],
+   photoLabels:['Домашка Даши 16.10','Arbeitsblatt: mit + Dativ, fahren/fliegen/gehen','Добавка 17.10: n-Deklination']},
+  {id:'p18', num:'Занятие 18', date:'14.10.2026', title:'dieser, jener, solcher в тексте и транспорт',
+   topic:'Сорок пять минут. Вопрос по прошлой домашке: «seins» — притяжательное вместо опущенного существительного (Der kleine Otto hat seins zu Hause vergessen) и притяжательное в Genitiv (Die Farbe ihres Kleides ist blau — сначала вопрос wessen?, потом форма как у артикля). dieser, jener, solcher в тексте про книжный магазин и кафе (dieses Buch, von jenem Autor, diese Zeitschrift, in diesem Café, jenen Kuchen). von, mit, nach — всегда Dativ. Новая тема — транспорт и путешествия: das Gepäck, der Koffer, die Haltestelle, der Bahnsteig, die U-Bahn, die Straßenbahn, das Flugzeug; steigen ≠ wachsen. Домашка: два видео (Wortschatz Reisen, Eine Reise um die Welt), «Was kann man in Deutschland, Österreich, der Schweiz und Ägypten machen?», карточки Stadt & Verkehr.',
+   pdf:'', audio:'dasha/polya18_interactive.html', mins:45, hard:'Средне', cards:71,
+   photos:['dasha/polya18_hw_aufgabe.jpg'],
+   photoLabels:['Сообщение Даши с домашкой']},
+  {id:'p17', num:'Занятие 17', date:'11.10.2026', title:'Указательные местоимения: dieser, jener, solcher',
+   topic:'Пятьдесят минут. История из учебника: Кристиан Шмидт работает у озера, а ему звонят коллега, Эва и шеф — слова офиса (der Schlüssel, Stifte, Briefpapier, Rechnungen, Formulare, telefonieren, anrufen), ответы на задания 3 и 4. Как устроено письмо: обращение с запятой, текст с маленькой буквы, прощание и подпись. Повтор склонения mein. Новая тема — указательные местоимения dieser, jener, solcher, derselbe, derjenige: окончание есть уже в Nominativ, склонение как у der; 16 предложений на все падежи. Мелочи: Kollegin von, Kollegen (n-Deklination), kaufen ≠ einkaufen, zustimmen и vertrauen + Dativ. Домашка: ответы по учебнику Menschen A1.1, с. 29–37 (уроки 5 и 6: ein/kein, очки и материалы, заказ часов, офис, множественное число, Akkusativ, телефон, Lesemagazin) и с. 48, задание 8 (письмо-отказ), выражения из видео про официальное письмо (Гёте A1–A2), письмо Лауре на 50–60 слов с образцом, таблица dieser по памяти.',
+   pdf:'', audio:'dasha/polya17_interactive.html', mins:52, hard:'Средне', cards:203,
+   photos:['dasha/polya17_hw_aufgabe.png'],
+   photoLabels:['Список заданий и письмо Лауры']},
+  {id:'p16', num:'Занятие 16', date:'08.10.2026', title:'Притяжательные местоимения, отрицание и еда (домашка)',
+   topic:'Записи занятия нет — Даша забыла её включить, поэтому страница собрана по домашке. Памятки: притяжательные mein, dein, sein, ihr, unser, euer (в немецком нет «свой» — всегда говорим, чей), окончания как у ein, Akkusativ meinen; отрицание nicht / kein / nichts / niemand (niemanden, niemandem). Домашка с ответами и пояснениями: 5 предложений (seins, eurer, entlang seines Hauses), 21 предложение, Симпсоны (sein / ihr), письмо Лизы маме и пересказ мамы папе (mein → ihr), 15 предложений на отрицание, текст «Klaras Haus» с 5 вопросами, Arbeitsblatt «Lebensmittel 2» — что лишнее (упаковки, глаголы кухни, блюда Австрии, Германии и Швейцарии), аналогии и сложные слова.',
+   pdf:'', audio:'dasha/polya16_interactive.html', mins:0, hard:'Средне', cards:60,
+   photos:['dasha/polya16_hw_list.png','dasha/polya16_hw_poss2.jpg','dasha/polya16_hw_simpsons.jpg','dasha/polya16_hw_brief.jpg','dasha/polya16_hw_negation.jpg','dasha/polya16_hw_klara.jpg','dasha/polya16_hw_lebensmittel.jpg'],
+   photoLabels:['Список заданий','21 предложение','Симпсоны','Письмо Лизы','Отрицание','Текст Клары','Lebensmittel 2']},
+  {id:'p15', num:'Занятие 15', date:'24.09.2026', title:'Склонение личных местоимений',
+   topic:'Сорок минут. Разминка на неопределённый артикль: helfen и glauben — с Dativ (einem Mann, einer Frau), brauchen — всегда Akkusativ (einen Arzt). Текст, где надо выбрать определённый, неопределённый или нулевой артикль: впервые — eine Katze, потом die Katze, вообще — Obst без артикля; город — с артиклем, название города — без. Отступление про приставки (spielen → verspielt). Новая тема: личные местоимения в Dativ и Akkusativ — mir/mich, dir/dich, ihm/ihn, ihr/sie, uns, euch, ihnen/Ihnen. Четыре правила: sie и es в Akkusativ не меняются, у wir и ihr одна форма, es склоняется как er, sie «она» и «они» в Dativ разные (ihr / ihnen). Ловушки: anrufen + Akkusativ (ich rufe ihn an), danken и gefallen + Dativ. Домашка: таблица по памяти, 12 предложений на три падежа, перевод текста про еду, два вопроса о завтраке, 8 предложений на местоимения.',
+   pdf:'', audio:'dasha/polya15_interactive.html', mins:38, hard:'Средне', cards:72,
+   photos:['dasha/polya15_hw_tabelle.jpg','dasha/polya15_hw_text.jpg','dasha/polya15_hw_aufgabe.png'],
+   photoLabels:['Таблица местоимений','Текст для перевода','Список заданий']},
+  {id:'p14', num:'Занятие 14', date:'21.09.2026', title:'Сравнение прилагательных, еда и вкус',
+   topic:'Запись начинается посреди темы: три формы прилагательного — обычная, сравнительная (-er) и превосходная (am …-sten), умлаут переносится в Superlativ, после -d/-t добавляется -e-. Три исключения, которые учат наизусть: gut → besser → am besten, gern → lieber → am liebsten, viel → mehr → am meisten; чем lieber отличается от besser. Два слова-мостика: als («чем») и wie («как»). Тренировка на листе — ловушки: teurer als (не am teuersten), das Auto ist besser (не mehr gut), der Bus. Потом еда и напитки (Butterbrot — то самое «бутерброд»), вкусовые прилагательные, разговор Даши и Полины про завтрак: mit Milch без артикля, ich esse gern вместо «люблю завтракать». В конце — разговор про экзамен (все части в один день, Schreiben на A2 — 20–30 слов, план до C1). Домашка: kein в пропуски, kein или nicht, 30 предложений на перевод с отрицанием, письмо Марии и 5 вопросов. Запись начиналась на середине, две паузы — честно отмечено.',
+   pdf:'', audio:'dasha/polya14_interactive.html', mins:61, hard:'Плотно', cards:112,
+   photos:['dasha/polya14_hw_kein.jpg','dasha/polya14_hw_keinnicht.jpg','dasha/polya14_hw_perevod.jpg','dasha/polya14_hw_email.jpg','dasha/polya14_hw_fragen.jpg'],
+   photoLabels:['Вставить kein','kein или nicht','Перевод на немецкий','Письмо Марии','Вопросы 11–15']},
+  {id:'p13', num:'Занятие 13', date:'16.09.2026', title:'Описываем предметы и неопределённый артикль',
+   topic:'Разминка по картинкам: назвать посуду и описать её — цвет, форма, из чего сделана (aus Keramik, aus Metall, aus Glas — материал всегда без артикля), для чего нужна (benutzen für + вещь, zum + действие). Красивая находка: die Pfanne → der Pfannkuchen. Доделали упражнение на склонение ОПРЕДЕЛЁННОГО артикля: gehören + Dativ, bringen/zeigen — кому Dativ и что Akkusativ, после mögen всегда Akkusativ. Новая тема: склонение НЕОПРЕДЕЛЁННОГО артикля — ein, eine, einen, einem, einer, eines; окончания те же, что у определённого, основа другая. Железное правило: после haben, brauchen и es gibt — неопределённый артикль в Akkusativ. Разобрали, чем dem отличается от den. Одним глазком заглянули в окончания прилагательных (-en после неопределённого артикля). Домашка: две таблицы по памяти, 15 предложений на артикль, F6 про вкус еды и три словарных листа — фрукты, овощи, ягоды.',
+   pdf:'', audio:'dasha/polya13_interactive.html', mins:56, hard:'Плотно', cards:216,
+   photos:['dasha/polya13_hw_artikel.jpg','dasha/polya13_hw_f6.jpg','dasha/polya13_hw_obst.jpg','dasha/polya13_hw_gemuese.jpg','dasha/polya13_hw_beeren.jpg'],
+   photoLabels:['Вставить неопределённый артикль','F6: Wie schmeckt das Essen?','Фрукты','Овощи','Ягоды']},
+  {id:'p12', num:'Занятие 12', date:'10.09.2026', title:'Мебельный магазин, цены и падежи',
+   topic:'Разбор домашки про семью: Schwiegersohn и Schwiegertochter (зять и невестка), Stiefschwester, Pflegeeltern, собака — Familienmitglied. Учебник: диалог в мебельном магазине — billig, günstig, sehr teuer или zu teuer, Sonderangebot. Как читать цены вслух (9,99 € = neun Euro neunundneunzig), своё мнение через Ich finde es … и почему лампа — sie, а кровать — es. Повтор падежей (wohin — Akkusativ, woher — Dativ) и упражнение на артикли. liegen или legen: Das Buch liegt auf dem Tisch / Ich lege das Buch auf den Tisch. Вся домашка от Даши — с переводом и пояснениями к ответам.',
+   pdf:'', audio:'dasha/polya12_interactive.html', mins:58, hard:'Плотно', cards:243,
+   photos:['dasha/polya12_hw_spisok.png','dasha/polya12_hw_artikel.jpg','dasha/polya12_hw_tisch.jpg','dasha/polya12_hw_c9.jpg','dasha/polya12_hw_c2.jpg','dasha/polya12_hw_c6.jpg'],
+   photoLabels:['Список заданий','Вставить артикль','Картинка со столом','C9: Was/Wer ist wo?','C2: Frau Müller kauft Möbel','C6: Ich suche eine Wohnung']},
+  {id:'p11', num:'Занятие 11', date:'07.09.2026', title:'Описание картинки, посуда и падежи',
+   topic:'Новая картинка из учебника — кафе: es gibt, im Vordergrund/Hintergrund, auf dem Tisch steht, an der Wand hängt. Главное правило: глагол всегда второй — «Auf dem Bild gibt es», а не «es gibt». Текст «Mein Zimmer», наречия abends/montags, посуда и приборы (Geschirr, Besteck, Teller, Topf, Schüssel ≠ Schlüssel). Большая тема: четыре падежа и их вопросы, склонение определённого артикля (der → den → dem → des), ins или im. Вся домашка от Даши — с переводом и пояснениями к ответам.',
+   pdf:'', audio:'dasha/polya11_interactive.html', mins:55, hard:'Плотно', cards:127,
+   photos:['dasha/polya11_hw_spisok.png','dasha/polya11_hw_wochenende.jpg','dasha/polya11_hw_meinzimmer.jpg','dasha/polya11_hw_wochentage.jpg','dasha/polya11_hw_perevod.jpg'],
+   photoLabels:['Список заданий','Ein Wochenende auf dem Land','Mein Zimmer','F8: дни недели','Текст на перевод']},
+  {id:'p10', num:'Занятие 10', date:'05.09.2026', title:'Артикли целиком, мебель и описание картинки',
+   topic:'Девятое занятие не записалось на диктофон — это прямое продолжение: доразобрали правило артиклей (когда der/die/das, когда ein/eine, когда вообще без артикля) на примерах с яблоком, машиной, газетой и котом. Честно предупредили: без контекста нередко подходят оба варианта. Новая большая тема — мебель и комната (Tisch, Schreibtisch, Bett, Regal, Spiegel, Sofa, Teppich, Kommode, Sessel, Schrank и другие). Разобрали описание картинки из учебника (im Hintergrund/Vordergrund, hängen, es gibt), конструкцию über + винительный и коротко повторили числа.',
+   pdf:'', audio:'dasha/polya10_interactive.html', mins:30, hard:'Плотно', cards:82,
+   photos:['dasha/polya10_hw_artikel.jpg','dasha/polya10_hw_arbeitsblatt.jpg'],
+   photoLabels:['Домашка: вставить артикли','Arbeitsblatt: дом и мебель']},
+  {id:'p8', num:'Занятие 8', date:'31.08.2026', title:'Профессии, национальности и множественное число',
+   topic:'Продолжение женского рода: 16 профессий из учебника (стр. 14–15) и 9 национальностей — везде одно правило der→die и суффикс -in. Ловушки: der Arzt→die Ärztin и der Koch→die Köchin (меняется гласная), а der Deutsche/die Deutsche вообще исключение. Разобрали разницу aufräumen (навести порядок) и putzen (помыть), отделяемую приставку (räumt auf, ruft an) и нулевой артикль — когда артикль не нужен вовсе. Новая большая тема: множественное число — артикль всегда die, а форма слова меняется четырьмя способами.',
+   pdf:'', audio:'dasha/polya8_interactive.html', mins:45, hard:'Плотно', cards:138,
+   photos:['dasha/polya8_hw_berufe1.jpg','dasha/polya8_hw_berufe2.jpg','dasha/polya8_hw_taetigkeiten.jpg'],
+   photoLabels:['Профессии, лист 1','Профессии, лист 2','Кто чем занимается']},
+  {id:'p7', num:'Занятие 7', date:'26.08.2026', title:'Разбор текста и феминитивы',
+   topic:'Дочитали текст про изучение языков (vor allem, Spaß machen, aufschreiben), ловушка vor/nach во времени («vor zwei Tagen» = два дня НАЗАД), почему у «Kinderbücher haben viele Bilder» нет артикля. Новая тема: женский род профессий (-in) и его множественное (-innen) — единственное железное правило множественного в немецком. ✍️ Внутри: оригинал текста целиком с озвучкой, 12 наречий времени по шкале частоты и вся домашка с полями.',
+   pdf:'dasha/polya7_pdf.pdf', audio:'dasha/polya7_interactive.html', mins:25, hard:'Средне', cards:66,
+   photos:['dasha/polya7_hw_text.jpg','dasha/polya7_hw_adverbien.jpg'],
+   photoLabels:['Текст Deutsch lernen (A1)','Карта наречий времени']},
+  {id:'p6', num:'Занятие 6', date:'22.08.2026', title:'Вопросы, позиция глагола и описание картинки',
+   topic:'Разбор домашки (leben vs wohnen, wie vs welche), правило «глагол на второй ПОЗИЦИИ», после haben всегда Akkusativ, куда ставить nicht и почему нельзя kein, тексты Menschen A1 стр. 21, описание картинки (im Vordergrund / im Hintergrund). ✍️ Вся домашка от Даши внутри — с полями для заполнения и озвученным текстом «Meine Familie».',
+   pdf:'dasha/polya6_pdf.pdf', audio:'dasha/polya6_interactive.html', mins:30, hard:'Плотно', cards:81,
+   photos:['dasha/polya6_hw_text.jpg','dasha/polya6_hw_fragen.jpg','dasha/polya6_hw_modal.jpg','dasha/polya6_hw_ru.jpg'],
+   photoLabels:['Текст Meine Familie','Вопросы к тексту','Модальные глаголы','Текст на перевод']},
+  {id:'p5', num:'Занятие 5', date:'19.08.2026', title:'Семья и вопросительные слова',
+   topic:'Глаголы-исключения (haben, werden, sein, tun, wissen), вся лексика семьи и семейного положения, вопросительные слова + 4 пары, где путаются: wie/welche, wie viel/wie viele, wer/wen, nach/in. Плюс вся домашка от Даши с полями для заполнения.',
+   pdf:'dasha/polya5_pdf.pdf', audio:'dasha/polya5_interactive.html', mins:30, hard:'Плотно', cards:90},
+];
+const NEXT_POLYA = {date:'пятница', time:'8:00'};
+
+/* ===== ПОИСК ПО САЙТУ =====
+   Три линии уроков плюс темы грамматики лежат в разных массивах, а врачу
+   надо одно: вбил «Akkusativ» — увидел, где это проходили. Поэтому ищем
+   сразу везде и показываем ссылками прямо на нужный урок.
+   Слова тут не ищем: для слов есть ЗУБР, туда и отправляем ссылкой. */
+// экранирование живёт в другом блоке скрипта и сюда не видно — своё
+function поискЭкр(s){
+  return (s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function поискНорм(s){
+  return (s || '').toLowerCase()
+    .replace(/ä/g,'a').replace(/ö/g,'o').replace(/ü/g,'u').replace(/ß/g,'ss')
+    .replace(/ё/g,'е').trim();
+}
+
+function поискПоСайту(что){
+  var игла = поискНорм(что);
+  var уроки = [], темы = [];
+  if (игла.length < 2) return {уроки:уроки, темы:темы};
+
+  [[LESSONS,'Уроки с Claude'], [DASHA,'Занятия с Дашей'], [POLYA,'Занятия Полины']]
+    .forEach(function(пара){
+      (пара[0] || []).forEach(function(у){
+        var стог = поискНорм((у.title||'') + ' ' + (у.topic||'') + ' ' + (у.num||''));
+        if (стог.indexOf(игла) >= 0)
+          уроки.push({у:у, линия:пара[1]});
+      });
+    });
+
+  (LEVELS || []).forEach(function(ур){
+    (ур.topics || []).forEach(function(т){
+      if (поискНорм(т.t).indexOf(игла) >= 0) темы.push({т:т, ур:ур});
+    });
+  });
+  return {уроки:уроки, темы:темы};
+}
+
+/* Тема знает только коды уроков (l4, d1, p6) — разворачиваем их в ссылки. */
+function урокПоКоду(код){
+  var семьи = {l:LESSONS, d:DASHA, p:POLYA};
+  var список = семьи[код[0]];
+  if (!список) return null;
+  var хвост = код.slice(1);
+  for (var i = 0; i < список.length; i++){
+    var id = String(список[i].id);
+    if (id === хвост || id === код) return список[i];
+  }
+  return null;
+}
+
+function показатьПоискСайта(что){
+  var место = document.getElementById('siteFound');
+  if (!место) return;
+  if (поискНорм(что).length < 2){ место.innerHTML = ''; return; }
+
+  var р = поискПоСайту(что);
+  var куски = [];
+
+  if (р.уроки.length){
+    куски.push('<div class="sf-group">Уроки · ' + р.уроки.length + '</div>');
+    р.уроки.forEach(function(п){
+      куски.push('<a class="sf-item" href="' + (п.у.audio || п.у.pdf || '#') + '">' +
+        '<b>' + поискЭкр(п.у.title || п.у.num || '') + '</b>' +
+        '<span>' + п.линия + ' · ' + поискЭкр((п.у.topic || '').slice(0, 130)) + '</span></a>');
+    });
+  }
+
+  if (р.темы.length){
+    куски.push('<div class="sf-group">Темы грамматики · ' + р.темы.length + '</div>');
+    р.темы.forEach(function(п){
+      var ссылки = (п.т.l || []).map(урокПоКоду).filter(Boolean);
+      var первый = ссылки[0];
+      куски.push('<a class="sf-item" href="' + (первый ? (первый.audio || первый.pdf) : '#') + '">' +
+        '<b>' + поискЭкр(п.т.t) + '</b><span>' + п.ур.code + ' · ' +
+        (ссылки.length
+          ? 'проходили: ' + ссылки.map(function(у){ return поискЭкр(у.num || у.title || ''); }).join(', ')
+          : 'урока пока нет') + '</span></a>');
+    });
+  }
+
+  // Слова живут в ЗУБРе — отправляем туда, а не ищем здесь второй раз
+  куски.push('<div class="sf-group">Слова</div>' +
+    '<a class="sf-item" href="zubr.html"><b>Искать «' + поискЭкр(что) + '» среди карточек</b>' +
+    '<span>Поиск по всем колодам ЗУБРа</span></a>');
+
+  if (!р.уроки.length && !р.темы.length)
+    куски.unshift('<div class="sf-empty">Среди уроков и тем ничего не нашлось</div>');
+
+  место.innerHTML = куски.join('');
+}
+
+(function(){
+  var поле = document.getElementById('siteSearch');
+  if (поле) поле.addEventListener('input', function(){
+    показатьПоискСайта(поле.value.trim());
+  });
+})();
+
+
+// ===== ПРОГРАММА CEFR: темы по уровням, привязанные к урокам =====
+// lessons: какие уроки закрывают тему. l0..l11 = уроки с Claude, d1 = занятие с Дашей.
+// Веса уровней = доля в общем пути к B2 (по учебным часам Goethe-Institut).
+const LEVELS = [
+  {code:'A1', name:'Начальный', weight:0.15, color:'#2e9e5b', topics:[
+    {t:'Алфавит и правила чтения', l:['l0']},
+    {t:'Приветствие и знакомство', l:['l1','d1']},
+    {t:'Личные местоимения (ich, du, er…)', l:['l1','d1','d2','p15']},
+    {t:'Глагол sein', l:['l1','d1','d6','d9','d10']},
+    {t:'Глагол haben', l:['l4','l8','d6','d9','d10']},
+    {t:'Präsens правильных глаголов', l:['l3','d9']},
+    {t:'Сильные глаголы (du sprichst, er fährt)', l:['l8','d7','d9']},
+    {t:'Род существительных, артикли der/die/das', l:['l2','d1']},
+    {t:'Неопределённый артикль ein/eine', l:['l4','p13','p15']},
+    {t:'Отрицание kein и nicht', l:['l4','p14','p16','p21']},
+    {t:'Именительный падеж (Nominativ)', l:['l2','p11','p12','p13']},
+    {t:'Винительный падеж (Akkusativ)', l:['l4','p11','p12','p13']},
+    {t:'Дательный падеж (Dativ) — база', l:['l11','p11','p12','p13']},
+    {t:'Притяжательные местоимения (mein, dein)', l:['d1','d2','p16','p17','p18','p21']},
+    {t:'Порядок слов: глагол на 2-м месте', l:['l3']},
+    {t:'Вопросы с W-словом (W-Fragen)', l:['l8','d6','d7','d12']},
+    {t:'Вопросы да/нет', l:['l3','d6']},
+    {t:'Предлоги места (in, auf, unter + Dativ)', l:['l11','l15','p12']},
+    {t:'Множественное число существительных', l:['l9','d1','d8','d12']},
+    {t:'Числа 0–1 000 000', l:['l2','l5','d1','d13']},
+    {t:'Порядковые числительные', l:['l5','d1']},
+    {t:'Цвета', l:['l7','d1']},
+    {t:'Время суток, распорядок дня', l:['d1']},
+    {t:'Дни недели, месяцы, времена года', l:['l6','d1','p11']},
+    {t:'Который час (Uhrzeit)', l:['l10']},
+    {t:'Части тела', l:['l9']},
+    {t:'Наречия частотности (immer, oft, nie)', l:['d1']},
+    {t:'Профессия и работа', l:['l1','d8','d9','d10']},
+    {t:'Модальные глаголы (können, müssen, dürfen)', l:['d2','d9','d12']},
+    {t:'Повелительное наклонение (Imperativ)', l:['l13']},
+    {t:'Отделяемые приставки (aufstehen, einkaufen)', l:['l12','l13','d9','p22','p23']},
+    {t:'Прошедшее время Perfekt', l:['l12']},
+    {t:'Семья и родственники', l:['d2','p12','d6','d7','d8']},
+    {t:'Еда и напитки', l:['l14','p13','p14','p15','p16']},
+    {t:'Квартира и жильё', l:['l15','p11','p12','p16','d13']},
+    {t:'Погода', l:['l16']},
+    {t:'Союзы und, aber, oder, denn, sondern', l:['l23']},
+    {t:'Сложные слова (Komposita)', l:['l23']},
+    {t:'welcher, dieser, jeder', l:['l23','p17','p18','p19']},
+  ]},
+  {code:'A2', name:'Базовый', weight:0.20, color:'#1f8fb5', topics:[
+    {t:'Perfekt со всеми глаголами', l:['l12','l60']},
+    {t:'Präteritum (sein, haben, модальные)', l:['l19']},
+    {t:'Präteritum слабых и сильных глаголов', l:['l29']},
+    {t:'Возвратные глаголы (sich waschen)', l:['l18']},
+    {t:'Дательный падеж полностью + глаголы с Dativ', l:['l21']},
+    {t:'Предлоги Wo? / Wohin? (Wechselpräpositionen)', l:['l17','p12']},
+    {t:'Предлоги с Dativ (mit, nach, bei, seit)', l:['l20','p18','p19']},
+    {t:'Предлоги с Akkusativ (für, ohne, gegen)', l:['l20']},
+    {t:'Сравнительная степень (größer, am größten)', l:['l22','p14','p19']},
+    {t:'Придаточные с weil / denn', l:['l25']},
+    {t:'Придаточные с dass', l:['l25']},
+    {t:'Придаточные с wenn / als', l:['l25']},
+    {t:'Склонение прилагательных (база)', l:['l24']},
+    {t:'Konjunktiv II вежливости (würde, hätte, könnte)', l:['l26','l48']},
+    {t:'Будущее время (Futur I)', l:['l34']},
+    {t:'Императив во всех формах', l:['l13']},
+    {t:'Infinitiv mit zu', l:['l39']},
+    {t:'Родительный падеж (Genitiv) — база', l:['p11','p12','p13','d10','p18','p19']},
+    {t:'Пассив — введение', l:['l27']},
+    {t:'Глагол lassen', l:['l28']},
+    {t:'Косвенный вопрос (ob)', l:['l31']},
+    {t:'Глаголы с предлогами', l:['l30']},
+    {t:'Медицина: симптомы и жалобы пациента', l:['l47']},
+    {t:'Здоровье и самочувствие', l:['l61']},
+    {t:'Покупки и магазины', l:['p12','d13']},
+    {t:'Путешествия и транспорт', l:['p18','p19','p22','p23']},
+    {t:'Работа, офис, документы', l:['p17']},
+    {t:'Жильё: аренда, мебель', l:['l15','p12','d13']},
+    {t:'Свободное время и хобби', l:['l62']},
+    {t:'Чувства и эмоции', l:['l63']},
+  ]},
+  {code:'B1', name:'Средний', weight:0.30, color:'#8a5cc7', topics:[
+    {t:'Konjunktiv II полностью', l:['l33']},
+    {t:'Пассив во всех временах', l:['l35','l56']},
+    {t:'Относительные придаточные (der, die, das)', l:['l38']},
+    {t:'Genitiv полностью', l:['l37']},
+    {t:'n-Deklination (den Patienten)', l:['l36','p19']},
+    {t:'Склонение прилагательных полностью', l:['l24']},
+    {t:'Partizip I и II как определение', l:['l42']},
+    {t:'Infinitivkonstruktionen (um zu, ohne zu, statt zu)', l:['l39']},
+    {t:'Сложные союзы (obwohl, trotzdem, deshalb, falls)', l:['l40']},
+    {t:'Временные придаточные (bevor, nachdem, während)', l:['l45']},
+    {t:'Plusquamperfekt', l:['l32']},
+    {t:'Косвенная речь — введение', l:['l43']},
+    {t:'Модальные глаголы в субъективном значении', l:['l44']},
+    {t:'Предлоги с Genitiv (wegen, trotz, während)', l:['l37']},
+    {t:'Двойные союзы (sowohl…als auch, entweder…oder)', l:['l41']},
+    {t:'Nomen-Verb-Verbindungen', l:['l46']},
+    {t:'Медицина: сбор анамнеза', l:['l47']},
+    {t:'Медицина: осмотр и обследование', l:['l48']},
+    {t:'Медицина: объяснение диагноза пациенту', l:['l49']},
+    {t:'Профессиональная коммуникация', l:['l50']},
+    {t:'Выражение мнения и аргументация', l:['l59']},
+    {t:'Резюме и собеседование', l:['l66']},
+    {t:'Учреждения, документы, бюрократия', l:['l65']},
+    {t:'Телефонные разговоры', l:['l64']},
+    {t:'Рассказ о событиях в прошлом', l:['l67']},
+    {t:'Описание процессов', l:['l68']},
+    {t:'Дискуссия и спор', l:['l59']},
+    {t:'Понимание сложных текстов', l:['l69']},
+    {t:'Письмо: официальное и личное', l:['p17']},
+  ]},
+  {code:'B2', name:'Цель — Approbation', weight:0.35, color:'#c9552b', topics:[
+    {t:'Konjunktiv I (косвенная речь)', l:['l43']},
+    {t:'Заменители пассива (sich lassen, sein + zu)', l:['l28']},
+    {t:'Partizipialkonstruktionen', l:['l70']},
+    {t:'Номинализация (Nominalstil)', l:['l71']},
+    {t:'Расширенные определения', l:['l70']},
+    {t:'Сложные коннекторы', l:['l73']},
+    {t:'Модальность во всех оттенках', l:['l44']},
+    {t:'Стилистика: формальный и разговорный регистр', l:['l74']},
+    {t:'Идиомы и устойчивые выражения', l:['l75']},
+    {t:'Продвинутые приставки глаголов', l:['l72','p22','p23']},
+    {t:'Функциональные глаголы (Funktionsverbgefüge)', l:['l46']},
+    {t:'Типы текстов и их структура', l:['l94']},
+    {t:'FSP: сбор анамнеза у пациента', l:['l47']},
+    {t:'FSP: врачебное письмо (Arztbrief)', l:['l54']},
+    {t:'FSP: доклад коллеге о пациенте', l:['l50']},
+    {t:'Медицинская терминология (латынь ↔ немецкий)', l:['l49','l52','l57']},
+    {t:'Разговор с пациентом простым языком', l:['l49','l53','l55']},
+    {t:'Информированное согласие (Aufklärung)', l:['l51']},
+    {t:'Межкультурная коммуникация в клинике', l:['l55']},
+    {t:'Неотложные состояния', l:['l58']},
+    {t:'Медицинская документация', l:['l48','l50','l52','l54']},
+    {t:'Коммуникация с коллегами и медсёстрами', l:['l50','l55','l59']},
+    {t:'Флебология: своя специальность по-немецки', l:['l57']},
+    {t:'Профессиональная дискуссия', l:['l59']},
+    {t:'Презентация и доклад', l:['l56']},
+    {t:'Переговоры', l:['l77']},
+    {t:'Критика и возражение', l:['l59']},
+    {t:'Понимание беглой речи и диалектов', l:['l78']},
+    {t:'Формальное письмо', l:['l76']},
+  ]},
+  // 27.10.2026: C1 — медицинский, после B2 (в путь «до B2» не входит, вес 0). План — «ПЛАН САЙТА GlobalDoc», раздел 3.
+  {code:'C1', name:'Медицинский', weight:0, color:'#b8326f', topics:[
+    {t:'Обход с главным врачом: доклад у постели (Nominalstil)', l:['l79']},
+    {t:'M&M-конференция: разбор осложнений (hätte … müssen)', l:['l80']},
+    {t:'FSP целиком: анамнез → доклад → документ', l:['l81']},
+    {t:'Конфликт с пациентом или родственником: деэскалация', l:['l82']},
+    {t:'Телефон: семейный врач, родственники, передача пациента', l:['l83']},
+    {t:'Обучение студентов и практикантов', l:['l84']},
+    {t:'Реанимация: разговор с семьёй о прогнозе', l:['l85']},
+    {t:'Паллиатив: смена цели лечения, Patientenverfügung', l:['l86']},
+    {t:'Междисциплинарный разбор с радиологом (Tumorboard)', l:['l87']},
+    {t:'Ночное дежурство и передача смены (ISBAR)', l:['l88']},
+    {t:'Обратная связь от старшего врача, разговор о росте', l:['l89']},
+    {t:'Клиническое исследование и информированное согласие', l:['l90']},
+    {t:'Эпикриз и выписной Arztbrief на уровне C1', l:['l91']},
+    {t:'Право врача: Aufklärungspflicht, документация, данные', l:['l92']},
+    {t:'Своя специальность на конгрессе: доклад и дискуссия', l:['l93']},
+  ]},
+];
+
+const grid = document.getElementById('grid');
+const gridDasha = document.getElementById('gridDasha');
+const progressNote = document.getElementById('progressNote');
+let profile = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+document.documentElement.setAttribute('data-кто', profile);
+
+function выученоСлов(){
+  const пре = 'nemeckiy_q_' + profile + '_';
+  let n = 0;
+  for (let i = 0; i < localStorage.length; i++){
+    const k = localStorage.key(i);
+    if (k && k.startsWith(пре) && localStorage.getItem(k) === '3') n++;
+  }
+  return n;
+}
+function progressKey(p, lessonId){ return 'nemeckiy_done_' + p + '_' + lessonId; }
+
+// ===== расчёт прогресса по уровням CEFR =====
+let activeLevel = localStorage.getItem('nemeckiy_lvl') || 'A1';
+
+function doneLessonIds(){
+  const s = new Set();
+  LESSONS.forEach(l=>{ if(localStorage.getItem(progressKey(profile,l.id))==='1') s.add('l'+l.id); });
+  dashaListFor(profile).forEach(l=>{ if(localStorage.getItem(progressKey(profile,l.id))==='1') s.add(l.id); });
+  return s;
+}
+
+function computeProgress(){
+  const done = doneLessonIds();
+  const levels = LEVELS.map(lv=>{
+    let ok = 0;
+    const topics = lv.topics.map(tp=>{
+      const covered = tp.l.length>0 && tp.l.some(id=>done.has(id));
+      if(covered) ok++;
+      return {...tp, covered};
+    });
+    return {...lv, topics, ok, total:lv.topics.length, pct: lv.topics.length ? Math.round(ok/lv.topics.length*100) : 0};
+  });
+  const total = Math.round(levels.reduce((a,lv)=> a + lv.weight * (lv.ok/lv.total), 0) * 100);
+  return {levels, total};
+}
+
+function renderProgress(){
+  const {levels, total} = computeProgress();
+
+  document.getElementById('ppTotal').textContent = total + '%';
+  const fill = document.getElementById('ppFillBig');
+  fill.style.width = total + '%';
+  // градиент растягиваем на всю шкалу, чтобы цвет отражал реальную позицию на пути
+  fill.style.backgroundSize = (total>0 ? (100/total*100) : 100) + '% 100%';
+
+  const cur = levels.find(l=>l.pct<100) || levels[levels.length-1];
+  document.getElementById('ppLeft').innerHTML =
+    `Сейчас идёшь по уровню <b>${cur.code}</b> — пройдено <b>${cur.ok} из ${cur.total}</b> тем. ` +
+    `До цели B2 осталось <b>${100-total}%</b> пути.`;
+
+  document.getElementById('ppLevels').innerHTML = levels.map(lv=>`
+    <div class="lvl ${lv.code===activeLevel?'active':''}" data-lvl="${lv.code}">
+      <div class="lvl-top"><span class="lvl-code" style="color:${lv.color}">${lv.code}</span><span class="lvl-pct">${lv.pct}%</span></div>
+      <div class="lvl-name">${lv.name}</div>
+      <div class="lvl-bar"><div class="lvl-fill" style="width:${lv.pct}%;background:${lv.color}"></div></div>
+      <div class="lvl-done">${lv.ok} из ${lv.total} тем</div>
+    </div>`).join('');
+
+  document.querySelectorAll('.lvl').forEach(el=>{
+    el.addEventListener('click', ()=>{
+      activeLevel = el.dataset.lvl;
+      localStorage.setItem('nemeckiy_lvl', activeLevel);
+      renderProgress();
+      const box = document.getElementById('ppTopics');
+      if(box.hidden){ box.hidden=false; document.getElementById('ppToggle').textContent='Скрыть темы уровня ▴'; }
+    });
+  });
+
+  const lv = levels.find(l=>l.code===activeLevel) || levels[0];
+  document.getElementById('ppTopics').innerHTML =
+    `<h4>Уровень ${lv.code}: ${lv.name}: ${lv.ok} из ${lv.total} тем</h4>
+     <div class="topic-list">` +
+    lv.topics.map(tp=>{
+      const src = tp.l.length ? tp.l.map(x=> x.startsWith('d') ? 'Даша '+x.slice(1) : x.startsWith('p') ? 'Полина '+x.slice(1) : 'Урок '+(Number(x.slice(1))+1)).join(', ') : '';
+      return `<div class="topic ${tp.covered?'ok':''}">
+        <span class="tick">${tp.covered?'✓':'·'}</span>
+        <span class="tt">${tp.t}${src?` <span class="src">— ${src}</span>`:''}</span>
+      </div>`;
+    }).join('') + '</div>';
+}
+
+document.getElementById('ppToggle').addEventListener('click', ()=>{
+  const box = document.getElementById('ppTopics');
+  box.hidden = !box.hidden;
+  document.getElementById('ppToggle').textContent = box.hidden ? 'Показать темы уровня ▾' : 'Скрыть темы уровня ▴';
+});
+
+// какие занятия с Дашей принадлежат профилю: у Григория своя линия, у Полины своя
+function dashaListFor(prof){ return prof === 'polina' ? POLYA : DASHA; }
+function dashaNextFor(prof){ return prof === 'polina' ? NEXT_POLYA : NEXT_LESSON; }
+
+const SECTIONS = ['claude','dasha'];
+let currentSection = localStorage.getItem('nemeckiy_section') || 'claude';
+if(!SECTIONS.includes(currentSection)) currentSection = 'claude';
+
+function renderFolders(){
+  const list = dashaListFor(profile);
+  const claudeDone = LESSONS.filter(l=>localStorage.getItem(progressKey(profile,l.id))==='1').length;
+  const dashaDone  = list.filter(l=>localStorage.getItem(progressKey(profile,l.id))==='1').length;
+  const who = profile === 'polina' ? 'Занятия Полины с Дашей' : 'Занятия с Дашей';
+  document.getElementById('folders').innerHTML = `
+    <button class="folder${currentSection==='claude'?' active':''}" data-section="claude">
+      <span class="f-ico">🤖</span>
+      <span class="f-txt"><span class="f-name">Уроки с Claude</span>
+      <span class="f-sub">${claudeDone} из ${LESSONS.length} пройдено · по уровням A1–B2 и C1 медицинский</span></span>
+    </button>
+    <button class="folder dasha${currentSection==='dasha'?' active':''}" data-section="dasha">
+      <span class="f-ico">👩‍🏫</span>
+      <span class="f-txt"><span class="f-name">${who}</span>
+      <span class="f-sub">${list.length ? dashaDone + ' из ' + list.length + ' разобрано' : 'занятий пока нет'} · репетитор, раз в неделю</span></span>
+    </button>
+    <a class="folder trainer" href="trenazhyor.html">
+      <span class="f-ico">★</span>
+      <span class="f-txt"><span class="f-name">Тренажёр слов</span>
+      <span class="f-sub">${выученоСлов()} слов выучено · все уроки вперемешку</span></span>
+    </a>
+    <a class="folder zubr" href="zubr.html">
+      <span class="f-ico">🐃</span>
+      <span class="f-txt"><span class="f-name">ЗУБР</span>
+      <span class="f-sub">свой словарик и домашка от Даши</span></span>
+    </a>
+    <a class="folder trainer" href="glagoly.html">
+      <span class="f-ico">⚡</span>
+      <span class="f-txt"><span class="f-name">Спряжения</span>
+      <span class="f-sub">особые, модальные и сильные — таблица и тренировка</span></span>
+    </a>
+    <a class="folder trainer" href="igry.html">
+      <span class="f-ico">🎮</span>
+      <span class="f-txt"><span class="f-name">Поиграем</span>
+      <span class="f-sub">собрать фразу, der/die/das, подписать картинку</span></span>
+    </a>
+    <a class="folder trainer" href="ekzameny.html">
+      <span class="f-ico">🎯</span>
+      <span class="f-txt"><span class="f-name">Экзамены</span>
+      <span class="f-sub">ÖSD, Stichprobentest, фармакология, медправо, ÖÄK</span></span>
+    </a>
+    <a class="folder trainer" href="testy.html">
+      <span class="f-ico">🩺</span>
+      <span class="f-txt"><span class="f-name">Тесты для врачей</span>
+      <span class="f-sub">медицинский немецкий · блоки по 100 вопросов</span></span>
+    </a>
+    <a class="folder trainer" href="itog.html">
+      <span class="f-ico">🎓</span>
+      <span class="f-txt"><span class="f-name">Итоговый тест</span>
+      <span class="f-sub">проверка уровня целиком</span></span>
+    </a>
+    <a class="folder trainer" href="pravila.html">
+      <span class="f-ico">📐</span>
+      <span class="f-txt"><span class="f-name">Правила</span>
+      <span class="f-sub">справочник по всем урокам</span></span>
+    </a>
+    <a class="folder trainer" href="slushat.html">
+      <span class="f-ico">🎧</span>
+      <span class="f-txt"><span class="f-name">Слушать</span>
+      <span class="f-sub">тексты с озвучкой и вопросами</span></span>
+    </a>
+    <a class="folder trainer" href="chitaem.html">
+      <span class="f-ico">📖</span>
+      <span class="f-txt"><span class="f-name">Читаем</span>
+      <span class="f-sub">Кафка и Гёте в оригинале · звук и перевод</span></span>
+    </a>
+    <a class="folder trainer" href="stat.html">
+      <span class="f-ico">📊</span>
+      <span class="f-txt"><span class="f-name">Статистика</span>
+      <span class="f-sub">занятия, прогноз, что уже держится</span></span>
+    </a>`;
+  document.querySelectorAll('button.folder').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      currentSection = b.dataset.section;
+      localStorage.setItem('nemeckiy_section', currentSection);
+      render();
+    });
+  });
+  document.getElementById('secClaude').hidden = currentSection !== 'claude';
+  document.getElementById('secDasha').hidden  = currentSection !== 'dasha';
+}
+
+const LEVEL_ORDER = ['A1','A2','B1','B2','C1'];
+function levelOf(l){ return l.level || 'A1'; }
+function defaultLevel(){
+  // C1 — продолжение после B2, по умолчанию не открываем (29.10.2026)
+  const have = LEVEL_ORDER.filter(c => c !== 'C1' && LESSONS.some(l => levelOf(l) === c));
+  return have.length ? have[have.length - 1] : 'A1';
+}
+let currentLevel = localStorage.getItem('nemeckiy_level') || defaultLevel();
+if(!LEVEL_ORDER.includes(currentLevel)) currentLevel = defaultLevel();
+
+function renderLevelTabs(){
+  const el = document.getElementById('lvlTabs');
+  el.innerHTML = LEVEL_ORDER.map(code=>{
+    const lv = LEVELS.find(x => x.code === code) || {};
+    const list = LESSONS.filter(l => levelOf(l) === code);
+    const done = list.filter(l => localStorage.getItem(progressKey(profile, l.id)) === '1').length;
+    const badge = list.length ? `${done}/${list.length}` : '—';
+    return `<button class="lvl-tab${code === currentLevel ? ' active' : ''}${list.length ? '' : ' locked'}"
+      data-level="${code}" style="--lvl:${lv.color || 'var(--color-muted)'}">
+      <span class="lvl-code">${code}</span>
+      <span class="lvl-name">${lv.name || ''}</span>
+      <span class="lvl-badge">${badge}</span>
+    </button>`;
+  }).join('');
+  el.querySelectorAll('.lvl-tab').forEach(b=>{
+    b.addEventListener('click', ()=>{
+      currentLevel = b.dataset.level;
+      localStorage.setItem('nemeckiy_level', currentLevel);
+      render();
+    });
+  });
+}
+
+// обложки уроков — указатель img/sceny.json; пришёл — перерисовать карточки
+fetch('img/sceny.json').then(r => r.ok ? r.json() : null).then(о => { if (о) { window.ОБЛОЖКИ = о; try { render(); } catch (e) {} } }).catch(() => {});
+function render(){
+  document.querySelectorAll('.profile-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.profile === profile);
+    document.documentElement.setAttribute('data-кто', profile);
+  });
+
+  grid.innerHTML = '';
+  let doneCount = 0;
+  LESSONS.forEach(l=>{ if(localStorage.getItem(progressKey(profile, l.id)) === '1') doneCount++; });
+
+  renderLevelTabs();
+
+  const shown = LESSONS.filter(l => levelOf(l) === currentLevel);
+  if(!shown.length){
+    const lv = LEVELS.find(x => x.code === currentLevel) || {};
+    grid.innerHTML = `<div class="lvl-empty">Уроков уровня <b>${currentLevel}</b>${lv.name ? ' («' + lv.name + '»)' : ''} пока нет.<br>Дойдём — появятся здесь.</div>`;
+  }
+  shown.forEach(l=>{
+    const done = localStorage.getItem(progressKey(profile, l.id)) === '1';
+
+    const card = document.createElement('div');
+    card.className = 'card' + (done ? ' done' : '');
+
+    // 29.10: врач — «вся рамочка одна большая ссылка; интерактив, PDF, минуты, сложность, число слов убрать; нумерация с 1»
+    card.classList.add('кратко');
+    const обл = window.ОБЛОЖКИ && ОБЛОЖКИ['urok' + l.id];   // 24.10.2026: фото-обложка урока (Nano Banana)
+    const имя = l.title.split('—')[1] ? l.title.split('—')[1].trim() : l.title;
+    card.innerHTML = `
+      <a class="кратко-ссылка" href="${l.audio}">
+        ${обл ? `<img class="card-фото" alt="" loading="lazy" decoding="async" src="img/sceny/${обл}">` : ''}
+        <span class="num">Урок ${Number(l.id) + 1}</span>
+        <h2>${имя}</h2>
+        <p class="topic">${l.topic}</p>
+      </a>
+      <label class="check">
+        <input type="checkbox" ${done ? 'checked' : ''} data-lesson="${l.id}">
+        Урок пройден
+      </label>
+    `;
+    grid.appendChild(card);
+  });
+
+  // --- Занятия с Дашей: показываем только линию текущего профиля ---
+  renderFolders();
+
+  const dashaList = dashaListFor(profile);
+  const dashaNext = dashaNextFor(profile);
+  document.getElementById('dashaTitle').textContent =
+    profile === 'polina' ? 'Занятия Полины с Дашей' : 'Занятия с Дашей';
+  document.getElementById('dashaNote').textContent =
+    profile === 'polina' ? '— её собственная линия, она идёт впереди по программе' : '— репетитор, раз в неделю по воскресеньям';
+  document.getElementById('nextLesson').innerHTML = dashaNext
+    ? `Следующее занятие: <b>${dashaNext.date}, ${dashaNext.time}</b>`
+    : '';
+
+  gridDasha.innerHTML = '';
+  if(!dashaList.length){
+    gridDasha.innerHTML = `<div class="lvl-empty">Занятий с Дашей в этом профиле пока нет.</div>`;
+  }
+  dashaList.forEach(l=>{
+    const done = localStorage.getItem(progressKey(profile, l.id)) === '1';
+    if(done) doneCount++;
+
+    const card = document.createElement('div');
+    card.className = 'card ' + (profile === 'polina' ? 'polya' : 'dasha') + (done ? ' done' : '');
+
+    // 28.10: врач — «только название, дата и галочка; конспект, PDF, описание, фото — не нужно».
+    // Вся карточка — ссылка на занятие; тренажёр (если есть) — маленькой ссылкой.
+    card.classList.add('кратко');
+    const trainerBtn = l.trainer
+      ? `<a class="кратко-доп" href="${l.trainer}">${(l.trainerName||'Тренажёр').replace(/^\S*🎯\s*/,'')}</a>`
+      : '';
+    card.innerHTML = `
+      <a class="кратко-ссылка" href="${l.audio}">
+        <span class="num ${profile === 'polina' ? 'polya-num' : 'dasha-num'}">${l.num} · ${l.date}</span>
+        <h2>${l.title}</h2>
+      </a>
+      ${trainerBtn}
+      <label class="check">
+        <input type="checkbox" ${done ? 'checked' : ''} data-lesson="${l.id}">
+        Занятие разобрано, домашка сделана
+      </label>
+    `;
+    gridDasha.appendChild(card);
+  });
+
+  progressNote.textContent = `Пройдено: ${doneCount} из ${LESSONS.length + dashaListFor(profile).length}`;
+  renderProgress();
+
+  gridDasha.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', e=>{
+      const id = e.target.dataset.lesson;
+      const key = progressKey(profile, id);
+      if(e.target.checked){ localStorage.setItem(key, '1'); }
+      else{ localStorage.removeItem(key); }
+      render();
+    });
+  });
+
+  grid.querySelectorAll('input[type=checkbox]').forEach(cb=>{
+    cb.addEventListener('change', e=>{
+      const id = e.target.dataset.lesson;
+      const key = progressKey(profile, id);
+      if(e.target.checked){ localStorage.setItem(key, '1'); }
+      else{ localStorage.removeItem(key); }
+      render();
+    });
+  });
+}
+
+document.querySelectorAll('.profile-btn').forEach(b=>{
+  b.addEventListener('click', ()=>{
+    profile = b.dataset.profile;
+    localStorage.setItem('nemeckiy_profile', profile);
+    render();
+    document.getElementById('folders').scrollIntoView({block:'nearest'});
+  });
+});
+
+render();
+</script>
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+
+  // Поворот экрана на планшете — подробно в quiz_pwa.html (10.09)
+  var приложение = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (приложение && screen.orientation && screen.orientation.lock)
+    screen.orientation.lock('any').catch(function(){});
+})();
+</script>
+
+<!--ВХОД-СКРИПТ-->
+<script>
+/* Экран входа «Гриша / Поля», верхнее меню и три вида главной (28.10.2026).
+   Опирается на переменные основного скрипта главной: profile, currentSection, render,
+   LESSONS, dashaListFor, progressKey, выученоСлов — они объявлены выше (общая глобальная область). */
+(function(){
+  var ИМЕНА = { grigoriy: 'Гриша', polina: 'Поля' };
+  var ФОТО = { grigoriy: 'img/kto/grisha.webp', polina: 'img/kto/polya.webp' };
+  var вход = document.getElementById('вход');
+
+  function шапка(){
+    document.getElementById('ктоИмя').textContent = 'Привет, ' + ИМЕНА[profile] + '!';
+    var ф = document.getElementById('ктоФото');
+    ф.innerHTML = '<img alt="" src="' + ФОТО[profile] + '">';
+    ф.querySelector('img').onerror = function(){ ф.textContent = profile === 'polina' ? 'П' : 'Г'; };
+    document.getElementById('менюДаша').innerHTML = '<i>Hallo!</i>' + (profile === 'polina' ? 'Занятия Поли с Дашей' : 'Уроки с Дашей');
+    сводка();
+  }
+  function сводка(){
+    var claudeDone = LESSONS.filter(function(l){ return localStorage.getItem(progressKey(profile, l.id)) === '1'; }).length;
+    var список = dashaListFor(profile);
+    var dashaDone = список.filter(function(l){ return localStorage.getItem(progressKey(profile, l.id)) === '1'; }).length;
+    var проц = (document.getElementById('ppTotal') || {}).textContent || '';
+    document.getElementById('сводка').innerHTML =
+      '<a href="#claude"><b>' + claudeDone + '/' + LESSONS.length + '</b>уроков с Claude</a>' +
+      '<a href="#dasha"><b>' + dashaDone + '/' + список.length + '</b>занятий с Дашей</a>' +
+      '<a href="stat.html"><b>' + выученоСлов() + '</b>слов выучено</a>' +
+      '<a href="stat.html#put"><b>' + (проц || '—') + '</b>путь к B2</a>';
+  }
+  var ЗАГОЛОВКИ = { claude: 'Уроки с Claude', dasha: 'Уроки с Дашей', put: 'Путь к B2' };
+  function показать(вид){
+    if (['home', 'claude', 'dasha', 'put'].indexOf(вид) < 0) вид = 'home';
+    document.documentElement.setAttribute('data-вид', вид);
+    if (вид === 'claude' || вид === 'dasha'){ currentSection = вид; localStorage.setItem('nemeckiy_section', вид); render(); }
+    document.getElementById('верхИмя').textContent = вид === 'dasha' && profile === 'polina' ? 'Занятия Поли с Дашей' : (ЗАГОЛОВКИ[вид] || '');
+    window.scrollTo(0, 0);
+    сводка();
+  }
+  function войти(кто){
+    profile = кто;
+    localStorage.setItem('nemeckiy_profile', кто);
+    try { sessionStorage.setItem('nemeckiy_вошёл', '1'); } catch(e){}
+    document.documentElement.setAttribute('data-кто', кто);
+    вход.hidden = true;
+    render(); шапка();
+  }
+  Array.prototype.forEach.call(вход.querySelectorAll('[data-кто]'), function(к){
+    к.addEventListener('click', function(){ войти(к.dataset.кто); });
+  });
+  document.getElementById('ктоСмена').addEventListener('click', function(){ вход.hidden = false; });
+  window.addEventListener('hashchange', function(){ показать(location.hash.slice(1)); });
+
+  // встроено в «Статистику»: без входа и меню, только панель пути к B2; высоту сообщаем родителю
+  if (/[?&]встроено=1/.test(location.search) || location.search.indexOf('%D0%B2%D1%81%D1%82%D1%80%D0%BE%D0%B5%D0%BD%D0%BE') >= 0){
+    document.documentElement.setAttribute('data-встроено', '1');
+    вход.hidden = true; шапка(); render();
+    var сказать = function(){ try { parent.postMessage({ путьВысота: document.querySelector('.progress-panel').offsetHeight + 4 }, '*'); } catch(e){} };
+    if (window.ResizeObserver) new ResizeObserver(сказать).observe(document.querySelector('.progress-panel'));
+    window.addEventListener('load', сказать); setTimeout(сказать, 400);
+    return;
+  }
+  var вошёл = false;
+  try { вошёл = sessionStorage.getItem('nemeckiy_вошёл') === '1'; } catch(e){}
+  // ссылка с уроков «← Все уроки» ведёт на главную без хэша — экран входа показываем только при первом заходе в сессии
+  if (!вошёл) вход.hidden = false;
+  шапка();
+  показать(location.hash.slice(1) || 'home');
+})();
+</script>
+<!--/ВХОД-СКРИПТ-->
+<!-- ВЫБОР-ГОЛОСА-START (03.11.2026, врач: «два варианта мужской озвучки — голос создателя сайта или носитель, пусть человек выберет») -->
+
+<script>
+(function(){
+  var КЛЮЧ = 'nemeckiy_golos_muzh';            // 'thorsten' | 'grisha'
+  function прочитать(){ try { return localStorage.getItem(КЛЮЧ); } catch(e){ return null; } }
+  function возгласыВкл(){ try { return localStorage.getItem('nemeckiy_vozglasy') !== '0'; } catch(e){ return true; } }
+  function сохранить(в){
+    try {
+      localStorage.setItem(КЛЮЧ, в);
+    } catch(e){}
+  }
+  var играет = null;
+  function слушать(файл, кн){
+    if (играет) { играет.pause(); }
+    играет = new Audio(файл); кн.textContent = 'Звучит…';
+    играет.onended = function(){ кн.textContent = 'Послушать'; };
+    играет.play().catch(function(){ кн.textContent = 'Послушать'; });
+  }
+  window.выборГолоса = function(){
+    var текущий = прочитать() || 'thorsten';
+    var ф = document.createElement('div'); ф.className = 'гв-фон';
+    ф.innerHTML = '<div class="гв-окно" role="dialog" aria-label="Выбор голоса">' +
+      '<h2>Каким голосом вам говорить?</h2>' +
+      '<p>На сайте два варианта мужской озвучки. Выберите, какой вам больше нравится — поменять можно в любой момент внизу главной страницы.</p>' +
+      '<button class="гв-вар" data-г="thorsten"><b>Носитель языка</b><small>Мужские роли в уроках и тренажёрах читает голос носителя немецкого (Thorsten) — чёткое произношение без акцента.</small>' +
+        '<span class="гв-слушать" data-ф="zvuk/golos/thorsten.mp3">Послушать</span></button>' +
+      '<button class="гв-вар" data-г="grisha"><b>Григорий Андреевич Плотников, создатель сайта</b><small>Голос создателя сайта. Немецкие реплики в уроках пока читает носитель.</small>' +
+        '<span class="гв-слушать" data-ф="zvuk/otvet/гриша/верно_молодец.mp3">Послушать</span></button>' +
+      '<button class="гв-ок">Готово</button></div>';
+    document.body.appendChild(ф);
+    function отметить(){ ф.querySelectorAll('.гв-вар').forEach(function(b){ b.classList.toggle('выбран', b.dataset.г === текущий); }); }
+    отметить();
+    ф.querySelectorAll('.гв-вар').forEach(function(b){
+      b.onclick = function(e){
+        var с = e.target.closest('.гв-слушать');
+        if (с) { e.stopPropagation(); слушать(с.dataset.ф, с); }
+        текущий = b.dataset.г; отметить();
+      };
+    });
+    ф.querySelector('.гв-ок').onclick = function(){
+      сохранить(текущий);
+      if (играет) играет.pause(); ф.remove();
+    };
+  };
+  document.addEventListener('DOMContentLoaded', function(){
+    var низ = document.querySelector('footer');
+    if (низ) {
+      var к = document.createElement('button'); к.className = 'гв-ссылка'; к.textContent = 'Сменить голос озвучки';
+      к.onclick = window.выборГолоса; низ.parentNode.insertBefore(к, низ);
+    }
+    // первый заход — спрашиваем один раз, но после экрана «Кто занимается?» (он поверх всего)
+    if (!прочитать()) {
+      var т = setInterval(function(){
+        var вход = document.querySelector('.вход');
+        var виден = вход && !вход.hidden && getComputedStyle(вход).display !== 'none';   // экран профиля прячется атрибутом hidden
+        if (!виден) { clearInterval(т); setTimeout(window.выборГолоса, 600); }
+      }, 500);
+    }
+  });
+})();
+</script>
+<!-- ВЫБОР-ГОЛОСА-END -->
+</body>
+</html>

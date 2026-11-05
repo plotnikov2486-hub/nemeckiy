@@ -1,0 +1,1416 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<script>/*ОБРАЗЕЦ-ПРОФИЛЬ*/try{sessionStorage.setItem('nemeckiy_вошёл','1');if(!localStorage.getItem('nemeckiy_profile'))localStorage.setItem('nemeckiy_profile','grigoriy');if(!localStorage.getItem('nemeckiy_golos_muzh'))localStorage.setItem('nemeckiy_golos_muzh','thorsten');}catch(e){}</script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Урок 16 — Квартира и жильё (Wohnung und Haus)</title>
+
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c; --ink-faint:#8b918a;
+    --accent:#1f5f5b; --accent-ink:#ffffff; --play:#c97a2b; --play-ink:#ffffff; --line:#dde0d9; --bubble-a:#e7ede9; --bubble-m:#fbeadb;
+    --warn:#b3402a; --warn-bg:#fbeae6; --hb:#1f6f8b; --hb-bg:#e3f0f4; --sn:#7b3fb5; --sn-bg:#f2ebfa; --tr:#8a2be2;
+    --der:#1f6f8b; --die:#a03060; --das:#8a6d1a;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); --radius:10px; }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e;
+    --accent:#4fb3a9; --accent-ink:#0d1413; --play:#e29a4e; --play-ink:#241407; --line:#2a3234; --bubble-a:#212a29; --bubble-m:#2a2420;
+    --warn:#e8836b; --warn-bg:#2b1a16; --hb:#6db6d6; --hb-bg:#17282e; --sn:#b98ce0; --sn-bg:#241a30; --tr:#c9a4f0;
+    --der:#6db6d6; --die:#e08bb0; --das:#e0c06a;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif; max-width:800px; margin:0 auto; padding:24px 18px 64px; line-height:1.5; }
+  .lp h1,.lp h2 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0; }
+  .eyebrow { font-size:12px; letter-spacing:0.09em; text-transform:uppercase; color:var(--accent); font-weight:600; margin-bottom:6px; }
+  .lp h1 { font-size:clamp(23px,5vw,31px); font-weight:600; }
+  .lp .lede { color:var(--ink-muted); font-size:14.5px; margin-top:8px; max-width:64ch; }
+  .hint { display:inline-flex; align-items:center; gap:6px; margin-top:12px; font-size:13px; color:var(--ink-muted); background:var(--surface); border:1px solid var(--line); padding:7px 12px; border-radius:999px; }
+  .toc { background:var(--surface-2); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin-top:22px; }
+  .toc b { font-size:13px; color:var(--ink-muted); display:block; margin-bottom:8px; }
+  .toc ol { margin:0; padding-left:20px; columns:2; column-gap:24px; font-size:13.5px; }
+  .toc li { margin:3px 0; break-inside:avoid; }
+  .toc a { color:var(--accent); text-decoration:none; } .toc a:hover { text-decoration:underline; }
+  section.block { margin-top:36px; scroll-margin-top:62px; }
+  .block h2 { font-size:19px; font-weight:600; display:flex; align-items:baseline; gap:10px; }
+  .block h2 .num { color:var(--accent); font-variant-numeric:tabular-nums; }
+  .block .desc { color:var(--ink-muted); font-size:13.5px; margin:4px 0 14px; max-width:64ch; }
+  button.play { flex-shrink:0; width:38px; height:38px; border-radius:50%; border:none; background:var(--play); color:var(--play-ink); font-size:15px; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:transform .12s ease,filter .12s ease; }
+  button.play:hover { filter:brightness(1.08); } button.play:active { transform:scale(0.92); }
+  button.play:focus-visible { outline:3px solid var(--accent); outline-offset:2px; }
+  button.play.playing { animation:pulse 0.7s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{transform:scale(1);} 50%{transform:scale(1.1);} }
+  @media (prefers-reduced-motion: reduce) { button.play.playing { animation:none; } }
+  .grammar-box { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--accent); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .grammar-box b { color:var(--ink); } .grammar-box .hl { color:var(--play); font-weight:700; }
+  .warn-box { background:var(--warn-bg); border:1px solid var(--line); border-left:4px solid var(--warn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .warn-box b { color:var(--warn); } .warn-box .big { font-size:15px; color:var(--ink); font-weight:700; display:block; margin-bottom:4px; }
+  .link-box { background:var(--sn-bg); border:1px solid var(--line); border-left:4px solid var(--sn); border-radius:8px; padding:12px 14px; font-size:13.5px; color:var(--ink-muted); margin-bottom:14px; }
+  .link-box b { color:var(--sn); }
+  .artikel-legend { display:flex; gap:14px; flex-wrap:wrap; margin-bottom:14px; font-size:13px; }
+  .artikel-legend span { display:inline-flex; align-items:center; gap:5px; }
+  .artikel-legend .dot { width:10px; height:10px; border-radius:50%; display:inline-block; }
+  .grid2 { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:8px; }
+  .wcard { display:flex; align-items:center; gap:10px; background:var(--surface); border:1px solid var(--line); border-left:4px solid var(--line); border-radius:var(--radius); padding:9px 10px 9px 12px; box-shadow:var(--shadow); }
+  .wcard.hb { border-left-color:var(--hb); } .wcard.sn { border-left-color:var(--sn); }
+  .wcard.der { border-left-color:var(--der); } .wcard.die { border-left-color:var(--die); } .wcard.das { border-left-color:var(--das); }
+  .wcard .de .art-der { color:var(--der); } .wcard .de .art-die { color:var(--die); } .wcard .de .art-das { color:var(--das); }
+  .wcard .txt { flex:1; min-width:0; }
+  .wcard .de { font-family:Georgia,serif; font-weight:700; font-size:15px; overflow-wrap:anywhere; }
+  .wcard .de b { color:var(--play); }
+  .wcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:1px; }
+  .wcard .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; }
+  .wcard button.play { width:30px; height:30px; font-size:13px; }
+  .card-list { display:flex; flex-direction:column; gap:8px; }
+  .pcard { display:flex; align-items:center; gap:12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:11px 12px 11px 15px; box-shadow:var(--shadow); }
+  .pcard.hb { border-left:4px solid var(--hb); } .pcard.sn { border-left:4px solid var(--sn); } .pcard.wn { border-left:4px solid var(--warn); }
+  .pcard .txt { flex:1; min-width:0; }
+  .pcard .de { font-family:Georgia,serif; font-size:15.5px; font-weight:600; }
+  .pcard .de b { color:var(--play); }
+  .pcard .tr { font-size:11.5px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .pcard .ru { font-size:12.5px; color:var(--ink-muted); margin-top:1px; }
+  .dialogue { display:flex; flex-direction:column; gap:10px; }
+  .bubble-row { display:flex; gap:10px; align-items:flex-end; }
+  .bubble-row.left { justify-content:flex-start; } .bubble-row.right { justify-content:flex-end; flex-direction:row-reverse; }
+  .avatar { flex-shrink:0; width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:Georgia,serif; font-weight:700; font-size:11px; color:var(--accent-ink); background:var(--accent); }
+  .bubble-row.right .avatar { background:var(--play); color:var(--play-ink); }
+  .bubble { max-width:82%; border-radius:14px; padding:9px 12px; box-shadow:var(--shadow); display:flex; align-items:center; gap:10px; }
+  .bubble-row.left .bubble { background:var(--bubble-a); border-bottom-left-radius:4px; } .bubble-row.right .bubble { background:var(--bubble-m); border-bottom-right-radius:4px; }
+  .bubble .txt .de { font-family:Georgia,serif; font-weight:600; font-size:14.5px; }
+  .bubble .txt .tr { font-size:11px; color:var(--tr); font-weight:600; margin-top:2px; }
+  .bubble .txt .ru { font-size:12px; color:var(--ink-muted); margin-top:1px; } .bubble button.play { width:32px; height:32px; font-size:13px; }
+  .hw { background:var(--surface-2); border:1px solid var(--line); border-left:4px solid var(--play); border-radius:8px; padding:14px 16px; font-size:14px; }
+  .hw ol { margin:6px 0 0; padding-left:20px; } .hw li { margin:6px 0; }
+  footer.lp-foot { margin-top:44px; padding-top:16px; border-top:1px solid var(--line); font-size:12px; color:var(--ink-faint); }
+</style>
+<style>
+  .grammar-box.doc { border-left-color:var(--play); }
+  .dlg-title { font-family:Georgia,serif; font-size:15px; font-weight:600; color:var(--ink); margin:20px 0 10px; }
+  .tabwrap { overflow-x:auto; margin-bottom:14px; }
+  .ftab { width:100%; border-collapse:collapse; font-size:14px; background:var(--surface); }
+  .ftab th, .ftab td { border:1px solid var(--line); padding:6px 10px; text-align:left; }
+  .ftab th { background:var(--surface-2); color:var(--ink-muted); font-weight:600; font-size:12.5px; }
+  .ftab td { font-family:Georgia,serif; font-weight:600; color:var(--ink); }
+  .ftab td:first-child { font-family:inherit; font-weight:400; color:var(--ink-muted); }
+  .err { display:flex; flex-direction:column; gap:6px; }
+  .err-row { display:grid; grid-template-columns:1fr 1fr; gap:4px 12px; background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:10px 13px; box-shadow:var(--shadow); }
+  .err-row .bad { font-family:Georgia,serif; color:#b3261e; text-decoration:line-through; text-decoration-thickness:1px; }
+  .err-row .good { font-family:Georgia,serif; font-weight:700; color:var(--accent); }
+  .err-row .why { grid-column:1 / -1; font-size:12.5px; color:var(--ink-muted); }
+  :root[data-theme="dark"] .err-row .bad { color:#f2867c; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .err-row .bad { color:#f2867c; } }
+  @media (max-width:560px) { .err-row { grid-template-columns:1fr; } }
+</style>
+
+<style id="backbar-css">
+  .backbar{ position:sticky; top:0; z-index:9999; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    padding:7px 14px; border-radius:999px; border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar a.bb-link:active{ transform:scale(0.97); }
+  .backbar .bb-title{ color:rgba(255,255,255,0.72); font-size:12.5px; margin-left:auto;
+    font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:52%; }
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+</style>
+<!--ТЕМА-ЗУБРА-START-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../css/lesson.css">
+<!--ТЕМА-ЗУБРА-END-->
+<link rel="stylesheet" href="../css/вариант-стекло.css">
+<meta name="robots" content="noindex">
+</head>
+<body>
+<div class="backbar"><a class="bb-link" href="../index.html">&#8592; Все уроки</a><span class="bb-title">Урок 16 — Квартира и жильё</span></div>
+
+<div class="lp">
+  <div class="eyebrow">Курс немецкого · Григорий · интерактивный урок</div>
+  <h1>Урок 16. Квартира и жильё (Wohnung und Haus)</h1>
+  <p class="lede">Самый практичный урок курса: снять квартиру — первое, что ты будешь делать в Германии, ещё до первого приёма. Плюс ловушки, на которых теряют деньги, переезд с регистрацией, звонок хозяйке и врачебный блок «жильё в анамнезе». У каждого слова озвучка и <span style="color:var(--tr);font-weight:600">[транскрипция]</span>.</p>
+  <div class="hint">🔊 &nbsp;= нажми и слушай</div>
+
+  <div class="toc">
+    <b>Что в уроке</b>
+    <ol>
+      <li><a href="#s1">Дом и квартира</a></li>
+      <li><a href="#s2">Комнаты</a></li>
+      <li><a href="#s3">Ловушка: счёт комнат</a></li>
+      <li><a href="#s4">Мебель и техника</a></li>
+      <li><a href="#s5">Где что стоит (Wo? + Dativ)</a></li>
+      <li><a href="#s6">Ловушка: этажи</a></li>
+      <li><a href="#s7">Аренда: Kalt или Warm</a></li>
+      <li><a href="#s8">Как читать объявление</a></li>
+      <li><a href="#s9">Вопросы при поиске жилья</a></li>
+      <li><a href="#s10">Переезд и регистрация</a></li>
+      <li><a href="#s11">Что-то сломалось</a></li>
+      <li><a href="#s12">Жильё в анамнезе</a></li>
+      <li><a href="#s13">Частые ошибки</a></li>
+      <li><a href="#s14">Диалоги</a></li>
+      <li><a href="#s15">Домашка</a></li>
+    </ol>
+  </div>
+
+  <section class="block" id="s1">
+    <h2><span class="num">1</span> Дом и квартира</h2>
+    <div class="grammar-box">
+      Как всегда — <b>сразу с артиклем</b>, род подсвечен цветом и полоской слева. Обрати внимание на пару <i>der Stock</i> / <i>die Etage</i>: это одно и то же (этаж), просто первое немецкое, второе из французского. В объявлениях встретишь оба.
+    </div>
+    <div class="artikel-legend">
+      <span><span class="dot" style="background:var(--der)"></span> <b style="color:var(--der)">der</b> — муж. род</span>
+      <span><span class="dot" style="background:var(--die)"></span> <b style="color:var(--die)">die</b> — жен. род</span>
+      <span><span class="dot" style="background:var(--das)"></span> <b style="color:var(--das)">das</b> — ср. род</span>
+    </div>
+    <div class="grid2" id="basis"></div>
+  </section>
+
+  <section class="block" id="s2">
+    <h2><span class="num">2</span> Комнаты</h2>
+    <div class="grammar-box">
+      Здесь работает конструктор: <b class="hl">Zimmer</b> = комната, и почти все названия — это «что-делать-комната». <i>wohnen</i> (жить) + Zimmer = <b>Wohnzimmer</b> (гостиная), <i>schlafen</i> (спать) + Zimmer = <b>Schlafzimmer</b> (спальня), <i>Arbeit</i> (работа) → <b>Arbeitszimmer</b> (кабинет). Все они <b class="hl">das</b>, потому что род даёт последнее слово — <i>das Zimmer</i>.
+    </div>
+    <div class="grid2" id="rooms"></div>
+  </section>
+
+  <section class="block" id="s3">
+    <h2><span class="num">3</span> Ловушка первая: в объявлении «3 комнаты» — это не то, что ты подумал</h2>
+    <div class="warn-box">
+      <span class="big">Кухня и ванная в счёт НЕ входят</span>
+      <b>Dreizimmerwohnung</b> — это <b>три жилые комнаты</b> ПЛЮС кухня, ванная и коридор. То есть по-русски это скорее «трёшка», а не «три комнаты вместе с кухней». Если ищешь как в России — ошибёшься на целую комнату и переплатишь.<br><br>
+      Отсюда и странная на первый взгляд запись в объявлениях: <i>«3 Zimmer, Küche, Bad»</i> — кухню и ванную перечисляют отдельно именно потому, что они не считаются.
+    </div>
+    <div class="card-list" id="zimmerTrap"></div>
+  </section>
+
+  <section class="block" id="s4">
+    <h2><span class="num">4</span> Мебель и техника</h2>
+    <p class="desc">Двенадцать предметов, которых хватит, чтобы описать любую квартиру — и на осмотре, и в разговоре.</p>
+    <div class="grid2" id="furniture"></div>
+    <p class="desc" style="margin-top:16px">Кухня и ванная — что там должно быть:</p>
+    <div class="grid2" id="geraete"></div>
+    <div class="warn-box" style="margin-top:14px">
+      <span class="big">Ловушка: в квартире может не быть кухни ВООБЩЕ</span>
+      В Германии квартиру часто сдают с голыми стенами на кухне — ни плиты, ни шкафов, ни раковины: прежний жилец увёз свою кухню с собой. Ищи в объявлении <b>Einbauküche</b> (сокращённо <b>EBK</b>) — «встроенная кухня». Нет этого слова — готовься покупать кухню сам.
+    </div>
+    <div class="card-list" id="ebk"></div>
+  </section>
+
+  <section class="block" id="s5">
+    <h2><span class="num">5</span> Где что стоит — Wo? + Dativ</h2>
+    <div class="link-box">
+      🔗 <b>Прямое продолжение урока 11.</b> Вопрос <i>Wo?</i> (где) — значит <b>Dativ</b>: <i>im Schlafzimmer</i>, <i>über dem Tisch</i>, <i>am Fenster</i>. Ничего нового учить не надо, только подставить мебель.
+    </div>
+    <div class="grammar-box">
+      Одна разница с русским: мы почти всё «кладём» словом «есть/находится», а немцы обязательно уточняют <b>позу предмета</b>:<br><br>
+      <b class="hl">stehen</b> — стоит (вертикальное: шкаф, стул, кровать, бутылка)<br>
+      <b class="hl">liegen</b> — лежит (горизонтальное: ковёр, книга, полотенце)<br>
+      <b class="hl">hängen</b> — висит (лампа, картина, зеркало)<br><br>
+      Сказать «кровать лежит в спальне» — ошибка. Кровать <i>стоит</i>.
+    </div>
+    <div class="grid2" id="posVerbs"></div>
+    <div class="card-list" id="position" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s6">
+    <h2><span class="num">6</span> Ловушка вторая: этажи сдвинуты на один</h2>
+    <div class="warn-box">
+      <span class="big">der erste Stock — это наш ВТОРОЙ этаж</span>
+      Первый этаж у немцев не считается «первым»: он называется <b>das Erdgeschoss</b> (буквально «земляной этаж»). Счёт начинается с того, что выше:<br><br>
+      Erdgeschoss = наш 1-й &nbsp;·&nbsp; erster Stock = наш 2-й &nbsp;·&nbsp; zweiter Stock = наш 3-й<br><br>
+      Ты это уже видел в уроке 5 с порядковыми числами. Здесь оно становится практическим: «квартира im dritten Stock» — это подъём на четыре этажа. Без лифта — существенно.
+    </div>
+    <div class="card-list" id="floors"></div>
+  </section>
+
+  <section class="block" id="s7">
+    <h2><span class="num">7</span> Ловушка третья, самая дорогая: Kaltmiete или Warmmiete</h2>
+    <div class="warn-box">
+      <span class="big">В объявлении почти всегда пишут холодную — она меньше</span>
+      <b>Kaltmiete</b> [кальтмитэ] — «холодная» аренда, <b>только за квадратные метры</b>. Отопление, вода, вывоз мусора сюда НЕ входят.<br>
+      <b>Nebenkosten</b> [нэбэнкостэн] — те самые «побочные расходы» сверху, обычно 150–350 € в месяц.<br>
+      <b>Warmmiete</b> [вармитэ] — «тёплая», то есть Kaltmiete + Nebenkosten. <b>Вот это ты реально платишь.</b><br><br>
+      И третья сумма при въезде: <b>Kaution</b> (залог) — по закону до трёх холодных аренд, возвращается при выезде. То есть на старте нужно иметь примерно четыре месячных платежа сразу.
+    </div>
+    <div class="card-list" id="kaltwarm"></div>
+    <p class="desc" style="margin-top:16px">Слова, которые встретишь в любом объявлении и договоре:</p>
+    <div class="grid2" id="miete"></div>
+    <p class="desc" style="margin-top:16px">И одно прилагательное, от которого зависит, везти ли мебель через границу:</p>
+    <div class="grid2" id="moebl"></div>
+  </section>
+
+  <section class="block" id="s8">
+    <h2><span class="num">8</span> Как читать объявление</h2>
+    <div class="grammar-box">
+      Объявления пишут сокращениями — место на сайте платное. Вот расшифровка того, что встретишь почти в каждом:
+    </div>
+    <div class="tabwrap"><table class="ftab">
+      <tr><th>пишут</th><th>значит</th><th>по-русски</th></tr>
+      <tr><td>Zi.</td><td>Zimmer</td><td>жилых комнат</td></tr>
+      <tr><td>KM / WM</td><td>Kaltmiete / Warmmiete</td><td>аренда без / с коммуналкой</td></tr>
+      <tr><td>NK</td><td>Nebenkosten</td><td>коммуналка</td></tr>
+      <tr><td>EBK</td><td>Einbauküche</td><td>встроенная кухня есть</td></tr>
+      <tr><td>EG / 2. OG / DG</td><td>Erdgeschoss / Obergeschoss / Dachgeschoss</td><td>1-й этаж / наш 3-й / мансарда</td></tr>
+      <tr><td>m² (qm)</td><td>Quadratmeter</td><td>квадратные метры</td></tr>
+      <tr><td>WG</td><td>Wohngemeinschaft</td><td>квартира на нескольких жильцов</td></tr>
+      <tr><td>ab sofort</td><td>—</td><td>свободна сразу</td></tr>
+    </table></div>
+    <div class="grid2" id="anzeige"></div>
+    <div class="card-list" id="anzeigeEx" style="margin-top:10px"></div>
+  </section>
+
+  <section class="block" id="s9">
+    <h2><span class="num">9</span> Восемь вопросов при поиске жилья</h2>
+    <p class="desc">Этого набора хватит на телефонный звонок и на осмотр. Выучи блоком — спросишь ровно то, что решает дело.</p>
+    <div class="card-list" id="fragen"></div>
+  </section>
+
+  <section class="block" id="s10">
+    <h2><span class="num">10</span> Переезд и регистрация</h2>
+    <div class="grammar-box">
+      «Переезжать» — <b class="hl">umziehen</b>, «въезжать» — <b class="hl">einziehen</b>. Оба с отделяемой приставкой (урок 13) и в Perfekt идут через <b>sein</b> — это движение (урок 12): <i>Wir <b>sind</b> eingezogen</i>.
+    </div>
+    <div class="warn-box">
+      <span class="big">Anmeldung — обязательно, в течение двух недель</span>
+      После въезда нужно зарегистрироваться по месту жительства в <b>Bürgeramt</b> (районная служба). Хозяин квартиры даёт для этого бумагу — <b>Wohnungsgeberbestätigung</b>. После первой регистрации по почте приходит налоговый номер (<i>Steuer-ID</i>), а его спросит работодатель — то есть клиника.
+    </div>
+    <div class="card-list" id="umzug"></div>
+  </section>
+
+  <section class="block" id="s11">
+    <h2><span class="num">11</span> Что-то сломалось — звоним хозяину</h2>
+    <div class="grammar-box">
+      Мелкий ремонт в съёмной квартире обычно делает хозяин — ему и звонят. Мастер — <b class="hl">der Handwerker</b>. И ещё одно немецкое правило: в домовых правилах (<i>Hausordnung</i>) почти всегда есть <b>Nachtruhe</b> — тишина обычно с 22 до 6 часов.
+    </div>
+    <div class="card-list" id="defekt"></div>
+  </section>
+
+  <section class="block" id="s12">
+    <h2><span class="num">12</span> Жильё в анамнезе — твой рабочий блок</h2>
+    <div class="link-box">
+      🔗 <b>Зачем флебологу спрашивать про квартиру:</b> после ЭВЛО и при тяжёлой ХЗВ важно, сколько человек ходит по лестнице, может ли поднять ноги дома и есть ли кому помочь. Этаж и лифт — это не светская беседа, а часть плана реабилитации. Заодно тут повторяются модальные глаголы (können, müssen, sollten) от Даши.
+    </div>
+    <div class="card-list" id="med"></div>
+    <div class="grammar-box doc" style="margin-top:14px">
+      🩺 <b>Дома при ХЗВ:</b> приподнятый ножной конец кровати (бруски 10–15 см под ножки) и душ вместо горячей ванны. Ограничения после операции — лестницы, нагрузки — называй по своему протоколу. <i>unter die Beine</i> — «под ноги» с вопросом «куда?», поэтому Akkusativ; разберём отдельно.
+    </div>
+    <div class="card-list" id="med2"></div>
+  </section>
+
+  <section class="block" id="s13">
+    <h2><span class="num">13</span> Частые ошибки русскоговорящих</h2>
+    <div class="err">
+      <div class="err-row"><span class="bad">Das Bett liegt im Schlafzimmer.</span><span class="good">Das Bett steht im Schlafzimmer.</span><span class="why">кровать стоит</span></div>
+      <div class="err-row"><span class="bad">der Schlafzimmer</span><span class="good">das Schlafzimmer</span><span class="why">род даёт последнее слово: das Zimmer</span></div>
+      <div class="err-row"><span class="bad">Ich bin in die Küche.</span><span class="good">Ich bin in der Küche.</span><span class="why">где? → Dativ</span></div>
+      <div class="err-row"><span class="bad">Ich suche ein Wohnung.</span><span class="good">Ich suche eine Wohnung.</span><span class="why">die Wohnung → eine</span></div>
+      <div class="err-row"><span class="bad">Ich habe umgezogen.</span><span class="good">Ich bin umgezogen.</span><span class="why">переезд — движение → sein</span></div>
+      <div class="err-row"><span class="bad">im ersten Stock (про наш 1-й)</span><span class="good">im Erdgeschoss</span><span class="why">наш первый этаж — Erdgeschoss</span></div>
+    </div>
+  </section>
+
+  <section class="block" id="s14">
+    <h2><span class="num">14</span> Диалоги</h2>
+    <div class="desc">Маклера, Григория и пациента озвучивает Yannick.</div>
+    <h3 class="dlg-title">Смотрим квартиру</h3>
+    <div class="dialogue" id="dialog"></div>
+    <h3 class="dlg-title">Звонок хозяйке: не работает отопление</h3>
+    <div class="dialogue" id="dialog2"></div>
+    <div class="grammar-box" style="margin-top:12px">
+      <i>Auf Wiederhören!</i> — «до свидания» по телефону: «до нового слышания», ведь увидеться нельзя. Вживую — <i>Auf Wiedersehen</i>.
+    </div>
+    <h3 class="dlg-title">Жильё в анамнезе перед операцией</h3>
+    <div class="dialogue" id="dialog3"></div>
+  </section>
+
+  <section class="block" id="s15">
+    <h2><span class="num">15</span> Домашка</h2>
+    <div class="hw">
+      <ol>
+        <li>Назови все комнаты своей квартиры с артиклем. Проверь себя: почему они почти все <i>das</i>?</li>
+        <li>Опиши, где что стоит — пять предложений с <b>stehen / liegen / hängen</b> и Dativ. Следи за позой предмета.</li>
+        <li>Ты видишь объявление: <i>«3 Zimmer, 75 m², Kaltmiete 900 €, NK 180 €, Kaution 3 KM»</i>. Сколько комнат жилых, сколько ты платишь в месяц и сколько нужно денег при въезде?</li>
+        <li>Расшифруй: <i>«2 Zi., 58 m², 2. OG, EBK, KM 780 €, NK 190 €, ab sofort»</i>. На каком это этаже по-нашему и есть ли кухня?</li>
+        <li>На каком этаже ты живёшь — по-немецки? (Осторожно: сдвиг на один.)</li>
+        <li>Позвони хозяйке (вслух): не работает отопление в спальне, с какого времени, когда ты дома.</li>
+        <li>Задай маклеру пять вопросов из раздела 9 вслух, не подглядывая.</li>
+      </ol>
+    </div>
+  </section>
+
+<!--ИГРЫ-START-->
+<section class="игры" id="игры"></section>
+<style>
+/* 27.10.2026: «✓ ответ» у каждого предложения домашки */
+.hw-ответ-кн{ display:inline-flex; align-items:center; margin-left:6px; padding:2px 10px; border-radius:999px; cursor:pointer;
+  border:1px solid #1f9d55; background:transparent; color:#1f9d55; font:inherit; font-size:11.5px; font-weight:700; vertical-align:middle; }
+.hw-ответ-кн.вкл{ background:#1f9d55; color:#fff; }
+.hwrow .hw-ответ{ display:block; margin:6px 0 2px; padding:9px 12px; border-radius:10px; font-size:13.5px; line-height:1.5;
+  background:var(--surface-2,#f3f4fa); border-left:4px solid #1f9d55; }
+.hwrow .hw-ответ[hidden]{ display:none !important; }
+.hw-ответ .hw-why{ margin-top:3px; color:var(--ink-muted,#5b615c); font-size:13px; }
+.hw-ок{ color:#1f9d55; font-weight:800; } .hw-почти{ color:#c07a00; font-weight:800; } .hw-нет{ color:#d64545; font-weight:800; }
+/* 20.10.2026: игры урока — отдельным экраном на весь экран, как ЗУБР */
+.иг-пуск{ display:flex; align-items:center; gap:14px; width:100%; text-align:left; cursor:pointer; font:inherit;
+  background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff); border:none; border-radius:18px; padding:18px 18px; min-height:72px;
+  box-shadow:var(--shadow,0 8px 24px rgba(40,50,110,.12)); }
+.иг-пуск i{ font-style:normal; font-size:30px; } .иг-пуск b{ display:block; font-size:18px; }
+.иг-пуск small{ display:block; font-size:13px; opacity:.85; margin-top:2px; font-weight:500; }
+.иг-экран{ position:fixed; inset:0; z-index:9000; overflow-y:auto; -webkit-overflow-scrolling:touch;
+  background:var(--bg,var(--surface,#fff)); padding:0 10px 12px; }
+.иг-экран[hidden]{ display:none !important; }
+.иг-экран-верх{ position:sticky; top:0; z-index:5; display:flex; align-items:center; gap:10px; padding:10px 2px;
+  background:var(--bg,var(--surface,#fff)); border-bottom:1px solid var(--line,#e4e6ef); margin:0 -2px 8px;
+  font-family:-apple-system,"SF Pro Text",Arial,sans-serif; color:var(--ink,#1c2242); }
+.иг-экран-верх button{ font:inherit; font-size:14px; font-weight:700; cursor:pointer; border-radius:999px;
+  padding:8px 14px; border:1px solid var(--line,#e4e6ef); background:var(--surface,#fff); color:var(--ink,#1c2242); }
+.иг-экран-верх button{ white-space:nowrap; flex:0 0 auto; }
+.иг-экран-верх b{ font-size:14px; line-height:1.3; }
+.иг-экран .игры{ margin:0 auto; max-width:760px; }
+.иг-выбор{ display:grid; gap:8px; margin:6px 0 14px; }
+.иг-выбор label{ display:flex; align-items:center; gap:11px; padding:11px 12px; border-radius:14px; cursor:pointer;
+  background:var(--surface-2,#f3f4fa); border:1px solid var(--line,#e4e6ef); min-height:54px; }
+.иг-выбор label.все{ border:2px solid var(--accent,#1f5f5b); }
+.иг-выбор input{ width:22px; height:22px; flex:0 0 auto; accent-color:var(--accent,#1f5f5b); }
+.иг-выбор .зн{ font-size:22px; } .иг-выбор .им{ flex:1; font-weight:700; font-size:15px; }
+.иг-выбор .им small{ display:block; font-weight:500; font-size:12.5px; color:var(--ink-muted,#5b615c); margin-top:2px; }
+.иг-выбор .рек{ font-size:12.5px; font-weight:700; color:var(--accent,#1f5f5b); white-space:nowrap; }
+.иг-играть{ position:sticky; bottom:10px; width:100%; font:inherit; font-size:17px; font-weight:800; cursor:pointer;
+  border:none; border-radius:16px; padding:15px; background:var(--accent,#1f5f5b); color:var(--accent-ink,#fff);
+  box-shadow:0 6px 20px rgba(0,0,0,.18); }
+.иг-играть:disabled{ opacity:.45; }
+</style>
+<script src="../kartinki.js?v=202611041715"></script>
+<script src="../igry.js?v=202611041715"></script>
+<script src="../dz.js?v=202611041715"></script>
+<script>
+/* Игры в конце урока. Слова берём из того же словаря, что кормит ЗУБР,
+   поэтому блок один на все уроки и к каждому уроку руками ничего не нужно.  */
+(function () {
+  var корень = document.getElementById('игры');
+  if (!корень) return;
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html', '');
+  if (!/^[a-z]+\d+$/.test(файл) || !window.ИГРЫ) { корень.style.display = 'none'; return; }
+
+  /* Игры в домашку (18.09). Домашку проверяет не Даша, а сам ученик, и
+     после письменной части полезно прогнать те же слова в игре. Кнопки
+     ставим прямо в конец блока домашки — они зовут ядро напрямую. */
+  function вДомашку() {
+    var метка = document.querySelector('.hwrow, .hw-tr-btn');
+    var секция = метка && метка.closest('section');
+    if (!секция) {
+      // уроки со мной: домашка — обычный раздел с заголовком
+      var все = document.querySelectorAll('section h2');
+      for (var i = 0; i < все.length; i++) {
+        if (/Домашк/i.test(все[i].textContent)) { секция = все[i].closest('section'); break; }
+      }
+    }
+    if (!секция || секция === корень || секция.querySelector('.иг-вдомашке')) return;
+    var коды = (ИГРЫ.какиеЕсть && ИГРЫ.какиеЕсть()) || [];
+    if (!коды.length) return;
+    var имена = { порядок:'🧩 Собери фразу', роды:'🗂 der, die, das', пропуск:'✏️ Вставь слово',
+                  картинка:'🖼 Подпиши картинку', анаграмма:'🔤 Собери слово',
+                  порядоксписка:'🔢 По порядку', парочки:'🃏 Парочки', колесо:'🎡 Колесо слов',
+                  плитки:'🎴 Плитки', книжки:'📚 Вставь в текст',
+                  скажи:'🎤 Говори вслух', диктант:'✍️ Диктант', отметь:'🖍 Отметь слова',
+                  текст:'📜 Текст по порядку', диалог:'💬 Диалог-карточки', сценарий:'🩺 Разговор с пациентом' };
+    var коробка = document.createElement('div');
+    коробка.className = 'иг-вдомашке';
+    коробка.innerHTML = '<b>🎮 Проверь себя в игре</b>' +
+      '<p>Те же слова занятия, только играть: ' + коды.length + ' игр, можно все подряд. Откроются на весь экран.</p>' +
+      '<div class="иг-вдомашке-кн">' + (window.ДОМАШКА_ОТКРЫТЬ ? '<button type="button" id="дзИзДомашки">📚 Домашка к этому уроку</button>' : '') +
+      '<button type="button" id="игИзДомашки">🎮 Игры к этому занятию</button></div>';
+    секция.appendChild(коробка);
+    коробка.querySelector('#игИзДомашки').onclick = function () { if (window.ИГРЫ_ОТКРЫТЬ) ИГРЫ_ОТКРЫТЬ(); };
+    var дз = коробка.querySelector('#дзИзДомашки'); if (дз) дз.onclick = function () { ДОМАШКА_ОТКРЫТЬ(); };
+  }
+
+  /* Экран выбора: первая строка — «все игры подряд», дальше галочки; выбор помним по уроку. */
+  function выбор(карта, игры, играть) {
+    var ключ = 'nemeckiy_igry_vybor_' + файл, помню = null;
+    try { помню = JSON.parse(localStorage.getItem(ключ) || 'null'); } catch (e) {}
+    var вкл = {}; игры.forEach(function (и) { вкл[и.код] = !помню || помню.indexOf(и.код) >= 0; });
+    function экр(т) { return String(т == null ? '' : т).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+    карта.innerHTML = '<div class="иг-верх"><div class="иг-знак">🎮</div><div><h2>Выбери игры</h2></div></div>' +
+      '<p class="иг-под">Все слова — из этого занятия. Отметь, во что играть, и жми «Играть»: игры пойдут одна за другой.</p>' +
+      '<div class="иг-выбор"><label class="все"><input type="checkbox" id="игВсе"><span class="зн">⭐</span>' +
+      '<span class="им">Играть во все игры подряд<small>' + игры.length + ' игр, по очереди</small></span></label>' +
+      игры.map(function (и) {
+        return '<label><input type="checkbox" data-к="' + и.код + '"' + (вкл[и.код] ? ' checked' : '') + '>' +
+          '<span class="зн">' + и.значок + '</span><span class="им">' + экр(и.имя) + '<small>' + экр(и.под) + '</small></span>' +
+          (и.рекорд ? '<span class="рек">' + и.рекорд.процент + '%</span>' : '') + '</label>';
+      }).join('') + '</div><button type="button" class="иг-играть" id="игИграть"></button>';
+    var все = карта.querySelector('#игВсе'), поля = карта.querySelectorAll('input[data-к]'), кн = карта.querySelector('#игИграть');
+    function отмечено() { return Array.prototype.filter.call(поля, function (п) { return п.checked; }).map(function (п) { return п.getAttribute('data-к'); }); }
+    function обновить() {
+      var о = отмечено();
+      все.checked = о.length === поля.length;
+      кн.disabled = !о.length;
+      кн.textContent = о.length ? '▶ Играть' + (о.length > 1 ? ' (' + о.length + ' игр подряд)' : '') : 'Отметь хотя бы одну игру';
+      try { localStorage.setItem(ключ, JSON.stringify(о)); } catch (e) {}
+    }
+    все.onchange = function () { Array.prototype.forEach.call(поля, function (п) { п.checked = все.checked; }); обновить(); };
+    Array.prototype.forEach.call(поля, function (п) { п.onchange = обновить; });
+    кн.onclick = function () { var о = отмечено(); if (о.length) { карта.scrollIntoView({ block: 'start' }); играть(о); } };
+    обновить();
+  }
+
+  /* «Проверить мои ответы» (15.10.2026, как на ZUM): к каждому блоку пропусков домашки.
+     Ответы берём из того же «Показать ответы» (раскрываем и сразу прячем), сверяем по строкам:
+     зелёный — верно, оранжевый — опечатка («почти»), красный — ошибка. Работает и на старых страницах. */
+  function чист(s) { return String(s || '').toLowerCase().replace(/[.,!?;:«»"„“()]/g, '').replace(/\s+/g, ' ').trim(); }
+  function проверкаДомашки() {
+    Array.prototype.forEach.call(document.querySelectorAll('button.кн-ответы'), function (кн) {
+      if (кн.dataset.проверка) return;
+      var блок = кн.previousElementSibling, ответы = кн.nextElementSibling;
+      if (!блок || !ответы || !блок.querySelector('.hwrow input.fld')) return;
+      if (!ответы.innerHTML) { кн.click(); кн.click(); }            // showAnswers рисует ответы при первом показе
+      var ответыHtml = Array.prototype.slice.call(ответы.querySelectorAll('.hw-ans'));
+      var список = ответыHtml.map(function (о) {
+        var b = о.querySelector('b');
+        return (b ? b.textContent : '').replace(/^\s*\d+\.\s*/, '').replace(/🔊/g, '').trim();
+      });
+      var строки = блок.querySelectorAll('.hwrow');
+      if (!список.length || список.length !== строки.length) return;
+      кн.dataset.проверка = '1';
+      // одна строка: красим поля, возвращаем [верно, почти, всего]
+      function сверить(строка, i) {
+        var верно = 0, почти = 0, всего = 0;
+        var поля = строка.querySelectorAll('input.fld');
+        var части = список[i].split(/\s*(?:…|\.\.\.)\s*/);
+        if (части.length !== поля.length) части = поля.length === 1 ? [список[i]] : части;
+        Array.prototype.forEach.call(поля, function (поле, k) {
+          var варианты = String(части[k] || '').split(/\s*\|\s*|\s+\/\s+/).map(чист);
+          var в = чист(поле.value); всего++;
+          поле.title = '';
+          if (!в) { поле.style.borderColor = ''; поле.style.background = ''; return; }
+          if (варианты.indexOf(в) >= 0) { верно++; поле.style.borderColor = '#1f9d55'; поле.style.background = 'rgba(31,157,85,.10)'; }
+          else if (window.ИГРЫ_ОПЕЧАТКА && варианты.some(function (о) { return ИГРЫ_ОПЕЧАТКА(в, о); })) {
+            почти++; поле.style.borderColor = '#c07a00'; поле.style.background = 'rgba(192,122,0,.10)'; поле.title = 'почти — проверь написание';
+          } else { поле.style.borderColor = '#d64545'; поле.style.background = 'rgba(214,69,69,.08)'; }
+        });
+        return [верно, почти, всего];
+      }
+      /* 27.10.2026, врач: «по каждому предложению — своя кнопка: проверить и показать правильный ответ
+         с объяснением, а не длинный список в конце». Кнопка «✓ ответ» рядом с «перевод». */
+      Array.prototype.forEach.call(строки, function (строка, i) {
+        var место = строка.querySelector('.q') || строка;
+        if (место.querySelector('.hw-ответ-кн')) return;
+        var к = document.createElement('button');
+        к.type = 'button'; к.className = 'hw-ответ-кн'; к.textContent = '✓ ответ';
+        var плашка = document.createElement('div'); плашка.className = 'hw-ответ'; плашка.hidden = true;
+        // перед «перевод»: та кнопка открывает nextElementSibling — свой перевод, вставать между нельзя
+        var трКн = место.querySelector('.hw-tr-btn');
+        if (трКн) место.insertBefore(к, трКн); else место.appendChild(к);
+        место.appendChild(плашка);   // внутрь .q: сама строка — flex в ряд
+        к.onclick = function () {
+          if (!плашка.hidden) { плашка.hidden = true; к.classList.remove('вкл'); return; }
+          var р = сверить(строка, i), ввод = р[2] && Array.prototype.some.call(строка.querySelectorAll('input.fld'), function (п) { return п.value.trim(); });
+          var оценка = !ввод ? '' : р[0] === р[2] ? '<span class="hw-ок">✅ Верно!</span> ' :
+            р[0] + р[1] === р[2] ? '<span class="hw-почти">🟠 Почти — проверь написание.</span> ' : '<span class="hw-нет">❌ Не так.</span> ';
+          var о = ответыHtml[i].cloneNode(true), b = о.querySelector('b');
+          if (b) b.innerHTML = b.innerHTML.replace(/^\s*\d+\.\s*/, '');
+          плашка.innerHTML = оценка + 'Правильно: ' + о.innerHTML;
+          плашка.hidden = false; к.classList.add('вкл');
+        };
+      });
+      var пр = document.createElement('button');
+      пр.type = 'button'; пр.className = 'кн-ответы'; пр.style.marginRight = '8px';
+      пр.textContent = '✓ Проверить всё сразу';
+      var итог = document.createElement('div'); итог.style.cssText = 'margin-top:8px;font-weight:600';
+      кн.parentNode.insertBefore(пр, кн); кн.parentNode.insertBefore(итог, кн.nextSibling);
+      пр.onclick = function () {
+        var верно = 0, всего = 0, почти = 0;
+        Array.prototype.forEach.call(строки, function (строка, i) {
+          var р = сверить(строка, i); верно += р[0]; почти += р[1]; всего += р[2];
+        });
+        итог.textContent = 'Верно ' + верно + ' из ' + всего + (почти ? ' · оранжевых (опечатка, почти верно): ' + почти : '') +
+          (верно === всего ? ' — отлично!' : ' — нажми «✓ ответ» у красных и оранжевых.');
+      };
+    });
+  }
+  // домашку рисует скрипт урока, который может стоять ниже блока игр — ждём полной загрузки
+  function запуститьПроверку() { try { проверкаДомашки(); } catch (e) {} }
+  if (document.readyState === 'complete') запуститьПроверку();
+  else window.addEventListener('load', запуститьПроверку);
+
+  // разговор с развилками (если для урока написан): scenarii/<урок>.json — грузим до старта игр
+  fetch('../scenarii/' + файл + '.json?v=' + Date.now())
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; })
+    .then(function (сц) { if (сц) window.ИГРЫ_СЦЕНАРИЙ = сц; })
+    .then(function () { return window.КАРТИНКИ ? КАРТИНКИ.готово : null; })  // 24.10: играм и домашке нужны картинки слов
+    .then(function () { return fetch('../words/' + файл + '.json?v=' + Date.now()); })
+    .then(function (r) { if (!r.ok) throw 0; return r.json(); })
+    .then(function (д) {
+      if (!д || д.length < 6) { корень.style.display = 'none'; return; }
+      var экран = document.createElement('div');
+      экран.className = 'иг-экран'; экран.hidden = true;
+      var заголовок = (document.querySelector('.bb-title') || document.querySelector('h1') || {}).textContent || '';
+      экран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="игЗакрыть">✕ Закрыть</button>' +
+        '<b>🎮 Игры · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section class="игры" id="игрыЭкран"></section>';
+      document.body.appendChild(экран);
+      var вышло = ИГРЫ.старт({ корень: экран.querySelector('#игрыЭкран'), слова: д, урок: файл, база: '../', меню: выбор });
+      if (!вышло) { корень.style.display = 'none'; return; }
+      var коды = ИГРЫ.какиеЕсть();
+      корень.innerHTML = '<button type="button" class="иг-пуск" id="игПуск"><i>🎮</i><span><b>Игры к этому занятию</b>' +
+        '<small>' + коды.length + ' игр на словах урока · открываются на весь экран</small></span></button>';
+      корень.querySelector('#игПуск').onclick = function () { открыть(); };
+
+      /* 21.10.2026: «📚 Домашка к этому уроку» — у уроков с Claude (lessons/urokN): задания по одному,
+         потом игры; из игр — обратно в задания. Строится сама из того же словаря (dz.js). */
+      var дзЭкран = null;
+      if (/^urok\d+$/.test(файл) && window.ДОМАШКА) {
+        дзЭкран = document.createElement('div');
+        дзЭкран.className = 'иг-экран'; дзЭкран.hidden = true;
+        дзЭкран.innerHTML = '<div class="иг-экран-верх"><button type="button" id="дзЗакрыть">✕ Закрыть</button>' +
+          '<b>📚 Домашка · ' + заголовок.replace(/[<>&]/g, '') + '</b></div><section id="дзКорень"></section>';
+        document.body.appendChild(дзЭкран);
+        var заданий = ДОМАШКА.старт({ корень: дзЭкран.querySelector('#дзКорень'), слова: д, урок: файл, база: '../',
+          игры: function () { спрятатьДЗ(); открыть(); } });
+        if (заданий) {
+          var кн = document.createElement('button');
+          кн.type = 'button'; кн.className = 'иг-пуск'; кн.style.marginBottom = '10px';
+          кн.innerHTML = '<i>📚</i><span><b>Домашка к этому уроку</b><small>' + заданий + ' заданий по одному, с проверкой · потом игры</small></span>';
+          кн.onclick = function () { открытьДЗ(); };
+          корень.insertBefore(кн, корень.firstChild);
+          дзЭкран.querySelector('#дзЗакрыть').onclick = закрытьДЗ;
+          window.ДОМАШКА_ОТКРЫТЬ = function () { спрятать(); открытьДЗ(); };
+        } else { дзЭкран.remove(); дзЭкран = null; }
+      }
+      function открытьДЗ() {
+        if (!дзЭкран) return;
+        if (дзЭкран.hidden) {
+          дзЭкран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ дз: 1 }, '', '#домашка'); } catch (e) {}
+        }
+        ДОМАШКА.меню(); дзЭкран.scrollTop = 0;
+      }
+      function спрятатьДЗ() { if (дзЭкран) { дзЭкран.hidden = true; document.documentElement.style.overflow = ''; } }
+      function закрытьДЗ() { спрятатьДЗ(); if (location.hash === '#домашка') { try { history.back(); } catch (e) {} } }
+      window.addEventListener('popstate', function () { if (дзЭкран && !дзЭкран.hidden && location.hash !== '#домашка') спрятатьДЗ(); });
+      // 22.10.2026: прямая ссылка урок…#домашка / #игры сразу открывает экран (для демо и рассылок)
+      var хеш = decodeURIComponent(location.hash || '');
+      if (хеш === '#домашка' && дзЭкран) { history.replaceState(null, '', location.pathname); открытьДЗ(); }
+      else if (хеш === '#игры') { history.replaceState(null, '', location.pathname); открыть(); }
+      экран.querySelector('#игЗакрыть').onclick = закрыть;
+      window.addEventListener('popstate', function () { if (!экран.hidden && location.hash !== '#игры') спрятать(); });
+      // из домашки и откуда угодно: ИГРЫ.запустить('книжки') — сначала открыть экран
+      var прямо = ИГРЫ.запустить;
+      ИГРЫ.запустить = function (код) { открыть(true); return прямо(код); };
+
+      function открыть(безМеню) {
+        if (экран.hidden) {
+          экран.hidden = false; document.documentElement.style.overflow = 'hidden';
+          try { history.pushState({ игры: 1 }, '', '#игры'); } catch (e) {}
+        }
+        if (!безМеню) ИГРЫ.меню();
+        экран.scrollTop = 0;
+      }
+      function спрятать() { экран.hidden = true; document.documentElement.style.overflow = ''; }
+      function закрыть() { спрятать(); if (location.hash === '#игры') { try { history.back(); } catch (e) {} } }
+      window.ИГРЫ_ОТКРЫТЬ = открыть;
+
+      вДомашку();
+      var toc = document.querySelector('.toc ol');
+      if (toc) {
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#игры">🎮 Игры к этому занятию</a>';
+        li.querySelector('a').onclick = function (e) { e.preventDefault(); открыть(); };
+        toc.appendChild(li);
+      }
+    })
+    .catch(function () { корень.style.display = 'none'; });
+})();
+</script>
+<!--ИГРЫ-END-->
+<!--QUIZ-START-->
+<!--UPR-START-->
+<style>
+  .упр{ margin:30px 0 0; }
+  .упр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .упр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+
+  .упр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .упр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(46,158,107,.3); }
+  .упр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .упр-карта .упр-лид{ font-size:14px; color:#6C7291; margin:2px 0 16px; line-height:1.45; }
+  :root[data-theme="dark"] .упр-карта .упр-лид{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-карта .упр-лид{ color:#9AA0BE; } }
+
+  .упр-старт{ display:flex; align-items:center; gap:12px; text-decoration:none; width:100%;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700; border:none;
+    color:#fff; background:linear-gradient(135deg,#2E9E6B,#7FC55F); cursor:pointer;
+    box-shadow:0 10px 24px rgba(46,158,107,.3); font-family:inherit; }
+  .упр-старт:active{ transform:scale(.98); }
+  .упр-старт small{ display:block; font-weight:500; font-size:12.5px; opacity:.85; margin-top:1px; }
+  .упр-старт span{ flex:1; text-align:left; }
+  .упр-старт i{ font-style:normal; font-size:20px; }
+
+  .упр-шкала{ height:7px; border-radius:99px; background:#EDEFF6; overflow:hidden; margin-bottom:14px; }
+  :root[data-theme="dark"] .упр-шкала{ background:#2A2E52; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-шкала{ background:#2A2E52; } }
+  .упр-шкала i{ display:block; height:100%; background:linear-gradient(90deg,#2E9E6B,#7FC55F);
+    border-radius:99px; transition:width .25s ease; }
+
+  .упр-счёт{ font-size:12.5px; color:#6C7291; margin-bottom:10px; display:flex; justify-content:space-between; }
+  :root[data-theme="dark"] .упр-счёт{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-счёт{ color:#9AA0BE; } }
+
+  .упр-тип{ font-size:12px; letter-spacing:.06em; text-transform:uppercase; font-weight:700;
+    color:#2E9E6B; margin-bottom:7px; }
+  .упр-вопрос{ font-family:Georgia,serif; font-size:21px; font-weight:700; line-height:1.35;
+    margin-bottom:4px; overflow-wrap:anywhere; }
+  .упр-подпись{ font-size:13px; color:#6C7291; margin-bottom:15px; }
+  :root[data-theme="dark"] .упр-подпись{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-подпись{ color:#9AA0BE; } }
+
+  .упр-вар{ display:flex; flex-direction:column; gap:9px; }
+  .упр-вар button{ text-align:left; padding:14px 15px; border-radius:14px; font-size:15px;
+    border:1.5px solid #E4E7F2; background:#F8F9FD; color:inherit; cursor:pointer;
+    font-family:inherit; line-height:1.35; transition:border-color .12s, background .12s; }
+  :root[data-theme="dark"] .упр-вар button{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-вар button{
+    background:#242848; border-color:#333961; } }
+  .упр-вар button:active{ transform:scale(.99); }
+  .упр-вар button.верно{ border-color:#2E9E6B; background:rgba(46,158,107,.13); font-weight:700; }
+  .упр-вар button.мимо{ border-color:#D9534F; background:rgba(217,83,79,.12); }
+  .упр-вар button:disabled{ cursor:default; }
+  .упр-вар button .разбор{ display:block; font-size:13px; font-weight:500; opacity:.85; margin-top:5px; }
+
+  .упр-поле{ width:100%; padding:14px 15px; border-radius:14px; font-size:16px; font-family:inherit;
+    border:1.5px solid #E4E7F2; background:#F8F9FD; color:inherit; box-sizing:border-box; }
+  :root[data-theme="dark"] .упр-поле{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-поле{
+    background:#242848; border-color:#333961; } }
+  .упр-поле.верно{ border-color:#2E9E6B; }
+  .упр-поле.мимо{ border-color:#D9534F; }
+  .упр-умл{ display:flex; gap:6px; margin-top:9px; flex-wrap:wrap; }
+  .упр-умл button{ width:42px; height:40px; border-radius:11px; border:1.5px solid #E4E7F2;
+    background:#F8F9FD; color:inherit; font-size:16px; cursor:pointer; font-family:inherit; }
+  :root[data-theme="dark"] .упр-умл button{ background:#242848; border-color:#333961; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-умл button{
+    background:#242848; border-color:#333961; } }
+
+  .упр-низ{ margin-top:14px; display:flex; gap:9px; }
+  .упр-низ button{ flex:1; padding:14px; border-radius:14px; border:none; font-size:15px;
+    font-weight:700; font-family:inherit; cursor:pointer;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); color:#fff; }
+  .упр-низ button.тихая{ background:#F3F4FA; color:#1C2242; }
+  :root[data-theme="dark"] .упр-низ button.тихая{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .упр-низ button.тихая{
+    background:#252949; color:#EDEFF8; } }
+  .упр-низ button:disabled{ opacity:.45; cursor:default; }
+
+  .упр-отклик{ margin-top:12px; font-size:14.5px; line-height:1.45; min-height:22px; }
+  .упр-отклик b{ font-weight:800; }
+  .упр-отклик .ок{ color:#2E9E6B; }
+  .упр-отклик .нет{ color:#D9534F; }
+
+  .упр-итог{ text-align:center; padding:8px 0 4px; }
+  .упр-итог .число{ font-size:44px; font-weight:900; line-height:1.1;
+    background:linear-gradient(135deg,#2E9E6B,#7FC55F); -webkit-background-clip:text;
+    background-clip:text; color:transparent; }
+  .упр-итог .слово{ font-size:15px; margin:4px 0 14px; }
+  .упр-ошибки{ text-align:left; margin-top:6px; }
+  .упр-ошибки h3{ font-size:14px; margin:0 0 8px; font-family:inherit; }
+  .упр-ошибки div{ font-size:14px; padding:9px 12px; border-radius:12px; margin-bottom:7px;
+    background:rgba(217,83,79,.1); line-height:1.4; }
+  .упр-ошибки .де{ font-family:Georgia,serif; font-weight:700; }
+</style>
+
+<section class="упр" id="упр">
+  <div class="упр-карта" id="упрКарта"></div>
+</section>
+
+<script>
+/* Задания в конце урока — часть 11 плана.
+   Строятся из того же словаря, что кормит ЗУБР (words/<урок>.json),
+   поэтому блок один на все уроки и не требует ручной работы к каждому.
+
+   Проверка ОДИН В ОДИН как в ЗУБРе: прощаем регистр, знаки и запись
+   ae/oe/ue/ss вместо умляутов — и больше ничего. Полуправильных ответов нет.  */
+(function(){
+  var корень = document.getElementById('упр');
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  if (!/^[a-z]+\d+$/.test(файл)){ корень.style.display='none'; return; }
+
+  var ПРОФИЛЬ = localStorage.getItem('nemeckiy_profile') || 'grigoriy';
+  var КЛЮЧ = 'nemeckiy_upr_' + ПРОФИЛЬ + '_' + файл;
+  var ВСЕГО = 10;
+
+  /* ---- проверка ответа: та же строгость, что в ЗУБРе ---- */
+  function норм(s){
+    return (s||'').toLowerCase().replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue')
+      .replace(/ß/g,'ss').replace(/ё/g,'е').replace(/[.,!?;:()«»"'’\-–—/]/g,' ')
+      .replace(/\s+/g,' ').trim();
+  }
+  function чисто(s){
+    return (s||'').split(/\s+[—–→]\s+/)[0].replace(/\([^)]*\)/g,'').replace(/\s+/g,' ').trim();
+  }
+  function сверить(ответ, правильно){
+    var u = норм(ответ); if (!u) return false;
+    var вар = String(правильно||'').split(/\s*[,/]\s*|\s+или\s+/).map(норм).filter(Boolean);
+    if (!вар.length) вар = [норм(правильно)];
+    for (var i=0;i<вар.length;i++) if (u === вар[i]) return true;
+    return false;
+  }
+  function безТегов(s){ return (s||'').replace(/<[^>]+>/g,''); }
+  function перемешать(a){
+    a = a.slice();
+    for (var i=a.length-1;i>0;i--){ var j=Math.floor(Math.random()*(i+1)); var t=a[i]; a[i]=a[j]; a[j]=t; }
+    return a;
+  }
+  function звук(верно){
+    try{
+      var имя = верно ? (localStorage.getItem('nemeckiy_zvuk_верно')||'верно2')
+                      : (localStorage.getItem('nemeckiy_zvuk_мимо')||'мимо2');
+      if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+      new Audio('../zvuk/otvet/'+имя+'.mp3').play().catch(function(){});
+    }catch(e){}
+  }
+  function сказатьНемецкое(текст){
+    try{
+      if (!window.speechSynthesis) return;
+      var г = speechSynthesis.getVoices().filter(function(v){ return /^de/i.test(v.lang); })[0];
+      if (!г) return;                       // чужим языком не читаем
+      var р = new SpeechSynthesisUtterance(текст); р.voice = г; р.lang = г.lang; р.rate = .9;
+      speechSynthesis.speak(р);
+    }catch(e){}
+  }
+
+  /* ---- сборка заданий из словаря урока ---- */
+  function собрать(строки){
+    // [0]=id [1]=немецкое [2]=транскрипция [3]=перевод [4]=это фраза [5]=немецкое с выделением
+    var слова = [], фразы = [];
+    строки.forEach(function(с){
+      var карта = { id:с[0], de:безТегов(с[1]), тр:с[2], ru:чисто(с[3]), полн:с[3], html:с[5]||с[1] };
+      if (!карта.de || !карта.ru) return;
+      if (с[4]) фразы.push(карта); else слова.push(карта);
+    });
+    if (слова.length < 4) return [];
+
+    var задания = [];
+    var артикльные = слова.filter(function(к){ return /^(der|die|das)\s+\S/i.test(к.de); });
+    // во фразе должно быть жирное выделение — иначе прятать нечего
+    var спропуском = фразы.filter(function(к){ return /<b>[^<]{2,}<\/b>/.test(к.html); });
+
+    function варианты(верный, из, поле){
+      var чужие = перемешать(из.filter(function(к){ return к.id !== верный.id
+                    && норм(к[поле]) !== норм(верный[поле]); })).slice(0,3);
+      if (чужие.length < 3) return null;
+      return перемешать(чужие.concat([верный]));
+    }
+
+    perem: for (var i=0, с=перемешать(слова); i<с.length; i++){
+      var к = с[i];
+      var в = варианты(к, слова, 'ru');
+      if (в) задания.push({ тип:'выбор-ru', к:к, вар:в });
+      if (задания.length >= 3) break perem;
+    }
+    перемешать(слова).slice(0,3).forEach(function(к){
+      var в = варианты(к, слова, 'de');
+      if (в) задания.push({ тип:'выбор-de', к:к, вар:в });
+    });
+    перемешать(слова).slice(0,2).forEach(function(к){
+      задания.push({ тип:'вписать', к:к });
+    });
+    перемешать(артикльные).slice(0,2).forEach(function(к){
+      задания.push({ тип:'артикль', к:к });
+    });
+    перемешать(спропуском).slice(0,3).forEach(function(к){
+      задания.push({ тип:'пропуск', к:к });
+    });
+
+    // убираем повторы одного и того же слова подряд и режем до нужного числа
+    var видели = {}, итог = [];
+    перемешать(задания).forEach(function(з){
+      var кл = з.тип + '|' + з.к.id;
+      if (видели[кл]) return; видели[кл] = 1; итог.push(з);
+    });
+    return итог.slice(0, ВСЕГО);
+  }
+
+  /* ---- экраны ---- */
+  var карта = document.getElementById('упрКарта');
+  var задания = [], шаг = 0, верных = 0, ошибки = [], словарь = null;
+
+  function шапка(заголовок, лид){
+    return '<div class="упр-верх"><div class="упр-знак">✅</div>' +
+           '<h2>' + заголовок + '</h2></div>' +
+           (лид ? '<p class="упр-лид">' + лид + '</p>' : '');
+  }
+
+  function приглашение(){
+    var лучший = null;
+    try{ лучший = JSON.parse(localStorage.getItem(КЛЮЧ) || 'null'); }catch(e){}
+    var хвост = лучший
+      ? '<p class="упр-лид">Лучший результат: <b>' + лучший.процент + '%</b>' +
+        ' (' + лучший.верных + ' из ' + лучший.всего + ')</p>'
+      : '';
+    карта.innerHTML =
+      шапка('Проверь себя', 'Десять заданий по словам и фразам именно этого урока. ' +
+            'Проверка строгая: артикль и умляуты считаются. Каждый раз задания новые.') +
+      хвост +
+      '<button class="упр-старт" id="упрСтарт"><i>✅</i><span>Начать проверку' +
+      '<small>10 заданий · около 3 минут</small></span></button>';
+    document.getElementById('упрСтарт').onclick = начать;
+  }
+
+  function начать(){
+    задания = собрать(словарь);
+    if (!задания.length){
+      карта.innerHTML = шапка('Проверь себя') +
+        '<p class="упр-лид">Для этого урока заданий пока не собрать — слишком мало слов в словаре.</p>';
+      return;
+    }
+    шаг = 0; верных = 0; ошибки = [];
+    показать();
+  }
+
+  function показать(){
+    if (шаг >= задания.length) return итог();
+    var з = задания[шаг];
+    var процент = Math.round(шаг / задания.length * 100);
+
+    var верх =
+      '<div class="упр-шкала"><i style="width:' + процент + '%"></i></div>' +
+      '<div class="упр-счёт"><span>Задание ' + (шаг+1) + ' из ' + задания.length + '</span>' +
+      '<span>верно: ' + верных + '</span></div>';
+
+    var тело = '';
+    if (з.тип === 'выбор-ru'){
+      тело = '<div class="упр-тип">Что это значит?</div>' +
+             '<div class="упр-вопрос">' + з.к.de + '</div>' +
+             '<div class="упр-подпись">[' + (з.к.тр||'') + ']</div>' +
+             '<div class="упр-вар">' + з.вар.map(function(в){
+               return '<button data-id="' + в.id + '">' + в.ru + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'выбор-de'){
+      тело = '<div class="упр-тип">Как это по-немецки?</div>' +
+             '<div class="упр-вопрос">' + з.к.ru + '</div>' +
+             '<div class="упр-вар">' + з.вар.map(function(в){
+               return '<button data-id="' + в.id + '">' + в.de + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'артикль'){
+      тело = '<div class="упр-тип">Какой артикль?</div>' +
+             '<div class="упр-вопрос">… ' + з.к.de.replace(/^(der|die|das)\s+/i,'') + '</div>' +
+             '<div class="упр-подпись">' + з.к.ru + '</div>' +
+             '<div class="упр-вар">' + ['der','die','das'].map(function(а){
+               return '<button data-арт="' + а + '">' + а + '</button>'; }).join('') + '</div>';
+    } else if (з.тип === 'вписать'){
+      тело = '<div class="упр-тип">Напиши по-немецки</div>' +
+             '<div class="упр-вопрос">' + з.к.ru + '</div>' +
+             '<div class="упр-подпись">артикль тоже нужен, если он есть</div>' +
+             '<input class="упр-поле" id="упрПоле" autocomplete="off" autocorrect="off" ' +
+             'autocapitalize="off" spellcheck="false" placeholder="по-немецки">' +
+             умляуты();
+    } else if (з.тип === 'пропуск'){
+      var спрятано = з.к.html.match(/<b>([^<]+)<\/b>/)[1];
+      var сдыркой = з.к.html.replace(/<b>[^<]+<\/b>/, '<b>____</b>');
+      тело = '<div class="упр-тип">Вставь пропущенное</div>' +
+             '<div class="упр-вопрос">' + сдыркой + '</div>' +
+             '<div class="упр-подпись">' + з.к.ru + '</div>' +
+             '<input class="упр-поле" id="упрПоле" autocomplete="off" autocorrect="off" ' +
+             'autocapitalize="off" spellcheck="false" placeholder="одно слово">' +
+             умляуты();
+      з.ответ = спрятано;
+    }
+
+    карта.innerHTML = верх + тело +
+      '<div class="упр-отклик" id="упрОтклик"></div>' +
+      '<div class="упр-низ" id="упрНиз"></div>';
+
+    if (з.тип === 'выбор-ru' || з.тип === 'выбор-de'){
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        b.onclick = function(){ ответВыбором(b, b.dataset.id === з.к.id); };
+      });
+    } else if (з.тип === 'артикль'){
+      var верный = (з.к.de.match(/^(der|die|das)/i)||[])[0].toLowerCase();
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        b.onclick = function(){ ответВыбором(b, b.dataset.арт === верный, верный); };
+      });
+    } else {
+      var поле = document.getElementById('упрПоле');
+      подключитьУмляуты(поле);
+      поле.onkeydown = function(e){ if (e.key === 'Enter') проверитьПоле(з); };
+      document.getElementById('упрНиз').innerHTML =
+        '<button id="упрОК">Проверить</button>';
+      document.getElementById('упрОК').onclick = function(){ проверитьПоле(з); };
+      поле.focus();
+    }
+  }
+
+  function умляуты(){
+    return '<div class="упр-умл">' + ['ä','ö','ü','ß'].map(function(ч){
+      return '<button type="button" data-ч="' + ч + '">' + ч + '</button>'; }).join('') + '</div>';
+  }
+  function подключитьУмляуты(поле){
+    карта.querySelectorAll('.упр-умл button').forEach(function(b){
+      b.onclick = function(){
+        var s = поле.selectionStart == null ? поле.value.length : поле.selectionStart;
+        var e = поле.selectionEnd == null ? s : поле.selectionEnd;
+        поле.value = поле.value.slice(0,s) + b.dataset.ч + поле.value.slice(e);
+        поле.focus(); поле.selectionStart = поле.selectionEnd = s + 1;
+      };
+    });
+  }
+
+  function ответВыбором(кнопка, верно, верныйАртикль){
+    var з = задания[шаг];
+    карта.querySelectorAll('.упр-вар button').forEach(function(b){ b.disabled = true; });
+    кнопка.classList.add(верно ? 'верно' : 'мимо');
+    if (!верно){
+      // показываем правильный
+      карта.querySelectorAll('.упр-вар button').forEach(function(b){
+        var это = верныйАртикль ? b.dataset.арт === верныйАртикль : b.dataset.id === з.к.id;
+        if (это) b.classList.add('верно');
+      });
+    }
+    засчитать(верно, верныйАртикль ? верныйАртикль + ' ' + з.к.de.replace(/^(der|die|das)\s+/i,'') : з.к.de);
+  }
+
+  function проверитьПоле(з){
+    var поле = document.getElementById('упрПоле');
+    if (!поле || поле.disabled) return;
+    var правильно = з.тип === 'пропуск' ? з.ответ : з.к.de;
+    var верно = сверить(поле.value, правильно);
+    поле.disabled = true;
+    поле.classList.add(верно ? 'верно' : 'мимо');
+    карта.querySelectorAll('.упр-умл button').forEach(function(b){ b.disabled = true; });
+    document.getElementById('упрОК').disabled = true;
+    засчитать(верно, правильно);
+  }
+
+  function засчитать(верно, правильный){
+    var з = задания[шаг];
+    if (верно) верных++;
+    else ошибки.push({ de: з.к.de, ru: з.к.ru, надо: правильный });
+    звук(верно);
+    document.getElementById('упрОтклик').innerHTML = верно
+      ? '<span class="ок">✓ Верно.</span> ' + (з.к.тр ? '[' + з.к.тр + ']' : '')
+      : '<span class="нет">✗ Мимо.</span> Правильно: <b>' + правильный + '</b>' +
+        (з.к.тр ? ' [' + з.к.тр + ']' : '');
+    сказатьНемецкое(з.тип === 'пропуск' ? безТегов(з.к.html) : з.к.de);
+    document.getElementById('упрНиз').innerHTML =
+      '<button id="упрДальше">' + (шаг + 1 >= задания.length ? 'Итог' : 'Дальше') + '</button>';
+    document.getElementById('упрДальше').onclick = function(){ шаг++; показать(); };
+  }
+
+  function итог(){
+    var процент = Math.round(верных / задания.length * 100);
+    var слово = процент === 100 ? 'Всё верно. Идеально.'
+              : процент >= 80 ? 'Хорошо — урок усвоен.'
+              : процент >= 50 ? 'Половина есть. Стоит пройти урок ещё раз.'
+              : 'Пока тяжело. Вернись к уроку и попробуй снова.';
+
+    var лучший = null;
+    try{ лучший = JSON.parse(localStorage.getItem(КЛЮЧ) || 'null'); }catch(e){}
+    if (!лучший || процент > лучший.процент){
+      try{ localStorage.setItem(КЛЮЧ, JSON.stringify(
+        { процент: процент, верных: верных, всего: задания.length, когда: Date.now() })); }catch(e){}
+    }
+
+    var разбор = ошибки.length
+      ? '<div class="упр-ошибки"><h3>Над чем поработать:</h3>' + ошибки.map(function(о){
+          return '<div><span class="де">' + о.надо + '</span> — ' + о.ru + '</div>'; }).join('') + '</div>'
+      : '';
+
+    карта.innerHTML =
+      шапка('Готово') +
+      '<div class="упр-итог"><div class="число">' + процент + '%</div>' +
+      '<div class="слово">' + верных + ' из ' + задания.length + ' · ' + слово + '</div></div>' +
+      разбор +
+      '<div class="упр-низ"><button id="упрЕщё">Пройти ещё раз</button>' +
+      '<button class="тихая" id="упрСлова">Учить слова</button></div>';
+    document.getElementById('упрЕщё').onclick = начать;
+    document.getElementById('упрСлова').onclick = function(){
+      location.href = '../zubr.html?урок=' + файл;
+    };
+  }
+
+  /* ---- запуск: тянем словарь урока ---- */
+  fetch('../words/' + файл + '.json?v=' + Date.now())
+    .then(function(r){ if (!r.ok) throw 0; return r.json(); })
+    .then(function(д){
+      словарь = д;
+      if (!д || д.length < 4){ корень.style.display = 'none'; return; }
+      приглашение();
+      var toc = document.querySelector('.toc ol');
+      if (toc){
+        var li = document.createElement('li');
+        li.innerHTML = '<a href="#упр">✅ Проверить себя</a>';
+        toc.appendChild(li);
+      }
+    })
+    .catch(function(){ корень.style.display = 'none'; });
+})();
+</script>
+<!--UPR-END-->
+
+<style>
+  .взубр{ margin:44px 0 0; }
+  .взубр-карта{
+    background:#FFFFFF; border-radius:22px; padding:22px 20px;
+    box-shadow:0 12px 30px rgba(40,50,110,.12); color:#1C2242;
+    font-family:Figtree,-apple-system,system-ui,"Segoe UI",sans-serif;
+  }
+  :root[data-theme="dark"] .взубр-карта{ background:#1E2140; color:#EDEFF8;
+    box-shadow:0 12px 30px rgba(0,0,0,.35); }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта{
+    background:#1E2140; color:#EDEFF8; box-shadow:0 12px 30px rgba(0,0,0,.35); } }
+  .взубр-верх{ display:flex; align-items:center; gap:13px; margin-bottom:6px; }
+  .взубр-знак{ width:46px; height:46px; border-radius:14px; flex-shrink:0; font-size:23px;
+    background:linear-gradient(135deg,#4A63D6,#EC6A86); display:flex; align-items:center;
+    justify-content:center; box-shadow:0 6px 14px rgba(74,99,214,.3); }
+  .взубр-карта h2{ font-family:inherit; font-size:20px; font-weight:800; margin:0; letter-spacing:-.01em; }
+  .взубр-карта p{ font-size:14px; color:#6C7291; margin:2px 0 18px; line-height:1.45; }
+  :root[data-theme="dark"] .взубр-карта p{ color:#9AA0BE; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-карта p{ color:#9AA0BE; } }
+  .взубр-кн{ display:flex; flex-direction:column; gap:10px; }
+  .взубр-кн a{
+    display:flex; align-items:center; gap:12px; text-decoration:none;
+    padding:15px 17px; border-radius:16px; font-size:15.5px; font-weight:700;
+    color:#fff; background:linear-gradient(135deg,#4A63D6,#EC6A86);
+    box-shadow:0 10px 24px rgba(74,99,214,.32); transition:transform .12s ease;
+  }
+  .взубр-кн a.второй{ background:#F3F4FA; color:#1C2242; box-shadow:0 6px 16px rgba(40,50,110,.12); }
+  :root[data-theme="dark"] .взубр-кн a.второй{ background:#252949; color:#EDEFF8; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .взубр-кн a.второй{ background:#252949; color:#EDEFF8; } }
+  .взубр-кн a:active{ transform:scale(.98); }
+  .взубр-кн a small{ display:block; font-weight:500; font-size:12.5px; opacity:.8; margin-top:1px; }
+  .взубр-кн a span{ flex:1; }
+  .взубр-кн a i{ font-style:normal; font-size:20px; }
+</style>
+
+<section class="взубр" id="взубр">
+  <div class="взубр-карта">
+    <div class="взубр-верх">
+      <div class="взубр-знак">🐃</div>
+      <h2>Учить слова этого урока</h2>
+    </div>
+    <p>Все слова и фразы урока уже собраны в колоду ЗУБРа — с карточками, тестом, диктантом и расписанием повторений. Прогресс общий с остальными уроками.</p>
+    <div class="взубр-кн" id="взубрКнопки"></div>
+  </div>
+</section>
+
+<script>
+/* Ссылки собираем на месте: имя урока берём из адреса страницы,
+   чтобы один и тот же блок годился для всех двадцати шести. */
+(function(){
+  var файл = (location.pathname.split('/').pop() || '').replace('_interactive.html','');
+  var м = файл.match(/^([a-z]+)(\d+)$/);
+  if (!м){ document.getElementById('взубр').style.display = 'none'; return; }
+
+  var семья = м[1], номер = +м[2];
+  var первый = семья === 'polya' ? 5 : семья === 'dasha' ? 1 : 0;
+  var корень = '../zubr.html?урок=' + файл;
+
+  var html = '<a href="' + корень + '"><i>📖</i><span>Слова этого урока' +
+             '<small>только то, что разбирали здесь</small></span></a>';
+
+  if (номер > первый){
+    var подпись = семья === 'urok' ? 'уроки с 0 по ' + номер
+                : 'занятия с ' + первый + ' по ' + номер;
+    html += '<a class="второй" href="' + корень + '&повтор=1"><i>🔁</i>' +
+            '<span>Этот урок и все предыдущие<small>' + подпись + '</small></span></a>';
+  }
+  document.getElementById('взубрКнопки').innerHTML = html;
+
+  // ссылка в оглавление урока, чтобы не мотать страницу
+  var toc = document.querySelector('.toc ol');
+  if (toc){
+    var li = document.createElement('li');
+    li.innerHTML = '<a href="#взубр">🐃 Учить слова урока</a>';
+    toc.appendChild(li);
+  }
+})();
+</script>
+
+<script>
+/* Превращает сайт в приложение: своя иконка, полный экран, работа офлайн.
+   Теги ставим из скрипта, чтобы не править <head> в двадцати шести уроках. */
+(function(){
+  var корень = /\/(lessons|dasha)\//.test(location.pathname) ? '../' : './';
+
+  function тег(имя, атрибуты){
+    var e = document.createElement(имя);
+    for (var k in атрибуты) e.setAttribute(k, атрибуты[k]);
+    document.head.appendChild(e);
+  }
+
+  if (!document.querySelector('link[rel="manifest"]')){
+    тег('link', { rel:'manifest', href: корень + 'manifest.json' });
+    тег('link', { rel:'apple-touch-icon', href: корень + 'icons/apple-touch-icon.png' });
+    тег('meta', { name:'apple-mobile-web-app-capable', content:'yes' });
+    тег('meta', { name:'apple-mobile-web-app-status-bar-style', content:'default' });
+    тег('meta', { name:'apple-mobile-web-app-title', content:'Немецкий' });
+    тег('meta', { name:'mobile-web-app-capable', content:'yes' });
+
+    // цвет строки состояния подстраиваем под тему устройства
+    var тёмная = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    тег('meta', { name:'theme-color', content: тёмная ? '#14181a' : '#1f5f5b' });
+  }
+
+  if ('serviceWorker' in navigator && location.protocol !== 'file:'){
+    window.addEventListener('load', function(){
+      navigator.serviceWorker.register(корень + 'sw.js', { scope: корень })
+        .catch(function(){ /* без офлайна тоже жить можно */ });
+    });
+  }
+
+  /* Поворот экрана. 10.09 Григорий: на планшете (ASUS) сайт не крутится
+     горизонтально, как его ни верти. До 07.09 в manifest стояло «только
+     вертикально», и Android запомнил это, когда сайт ставили значком, —
+     поправленный manifest он подхватывает неохотно. Здесь прямая просьба
+     к системе: крутись как хочешь. Действует только в установленном
+     приложении (в браузере поворот и так свободный); где не умеет —
+     молча ничего не делает. */
+  var приложение = window.matchMedia && window.matchMedia('(display-mode: standalone)').matches;
+  if (приложение && screen.orientation && screen.orientation.lock)
+    screen.orientation.lock('any').catch(function(){});
+})();
+</script>
+<!--QUIZ-END-->
+  <footer class="lp-foot">Урок для Григория · курс немецкого с Claude · озвучка Anna (Premium) и Yannick (Enhanced), голоса Apple. Расширен 12.09.2026.</footer>
+</div>
+
+<script>
+const AUDIO = {"b_haus": "../zvuk/urok15/b_haus.mp3", "b_wohnung": "../zvuk/urok15/b_wohnung.mp3", "b_zimmer": "../zvuk/urok15/b_zimmer.mp3", "b_stock": "../zvuk/urok15/b_stock.mp3", "b_etage": "../zvuk/urok15/b_etage.mp3", "b_aufzug": "../zvuk/urok15/b_aufzug.mp3", "b_treppe": "../zvuk/urok15/b_treppe.mp3", "b_balkon": "../zvuk/urok15/b_balkon.mp3", "b_garten": "../zvuk/urok15/b_garten.mp3", "b_keller": "../zvuk/urok15/b_keller.mp3", "r_wohnzimmer": "../zvuk/urok15/r_wohnzimmer.mp3", "r_schlafzimmer": "../zvuk/urok15/r_schlafzimmer.mp3", "r_kueche": "../zvuk/urok15/r_kueche.mp3", "r_bad": "../zvuk/urok15/r_bad.mp3", "r_toilette": "../zvuk/urok15/r_toilette.mp3", "r_flur": "../zvuk/urok15/r_flur.mp3", "r_kinderzimmer": "../zvuk/urok15/r_kinderzimmer.mp3", "r_arbeitszimmer": "../zvuk/urok15/r_arbeitszimmer.mp3", "z1": "../zvuk/urok15/z1.mp3", "z2": "../zvuk/urok15/z2.mp3", "m_tisch": "../zvuk/urok15/m_tisch.mp3", "m_stuhl": "../zvuk/urok15/m_stuhl.mp3", "m_bett": "../zvuk/urok15/m_bett.mp3", "m_schrank": "../zvuk/urok15/m_schrank.mp3", "m_sofa": "../zvuk/urok15/m_sofa.mp3", "m_sessel": "../zvuk/urok15/m_sessel.mp3", "m_lampe": "../zvuk/urok15/m_lampe.mp3", "m_teppich": "../zvuk/urok15/m_teppich.mp3", "m_regal": "../zvuk/urok15/m_regal.mp3", "m_spiegel": "../zvuk/urok15/m_spiegel.mp3", "m_fenster": "../zvuk/urok15/m_fenster.mp3", "m_tuer": "../zvuk/urok15/m_tuer.mp3", "v1": "../zvuk/urok15/v1.mp3", "v2": "../zvuk/urok15/v2.mp3", "v3": "../zvuk/urok15/v3.mp3", "p1": "../zvuk/urok15/p1.mp3", "p2": "../zvuk/urok15/p2.mp3", "p3": "../zvuk/urok15/p3.mp3", "p4": "../zvuk/urok15/p4.mp3", "e1": "../zvuk/urok15/e1.mp3", "e2": "../zvuk/urok15/e2.mp3", "e3": "../zvuk/urok15/e3.mp3", "e4": "../zvuk/urok15/e4.mp3", "mi1": "../zvuk/urok15/mi1.mp3", "mi2": "../zvuk/urok15/mi2.mp3", "mi3": "../zvuk/urok15/mi3.mp3", "mi4": "../zvuk/urok15/mi4.mp3", "mi5": "../zvuk/urok15/mi5.mp3", "mi6": "../zvuk/urok15/mi6.mp3", "mi7": "../zvuk/urok15/mi7.mp3", "mi8": "../zvuk/urok15/mi8.mp3", "mi9": "../zvuk/urok15/mi9.mp3", "kw1": "../zvuk/urok15/kw1.mp3", "kw2": "../zvuk/urok15/kw2.mp3", "q1": "../zvuk/urok15/q1.mp3", "q2": "../zvuk/urok15/q2.mp3", "q3": "../zvuk/urok15/q3.mp3", "q4": "../zvuk/urok15/q4.mp3", "q5": "../zvuk/urok15/q5.mp3", "q6": "../zvuk/urok15/q6.mp3", "q7": "../zvuk/urok15/q7.mp3", "q8": "../zvuk/urok15/q8.mp3", "h1": "../zvuk/urok15/h1.mp3", "h2": "../zvuk/urok15/h2.mp3", "h3": "../zvuk/urok15/h3.mp3", "h4": "../zvuk/urok15/h4.mp3", "h5": "../zvuk/urok15/h5.mp3", "h6": "../zvuk/urok15/h6.mp3", "h7": "../zvuk/urok15/h7.mp3", "d1": "../zvuk/urok15/d1.mp3", "d2": "../zvuk/urok15/d2.mp3", "d3": "../zvuk/urok15/d3.mp3", "d4": "../zvuk/urok15/d4.mp3", "d5": "../zvuk/urok15/d5.mp3", "d6": "../zvuk/urok15/d6.mp3", "d7": "../zvuk/urok15/d7.mp3", "d8": "../zvuk/urok15/d8.mp3", "d9": "../zvuk/urok15/d9.mp3", "d10": "../zvuk/urok15/d10.mp3", "d11": "../zvuk/urok15/d11.mp3", "g_herd": "../zvuk/urok15/g_herd.mp3", "g_kuehlschrank": "../zvuk/urok15/g_kuehlschrank.mp3", "g_waschmaschine": "../zvuk/urok15/g_waschmaschine.mp3", "g_spuelmaschine": "../zvuk/urok15/g_spuelmaschine.mp3", "g_dusche": "../zvuk/urok15/g_dusche.mp3", "g_badewanne": "../zvuk/urok15/g_badewanne.mp3", "g_heizung": "../zvuk/urok15/g_heizung.mp3", "g_steckdose": "../zvuk/urok15/g_steckdose.mp3", "ek1": "../zvuk/urok15/ek1.mp3", "ek2": "../zvuk/urok15/ek2.mp3", "an_qm": "../zvuk/urok15/an_qm.mp3", "an_og": "../zvuk/urok15/an_og.mp3", "an_dg": "../zvuk/urok15/an_dg.mp3", "an_wg": "../zvuk/urok15/an_wg.mp3", "an1": "../zvuk/urok15/an1.mp3", "um1": "../zvuk/urok15/um1.mp3", "um2": "../zvuk/urok15/um2.mp3", "um3": "../zvuk/urok15/um3.mp3", "um4": "../zvuk/urok15/um4.mp3", "um5": "../zvuk/urok15/um5.mp3", "pr1": "../zvuk/urok15/pr1.mp3", "pr2": "../zvuk/urok15/pr2.mp3", "pr3": "../zvuk/urok15/pr3.mp3", "pr4": "../zvuk/urok15/pr4.mp3", "pr5": "../zvuk/urok15/pr5.mp3", "hm1": "../zvuk/urok15/hm1.mp3", "hm2": "../zvuk/urok15/hm2.mp3", "hm3": "../zvuk/urok15/hm3.mp3", "hm4": "../zvuk/urok15/hm4.mp3", "vm1": "../zvuk/urok15/vm1.mp3", "vm2": "../zvuk/urok15/vm2.mp3", "vm3": "../zvuk/urok15/vm3.mp3", "vm4": "../zvuk/urok15/vm4.mp3", "vm5": "../zvuk/urok15/vm5.mp3", "vm6": "../zvuk/urok15/vm6.mp3", "vm7": "../zvuk/urok15/vm7.mp3", "vm8": "../zvuk/urok15/vm8.mp3", "hw1": "../zvuk/urok15/hw1.mp3", "hw2": "../zvuk/urok15/hw2.mp3", "hw3": "../zvuk/urok15/hw3.mp3", "hw4": "../zvuk/urok15/hw4.mp3", "hw5": "../zvuk/urok15/hw5.mp3", "hw6": "../zvuk/urok15/hw6.mp3", "hw7": "../zvuk/urok15/hw7.mp3", "hw8": "../zvuk/urok15/hw8.mp3"};
+
+/* звук вынесен в zvuk/ */
+// Офлайн: один раз открыл урок с интернетом — клипы легли в кэш телефона.
+window.addEventListener('load', function () {
+  if (!navigator.onLine) return;
+  setTimeout(function () {
+    var список = Object.values(AUDIO), i = 0;
+    (function дальше() {
+      if (i >= список.length) return;
+      fetch(список[i++]).catch(function () {}).then(function () {
+        setTimeout(дальше, 60);
+      });
+    })();
+  }, 2500);
+});
+
+function playClip(id, btn){ const b64=AUDIO[id]; if(!b64) return; const a=new Audio(b64);
+  if(btn){ btn.classList.add('playing'); a.addEventListener('ended',()=>btn.classList.remove('playing')); } a.play().catch(()=>{ if(btn) btn.classList.remove('playing'); }); }
+function playBtn(id){ return `<button class="play" aria-label="Слушать" onclick="playClip('${id}', this)">&#128266;</button>`; }
+
+// слова и фразы: [id, немецкое, транскрипция, перевод]
+function words(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="wcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+function phrases(el, arr, cls){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru])=>`
+  <div class="pcard ${cls||''}"><div class="txt"><div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// существительное: артикль отдельным цветным полем (5-е поле)
+function nouns(el, arr){ document.getElementById(el).innerHTML = arr.map(([id,de,tr,ru,art])=>`
+  <div class="wcard ${art}"><div class="txt"><div class="de"><span class="art-${art}">${art}</span> ${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div></div>${playBtn(id)}</div>`).join(''); }
+// реплики: [id, сторона, кто, немецкое, транскрипция, перевод]
+function dlg(el, rows){ document.getElementById(el).innerHTML = rows.map(([id,side,ini,de,tr,ru])=>`
+  <div class="bubble-row ${side}"><div class="avatar">${ini}</div><div class="bubble"><div class="txt">
+    <div class="de">${de}</div><div class="tr">[${tr}]</div><div class="ru">${ru}</div>
+  </div>${playBtn(id)}</div></div>`).join(''); }
+
+nouns('basis',[
+  ["b_haus","Haus","хаус","дом","das"],
+  ["b_wohnung","Wohnung","вонунг","квартира","die"],
+  ["b_zimmer","Zimmer","циммэр","комната","das"],
+  ["b_stock","Stock","шток","этаж","der"],
+  ["b_etage","Etage","этажэ","этаж (то же самое)","die"],
+  ["b_aufzug","Aufzug","ауфцуг","лифт","der"],
+  ["b_treppe","Treppe","трэппэ","лестница","die"],
+  ["b_balkon","Balkon","балькон","балкон","der"],
+  ["b_garten","Garten","гартэн","сад","der"],
+  ["b_keller","Keller","кэллэр","подвал","der"],
+]);
+
+nouns('rooms',[
+  ["r_wohnzimmer","Wohnzimmer","вонциммэр","гостиная (wohnen — жить)","das"],
+  ["r_schlafzimmer","Schlafzimmer","шлафциммэр","спальня (schlafen — спать)","das"],
+  ["r_kueche","Küche","кюхе","кухня","die"],
+  ["r_bad","Badezimmer","бадэциммэр","ванная","das"],
+  ["r_toilette","Toilette","туалэттэ","туалет","die"],
+  ["r_flur","Flur","флуа","коридор, прихожая","der"],
+  ["r_kinderzimmer","Kinderzimmer","киндэрциммэр","детская (у вас — Викина)","das"],
+  ["r_arbeitszimmer","Arbeitszimmer","арбайтсциммэр","кабинет","das"],
+]);
+
+phrases('zimmerTrap',[
+  ["z1","eine <b>Dreizimmerwohnung</b>","айнэ драйциммэрвонунг","«трёшка» — три ЖИЛЫЕ комнаты"],
+  ["z2","Küche und Bad <b>zählen nicht mit</b>.","кюхе унт бат цэлен нихьт мит","Кухня и ванная не считаются."],
+], 'wn');
+
+nouns('furniture',[
+  ["m_tisch","Tisch","тиш","стол","der"],
+  ["m_stuhl","Stuhl","штуль","стул","der"],
+  ["m_bett","Bett","бэтт","кровать","das"],
+  ["m_schrank","Schrank","шранк","шкаф","der"],
+  ["m_sofa","Sofa","зофа","диван","das"],
+  ["m_sessel","Sessel","зэссэль","кресло","der"],
+  ["m_lampe","Lampe","лампэ","лампа","die"],
+  ["m_teppich","Teppich","тэппихь","ковёр","der"],
+  ["m_regal","Regal","рэгаль","полка, стеллаж","das"],
+  ["m_spiegel","Spiegel","шпигэль","зеркало","der"],
+  ["m_fenster","Fenster","фэнстэр","окно","das"],
+  ["m_tuer","Tür","тюа","дверь","die"],
+]);
+nouns('geraete',[
+  ["g_herd","Herd","хэрт","плита","der"],
+  ["g_kuehlschrank","Kühlschrank","кюльшранк","холодильник","der"],
+  ["g_waschmaschine","Waschmaschine","вашмашинэ","стиральная машина","die"],
+  ["g_spuelmaschine","Spülmaschine","шпюльмашинэ","посудомойка","die"],
+  ["g_dusche","Dusche","душэ","душ","die"],
+  ["g_badewanne","Badewanne","бадэваннэ","ванна","die"],
+  ["g_heizung","Heizung","хайцунг","отопление, батарея","die"],
+  ["g_steckdose","Steckdose","штэкдозэ","розетка","die"],
+]);
+phrases('ebk',[
+  ["ek1","Die Wohnung hat eine <b>Einbauküche</b>.","ди вонунг хат айнэ айнбаукюхе","В квартире есть встроенная кухня."],
+  ["ek2","Gibt es eine <b>Einbauküche</b>?","гипт эс айнэ айнбаукюхе","Кухня в квартире есть?"],
+], 'wn');
+
+words('posVerbs',[
+  ["v1","<b>stehen</b>","штээн","стоять — вертикальное"],
+  ["v2","<b>liegen</b>","лигэн","лежать — горизонтальное"],
+  ["v3","<b>hängen</b>","хэнгэн","висеть"],
+], 'hb');
+
+phrases('position',[
+  ["p1","Das Bett <b>steht</b> im Schlafzimmer.","дас бэтт штээт им шлафциммэр","Кровать стоит в спальне."],
+  ["p2","Der Teppich <b>liegt</b> im Wohnzimmer.","дэа тэппихь лигт им вонциммэр","Ковёр лежит в гостиной."],
+  ["p3","Die Lampe <b>hängt</b> über dem Tisch.","ди лампэ хэнгт юбэр дэм тиш","Лампа висит над столом."],
+  ["p4","Der Stuhl <b>steht</b> am Fenster.","дэа штуль штээт ам фэнстэр","Стул стоит у окна."],
+]);
+
+phrases('floors',[
+  ["e1","das <b>Erdgeschoss</b>","дас эрдгэшосс","первый этаж (наш 1-й)"],
+  ["e2","der <b>erste</b> Stock","дэа эрстэ шток","второй этаж (наш 2-й!)"],
+  ["e3","Ich wohne im <b>dritten</b> Stock.","ихь вонэ им дриттэн шток","Я живу на четвёртом этаже (по-нашему)."],
+  ["e4","Die Wohnung ist im Erdgeschoss.","ди вонунг ист им эрдгэшосс","Квартира на первом этаже."],
+], 'wn');
+
+phrases('kaltwarm',[
+  ["kw1","Die <b>Kaltmiete</b> ist ohne Nebenkosten.","ди кальтмитэ ист онэ нэбэнкостэн","«Холодная» аренда — без коммуналки."],
+  ["kw2","Die <b>Warmmiete</b> ist mit Nebenkosten.","ди вармитэ ист мит нэбэнкостэн","«Тёплая» — с коммуналкой. Это ты и платишь."],
+], 'wn');
+
+nouns('miete',[
+  ["mi1","Miete","митэ","аренда, квартплата","die"],
+  ["mi2","Kaltmiete","кальтмитэ","аренда без коммуналки","die"],
+  ["mi3","Warmmiete","вармитэ","аренда с коммуналкой","die"],
+  ["mi4","Nebenkosten","нэбэнкостэн","коммунальные (мн.ч.)","die"],
+  ["mi5","Kaution","кауцьон","залог (до 3 Kaltmieten)","die"],
+  ["mi6","Vermieter","фэрмитэр","арендодатель","der"],
+  ["mi7","Mieter","митэр","арендатор (ты)","der"],
+  ["mi8","Mietvertrag","митфэртраг","договор аренды","der"],
+]);
+
+words('moebl',[
+  ["mi9","<b>möbliert</b>","мёблирт","с мебелью (без — unmöbliert)"],
+], 'sn');
+
+nouns('anzeige',[
+  ["an_qm","Quadratmeter","квадратмэтэа","квадратный метр (m², qm)","der"],
+  ["an_og","Obergeschoss","обэргэшосс","этаж выше первого (OG)","das"],
+  ["an_dg","Dachgeschoss","дахгэшосс","мансарда, последний этаж (DG)","das"],
+  ["an_wg","Wohngemeinschaft","вонгэмайншафт","квартира на нескольких жильцов (WG)","die"],
+]);
+phrases('anzeigeEx',[
+  ["an1","Die Wohnung ist <b>ab sofort</b> frei.","ди вонунг ист ап зофорт фрай","Квартира свободна сразу."],
+]);
+
+phrases('fragen',[
+  ["q1","Ich suche eine Wohnung.","ихь зухэ айнэ вонунг","Я ищу квартиру."],
+  ["q4","Wie viele Zimmer hat die Wohnung?","ви филе циммэр хат ди вонунг","Сколько в квартире комнат?"],
+  ["q2","Wie hoch ist die Miete?","ви хох ист ди митэ","Какая аренда?"],
+  ["q3","Sind die Nebenkosten inklusive?","зинт ди нэбэнкостэн инклюзивэ","Коммуналка включена?"],
+  ["q7","Wie hoch ist die Kaution?","ви хох ист ди кауцьон","Какой залог?"],
+  ["q8","Ist die Wohnung möbliert?","ист ди вонунг мёблирт","Квартира с мебелью?"],
+  ["q5","Ab wann ist die Wohnung frei?","ап ван ист ди вонунг фрай","С какого числа она свободна?"],
+  ["q6","Kann ich die Wohnung besichtigen?","кан ихь ди вонунг бэзихьтигэн","Можно посмотреть квартиру?"],
+], 'hb');
+
+phrases('umzug',[
+  ["um1","Wir <b>ziehen</b> nächsten Monat <b>um</b>.","виа цийэн нэхьстэн монат ум","Мы переезжаем в следующем месяце."],
+  ["um2","Wann kann ich <b>einziehen</b>?","ван кан ихь айнцийэн","Когда можно въехать?"],
+  ["um3","Wir <b>sind</b> gerade <b>eingezogen</b>.","виа зинт гэрадэ айнгэцогэн","Мы только что въехали. (Perfekt через sein)"],
+  ["um4","Ich muss mich beim Bürgeramt <b>anmelden</b>.","ихь мус михь байм бюргэрамт анмэльдэн","Мне нужно зарегистрироваться в Бюргерамте."],
+  ["um5","Ich brauche eine Wohnungsgeberbestätigung.","ихь браухэ айнэ вонунгсгэбэрбэштэтигунг","Мне нужна справка от хозяина квартиры."],
+]);
+
+phrases('defekt',[
+  ["pr1","Die Heizung funktioniert nicht.","ди хайцунг функцьонирт нихьт","Отопление не работает."],
+  ["pr2","Das Fenster geht nicht zu.","дас фэнстэа гээт нихьт цу","Окно не закрывается."],
+  ["pr3","In der Küche tropft der Wasserhahn.","ин дэа кюхе тропфт дэа вассэахан","На кухне капает кран."],
+  ["pr4","Können Sie einen Handwerker schicken?","кённэн зи айнэн хантвэркэа шикэн","Можете прислать мастера?"],
+  ["pr5","Die Nachbarn sind nachts sehr laut.","ди нахбарн зинт нахтс зэа лаут","Соседи ночью очень шумят."],
+]);
+
+phrases('med',[
+  ["h1","Wohnen Sie allein?","вонэн зи аляйн","Вы живёте один?"],
+  ["h2","In welchem Stock wohnen Sie?","ин вэльхем шток вонэн зи","На каком этаже Вы живёте?"],
+  ["h3","Gibt es einen Aufzug im Haus?","гипт эс айнэн ауфцуг им хаус","В доме есть лифт?"],
+  ["h4","<b>Müssen</b> Sie viele Treppen steigen?","мюссэн зи филе трэппэн штайгэн","Вам приходится много ходить по лестницам?"],
+  ["h5","Nach der Operation <b>sollten</b> Sie Treppen vermeiden.","нах дэа опэрацьон зольтэн зи трэппэн фэрмайдэн","После операции Вам стоит избегать лестниц."],
+  ["h6","<b>Können</b> Sie zu Hause die Beine hochlegen?","кённэн зи цу хаузэ ди байнэ хохлегэн","Вы можете дома держать ноги приподнятыми?"],
+  ["h7","Haben Sie zu Hause Hilfe?","хабэн зи цу хаузэ хильфэ","Есть ли дома кому помочь?"],
+]);
+phrases('med2',[
+  ["hm1","Legen Sie nachts ein Kissen unter die Beine.","легэн зи нахтс айн киссэн унтэа ди байнэ","Кладите на ночь подушку под ноги."],
+  ["hm2","Das Bett sollte am Fußende etwas höher sein.","дас бэтт зольтэ ам фусэндэ этвас хёэа зайн","Ножной конец кровати должен быть чуть выше."],
+  ["hm3","Nehmen Sie lieber eine Dusche als ein heißes Bad.","нэмэн зи либэа айнэ душэ альс айн хайсэс бат","Лучше принимайте душ, а не горячую ванну."],
+  ["hm4","Wer bringt Sie nach der Operation nach Hause?","вэа брингт зи нах дэа опэрацьон нах хаузэ","Кто отвезёт Вас домой после операции?"],
+]);
+
+dlg('dialog',[
+  ["d1","left","я","Guten Tag, ich habe einen Termin zur Besichtigung.","гутэн так, ихь хабэ айнэн тэрмин цур бэзихьтигунг","Здравствуйте, у меня назначен осмотр."],
+  ["d2","right","маклер","Guten Tag! Kommen Sie bitte herein.","гутэн так! коммэн зи биттэ хэрайн","Здравствуйте! Проходите, пожалуйста."],
+  ["d3","left","я","Wie viele Zimmer hat die Wohnung?","ви филе циммэр хат ди вонунг","Сколько в квартире комнат?"],
+  ["d4","right","маклер","Drei Zimmer, Küche und Bad. Sie ist im zweiten Stock.","драй циммэр, кюхе унт бат. зи ист им цвайтэн шток","Три комнаты, кухня и ванная. Она на третьем этаже (по-нашему)."],
+  ["d5","left","я","Gibt es einen Aufzug?","гипт эс айнэн ауфцуг","Лифт есть?"],
+  ["d6","right","маклер","Ja, der Aufzug ist neben der Treppe.","я, дэа ауфцуг ист нэбэн дэа трэппэ","Да, лифт рядом с лестницей."],
+  ["d7","left","я","Wie hoch ist die Miete?","ви хох ист ди митэ","Какая аренда?"],
+  ["d8","right","маклер","Die Kaltmiete ist neunhundert Euro, die Nebenkosten sind hundertfünfzig.","ди кальтмитэ ист нойнхундэрт ойро, ди нэбэнкостэн зинт хундэртфюнфцихь","Холодная — 900 евро, коммуналка — 150."],
+  ["d9","left","я","Und wie hoch ist die Kaution?","унт ви хох ист ди кауцьон","А залог какой?"],
+  ["d10","right","маклер","Drei Kaltmieten. Ab wann brauchen Sie die Wohnung?","драй кальтмитэн. ап ван браухэн зи ди вонунг","Три холодные аренды. С какого числа Вам нужна квартира?"],
+  ["d11","left","я","Ab dem ersten Oktober. Die Wohnung gefällt mir sehr.","ап дэм эрстэн октобэр. ди вонунг гэфэльт миа зэа","С первого октября. Квартира мне очень нравится."],
+]);
+dlg('dialog2',[
+  ["vm1","right","Гр","Guten Tag, Frau Weber, hier ist Plotnikov aus dem zweiten Stock.","гутэн так, фрау вэбэа, хиа ист плотников аус дэм цвайтэн шток","Здравствуйте, фрау Вебер, это Плотников с третьего этажа."],
+  ["vm2","left","хоз.","Guten Tag, Herr Plotnikov. Was ist los?","гутэн так, хэа плотников. вас ист лос","Здравствуйте, господин Плотников. Что случилось?"],
+  ["vm3","right","Гр","Die Heizung im Schlafzimmer funktioniert nicht. Es ist sehr kalt.","ди хайцунг им шлафциммэр функцьонирт нихьт. эс ист зэа кальт","В спальне не работает отопление. Очень холодно."],
+  ["vm4","left","хоз.","Oh, das tut mir leid. Seit wann?","о, дас тут миа лайт. зайт ван","Ой, мне жаль. С какого времени?"],
+  ["vm5","right","Гр","Seit gestern Abend.","зайт гэстэрн абэнт","Со вчерашнего вечера."],
+  ["vm6","left","хоз.","Ich schicke morgen früh einen Handwerker. Sind Sie zu Hause?","ихь шикэ моргэн фрю айнэн хантвэркэа. зинт зи цу хаузэ","Пришлю завтра утром мастера. Вы будете дома?"],
+  ["vm7","right","Гр","Ab acht bin ich in der Klinik. Der Schlüssel ist beim Nachbarn.","ап ахт бин ихь ин дэа клиник. дэа шлюссэль ист байм нахбарн","С восьми я в клинике. Ключ у соседа."],
+  ["vm8","left","хоз.","Gut, kein Problem. Auf Wiederhören!","гут, кайн проблэм. ауф видэрхёрэн","Хорошо, без проблем. До свидания!"],
+]);
+dlg('dialog3',[
+  ["hw1","left","врач","Wohnen Sie in einem Haus oder in einer Wohnung?","вонэн зи ин айнэм хаус одэа ин айнэа вонунг","Вы живёте в доме или в квартире?"],
+  ["hw2","right","пац.","In einer Wohnung, im vierten Stock.","ин айнэа вонунг, им фиртэн шток","В квартире, на пятом этаже (по-нашему)."],
+  ["hw3","left","врач","Gibt es einen Aufzug?","гипт эс айнэн ауфцуг","Лифт есть?"],
+  ["hw4","right","пац.","Nein, leider nicht. Ich muss jeden Tag viele Treppen steigen.","найн, ляйдэа нихьт. ихь мус йэдэн так филе трэппэн штайгэн","Нет, к сожалению. Каждый день приходится много ходить по лестнице."],
+  ["hw5","left","врач","Wer hilft Ihnen nach der Operation?","вэа хильфт инэн нах дэа опэрацьон","Кто Вам поможет после операции?"],
+  ["hw6","right","пац.","Mein Sohn wohnt im selben Haus.","майн зон вонт им зэльбэн хаус","Мой сын живёт в том же доме."],
+  ["hw7","left","врач","Sehr gut. Können Sie zu Hause die Beine hochlegen?","зэа гут. кённэн зи цу хаузэ ди байнэ хохлегэн","Отлично. Вы можете дома держать ноги повыше?"],
+  ["hw8","right","пац.","Ja, im Wohnzimmer habe ich ein großes Sofa.","я, им вонциммэр хабэ ихь айн гросэс зофа","Да, в гостиной у меня большой диван."],
+]);
+</script>
+<a class="bb-top" href="../index.html">&#8592; Вернуться ко всем урокам и прогрессу</a>
+</body>
+</html>

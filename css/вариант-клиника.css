@@ -1,0 +1,33 @@
+/* Вариант 2 «Клиника» (05.11.2026): по теме Dose из Hallmark — тёплая утренняя бумага, зелёно-чёрные чернила,
+   один аптечный зелёный. Шрифт Manrope (есть кириллица). Плоские спокойные карточки, без жёлтого. */
+:root {
+  --font-display: "Manrope", system-ui, sans-serif; --font-body: var(--font-display);
+  --color-paper: oklch(97.6% 0.01 88); --color-paper-2: oklch(95% 0.014 120); --color-paper-3: oklch(92% 0.02 140);
+  --color-card: oklch(99.3% 0.004 88); --color-ink: oklch(24% 0.03 165); --color-muted: oklch(46% 0.025 165); --color-rule: oklch(89% 0.015 150);
+  --color-edge: oklch(89% 0.015 150); --color-own: oklch(48% 0.12 162); --color-own-ink: oklch(99% 0.004 88);
+  --color-accent: var(--color-own); --color-accent-deep: oklch(38% 0.1 162); --color-accent-ink: var(--color-own-ink);
+  --color-mint-deep: oklch(48% 0.12 162);
+  --shadow-card: 0 1px 2px oklch(24% 0.03 165 / 0.05), 0 8px 22px -14px oklch(24% 0.03 165 / 0.18);
+  --radius-card: 18px; --radius-stock: 12px;
+}
+:root[data-кто="polina"] { --color-own: oklch(56% 0.14 20); --color-accent-deep: oklch(46% 0.12 20); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --color-paper: oklch(19% 0.02 170); --color-paper-2: oklch(23% 0.022 170); --color-card: oklch(24% 0.02 170);
+  --color-ink: oklch(95% 0.01 120); --color-muted: oklch(75% 0.02 150); --color-rule: oklch(33% 0.02 170); --color-edge: oklch(15% 0.02 170);
+  --color-own: oklch(74% 0.12 162); --color-own-ink: oklch(19% 0.02 170);
+} }
+:root[data-theme="dark"] {
+  --color-paper: oklch(19% 0.02 170); --color-paper-2: oklch(23% 0.022 170); --color-card: oklch(24% 0.02 170);
+  --color-ink: oklch(95% 0.01 120); --color-muted: oklch(75% 0.02 150); --color-rule: oklch(33% 0.02 170); --color-edge: oklch(15% 0.02 170);
+  --color-own: oklch(74% 0.12 162); --color-own-ink: oklch(19% 0.02 170);
+}
+body { background: var(--color-paper) !important; }
+.разделы a, .кто-смена, .пер-смена, .пер-простая, .btn, .pp-toggle, .верх-ряд a, .lvl-tab, .card, .пер, .progress-panel, .block, .wcard, .pcard, .bb-link {
+  background: var(--color-card) !important; box-shadow: inset 0 0 0 1px var(--color-rule) !important; border: 0 !important; }
+.card, .пер, .progress-panel, .block { box-shadow: var(--shadow-card) !important; }
+.разделы a:hover, .btn:hover { box-shadow: inset 0 0 0 2px var(--color-own) !important; translate: none; }
+.разделы a.главный, .пер-главная, .btn.audio, .bb-top, .гв-ок, .взубр-кн a, .вход-кто .войти {
+  background: var(--color-own) !important; color: var(--color-own-ink) !important; box-shadow: none !important; }
+.разделы a.главный i { color: var(--color-own-ink) !important; }
+.lvl-tab.active { background: var(--color-own) !important; color: var(--color-own-ink) !important; }
+.разделы a i { color: var(--color-own); }

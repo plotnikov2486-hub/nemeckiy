@@ -1,0 +1,29 @@
+/* Вариант 3 «Чистый» (05.11.2026): по темам Ink / Cobalt из Hallmark — белая бумага, чернила без оттенка,
+   тонкие линии вместо теней, один синий сигнал. Шрифт Onest (российская шрифтовая, кириллица родная). */
+:root {
+  --font-display: "Onest", system-ui, sans-serif; --font-body: var(--font-display);
+  --color-paper: oklch(99.4% 0.002 100); --color-paper-2: oklch(97% 0.003 100); --color-paper-3: oklch(94% 0.004 100);
+  --color-card: oklch(99.4% 0.002 100); --color-ink: oklch(18% 0 0); --color-muted: oklch(45% 0 0); --color-rule: oklch(88% 0 0);
+  --color-edge: oklch(18% 0 0); --color-own: oklch(48% 0.19 258); --color-own-ink: oklch(99.4% 0.002 100);
+  --color-accent: var(--color-own); --color-accent-deep: var(--color-ink); --color-accent-ink: var(--color-own-ink);
+  --shadow-card: none; --radius-card: 6px; --radius-stock: 6px; --radius-input: 6px;
+}
+:root[data-кто="polina"] { --color-own: oklch(55% 0.19 20); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --color-paper: oklch(15% 0 0); --color-paper-2: oklch(19% 0 0); --color-card: oklch(15% 0 0); --color-ink: oklch(96% 0 0);
+  --color-muted: oklch(72% 0 0); --color-rule: oklch(30% 0 0); --color-edge: oklch(96% 0 0); --color-own: oklch(72% 0.14 258); --color-own-ink: oklch(15% 0 0);
+} }
+:root[data-theme="dark"] {
+  --color-paper: oklch(15% 0 0); --color-paper-2: oklch(19% 0 0); --color-card: oklch(15% 0 0); --color-ink: oklch(96% 0 0);
+  --color-muted: oklch(72% 0 0); --color-rule: oklch(30% 0 0); --color-edge: oklch(96% 0 0); --color-own: oklch(72% 0.14 258); --color-own-ink: oklch(15% 0 0);
+}
+body { background: var(--color-paper) !important; }
+.разделы a, .кто-смена, .пер-смена, .пер-простая, .btn, .pp-toggle, .верх-ряд a, .lvl-tab, .card, .пер, .progress-panel, .block, .wcard, .pcard, .toc, .bb-link, .сводка a, .сводка div {
+  background: var(--color-card) !important; box-shadow: none !important; border: 1px solid var(--color-rule) !important; }
+.block, .card, .пер, .progress-panel { border-top: 2px solid var(--color-ink) !important; }
+.разделы a:hover, .btn:hover { border-color: var(--color-ink) !important; translate: none; }
+.разделы a.главный, .пер-главная, .btn.audio, .bb-top, .гв-ок, .взубр-кн a, .вход-кто .войти, .lvl-tab.active {
+  background: var(--color-ink) !important; color: var(--color-paper) !important; box-shadow: none !important; border-color: var(--color-ink) !important; }
+.разделы a.главный i { color: var(--color-paper) !important; }
+.разделы a i { color: var(--color-own); font-weight: 600; }
+.block h2 .num, .play { border-radius: 4px !important; }
