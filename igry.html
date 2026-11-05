@@ -107,7 +107,7 @@ p.пояс{ margin:0 0 16px; color:var(--ст-тихий); font-size:15.5px; }
 /* сама игра: палитра ядра → стекло с бордовым */
 #поле{ --accent:var(--ст-свой); --accent-ink:var(--ст-свой-текст); --surface:var(--ст-стекло); --surface-2:var(--ст-стекло);
   --ink:var(--ст-текст); --ink-muted:var(--ст-тихий); --line:var(--ст-линия); }
-#поле .игры, #поле .иг-де, #поле .иг-плитка, #поле .иг-карта h2, #поле button{ font-family:var(--ст-шрифт) !important; }
+#поле, #поле *{ font-family:var(--ст-шрифт) !important; }
 #поле .иг-карта{ background:var(--ст-стекло) !important; -webkit-backdrop-filter:var(--ст-размытие); backdrop-filter:var(--ст-размытие);
   box-shadow:inset 0 0 0 1px var(--ст-линия), var(--ст-тень) !important; border:0 !important; border-radius:24px !important; }
 .низ div{ padding-right:56px; }   /* круглая кнопка темы справа внизу не налезает */
@@ -151,7 +151,7 @@ p.пояс{ margin:0 0 16px; color:var(--ст-тихий); font-size:15.5px; }
 <div class="низ" id="низ"><div id="низКн"></div></div>
 
 <script src="tema.js"></script>
-<script src="igry.js?v=202611051251"></script>
+<script src="igry.js?v=202611051259"></script>
 <script>
 (function () {
   var профиль = 'grigoriy';
@@ -281,12 +281,18 @@ p.пояс{ margin:0 0 16px; color:var(--ст-тихий); font-size:15.5px; }
     var поле = $('поле');
     поле.innerHTML = '<p class="пусто">Загружаю слова…</p>';
     Promise.all(файлы.map(function (ф) {
-      return fetch('words/' + ф + '.json?v=202611051251').then(function (r) { return r.ok ? r.json() : []; })
+      return fetch('words/' + ф + '.json?v=202611051259').then(function (r) { return r.ok ? r.json() : []; })
         .then(function (строки) { return строки.map(function (с) { с = с.slice(); с[0] = ф + '/' + с[0]; return с; }); })   // звук: zvuk/<урок>/<ид>.mp3
         .catch(function () { return []; });
     })).then(function (части) {
       var слова = [].concat.apply([], части);
-      if (слова.length > ПРЕДЕЛ) слова = перемешать(слова).slice(0, ПРЕДЕЛ);
+      if (слова.length > ПРЕДЕЛ) {
+        // берём целыми кусками (диалог, рассказ, блок слов), иначе «Текст по порядку» и «Диалог» разваливаются
+        var куски = {}, ключи = [];
+        слова.forEach(function (с) { var к = String(с[0]).replace(/\d+$/, ''); if (!куски[к]) { куски[к] = []; ключи.push(к); } куски[к].push(с); });
+        слова = [];
+        перемешать(ключи).some(function (к) { слова = слова.concat(куски[к]); return слова.length >= ПРЕДЕЛ; });
+      }
       var набор = файлы.length === 1 ? файлы[0] : (выбор.откуда || 'набор');
       var вышло = ИГРЫ.старт({
         корень: поле, слова: слова, урок: набор, база: '',
@@ -305,7 +311,7 @@ p.пояс{ margin:0 0 16px; color:var(--ст-тихий); font-size:15.5px; }
     });
   }
 
-  fetch('words/уроки.json?v=202611051251').then(function (r) { return r.json(); })
+  fetch('words/уроки.json?v=202611051259').then(function (r) { return r.json(); })
     .then(function (д) { уроки = д; }).catch(function () {})
     .then(function () { экран1(); });
 })();
