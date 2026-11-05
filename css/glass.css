@@ -39,3 +39,13 @@ body { background: radial-gradient(60vw 50vh at 12% 8%, var(--glow-1), transpare
 .вход-кто .подпись { background: var(--color-card); -webkit-backdrop-filter: var(--glass); backdrop-filter: var(--glass); filter: none; }
 .block h2 .num { border-radius: 10px; }
 .grammar-box, .warn-box, .link-box { -webkit-backdrop-filter: var(--glass); backdrop-filter: var(--glass); }
+
+/* 05.11 врач: на плитках не надписи, а гиперреалистичные картинки на всю плитку (Syntx, img/plitki/*.webp); подпись — на матовой полосе снизу */
+.разделы a.с-фото { position: relative; overflow: hidden; isolation: isolate; justify-content: flex-end; min-height: 150px; padding: 0 !important;
+  background-color: var(--color-paper-2) !important; background-position: center !important; background-size: cover !important; background-repeat: no-repeat !important; color: oklch(99% 0 0) !important; }
+.разделы a.главный.с-фото { min-height: 170px; flex-direction: column; align-items: stretch; }
+.разделы a.с-фото span { display: block; width: 100%; box-sizing: border-box; padding: 10px 14px 12px; font-weight: 650; font-size: 1.05rem; line-height: 1.2;
+  background: linear-gradient(transparent, oklch(15% 0.02 15 / 0.72)); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  text-shadow: 0 1px 2px oklch(0% 0 0 / 0.4); }
+.разделы a.главный.с-фото span { font-size: 1.35rem; padding: 14px 16px 16px; }
+@media (min-width: 720px) { .разделы a.с-фото { min-height: 180px; } }

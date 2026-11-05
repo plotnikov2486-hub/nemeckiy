@@ -39,18 +39,18 @@
 </div>
 <div class="сводка" id="сводка"></div>
 <nav class="разделы" id="разделы" aria-label="Разделы сайта">
-  <a href="#claude" class="главный"><i>A1 bis C1</i>Уроки с Claude</a>
-  <a href="#dasha" class="главный" id="менюДаша"><i>Hallo!</i>Уроки с Дашей</a>
-  <a href="zubr.html"><i><span class="der">der</span> <span class="die">die</span> <span class="das">das</span></i>ЗУБР</a>
-  <a href="pravila.html"><i>Regeln</i>Правила</a>
-  <a href="glagoly.html"><i>ich bin</i>Спряжения</a>
-  <a href="slushat.html"><i>Hör zu!</i>Слушаем</a>
-  <a href="chitaem.html"><i>Lies!</i>Читаем</a>
-  <a href="igry.html"><i>Spiel!</i>Игры</a>
-  <a href="ekzameny.html"><i>ÖSD B2</i>Экзамены</a>
-  <a href="testy.html"><i>FSP</i>Тесты врачей</a>
-  <a href="itog.html"><i>Test</i>Итоговый тест</a>
-  <a href="stat.html"><i>Wie viel?</i>Статистика</a>
+  <a href="#claude" class="главный с-фото" style="background-image:url(img/plitki/claude.webp) !important"><span>Уроки с Claude</span></a>
+  <a href="#dasha" class="главный с-фото" id="менюДаша" style="background-image:url(img/plitki/dasha.webp) !important"><span>Уроки с Дашей</span></a>
+  <a href="zubr.html" class="с-фото" style="background-image:url(img/plitki/zubr.webp) !important"><span>ЗУБР</span></a>
+  <a href="pravila.html" class="с-фото" style="background-image:url(img/plitki/pravila.webp) !important"><span>Правила</span></a>
+  <a href="glagoly.html" class="с-фото" style="background-image:url(img/plitki/glagoly.webp) !important"><span>Спряжения</span></a>
+  <a href="slushat.html" class="с-фото" style="background-image:url(img/plitki/slushat.webp) !important"><span>Слушаем</span></a>
+  <a href="chitaem.html" class="с-фото" style="background-image:url(img/plitki/chitaem.webp) !important"><span>Читаем</span></a>
+  <a href="igry.html" class="с-фото" style="background-image:url(img/plitki/igry.webp) !important"><span>Игры</span></a>
+  <a href="ekzameny.html" class="с-фото" style="background-image:url(img/plitki/ekzameny.webp) !important"><span>Экзамены</span></a>
+  <a href="testy.html" class="с-фото" style="background-image:url(img/plitki/testy.webp) !important"><span>Тесты врачей</span></a>
+  <a href="itog.html" class="с-фото" style="background-image:url(img/plitki/itog.webp) !important"><span>Итоговый тест</span></a>
+  <a href="stat.html" class="с-фото" style="background-image:url(img/plitki/stat.webp) !important"><span>Статистика</span></a>
 </nav>
 <!--/ВХОД-->
 
@@ -1669,7 +1669,7 @@ render();
     var ф = document.getElementById('ктоФото');
     ф.innerHTML = '<img alt="" src="' + ФОТО[profile] + '">';
     ф.querySelector('img').onerror = function(){ ф.textContent = profile === 'polina' ? 'П' : 'Г'; };
-    document.getElementById('менюДаша').innerHTML = '<i>Hallo!</i>' + (profile === 'polina' ? 'Занятия Поли с Дашей' : 'Уроки с Дашей');
+    document.getElementById('менюДаша').innerHTML = '<span>' + (profile === 'polina' ? 'Занятия Поли с Дашей' : 'Уроки с Дашей') + '</span>';
     сводка();
   }
   function сводка(){

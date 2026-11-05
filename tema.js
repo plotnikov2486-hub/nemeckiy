@@ -121,3 +121,21 @@ window.addEventListener('storage', function(e){
   }
 });
 })();
+
+/* 05.11.2026 врач: на экране блокировки айфона висела старая иконка «D немецкий» с белыми полосами и «ЗУБР — слова немецкого».
+   Теперь при любом звуке сайта — логотип GlobalDoc (квадрат во весь край) и название страницы. */
+(function(){
+  if (!('mediaSession' in navigator) || !window.MediaMetadata || !window.HTMLMediaElement) return;
+  var корень = (function(){ try { return document.currentScript.src.replace(/tema\.js.*$/, ''); } catch (e) { return ''; } })();
+  var играть = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function(){
+    try {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: (document.title || '').split(/\s+[—–-]\s+/)[0] || 'Немецкий для врачей',
+        artist: 'GlobalDoc',
+        artwork: [{ src: корень + 'icons/icon-512.png', sizes: '512x512', type: 'image/png' }]
+      });
+    } catch (e) {}
+    return играть.apply(this, arguments);
+  };
+})();
