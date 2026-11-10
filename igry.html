@@ -151,7 +151,7 @@ p.пояс{ margin:0 0 16px; color:var(--ст-тихий); font-size:15.5px; }
 <div class="низ" id="низ"><div id="низКн"></div></div>
 
 <script src="tema.js"></script>
-<script src="igry.js?v=202611051640"></script>
+<script src="igry.js?v=202611101903"></script>
 <script>
 (function () {
   var профиль = 'grigoriy';
@@ -281,7 +281,7 @@ p.пояс{ margin:0 0 16px; color:var(--ст-тихий); font-size:15.5px; }
     var поле = $('поле');
     поле.innerHTML = '<p class="пусто">Загружаю слова…</p>';
     Promise.all(файлы.map(function (ф) {
-      return fetch('words/' + ф + '.json?v=202611051640').then(function (r) { return r.ok ? r.json() : []; })
+      return fetch('words/' + ф + '.json?v=202611101903').then(function (r) { return r.ok ? r.json() : []; })
         .then(function (строки) { return строки.map(function (с) { с = с.slice(); с[0] = ф + '/' + с[0]; return с; }); })   // звук: zvuk/<урок>/<ид>.mp3
         .catch(function () { return []; });
     })).then(function (части) {
@@ -311,7 +311,7 @@ p.пояс{ margin:0 0 16px; color:var(--ст-тихий); font-size:15.5px; }
     });
   }
 
-  fetch('words/уроки.json?v=202611051640').then(function (r) { return r.json(); })
+  fetch('words/уроки.json?v=202611101903').then(function (r) { return r.json(); })
     .then(function (д) { уроки = д; }).catch(function () {})
     .then(function () { экран1(); });
 })();
