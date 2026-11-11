@@ -2730,12 +2730,16 @@ var СЦЕНАРИЙ = {
    в верхней половине, игра — полупрозрачной карточкой снизу. Ошибка — ситуация на ступень хуже, верный ответ — на ступень
    лучше и «лайк» героя. Дошёл до дна — финал проигрыша, прошёл игру — финал победы. Кадры: img/igry/сюжет/<имя>.webp.
    Включается для игры, когда её кадры одобрены врачом и лежат на месте: СЮЖЕТ_ГОТОВ[код] = true. Страница даёт наст.сюжеты. */
-var СЮЖЕТ_ГОТОВ = {};
+var СЮЖЕТ_ГОТОВ = {"порядок": 1};
 var СЮЖЕТЫ = {
   порядок: { имя: 'Останови кровотечение', под: 'Собери фразу, иначе кровь не остановить',
     мин: -3, макс: 0, кадры: { '0': 'кровь_0', '-1': 'кровь_1', '-2': 'кровь_2' }, лайк: 'кровь_лайк',
     проигрыш: ['кровь_3', 'кровь_экг'], писк: true, победа: 'кровь_победа',
-    проиграл: 'Вы проиграли. Пациент умер', выиграл: 'Ты выиграл! Кровотечение остановлено' },
+    проиграл: 'Вы проиграли. Пациент умер', выиграл: 'Ты выиграл! Кровотечение остановлено',
+    // 11.11.2026: ролики Seedance (ускорены вдвое). Переход «откуда>куда» по уровню; верный ответ — обратный ролик.
+    видео: { петля: 'кровь_0_петля', лайк: 'кровь_0-лайк', лайкНазад: 'кровь_лайк-0',
+      переходы: { '0>-1': 'кровь_0-1', '-1>-2': 'кровь_1-2', '-1>0': 'кровь_1-0', '-2>-1': 'кровь_2-1' },
+      проигрыш: ['кровь_2-3', 'кровь_3-экг'], победа: 'кровь_0-победа' } },
   пропуск: { имя: 'Помоги доктору написать истории болезни', под: 'Вставь слово, иначе истории завалят врача',
     мин: -3, макс: 0, кадры: { '0': 'истории_0', '-1': 'истории_1', '-2': 'истории_2' }, лайк: 'истории_лайк',
     проигрыш: ['истории_3'], победа: 'истории_лайк',
@@ -2752,48 +2756,111 @@ var СЮЖЕТЫ = {
 function новыйСюжет(код) {
   var с = СЮЖЕТЫ[код], уровень = 0, проиграно = false, корень = ИГРЫ_БАЗА + 'img/igry/сюжет/';
   var слой = document.createElement('div'); слой.className = 'иг-сюжет';
-  слой.innerHTML = '<img alt=""><div class="иг-сюжет-надпись" hidden></div>';
+  слой.innerHTML = '<div class="иг-сюжет-надпись" hidden></div>';
   document.body.appendChild(слой); document.body.classList.add('с-сюжетом');
-  var рис = слой.querySelector('img'), надпись = слой.querySelector('.иг-сюжет-надпись'), таймер = 0;
-  function кадр(имя) { рис.src = корень + имя + '.webp'; }
-  function обычный() { кадр(с.кадры[String(уровень)] || с.кадры['0']); }
+  var надпись = слой.querySelector('.иг-сюжет-надпись'), таймер = 0, этаж = 1, ход = 0;
+  // 11.11.2026: всё, что показываем (кадр или ролик), ложится поверх прежнего с короткой растушёвкой —
+  // так стыки роликов, которые Seedance закончил не тем кадром, не дёргаются.
+  function наверх(эл) {
+    эл.style.zIndex = ++этаж; эл.classList.remove('видно');
+    void эл.offsetWidth; эл.classList.add('видно');
+  }
+  var пул = {}, в = с.видео;
+  if (в && document.createElement('video').canPlayType('video/mp4')) {
+    [в.петля, в.лайк, в.лайкНазад, в.победа].concat(в.проигрыш || [], Object.keys(в.переходы || {}).map(function (к) { return в.переходы[к]; }))
+      .forEach(function (имя) {
+        if (!имя || пул[имя]) return;
+        var эл = document.createElement('video');
+        эл.muted = true; эл.defaultMuted = true; эл.playsInline = true; эл.setAttribute('playsinline', ''); эл.setAttribute('muted', '');
+        эл.preload = 'auto'; эл.src = корень + 'видео/' + имя + '.mp4';
+        слой.appendChild(эл); пул[имя] = эл;
+      });
+  } else в = null;
+  function кадр(имя) {
+    var рис = new Image(); рис.alt = '';
+    рис.onload = function () { наверх(рис); };
+    рис.src = корень + имя + '.webp'; слой.appendChild(рис);
+    var все = слой.querySelectorAll('img'); if (все.length > 3) все[0].remove();
+  }
+  // ролик; потом() — когда доиграл (или не смог: тогда сразу, игра не ждёт видео)
+  function играть(имя, потом, петля) {
+    var эл = пул[имя], мой = ++ход;
+    if (!эл) { if (потом) потом(); return; }
+    Object.keys(пул).forEach(function (к) { пул[к].onended = null; });
+    эл.loop = !!петля;
+    try { эл.currentTime = 0; } catch (e) {}
+    var пошло = false;
+    эл.onplaying = function () { if (пошло || мой !== ход) return; пошло = true; наверх(эл);
+      setTimeout(function () { Object.keys(пул).forEach(function (к) { if (пул[к] !== эл) пул[к].pause(); }); }, 250); };
+    if (!петля) эл.onended = function () { эл.onended = null; if (мой === ход && потом) потом(); };
+    var п = эл.play();
+    if (п && п.catch) п.catch(function () { if (мой === ход && потом) потом(); });
+  }
+  function обычный() {
+    if (в && уровень === 0 && в.петля) { играть(в.петля, null, true); return; }
+    ход++; кадр(с.кадры[String(уровень)] || с.кадры['0']);
+  }
+  // после ролика-перехода держим его последний кадр (обратный ролик тогда стартует ровно с него); на нуле — петля
+  function послеРолика() { if (уровень === 0 && в && в.петля) играть(в.петля, null, true); }
   function писк() {   // монитор: прямая линия и долгий писк
     try {
       var к = new (window.AudioContext || window.webkitAudioContext)(), г = к.createOscillator(), у = к.createGain();
       г.frequency.value = 1000; у.gain.value = 0.12; г.connect(у); у.connect(к.destination); г.start(); г.stop(к.currentTime + 4);
     } catch (e) {}
   }
+  function финалПроигрыша() { надпись.textContent = с.проиграл; надпись.hidden = false; }
   обычный();
   return {
     ответ: function (верно) {   // → true, если игра проиграна
       if (проиграно) return true;
       clearTimeout(таймер);
+      var было = уровень;
       if (верно) {
         уровень = Math.min(с.макс, уровень + 1);
+        if (в) {
+          var путь = в.переходы && в.переходы[было + '>' + уровень];
+          if (путь) играть(путь, послеРолика);
+          else if (было === уровень && в.лайк) играть(в.лайк, function () { таймер = setTimeout(function () { играть(в.лайкНазад, обычный); }, 500); });
+          else обычный();
+          return false;
+        }
         if (с.лайк) { кадр(с.лайк); таймер = setTimeout(обычный, 1400); } else обычный();
         return false;
       }
       уровень--;
       if (уровень <= с.мин) {
         проиграно = true; слой.classList.add('красный', 'финал');
+        if (в && в.проигрыш) {
+          var ролики = в.проигрыш.slice();
+          (function дальше() {
+            if (!ролики.length) { if (с.писк) писк(); финалПроигрыша(); return; }
+            играть(ролики.shift(), дальше);
+          })();
+          return true;
+        }
         var по = с.проигрыш.slice(), шаг = 0;
         (function дальше() {
           if (шаг < по.length) { кадр(по[шаг]); if (по[шаг].indexOf('экг') >= 0 && с.писк) писк(); шаг++; таймер = setTimeout(дальше, 2200); return; }
-          надпись.textContent = с.проиграл; надпись.hidden = false;
+          финалПроигрыша();
         })();
         return true;
       }
-      обычный();
+      var вниз = в && в.переходы && в.переходы[было + '>' + уровень];
+      if (вниз) играть(вниз, послеРолика); else обычный();
       return false;
     },
     победа: function () {
       if (проиграно) return;
-      clearTimeout(таймер); кадр(с.победа); слой.classList.add('финал');
-      надпись.textContent = с.выиграл; надпись.hidden = false;
-      таймер = setTimeout(function () { слой.classList.remove('финал'); надпись.hidden = true; }, 3500);
+      clearTimeout(таймер); слой.classList.add('финал');
+      function надписьПобеды() {
+        надпись.textContent = с.выиграл; надпись.hidden = false;
+        таймер = setTimeout(function () { слой.classList.remove('финал'); надпись.hidden = true; }, 3500);
+      }
+      if (в && в.победа && пул[в.победа]) играть(в.победа, надписьПобеды);
+      else { ход++; кадр(с.победа); надписьПобеды(); }
     },
     проиграно: function () { return проиграно; },
-    убрать: function () { clearTimeout(таймер); слой.remove(); document.body.classList.remove('с-сюжетом'); }
+    убрать: function () { clearTimeout(таймер); ход++; Object.keys(пул).forEach(function (к) { пул[к].pause(); пул[к].removeAttribute('src'); }); слой.remove(); document.body.classList.remove('с-сюжетом'); }
   };
 }
 
@@ -2839,13 +2906,13 @@ function карта_кнопки(сел) {
   + '.вв-ответ.дисней .б{ left:9px; }'
   + '.иг-стена .иг-плита{ background:rgba(20,24,40,.45); color:#fff; text-shadow:0 1px 3px rgba(0,0,0,.85); -webkit-backdrop-filter:blur(1.5px); backdrop-filter:blur(1.5px); }'
   + '.иг-стена .иг-плита.де{ background:rgba(20,24,40,.5); }'
-  + '.иг-сюжет{ position:fixed; inset:0; z-index:0; background:#000; } .иг-сюжет img{ width:100%; height:100%; object-fit:cover; }'
+  + '.иг-сюжет{ position:fixed; inset:0; z-index:0; background:#000; } .иг-сюжет img, .иг-сюжет video{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; } .иг-сюжет .видно{ opacity:1; transition:opacity .18s ease-out; }'
   + 'body.с-сюжетом #поле{ position:relative; z-index:1; padding-top:46vh; }'
   + 'body.с-сюжетом #поле .иг-карта{ background:rgba(255,255,255,.5) !important; -webkit-backdrop-filter:blur(14px) saturate(160%); backdrop-filter:blur(14px) saturate(160%); }'
   + '@media (prefers-color-scheme: dark){ body.с-сюжетом #поле .иг-карта{ background:rgba(20,22,30,.5) !important; } }'
-  + '.иг-сюжет.финал{ z-index:5; } .иг-сюжет.красный::after{ content:""; position:absolute; inset:0; pointer-events:none; box-shadow:inset 0 0 140px 50px rgba(220,0,0,.75); animation:иг-пульс .8s ease-in-out infinite; }'
+  + '.иг-сюжет.финал{ z-index:5; } .иг-сюжет.красный::after{ content:""; position:absolute; inset:0; pointer-events:none; z-index:99999; box-shadow:inset 0 0 140px 50px rgba(220,0,0,.75); animation:иг-пульс .8s ease-in-out infinite; }'
   + '@keyframes иг-пульс{ 50%{ opacity:.35; } } @media (prefers-reduced-motion: reduce){ .иг-сюжет.красный::after{ animation:none; } }'
-  + '.иг-сюжет-надпись{ position:absolute; left:16px; right:16px; top:58%; text-align:center; color:#fff; font-size:clamp(26px,7.5vw,40px); font-weight:800; line-height:1.1; text-shadow:0 2px 12px rgba(0,0,0,.8); }';
+  + '.иг-сюжет-надпись{ position:absolute; z-index:100000; left:16px; right:16px; top:58%; text-align:center; color:#fff; font-size:clamp(26px,7.5vw,40px); font-weight:800; line-height:1.1; text-shadow:0 2px 12px rgba(0,0,0,.8); }';
   (document.head || document.documentElement).appendChild(с);
 })();
 // 05.11.2026: полный список игр для первого экрана igry.html (слова ещё не выбраны)
