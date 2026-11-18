@@ -43,7 +43,7 @@
   <a href="#dasha" class="главный с-фото" id="менюДаша" style="background-image:url(img/plitki/dasha.webp) !important"><span>Уроки с Дашей</span></a>
   <a href="zubr.html" class="с-фото" style="background-image:url(img/plitki/zubr.webp) !important"><span>ЗУБР</span></a>
   <a href="pravila.html" class="с-фото" style="background-image:url(img/plitki/pravila.webp) !important"><span>Правила</span></a>
-  <a href="glagoly.html" class="с-фото" style="background-image:url(img/plitki/glagoly.webp) !important"><span>Спряжения</span></a>
+  <a href="tablichki.html" class="с-фото" style="background-image:url(img/plitki/glagoly.webp) !important"><span>Таблицы</span></a>
   <a href="slushat.html" class="с-фото" style="background-image:url(img/plitki/slushat.webp) !important"><span>Слушаем</span></a>
   <a href="chitaem.html" class="с-фото" style="background-image:url(img/plitki/chitaem.webp) !important"><span>Читаем</span></a>
   <a href="igry.html" class="с-фото" style="background-image:url(img/plitki/igry.webp) !important"><span>Игры</span></a>
@@ -712,6 +712,10 @@ if (!Слушалка){
 
 
 
+
+
+
+
   <header>
     <h1>Немецкий для врачей</h1>
     <p>Личный курс Григория и Полины на пути к Approbation: все уроки в одном месте.</p>
@@ -862,6 +866,11 @@ const LESSONS = [
 
 // Занятия с репетитором Дашей (Австрия) — раз в неделю, воскресенье 20:00
 const DASHA = [
+  {id:'d15', num:'Занятие 15', date:'≈15.11.2026', title:'Падежи и склонение определённого артикля',
+   topic:'Три рекламных текста про очки (Designer-Modell «One for you» — 6 цветов 179 €, Elisabetta — rund aus Metall, Klassiker Pamela O. — leicht und praktisch 99 €) — соединить тексты и картинки по словам rund / Metall / Farben; слова: verschieden (без -е!), rund, eckig, Glas, Holz, Papier, Kunststoff/Plastik, Gestell, Auge, modisch, Angebot; 70 = siebzig, 60 = sechzig. Живой момент: диалекты Австрии — Клагенфурт (2 часа от Граца, «я там ничего не понимаю»), Тироль — носитель понимает на 50%. Падежи: Nominativ кто? что?, Akkusativ кого? что? / куда?, Dativ кому? чему? / где?, Genitiv чей? (wessen); 4 вида артиклей: определённый, неопределённый, отрицательный kein, нулевой. Определённый: известный предмет, есть свойство; неопределённый: впервые, после haben / brauchen / es gibt. Склонение der/die/das/die: Akkusativ — меняется только м. род (der → den), Dativ — dem / dem / der / den (+n у мн. ч.), Genitiv — des / des / der / der (+s/-es у м./ср. всегда); der Hund schläft → ich sehe den Hund → ich gebe dem Hund Futter → des Hundes. Вопрос — от глагола, не от предлога; mit + Dativ (mit dem Bus — «с автобусом»), куда? → Akk, где? → Dat. Упражнение: der Hund im Garten, die Katze im Fenster, das Auto ist rot, in den Park, das Buch dem Lehrer, die Kinder im Hof, kennen ≠ können, den Tisch ins Zimmer, mit dem Bus, auf dem Tisch. Домашка: учить падежи и склонение, вставить артикль (15 — Das Auto meines Bruders, der 8. März, die Schweiz…), описать картинку со столом, c9 предлоги + C2 мебель + C6 квартира, учебник Menschen с. 29–32.',
+   pdf:'', audio:'dasha/dasha15_interactive.html', mins:56, hard:'Средне', cards:88,
+   photos:['dasha/dasha15_hw_nachricht.png','dasha/dasha15_hw_artikel.jpg','dasha/dasha15_hw_tisch.jpg','dasha/dasha15_hw_c9.jpg','dasha/dasha15_hw_c2.jpg','dasha/dasha15_hw_c6.jpg'],
+   photoLabels:['Сообщение Даши (домашка)','Вставить артикль','Стол (описать)','c9 — предлоги','C2 — мебель','C6 — квартира']},
   {id:'d14', num:'Занятие 14', date:'≈08.11.2026', title:'Артикли: der или ein? Модальные können, dürfen, sollen',
    topic:'Мебель на перевод: Regal, Teppich, Spiegel (Spiegelei — яичница), Fernseher, Sofa/Couch, Lampe и Apotheke на -e, Sessel (в Австрии и стул), Fenster, Tische. Фильм Menschen A1 с. 38: картина на рынке — zu groß / zu klein, 53 mal 43, «Ich habe nur zehn Euro». Артикли: определённый (известный предмет, есть свойство — Der Tisch ist braun), неопределённый (впервые, после haben — Ich habe einen Hund), нулевой (Ich mag Blumen); -ung всегда женский. Модальные: 4 формы (ich = er без окончания, du -st, ihr -t, wir/sie как в словаре); können, dürfen (nicht + dürfen = запрещено), sollen; der Morgen и morgen. Домашка: лист Modalverben (36), дни недели + montags, 7 предложений, перевод «Майкл и Мария».',
    pdf:'', audio:'dasha/dasha14_interactive.html', mins:78, hard:'Средне', cards:119,
@@ -935,6 +944,16 @@ const NEXT_LESSON = {date:'воскресенье', time:'20:00'};
 
 // Занятия ПОЛИНЫ с Дашей — отдельная линия (она идёт впереди по программе)
 const POLYA = [
+  {id:'p26', num:'Занятие 26', date:'16.11.2026', title:'Возвратные: тренируем выбор mich или mir',
+   topic:'Целое занятие — тренировка Akkusativ/Dativ: erinnern mich (главная ловушка — хочется mir), vorbereiten mich auf, Fingernägel lackieren — mir, duschen mich nach dem Sport (nach + Dat), Haare waschen — sich, putzen sich die Zähne vor oder nach dem Frühstück, sich vorstellen — Ich stelle mir den Urlaub vor; es tut weh — «болит» как es regnet; wenn → глагол в конец, учебные предложения бывают неестественными. Новые глаголы: ständig, sich auskennen (ориентироваться, разбираться), sich ausruhen = sich erholen = sich entspannen, der Gast, sich bedanken bei/für, höflich, die Einladung (einladen — ich lade dich ein), sich bewerben um (apply! das Stipendium), sich erkälten (der Anorak), sich bemühen, sich merken — всегда Dativ (erinnern = вспомнить былое, merken = запомнить новое), Mach dir keine Sorgen!, sich etwas leisten (позволить себе купить), glauben an. sich freuen: über (есть/было) → auf (будет) → für (за кого-то) — запоминать в этой последовательности, после всех Akkusativ; вопросы с предлогами одним словом: woran, worüber, wofür (an was нельзя). Текст A2 «Verkehrsmittel»: Matthias (остров, Fähre, Fahrrad), Bernd (Швейцария, Барселона—Париж, U-Bahn), Thomas (австриец, горы, Motorrad, Lastwagen); «половину текста не понять — это нормально». Экзамен A2: Hören 30 мин, всего ~2 часа, Sprechen отдельно; richtig/falsch коварные; записываться в начале апреля — к тому времени B1. Домашка (17.11): выписать незнакомые слова из текста, 5 вопросов, отделяемые глаголы (10), возвратные вставить (10), перевести 15 предложений (aufwachen, vergessen, mitnehmen, nach Hause).',
+   pdf:'', audio:'dasha/polya26_interactive.html', mins:65, hard:'Средне', cards:103,
+   photos:['dasha/polya26_hw_text.jpg','dasha/polya26_hw_trennbar.jpg','dasha/polya26_hw_refl.jpg','dasha/polya26_hw_nachricht1.png','dasha/polya26_hw_nachricht2.png'],
+   photoLabels:['Текст с пометками','Отделяемые глаголы','Возвратные глаголы','Сообщение Даши','Домашка целиком']},
+  {id:'p25', num:'Занятие 25', date:'≈14.11.2026', title:'Возвратные глаголы с Dativ и «ложные друзья» возвратности',
+   topic:'Слова: die Laune (настроение), die Gesundheit — Gesundheit! при чихании, die Kindheit, allein, der Strand, der See (озеро ≠ море). Возвратные с Dativ: Ich putze mir die Zähne, Was siehst du dir an?, Er gibt sich viel Mühe (= sich bemühen, die Mühe), Sie regt sich über die Klausur auf (sich aufregen über + Akk), Es lohnt sich, Wir sehen uns einen Film an, Was hört ihr euch an?, Sie schämt sich («ей стыдно» — а по-немецки «стыдит себя»), Sie kümmern sich um ihre Kinder (падеж глагола ≠ падеж предлога: um + Akk). Возвратность RU ↔ DE не совпадает: вспоминать = sich erinnern an + Akk, скучать = sich langweilen (Kevin allein zu Haus), отдыхать = sich erholen, опаздывать = sich verspäten, участвовать = sich beteiligen an + Dat; а учиться = lernen, смеяться = lachen (Wer zuletzt lacht, lacht am besten), купаться = baden (im See), нравиться = gefällen + Dat (das rote Kleid gefällt mir), следовать = folgen + Dat. Аудирование: больница (die Ambulanz 🇦🇹, die Ordination 🇦🇹, der Lift, zweiter Stock, gelbe Linie — зелёные двери как ловушка), билеты на Harry Potter um 16.30 (die Vorstellung, die Reihe), Sportcenter nur für Damen, автоответчик (Ich rufe Sie morgen an), Medikamente 20 Minuten vor dem Frühstück, buchstabieren, 132 Euro, treffen uns um halb drei = 14:30! Домашка: лист Reflexive Verben (местоимения + вопросы-ответы), видео «Was sind deine Hobbys?» + составить диалог (знакомство в кафе, заказ, хобби), рабочая тетрадь с. 49–53.',
+   pdf:'', audio:'dasha/polya25_interactive.html', mins:59, hard:'Средне', cards:93,
+   photos:['dasha/polya25_hw_nachricht.png','dasha/polya25_hw_video.jpg','dasha/polya25_hw_refl1.jpg','dasha/polya25_hw_refl2.jpg','dasha/polya25_hw_refl3.jpg'],
+   photoLabels:['Сообщение Даши (домашка)','Видео «Hobbys»','Reflexive Verben — таблица','Übung 1 + вопросы','Страницы листа']},
   {id:'p24', num:'Занятие 24', date:'≈09.11.2026', title:'Неотделяемые приставки и возвратные глаголы',
    topic:'Неотделяемые be-/emp-/ent-/er-/ver-: verkaufen, vermieten (mieten — снимать), beantworten, sich beeilen, beeinflussen (das Wohlbefinden), empfangen (er empfängt), empfehlen (er empfiehlt), sich entspannen, erfinden, erhalten = bekommen, gehören, erziehen, bezahlen. С be- — без предлога: zahlen für → bezahlen. Возвратные: sich = -ся; mich/mir, dich/dir, sich, uns, euch; Akkusativ (себя) и Dativ (себе, есть предмет: Ich wasche mir die Hände); sich ansehen/anhören + Dativ; sich vorbereiten auf, sich interessieren für (wofür?), sich ausziehen, sich befinden, sich irren; sich freuen über / auf / für. Домашка: 26 возвратных A1–A2, E1.1 отделяемые, E2.2 предложения, «Was ist was?», reflexive Verben.',
    pdf:'', audio:'dasha/polya24_interactive.html', mins:49, hard:'Средне', cards:103,
@@ -1141,12 +1160,12 @@ const LEVELS = [
     {t:'Глагол haben', l:['l4','l8','d6','d9','d10']},
     {t:'Präsens правильных глаголов', l:['l3','d9']},
     {t:'Сильные глаголы (du sprichst, er fährt)', l:['l8','d7','d9']},
-    {t:'Род существительных, артикли der/die/das', l:['l2','d1','d14']},
+    {t:'Род существительных, артикли der/die/das', l:['l2','d1','d14','d15']},
     {t:'Неопределённый артикль ein/eine', l:['l4','p13','p15','d14']},
     {t:'Отрицание kein и nicht', l:['l4','p14','p16','p21']},
-    {t:'Именительный падеж (Nominativ)', l:['l2','p11','p12','p13']},
-    {t:'Винительный падеж (Akkusativ)', l:['l4','p11','p12','p13']},
-    {t:'Дательный падеж (Dativ) — база', l:['l11','p11','p12','p13']},
+    {t:'Именительный падеж (Nominativ)', l:['l2','p11','p12','p13','d15']},
+    {t:'Винительный падеж (Akkusativ)', l:['l4','p11','p12','p13','d15']},
+    {t:'Дательный падеж (Dativ) — база', l:['l11','p11','p12','p13','d15']},
     {t:'Притяжательные местоимения (mein, dein)', l:['d1','d2','p16','p17','p18','p21']},
     {t:'Порядок слов: глагол на 2-м месте', l:['l3']},
     {t:'Вопросы с W-словом (W-Fragen)', l:['l8','d6','d7','d12']},
@@ -1178,7 +1197,7 @@ const LEVELS = [
     {t:'Perfekt со всеми глаголами', l:['l12','l60']},
     {t:'Präteritum (sein, haben, модальные)', l:['l19']},
     {t:'Präteritum слабых и сильных глаголов', l:['l29']},
-    {t:'Возвратные глаголы (sich waschen)', l:['l18','p24']},
+    {t:'Возвратные глаголы (sich waschen)', l:['l18','p24','p25','p26']},
     {t:'Дательный падеж полностью + глаголы с Dativ', l:['l21']},
     {t:'Предлоги Wo? / Wohin? (Wechselpräpositionen)', l:['l17','p12']},
     {t:'Предлоги с Dativ (mit, nach, bei, seit)', l:['l20','p18','p19']},
@@ -1192,7 +1211,7 @@ const LEVELS = [
     {t:'Будущее время (Futur I)', l:['l34']},
     {t:'Императив во всех формах', l:['l13']},
     {t:'Infinitiv mit zu', l:['l39']},
-    {t:'Родительный падеж (Genitiv) — база', l:['p11','p12','p13','d10','p18','p19']},
+    {t:'Родительный падеж (Genitiv) — база', l:['p11','p12','p13','d10','p18','p19','d15']},
     {t:'Пассив — введение', l:['l27']},
     {t:'Глагол lassen', l:['l28']},
     {t:'Косвенный вопрос (ob)', l:['l31']},
@@ -1415,10 +1434,10 @@ function renderFolders(){
       <span class="f-txt"><span class="f-name">ЗУБР</span>
       <span class="f-sub">свой словарик и домашка от Даши</span></span>
     </a>
-    <a class="folder trainer" href="glagoly.html">
-      <span class="f-ico">⚡</span>
-      <span class="f-txt"><span class="f-name">Спряжения</span>
-      <span class="f-sub">особые, модальные и сильные — таблица и тренировка</span></span>
+    <a class="folder trainer" href="tablichki.html">
+      <span class="f-ico">📐</span>
+      <span class="f-txt"><span class="f-name">Таблицы</span>
+      <span class="f-sub">артикли, местоимения, предлоги, вопросы + спряжения глаголов</span></span>
     </a>
     <a class="folder trainer" href="igry.html">
       <span class="f-ico">🎮</span>

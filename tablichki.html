@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Таблицы — артикли, местоимения, предлоги, вопросы</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#1f5f5b">
+<style>
+  :root { --bg:#eff1ec; --surface:#fbfaf7; --surface-2:#ffffff; --ink:#202422; --ink-muted:#5b615c;
+    --ink-faint:#8b918a; --accent:#1f5f5b; --accent-ink:#ffffff; --line:#dde0d9;
+    --ok:#2e7d43; --ok-bg:#e5f2e8; --err:#b3402a; --err-bg:#fbeae6;
+    --shadow:0 1px 2px rgba(32,36,34,0.06),0 6px 16px rgba(32,36,34,0.05); }
+  :root[data-theme="dark"] { --bg:#14181a; --surface:#1c2224; --surface-2:#202729; --ink:#edefea; --ink-muted:#9ba39c;
+    --ink-faint:#6d746e; --accent:#4fb3a9; --accent-ink:#0d1413; --line:#2a3234;
+    --ok:#6fce8a; --ok-bg:#17281c; --err:#e8836b; --err-bg:#2b1a16;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#14181a; --surface:#1c2224; --surface-2:#202729;
+    --ink:#edefea; --ink-muted:#9ba39c; --ink-faint:#6d746e; --accent:#4fb3a9; --accent-ink:#0d1413; --line:#2a3234;
+    --ok:#6fce8a; --ok-bg:#17281c; --err:#e8836b; --err-bg:#2b1a16;
+    --shadow:0 1px 2px rgba(0,0,0,0.3),0 8px 24px rgba(0,0,0,0.35); } }
+  * { box-sizing:border-box; } body { margin:0; }
+  .lp { background:var(--bg); color:var(--ink); font-family:-apple-system,"SF Pro Text","Helvetica Neue",Arial,sans-serif;
+    max-width:860px; margin:0 auto; padding:24px 16px 64px; line-height:1.5; min-height:100vh; }
+  .lp h1 { font-family:Georgia,"Iowan Old Style","Palatino Linotype","Times New Roman",serif; text-wrap:balance; margin:0 0 6px; }
+  .backbar{ position:sticky; top:0; z-index:50; display:flex; align-items:center; gap:10px;
+    padding:10px 14px; background:rgba(31,95,91,0.96); backdrop-filter:blur(8px); box-shadow:0 1px 8px rgba(0,0,0,0.18); }
+  @media (prefers-color-scheme: dark){ .backbar{ background:rgba(20,26,28,0.96); border-bottom:1px solid #2a3234; } }
+  .backbar a.bb-link{ display:inline-flex; align-items:center; gap:7px; color:#fff; text-decoration:none;
+    font-weight:600; font-size:14.5px; padding:7px 14px; border-radius:999px;
+    border:1px solid rgba(255,255,255,0.32); background:rgba(255,255,255,0.10); }
+  .backbar span.bb-title{ color:#fff; font-weight:700; font-size:14.5px; opacity:.9; }
+  .подзаг { color:var(--ink-muted); font-size:14.5px; margin:0 0 18px; }
+  .кат-список { display:flex; flex-direction:column; gap:10px; margin:0 0 8px; }
+  .кат { display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:16px; cursor:pointer;
+    background:var(--surface); color:var(--ink); border:1px solid var(--line); box-shadow:var(--shadow);
+    font:inherit; text-align:left; width:100%; }
+  .кат .знак { font-size:26px; }
+  .кат b { font-size:16.5px; display:block; }
+  .кат span.пояс { display:block; font-size:13px; color:var(--ink-muted); margin-top:2px; }
+  .кат.вкл { outline:3px solid var(--accent); }
+  .глаголы-ссылка { display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:16px;
+    background:var(--surface); border:1px dashed var(--line); color:var(--ink); text-decoration:none; box-shadow:var(--shadow); }
+  .глаголы-ссылка b { font-size:16.5px; display:block; }
+  .глаголы-ссылка span.пояс { display:block; font-size:13px; color:var(--ink-muted); margin-top:2px; }
+  .режимы { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin:14px 0 16px; }
+  .режимы button { font:inherit; font-size:13px; font-weight:700; padding:12px 4px; min-height:56px;
+    border-radius:14px; cursor:pointer; background:var(--surface); color:var(--ink); border:1px solid var(--line); }
+  .режимы button.вкл { background:var(--accent); border-color:var(--accent); color:var(--accent-ink); }
+  .карта { background:var(--surface); border:1px solid var(--line); border-radius:16px; padding:16px 12px;
+    box-shadow:var(--shadow); margin-bottom:14px; }
+  .карта h2 { font-size:18px; margin:0 0 4px; font-family:Georgia,"Iowan Old Style",serif; }
+  .карта .под { font-size:13px; color:var(--ink-muted); margin:0 0 12px; }
+  .обёртка { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+  table.табл { border-collapse:collapse; width:100%; min-width:480px; font-size:15px; }
+  table.табл th, table.табл td { border:1px solid var(--line); padding:10px 8px; text-align:center; }
+  table.табл th { background:var(--surface-2); font-size:12.5px; color:var(--ink-muted); white-space:nowrap; }
+  table.табл td.строка-имя { text-align:left; font-weight:700; font-size:13px; color:var(--ink-muted); white-space:nowrap; }
+  table.табл td.ячейка { font-family:Georgia,"Iowan Old Style",serif; cursor:pointer; user-select:none; }
+  table.табл td.ячейка.закрыта { color:transparent; background:var(--surface-2); }
+  table.табл td.ячейка.закрыта::after { content:'·'; color:var(--ink-faint); }
+  table.табл td.ячейка.звук:hover { text-decoration:underline dotted; }
+  table.табл input { font:inherit; font-family:Georgia,"Iowan Old Style",serif; font-size:15px; width:100%;
+    padding:6px 4px; border:1px solid var(--line); border-radius:8px; background:var(--surface-2); color:var(--ink); text-align:center; }
+  table.табл td.ок { background:var(--ok-bg); }
+  table.табл td.ошибка { background:var(--err-bg); }
+  .советы { font-size:13.5px; line-height:1.55; color:var(--ink); margin:12px 0 0; padding:0 0 0 4px; }
+  .советы li { margin-bottom:7px; }
+  .низ { display:flex; gap:9px; flex-wrap:wrap; margin-top:12px; }
+  .кн { font:inherit; font-size:14.5px; font-weight:700; padding:12px 18px; border-radius:13px; cursor:pointer;
+    border:none; background:var(--accent); color:var(--accent-ink); min-height:46px; }
+  .кн.тихая { background:transparent; color:var(--ink); border:1px solid var(--line); font-weight:600; }
+  .итог { font-size:14px; font-weight:700; margin-top:10px; }
+  .итог.хорошо { color:var(--ok); } .итог.плохо { color:var(--err); }
+  .счёт { font-size:12.5px; color:var(--ink-muted); margin-top:6px; }
+  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
+    border-radius:12px; text-decoration:none; font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
+  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
+  .легенда { font-size:12.5px; color:var(--ink-muted); margin:4px 0 0; }
+</style>
+</head>
+<body>
+<div class="backbar">
+  <a class="bb-link" href="index.html">&#8592; Главная</a>
+  <span class="bb-title">Таблицы</span>
+</div>
+
+<div class="lp">
+  <h1>Таблицы немецкого</h1>
+  <p class="подзаг">Базовые таблицы в одном месте. Выбери строку — таблица откроется на весь экран. Три режима: <b>смотреть</b> (клик по ячейке со знаком 🔊 — звук), <b>учить</b> (ячейки закрыты, тапни — откроется), <b>впиши</b> (набери сам и проверь). Так таблицы учатся быстрее всего.</p>
+
+  <div class="кат-список" id="катСписок"></div>
+
+  <div id="область"></div>
+
+  <a class="bb-top" href="index.html">&#8592; Вернуться на главную</a>
+</div>
+
+<script>
+const КАТЕГОРИИ = [{"id":"artikeli","имя":"Склонение определённых артиклей","знак":"📐","подзаголовок":"der · die · das · die во всех четырёх падежах","шапка":["Падеж","м. род","ср. род","ж. род","мн. число"],"строки":[["Nominativ (кто? что?)","der","das","die","die"],["Akkusativ (кого? что?)","den","das","die","die"],["Dativ (кому? чему?)","dem","dem","der","den"],["Genitiv (чей?)","des","des","der","der"]],"озвучивать_столбец0":false,"советы":["<b>Akkusativ</b> — меняется только мужской род: der → <b>den</b>. Остальные как в Nominativ.","<b>Dativ</b> — м. и ср. род <b>dem</b>, ж. род <b>der</b>, мн. число <b>den</b> (к слову во мн. ч. иногда +n: den Kindern).","<b>Genitiv</b> — м. и ср. род <b>des</b>, ж. и мн. <b>der</b>; к слову м./ср. рода всегда +s или +es: des Hundes, des Kindes.","По этой же таблице склоняются <b>ein</b> и <b>kein</b> (у них просто нет множественного в единственном смысле) — будет позже."]},{"id":"mestoimeniya","имя":"Личные местоимения","знак":"👤","подзаголовок":"я · меня · мне — Nominativ, Akkusativ, Dativ","шапка":["Лицо","Nominativ","Akkusativ","Dativ"],"строки":[["я","ich","mich","mir"],["ты","du","dich","dir"],["он / она / оно","er / sie / es","ihn / sie / es","ihm / ihr / ihm"],["мы","wir","uns","uns"],["вы (друзья)","ihr","euch","euch"],["они / Вы","sie / Sie","sie / Sie","ihnen / Ihnen"]],"озвучивать_столбец0":false,"советы":["По этим же строчкам меняется возвратное <b>sich</b>: mich/dich/sich, mir/dir/sich, uns, euch, sich.","Akkusativ — «<b>кого?</b>»: Ich sehe <b>dich</b>. Dativ — «<b>кому?</b>»: Ich helfe <b>dir</b>.","ihm / ihm / ihn — он; ihr / ihr / sie — она: аккузатив «её» выглядит как номинатив, не путай."]},{"id":"prityazhatelnye","имя":"Притяжательные (mein…)","знак":"💌","подзаголовок":"mein · dein · sein · ihr · unser · euer — как ein","шапка":["Падеж","м. род","ср. род","ж. род","мн. число"],"строки":[["Nominativ","mein","mein","meine","meine"],["Akkusativ","meinen","mein","meine","meine"],["Dativ","meinem","meinem","meiner","meinen"],["Genitiv","meines","meines","meiner","meiner"]],"озвучивать_столбец0":false,"советы":["Показано <b>mein</b>; все остальные склоняются так же: <b>dein</b> (твой), <b>sein</b> (его), <b>ihr</b> (её / их / Ваш), <b>unser</b> (наш), <b>euer</b> (ваш).","Это ровно склонение <b>ein/kein</b>: окончания те же (mein<b>en</b>, mein<b>em</b>, mein<b>es</b>…).","Nominativ одним списком: <b>mein, dein, sein, ihr, unser, euer, ihr/Sie</b> — про каждого «чей?»."]},{"id":"predlogi","имя":"Предлоги с падежами","знак":"🧭","подзаголовок":"какой предлог — какой падеж","шапка":["Предлог","Падеж","Пример"],"строки":[["für","Akkusativ","für dich — для тебя"],["ohne","Akkusativ","ohne Zucker — без сахара"],["gegen","Akkusativ","gegen die Wand — против стены"],["um","Akkusativ","um den Tisch — вокруг стола"],["durch","Akkusativ","durch den Park — через парк"],["bis","Akkusativ","bis zum Bahnhof — до вокзала"],["mit","Dativ","mit dem Bus — на автобусе"],["nach","Dativ","nach der Arbeit — после работы"],["aus","Dativ","aus dem Haus — из дома"],["bei","Dativ","bei mir — у меня"],["seit","Dativ","seit einem Jahr — уже год"],["von","Dativ","von der Ärztin — от врача"],["zu","Dativ","zur Ordination — к врачу (в приёмную)"],["in","куда? Akk / где? Dat","in den Park / im Park"],["an","куда? Akk / где? Dat","an die Wand / an der Wand"],["auf","куда? Akk / где? Dat","auf den Tisch / auf dem Tisch"],["vor","куда? Akk / где? Dat","vor den Spiegel / vor dem Spiegel"],["hinter","куда? Akk / где? Dat","hinter das Haus / hinter dem Haus"],["unter","куда? Akk / где? Dat","unter den Tisch / unter dem Tisch"],["neben","куда? Akk / где? Dat","neben den Stuhl / neben dem Stuhl"],["zwischen","куда? Akk / где? Dat","zwischen die Bücher / zwischen den Büchern"]],"озвучивать_столбец0":true,"советы":["Фокус «<b>куда?</b>» — Akkusativ (движение куда-то), фокус «<b>где?</b>» — Dativ (место). Это Wechselpräpositionen — предлоги перемены.","Мини-история для запоминания Dativ: <b>mit-nach-aus-bei-seit-von-zu</b> — «с, после, из, у, с (тех пор), от, к».","После <b>mit</b> — всегда Dativ: mit <b>dem</b> Bus (дословно «с автобусом»)."]},{"id":"voprosy","имя":"Вопросительные слова","знак":"❓","подзаголовок":"wer · was · wo · wohin · wem…","шапка":["Слово","Перевод","Пример"],"строки":[["wer?","кто?","Wer ist das?"],["was?","что?","Was ist das?"],["wen?","кого? (Akk)","Wen siehst du?"],["wem?","кому? (Dat)","Wem hilfst du?"],["wessen?","чей? (Gen)","Wessen Buch ist das?"],["wo?","где?","Wo wohnst du?"],["wohin?","куда?","Wohin gehst du?"],["woher?","откуда?","Woher kommst du?"],["wann?","когда?","Wann kommst du?"],["wie?","как?","Wie heißt du?"],["wie viel?","сколько?","Wie viel kostet das?"],["warum?","почему?","Warum lernst du Deutsch?"],["welcher?","который? какой?","Welcher Bus fährt zum Krankenhaus?"]],"озвучивать_столбец0":true,"советы":["<b>wohin / woher / wo</b>: куда (движение туда) / откуда (оттуда) / где (на месте).","<b>wen / wem / wessen</b> — это «wer» в трёх падежах: кого / кому / чей.","Вопрос с предлогом — одним словом: <b>woran</b> (во что?), <b>worüber</b> (о чём?), <b>wofür</b> (для чего?), <b>wohin</b> (куда?)."]}];
+const ЗВУК = {"für":"fuer.mp3","ohne":"ohne.mp3","gegen":"gegen.mp3","um":"um.mp3","durch":"durch.mp3","bis":"bis.mp3","mit":"mit.mp3","nach":"nach.mp3","aus":"aus.mp3","bei":"bei.mp3","seit":"seit.mp3","von":"von.mp3","zu":"zu.mp3","in":"in.mp3","an":"an.mp3","auf":"auf.mp3","vor":"vor.mp3","hinter":"hinter.mp3","unter":"unter.mp3","neben":"neben.mp3","zwischen":"zwischen.mp3","wer":"wer.mp3","was":"was.mp3","wen":"wen.mp3","wem":"wem.mp3","wessen":"wessen.mp3","wo":"wo.mp3","wohin":"wohin.mp3","woher":"woher.mp3","wann":"wann.mp3","wie":"wie.mp3","wie viel":"wie_viel.mp3","warum":"warum.mp3","welcher":"welcher.mp3"};
+let выбран = null, режим = 'смотреть';
+
+function игрок(ф) { const а = new Audio('zvuk/tablichki/' + ф); а.play().catch(()=>{}); }
+
+function списокКатегорий(){
+  const div = document.getElementById('катСписок');
+  div.innerHTML = КАТЕГОРИИ.map((к,i)=>
+    `<button class="кат" data-i="${i}"><span class="знак">${к.знак}</span><span><b>${к.имя}</b><span class="пояс">${к.подзаголовок}</span></span></button>`
+  ).join('') +
+  `<a class="глаголы-ссылка" href="glagoly.html"><span class="знак" style="font-size:26px">🔁</span><span><b>Глаголы: спряжения</b><span class="пояс">обычные · особые · модальные · меняют гласную — 4 группы, там же режимы «по одному» и «впиши форму»</span></span></a>`;
+  div.querySelectorAll('button.кат').forEach(b=>{
+    b.onclick = ()=>{ показать(+b.dataset.i); window.scrollTo({top: b.offsetTop - 70, behavior:'smooth'}); };
+  });
+}
+
+function показать(i){
+  выбран = i; режим = 'смотреть';
+  document.querySelectorAll('button.кат').forEach((b,j)=> b.classList.toggle('вкл', j===i));
+  нарисовать();
+}
+
+function нарисовать(){
+  const к = КАТЕГОРИИ[выбран];
+  const обл = document.getElementById('область');
+  const кнопки = [['смотреть','👀 Смотреть'],['учить','🙈 Учить'],['впиши','✍️ Впиши']]
+    .map(([id,им])=>`<button data-р="${id}" class="${режим===id?'вкл':''}">${им}</button>`).join('');
+  let тело = '';
+  if (режим === 'впиши') {
+    тело = `<div class="обёртка"><table class="табл"><tr>${к.шапка.map(h=>`<th>${h}</th>`).join('')}</tr>`;
+    к.строки.forEach((стр,r)=>{
+      тело += `<tr>${стр.map((яч,c)=>{
+        if (c===0 && !к.озвучивать_столбец0) return `<td class="строка-имя">${яч}</td>`;
+        if (c===0) return `<td class="строка-имя">${яч}</td>`;
+        if (к.озвучивать_столбец0 && c===2) return `<td>${яч}</td>`;  // пример не вводим
+        return `<td><input data-r="${r}" data-c="${c}" placeholder="…" autocomplete="off"></td>`;
+      }).join('')}</tr>`;
+    });
+    тело += `</table></div>
+      <div class="низ"><button class="кн" id="проверить">Проверить</button><button class="кн тихая" id="показатьВсе">Показать ответы</button></div>
+      <div class="итог" id="итог"></div><div class="счёт" id="счёт"></div>`;
+  } else {
+    тело = `<div class="обёртка"><table class="табл"><tr>${к.шапка.map(h=>`<th>${h}</th>`).join('')}</tr>`;
+    к.строки.forEach((стр)=>{
+      тело += `<tr>${стр.map((яч,c)=>{
+        if (c===0) return `<td class="строка-имя">${яч}</td>`;
+        const закр = режим==='учить' ? ' закрыта' : '';
+        const звук = ЗВУК[ядрышко(яч)] ? ' звук' : '';
+        return `<td class="ячейка${закр}${звук}" data-т="${яч}">${яч}</td>`;
+      }).join('')}</tr>`;
+    });
+    тело += `</table></div>`;
+    if (режим === 'учить') {
+      тело += `<div class="низ"><button class="кн тихая" id="открытьВсе">Открыть все</button><button class="кн тихая" id="закрытьВсе">Закрыть все</button></div><div class="легенда">Тап по ячейке — открыть/закрыть. Сначала открывай по одной и повторяй вслух.</div>`;
+    } else {
+      тело += `<div class="легенда">Ячейки с подчёркнутой точкой можно послушать — тапни по ним 🔊</div>`;
+    }
+  }
+  обл.innerHTML = `<section class="карта">
+    <h2>${к.знак} ${к.имя}</h2>
+    <p class="под">${к.подзаголовок}</p>
+    <div class="режимы">${кнопки}</div>
+    ${тело}
+    ${к.советы.length ? `<ol class="советы">${к.советы.map(s=>`<li>${s}</li>`).join('')}</ol>` : ''}
+  </section>`;
+  обл.querySelectorAll('.режимы button').forEach(b=> b.onclick = ()=>{ режим = b.dataset.р; нарисовать(); });
+  if (режим === 'учить') {
+    обл.querySelectorAll('td.ячейка').forEach(td=> td.onclick = ()=> td.classList.toggle('закрыта'));
+    document.getElementById('открытьВсе').onclick = ()=> обл.querySelectorAll('td.ячейка').forEach(td=>td.classList.remove('закрыта'));
+    document.getElementById('закрытьВсе').onclick = ()=> обл.querySelectorAll('td.ячейка').forEach(td=>td.classList.add('закрыта'));
+  } else if (режим === 'смотреть') {
+    обл.querySelectorAll('td.ячейка.звук').forEach(td=> td.onclick = ()=> игрок(ЗВУК[ядрышко(td.dataset.т)]));
+  } else if (режим === 'впиши') {
+    document.getElementById('проверить').onclick = проверить;
+    document.getElementById('показатьВсе').onclick = показатьОтветы;
+  }
+}
+
+function ядрышко(т){
+  // «wohin?» → «wohin», «er / sie / es» → не озвучиваем (слэш), «in» → in
+  const ч = т.split('?')[0].trim();
+  if (ч.includes('/')) return '';
+  return ч;
+}
+
+function проверить(){
+  const к = КАТЕГОРИИ[выбран];
+  const инп = document.querySelectorAll('#область input');
+  let верно = 0, всего = 0;
+  инп.forEach(п=>{
+    const ждём = к.строки[+п.dataset.r][+п.dataset.c].split('?')[0].trim();
+    всего++;
+    const ок = п.value.trim().toLowerCase() === ждём.toLowerCase();
+    п.parentElement.classList.toggle('ок', ок);
+    п.parentElement.classList.toggle('ошибка', !ок && п.value.trim() !== '');
+    if (ок) верно++;
+  });
+  const ит = document.getElementById('итог');
+  ит.textContent = `Верно ${верно} из ${всего}`;
+  ит.className = 'итог ' + (верно === всего ? 'хорошо' : 'плохо');
+  document.getElementById('счёт').textContent = верно === всего ? 'Отлично! Таблица твоя 💪' : 'Красное — исправь и проверь снова.';
+}
+
+function показатьОтветы(){
+  const к = КАТЕГОРИИ[выбран];
+  document.querySelectorAll('#область input').forEach(п=>{
+    п.value = к.строки[+п.dataset.r][+п.dataset.c].split('?')[0].trim();
+    п.parentElement.classList.remove('ошибка');
+    п.parentElement.classList.add('ок');
+  });
+}
+
+списокКатегорий();
+</script>
+</body>
+</html>
