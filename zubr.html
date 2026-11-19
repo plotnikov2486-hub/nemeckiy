@@ -84,6 +84,19 @@ body{
 .шапка .титул{ flex:1; min-width:0; font-weight:700; font-size:17px; text-align:center;
   overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .шапка .право{ width:40px; flex-shrink:0; display:flex; justify-content:flex-end; }
+.голос-зубра{
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:center; gap:6px 10px;
+  margin:8px auto 0; padding:0 12px; font-size:14px;
+}
+.голос-зубра select{
+  font:inherit; min-height:42px; max-width:100%; padding:6px 8px;
+  background:var(--бел); color:var(--текст); border:1px solid var(--линия); border-radius:8px;
+}
+.голос-зубра [role="status"]:not(:empty){ flex-basis:100%; text-align:center; }
+.голос-зубра button{
+  font:inherit; color:var(--синий); background:transparent; border:0;
+  padding:6px; cursor:pointer; text-decoration:underline;
+}
 .подвал{ max-width:720px; width:100%; margin:0 auto;
   padding:4px 16px calc(env(safe-area-inset-bottom) + 24px); }
 .подвал[hidden]{ display:none; }
@@ -587,6 +600,18 @@ body{ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica N
     <div class="титул" id="титул"></div>
     <div class="право" id="право"></div>
   </header>
+  <div class="голос-зубра">
+    <label for="голосЗубра">Озвучка</label>
+    <select id="голосЗубра">
+      <option value="" disabled>Выбрать голос</option>
+      <option value="grigoriy">Григорий Плотников</option>
+      <option value="female">Женский голос</option>
+      <option value="thorsten">Thorsten · носитель немецкого</option>
+      <option value="mute">Без озвучки</option>
+    </select>
+    <span id="статусГолосаЗубра" role="status"></span>
+    <button type="button" id="прежняяОзвучка" hidden>Послушать прежнюю запись</button>
+  </div>
   <main class="экран" id="экран">
     <div class="пусто">Открываю ЗУБР…</div>
   </main>
@@ -595,8 +620,8 @@ body{ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica N
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202611181811';</script>
-<script src="kartinki.js?v=202611181811"></script>
+<script>window.ЗУБР_ВЕРСИЯ = '202611191716';</script>
+<script src="kartinki.js?v=202611191716"></script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -1338,6 +1363,10 @@ var текущийЭкран = null, текущиеДанные = null;
 function назад(){
   var п = история.pop();
   if (!п){
+    if (new URLSearchParams(location.search).get('откуда') === 'глаголы'){
+      location.href = 'glagoly.html';
+      return;
+    }
     // На самом верху ЗУБРа «назад» = выйти на главную сайта.
     // В установленном приложении кнопок браузера нет вообще, и без этого
     // врач упирался в тупик и закрывал приложение целиком.
@@ -1961,24 +1990,73 @@ function нарисоватьТермины(набор){
 
 /* ================= звук ================= */
 var проигрыватель = null, немГолос;
+var выборГолоса = $('голосЗубра'), статусГолоса = $('статусГолосаЗубра');
+var прежняяОзвучка = $('прежняяОзвучка');
+var номерОзвучки = 0, ключиУроков;
+var КЛЮЧ_ГОЛОСА = 'nemeckiy_zubr_voice_' + ПРОФИЛЬ;
+выборГолоса.value = localStorage.getItem(КЛЮЧ_ГОЛОСА) || '';
+выборГолоса.onchange = function(){
+  localStorage.setItem(КЛЮЧ_ГОЛОСА, выборГолоса.value);
+  номерОзвучки++;
+  if (проигрыватель) проигрыватель.pause();
+  if (window.speechSynthesis) speechSynthesis.cancel();
+  статусГолоса.textContent = '';
+  прежняяОзвучка.hidden = true;
+};
+
+function ключДорожки(c){
+  var хеш = /\/([\da-f]{10})\.mp3$/.exec(c.mp3 || '');
+  if (хеш) return Promise.resolve(хеш[1]);
+  if (!ключиУроков) {
+    ключиУроков = fetch('words/zubr-voice-keys.json?v=' + window.ЗУБР_ВЕРСИЯ)
+      .then(function(r){ if (!r.ok) throw Error('Нет указателя'); return r.json(); })
+      .catch(function(){ ключиУроков = null; return {}; });
+  }
+  return ключиУроков.then(function(ключи){ return ключи[c.de]; });
+}
+
 function сказать(c){
-  if (!c) return;
+  if (!c || выборГолоса.value === 'mute' || localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+  var номер = ++номерОзвучки;
+  var голос = выборГолоса.value;
+  статусГолоса.textContent = '';
+  прежняяОзвучка.hidden = true;
   // пока звучит фраза Гриши («молодец» / «эх») — слово подождёт, чтобы не говорить хором
   var ждать = _голосДо - Date.now();
-  if (ждать > 0){ setTimeout(function(){ сказать(c); }, ждать); return; }
-  if (c.mp3){
-    if (!проигрыватель) проигрыватель = new Audio();
-    proигратьБезопасно(c);
+  if (ждать > 0){ setTimeout(function(){ if (номер === номерОзвучки) сказать(c); }, ждать); return; }
+  if (голос){
+    var нетЗаписи = function(ошибка){
+      if (номер !== номерОзвучки) return;
+      if (ошибка && ошибка.name === 'NotAllowedError'){
+        статусГолоса.textContent = 'Нажмите 🔊 ещё раз.';
+        return;
+      }
+      статусГолоса.textContent = 'Запись выбранного голоса пока недоступна.';
+      прежняяОзвучка.hidden = false;
+      прежняяОзвучка.onclick = function(){ старыйКлип(c, номер); };
+    };
+    ключДорожки(c).then(function(ключ){
+      if (номер !== номерОзвучки) return;
+      if (!ключ) return нетЗаписи();
+      var база = window.ЗУБР_АДРЕС_ДОРОЖЕК || 'zvuk/golosa-zubr/';
+      игратьКлип(база + голос + '/' + ключ + '.mp3', нетЗаписи);
+    });
     return;
   }
-  прочитать(c.de);
+  старыйКлип(c, номер);
 }
-function proигратьБезопасно(c){
+function старыйКлип(c, номер){
+  var системный = function(){ if (номер === номерОзвучки) прочитать(c.de); };
+  if (c.mp3) игратьКлип(c.mp3, системный);
+  else системный();
+}
+function игратьКлип(путь, неПолучилось){
   try{
-    проигрыватель.pause(); проигрыватель.src = c.mp3;
+    if (!проигрыватель) проигрыватель = new Audio();
+    проигрыватель.pause(); проигрыватель.src = путь;
     var п = проигрыватель.play();
-    if (п && п.catch) п.catch(function(){ прочитать(c.de); });
-  }catch(e){ прочитать(c.de); }
+    if (п && п.catch) п.catch(неПолучилось);
+  }catch(e){ неПолучилось(e); }
 }
 function прочитать(текст){
   if (!window.speechSynthesis) return;
@@ -3736,7 +3814,9 @@ function таблицаГлаголов(набор){
     звукПобеды();
     if ($('кСледСпр')) $('кСледСпр').onclick = function(){
       var ост = очередьСпр.slice(1).join(',');
-      location.href = 'zubr.html?набор=' + encodeURIComponent(следСпр.ключ) + '&режим=спряжение' + (ост ? '&дальше=' + encodeURIComponent(ост) : '');
+      var откуда = new URLSearchParams(location.search).get('откуда');
+      location.href = 'zubr.html?набор=' + encodeURIComponent(следСпр.ключ) + '&режим=спряжение' +
+        (откуда === 'глаголы' ? '&откуда=глаголы' : '') + (ост ? '&дальше=' + encodeURIComponent(ост) : '');
     };
     if ($('кВПредл')) $('кВПредл').onclick = function(){ показать('модальные', набор); };
     $('кЕщёСпр').onclick = function(){ шаг = 0; запомнить(); показатьШаг(); };
@@ -3898,9 +3978,9 @@ function загрузитьИгры(готово){
       return;
     }
     // карточки ЗУБРа → формат движка: [ид, немецкое, транскрипция, перевод]
-    var звуки = {};
+    var карточкиПоКлючу = new Map();
     var слова = набор.карточки.map(function(c){
-      if (c.mp3) звуки[c.k] = c.mp3;
+      карточкиПоКлючу.set(c.k, c);
       return [c.k, c.de, c.тр || '', c.ответ || c.ru || ''];
     });
     $('экран').innerHTML = '<div id="полеИгр"></div>';
@@ -3909,7 +3989,7 @@ function загрузитьИгры(готово){
       слова: слова,
       урок: '',
       база: '',
-      звук: function(ид){ return звуки[ид] || ''; }
+      произнести: function(ид){ сказать(карточкиПоКлючу.get(ид)); }
     });
     if (!вышло)
       $('экран').innerHTML = '<div class="пусто">Для этой колоды игр пока не набирается — слишком мало слов.</div>';
@@ -4200,14 +4280,17 @@ $('назадНиз').onclick = назад;   // была нарисована, 
 загрузить(function(){
   // ссылка прямо на колоду: zubr.html?набор=модальные — так со страницы
   // «Спряжения» попадаешь сразу в нужную колоду, а не в общий список
-  var хочуНабор = new URLSearchParams(location.search).get('набор');
+  var адрес = new URLSearchParams(location.search);
+  var хочуНабор = адрес.get('набор');
   if (хочуНабор){
     for (var i = 0; i < НАБОРЫ.length; i++){
       if (НАБОРЫ[i].ключ === хочуНабор){
+        var спряжение = адрес.get('режим') === 'спряжение' && СПР_НАБОРЫ.indexOf(хочуНабор) >= 0;
+        if (спряжение && адрес.get('откуда') === 'глаголы') return показать('спряжение', НАБОРЫ[i], true);
         текущийЭкран = 'главный';
         показать('набор', НАБОРЫ[i]);
         if (ХОЧУ_ИГРУ) показать('игры', НАБОРЫ[i]);
-        else if (new URLSearchParams(location.search).get('режим') === 'спряжение' && СПР_НАБОРЫ.indexOf(хочуНабор) >= 0)
+        else if (спряжение)
           показать('спряжение', НАБОРЫ[i]);
         return;
       }

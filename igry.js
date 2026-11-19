@@ -650,6 +650,7 @@ var ИГРЫ = {
     function голос(ид, de) {
       try {
         if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+        if (typeof наст.произнести === 'function') return наст.произнести(ид, de);
         var путь = свойЗвук ? свойЗвук(ид) : (ид && урок ? ИГРЫ.база + 'zvuk/' + урок + '/' + ид + '.mp3' : '');
         if (путь) new Audio(путь).play().catch(function () { системныйГолос(de); });
         else системныйГолос(de);

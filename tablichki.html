@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Таблицы — артикли, местоимения, предлоги, вопросы</title>
+<title>Таблицы немецкого</title>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#1f5f5b">
 <style>
@@ -35,14 +35,16 @@
   .кат { display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:16px; cursor:pointer;
     background:var(--surface); color:var(--ink); border:1px solid var(--line); box-shadow:var(--shadow);
     font:inherit; text-align:left; width:100%; }
+  .кат { text-decoration:none; }
+  .кат-список { margin-top:18px; }
+  [hidden] { display:none !important; }
+  .кн { text-decoration:none; display:inline-flex; align-items:center; }
+  .слушать { color:inherit; font:inherit; background:none; border:0; cursor:pointer; padding:2px 4px; }
+  .подсказка { display:block; color:var(--ink-muted); margin-top:4px; }
+  .табл th[scope="row"] { text-align:left; white-space:normal; }
   .кат .знак { font-size:26px; }
   .кат b { font-size:16.5px; display:block; }
   .кат span.пояс { display:block; font-size:13px; color:var(--ink-muted); margin-top:2px; }
-  .кат.вкл { outline:3px solid var(--accent); }
-  .глаголы-ссылка { display:flex; align-items:center; gap:14px; padding:15px 16px; border-radius:16px;
-    background:var(--surface); border:1px dashed var(--line); color:var(--ink); text-decoration:none; box-shadow:var(--shadow); }
-  .глаголы-ссылка b { font-size:16.5px; display:block; }
-  .глаголы-ссылка span.пояс { display:block; font-size:13px; color:var(--ink-muted); margin-top:2px; }
   .режимы { display:grid; grid-template-columns:repeat(3,1fr); gap:7px; margin:14px 0 16px; }
   .режимы button { font:inherit; font-size:13px; font-weight:700; padding:12px 4px; min-height:56px;
     border-radius:14px; cursor:pointer; background:var(--surface); color:var(--ink); border:1px solid var(--line); }
@@ -55,11 +57,6 @@
   table.табл { border-collapse:collapse; width:100%; min-width:480px; font-size:15px; }
   table.табл th, table.табл td { border:1px solid var(--line); padding:10px 8px; text-align:center; }
   table.табл th { background:var(--surface-2); font-size:12.5px; color:var(--ink-muted); white-space:nowrap; }
-  table.табл td.строка-имя { text-align:left; font-weight:700; font-size:13px; color:var(--ink-muted); white-space:nowrap; }
-  table.табл td.ячейка { font-family:Georgia,"Iowan Old Style",serif; cursor:pointer; user-select:none; }
-  table.табл td.ячейка.закрыта { color:transparent; background:var(--surface-2); }
-  table.табл td.ячейка.закрыта::after { content:'·'; color:var(--ink-faint); }
-  table.табл td.ячейка.звук:hover { text-decoration:underline dotted; }
   table.табл input { font:inherit; font-family:Georgia,"Iowan Old Style",serif; font-size:15px; width:100%;
     padding:6px 4px; border:1px solid var(--line); border-radius:8px; background:var(--surface-2); color:var(--ink); text-align:center; }
   table.табл td.ок { background:var(--ok-bg); }
@@ -72,145 +69,180 @@
   .кн.тихая { background:transparent; color:var(--ink); border:1px solid var(--line); font-weight:600; }
   .итог { font-size:14px; font-weight:700; margin-top:10px; }
   .итог.хорошо { color:var(--ok); } .итог.плохо { color:var(--err); }
-  .счёт { font-size:12.5px; color:var(--ink-muted); margin-top:6px; }
-  .bb-top{ display:block; text-align:center; margin:34px auto 0; max-width:760px; padding:12px 18px;
-    border-radius:12px; text-decoration:none; font-size:14.5px; font-weight:600; background:#1f5f5b; color:#fff; }
-  @media (prefers-color-scheme: dark){ .bb-top{ background:#4fb3a9; color:#0d1413; } }
-  .легенда { font-size:12.5px; color:var(--ink-muted); margin:4px 0 0; }
+  @media(max-width:520px) {
+    table.табл { min-width:0; font-size:14px; }
+    table.табл th, table.табл td { padding:7px 3px; }
+    table.табл th { white-space:normal; }
+    table.табл input { min-width:2.6em; font-size:16px; }
+  }
 </style>
 </head>
 <body>
 <div class="backbar">
-  <a class="bb-link" href="index.html">&#8592; Главная</a>
+  <a class="bb-link" id="назад" href="index.html">← Главная</a>
   <span class="bb-title">Таблицы</span>
 </div>
-
-<div class="lp">
-  <h1>Таблицы немецкого</h1>
-  <p class="подзаг">Базовые таблицы в одном месте. Выбери строку — таблица откроется на весь экран. Три режима: <b>смотреть</b> (клик по ячейке со знаком 🔊 — звук), <b>учить</b> (ячейки закрыты, тапни — откроется), <b>впиши</b> (набери сам и проверь). Так таблицы учатся быстрее всего.</p>
-
-  <div class="кат-список" id="катСписок"></div>
-
-  <div id="область"></div>
-
-  <a class="bb-top" href="index.html">&#8592; Вернуться на главную</a>
-</div>
-
+<main class="lp" id="экран"></main>
+<script src="tema.js"></script>
 <script>
-const КАТЕГОРИИ = [{"id":"artikeli","имя":"Склонение определённых артиклей","знак":"📐","подзаголовок":"der · die · das · die во всех четырёх падежах","шапка":["Падеж","м. род","ср. род","ж. род","мн. число"],"строки":[["Nominativ (кто? что?)","der","das","die","die"],["Akkusativ (кого? что?)","den","das","die","die"],["Dativ (кому? чему?)","dem","dem","der","den"],["Genitiv (чей?)","des","des","der","der"]],"озвучивать_столбец0":false,"советы":["<b>Akkusativ</b> — меняется только мужской род: der → <b>den</b>. Остальные как в Nominativ.","<b>Dativ</b> — м. и ср. род <b>dem</b>, ж. род <b>der</b>, мн. число <b>den</b> (к слову во мн. ч. иногда +n: den Kindern).","<b>Genitiv</b> — м. и ср. род <b>des</b>, ж. и мн. <b>der</b>; к слову м./ср. рода всегда +s или +es: des Hundes, des Kindes.","По этой же таблице склоняются <b>ein</b> и <b>kein</b> (у них просто нет множественного в единственном смысле) — будет позже."]},{"id":"mestoimeniya","имя":"Личные местоимения","знак":"👤","подзаголовок":"я · меня · мне — Nominativ, Akkusativ, Dativ","шапка":["Лицо","Nominativ","Akkusativ","Dativ"],"строки":[["я","ich","mich","mir"],["ты","du","dich","dir"],["он / она / оно","er / sie / es","ihn / sie / es","ihm / ihr / ihm"],["мы","wir","uns","uns"],["вы (друзья)","ihr","euch","euch"],["они / Вы","sie / Sie","sie / Sie","ihnen / Ihnen"]],"озвучивать_столбец0":false,"советы":["По этим же строчкам меняется возвратное <b>sich</b>: mich/dich/sich, mir/dir/sich, uns, euch, sich.","Akkusativ — «<b>кого?</b>»: Ich sehe <b>dich</b>. Dativ — «<b>кому?</b>»: Ich helfe <b>dir</b>.","ihm / ihm / ihn — он; ihr / ihr / sie — она: аккузатив «её» выглядит как номинатив, не путай."]},{"id":"prityazhatelnye","имя":"Притяжательные (mein…)","знак":"💌","подзаголовок":"mein · dein · sein · ihr · unser · euer — как ein","шапка":["Падеж","м. род","ср. род","ж. род","мн. число"],"строки":[["Nominativ","mein","mein","meine","meine"],["Akkusativ","meinen","mein","meine","meine"],["Dativ","meinem","meinem","meiner","meinen"],["Genitiv","meines","meines","meiner","meiner"]],"озвучивать_столбец0":false,"советы":["Показано <b>mein</b>; все остальные склоняются так же: <b>dein</b> (твой), <b>sein</b> (его), <b>ihr</b> (её / их / Ваш), <b>unser</b> (наш), <b>euer</b> (ваш).","Это ровно склонение <b>ein/kein</b>: окончания те же (mein<b>en</b>, mein<b>em</b>, mein<b>es</b>…).","Nominativ одним списком: <b>mein, dein, sein, ihr, unser, euer, ihr/Sie</b> — про каждого «чей?»."]},{"id":"predlogi","имя":"Предлоги с падежами","знак":"🧭","подзаголовок":"какой предлог — какой падеж","шапка":["Предлог","Падеж","Пример"],"строки":[["für","Akkusativ","für dich — для тебя"],["ohne","Akkusativ","ohne Zucker — без сахара"],["gegen","Akkusativ","gegen die Wand — против стены"],["um","Akkusativ","um den Tisch — вокруг стола"],["durch","Akkusativ","durch den Park — через парк"],["bis","Akkusativ","bis zum Bahnhof — до вокзала"],["mit","Dativ","mit dem Bus — на автобусе"],["nach","Dativ","nach der Arbeit — после работы"],["aus","Dativ","aus dem Haus — из дома"],["bei","Dativ","bei mir — у меня"],["seit","Dativ","seit einem Jahr — уже год"],["von","Dativ","von der Ärztin — от врача"],["zu","Dativ","zur Ordination — к врачу (в приёмную)"],["in","куда? Akk / где? Dat","in den Park / im Park"],["an","куда? Akk / где? Dat","an die Wand / an der Wand"],["auf","куда? Akk / где? Dat","auf den Tisch / auf dem Tisch"],["vor","куда? Akk / где? Dat","vor den Spiegel / vor dem Spiegel"],["hinter","куда? Akk / где? Dat","hinter das Haus / hinter dem Haus"],["unter","куда? Akk / где? Dat","unter den Tisch / unter dem Tisch"],["neben","куда? Akk / где? Dat","neben den Stuhl / neben dem Stuhl"],["zwischen","куда? Akk / где? Dat","zwischen die Bücher / zwischen den Büchern"]],"озвучивать_столбец0":true,"советы":["Фокус «<b>куда?</b>» — Akkusativ (движение куда-то), фокус «<b>где?</b>» — Dativ (место). Это Wechselpräpositionen — предлоги перемены.","Мини-история для запоминания Dativ: <b>mit-nach-aus-bei-seit-von-zu</b> — «с, после, из, у, с (тех пор), от, к».","После <b>mit</b> — всегда Dativ: mit <b>dem</b> Bus (дословно «с автобусом»)."]},{"id":"voprosy","имя":"Вопросительные слова","знак":"❓","подзаголовок":"wer · was · wo · wohin · wem…","шапка":["Слово","Перевод","Пример"],"строки":[["wer?","кто?","Wer ist das?"],["was?","что?","Was ist das?"],["wen?","кого? (Akk)","Wen siehst du?"],["wem?","кому? (Dat)","Wem hilfst du?"],["wessen?","чей? (Gen)","Wessen Buch ist das?"],["wo?","где?","Wo wohnst du?"],["wohin?","куда?","Wohin gehst du?"],["woher?","откуда?","Woher kommst du?"],["wann?","когда?","Wann kommst du?"],["wie?","как?","Wie heißt du?"],["wie viel?","сколько?","Wie viel kostet das?"],["warum?","почему?","Warum lernst du Deutsch?"],["welcher?","который? какой?","Welcher Bus fährt zum Krankenhaus?"]],"озвучивать_столбец0":true,"советы":["<b>wohin / woher / wo</b>: куда (движение туда) / откуда (оттуда) / где (на месте).","<b>wen / wem / wessen</b> — это «wer» в трёх падежах: кого / кому / чей.","Вопрос с предлогом — одним словом: <b>woran</b> (во что?), <b>worüber</b> (о чём?), <b>wofür</b> (для чего?), <b>wohin</b> (куда?)."]}];
-const ЗВУК = {"für":"fuer.mp3","ohne":"ohne.mp3","gegen":"gegen.mp3","um":"um.mp3","durch":"durch.mp3","bis":"bis.mp3","mit":"mit.mp3","nach":"nach.mp3","aus":"aus.mp3","bei":"bei.mp3","seit":"seit.mp3","von":"von.mp3","zu":"zu.mp3","in":"in.mp3","an":"an.mp3","auf":"auf.mp3","vor":"vor.mp3","hinter":"hinter.mp3","unter":"unter.mp3","neben":"neben.mp3","zwischen":"zwischen.mp3","wer":"wer.mp3","was":"was.mp3","wen":"wen.mp3","wem":"wem.mp3","wessen":"wessen.mp3","wo":"wo.mp3","wohin":"wohin.mp3","woher":"woher.mp3","wann":"wann.mp3","wie":"wie.mp3","wie viel":"wie_viel.mp3","warum":"warum.mp3","welcher":"welcher.mp3"};
-let выбран = null, режим = 'смотреть';
+const КАТЕГОРИИ = [{"id":"artikeli","имя":"Склонение определённых артиклей","знак":"📐","подзаголовок":"der · die · das · die во всех четырёх падежах","шапка":["Падеж","м. род","ср. род","ж. род","мн. число"],"строки":[["Nominativ (кто? что?)","der","das","die","die"],["Akkusativ (кого? что?)","den","das","die","die"],["Dativ (кому? чему?)","dem","dem","der","den"],["Genitiv (чей?)","des","des","der","der"]],"озвучивать_столбец0":false,"советы":["<b>Akkusativ</b> — меняется только мужской род: der → <b>den</b>. Остальные как в Nominativ.","<b>Dativ</b> — м. и ср. род <b>dem</b>, ж. род <b>der</b>, мн. число <b>den</b> (к слову во мн. ч. иногда +n: den Kindern).","<b>Genitiv</b> — м. и ср. род <b>des</b>, ж. и мн. <b>der</b>; к слову м./ср. рода всегда +s или +es: des Hundes, des Kindes.","Для <b>ein</b> и <b>kein</b> смотри таблицу «Притяжательные (mein…)»."]},{"id":"mestoimeniya","имя":"Личные местоимения","знак":"👤","подзаголовок":"я · меня · мне — Nominativ, Akkusativ, Dativ","шапка":["Лицо","Nominativ","Akkusativ","Dativ"],"строки":[["я","ich","mich","mir"],["ты","du","dich","dir"],["он / она / оно","er / sie / es","ihn / sie / es","ihm / ihr / ihm"],["мы","wir","uns","uns"],["вы (друзья)","ihr","euch","euch"],["они / Вы","sie / Sie","sie / Sie","ihnen / Ihnen"]],"озвучивать_столбец0":false,"советы":["По этим же строчкам меняется возвратное <b>sich</b>: mich/dich/sich, mir/dir/sich, uns, euch, sich.","Akkusativ — «<b>кого?</b>»: Ich sehe <b>dich</b>. Dativ — «<b>кому?</b>»: Ich helfe <b>dir</b>.","ihm / ihm / ihn — он; ihr / ihr / sie — она: аккузатив «её» выглядит как номинатив, не путай."]},{"id":"prityazhatelnye","имя":"Притяжательные (mein…)","знак":"💌","подзаголовок":"mein · dein · sein · ihr · unser · euer — как ein","шапка":["Падеж","м. род","ср. род","ж. род","мн. число"],"строки":[["Nominativ","mein","mein","meine","meine"],["Akkusativ","meinen","mein","meine","meine"],["Dativ","meinem","meinem","meiner","meinen"],["Genitiv","meines","meines","meiner","meiner"]],"озвучивать_столбец0":false,"советы":["Показано <b>mein</b>; все остальные склоняются так же: <b>dein</b> (твой), <b>sein</b> (его), <b>ihr</b> (её / их / Ваш), <b>unser</b> (наш), <b>euer</b> (ваш).","Это ровно склонение <b>ein/kein</b>: окончания те же (mein<b>en</b>, mein<b>em</b>, mein<b>es</b>…).","Nominativ одним списком: <b>mein, dein, sein, ihr, unser, euer, ihr/Sie</b> — про каждого «чей?»."]},{"id":"predlogi","имя":"Предлоги с падежами","знак":"🧭","подзаголовок":"какой предлог — какой падеж","шапка":["Предлог","Падеж","Пример"],"строки":[["für","Akkusativ","für dich — для тебя"],["ohne","Akkusativ","ohne Zucker — без сахара"],["gegen","Akkusativ","gegen die Wand — против стены"],["um","Akkusativ","um den Tisch — вокруг стола"],["durch","Akkusativ","durch den Park — через парк"],["bis","Akkusativ","bis zum Bahnhof — до вокзала"],["mit","Dativ","mit dem Bus — на автобусе"],["nach","Dativ","nach der Arbeit — после работы"],["aus","Dativ","aus dem Haus — из дома"],["bei","Dativ","bei mir — у меня"],["seit","Dativ","seit einem Jahr — уже год"],["von","Dativ","von der Ärztin — от врача"],["zu","Dativ","zur Ordination — к врачу (в приёмную)"],["in","куда? Akk / где? Dat","in den Park / im Park"],["an","куда? Akk / где? Dat","an die Wand / an der Wand"],["auf","куда? Akk / где? Dat","auf den Tisch / auf dem Tisch"],["vor","куда? Akk / где? Dat","vor den Spiegel / vor dem Spiegel"],["hinter","куда? Akk / где? Dat","hinter das Haus / hinter dem Haus"],["unter","куда? Akk / где? Dat","unter den Tisch / unter dem Tisch"],["neben","куда? Akk / где? Dat","neben den Stuhl / neben dem Stuhl"],["zwischen","куда? Akk / где? Dat","zwischen die Bücher / zwischen den Büchern"]],"озвучивать_столбец0":true,"советы":["Фокус «<b>куда?</b>» — Akkusativ (движение куда-то), фокус «<b>где?</b>» — Dativ (место). Это Wechselpräpositionen — предлоги перемены.","Мини-история для запоминания Dativ: <b>mit-nach-aus-bei-seit-von-zu</b> — «с, после, из, у, с (тех пор), от, к».","После <b>mit</b> — всегда Dativ: mit <b>dem</b> Bus (дословно «с автобусом»)."]},{"id":"voprosy","имя":"Вопросительные слова","знак":"❓","подзаголовок":"wer · was · wo · wohin · wem…","шапка":["Слово","Перевод","Пример"],"строки":[["wer?","кто?","Wer ist das?"],["was?","что?","Was ist das?"],["wen?","кого? (Akk)","Wen siehst du?"],["wem?","кому? (Dat)","Wem hilfst du?"],["wessen?","чей? (Gen)","Wessen Buch ist das?"],["wo?","где?","Wo wohnst du?"],["wohin?","куда?","Wohin gehst du?"],["woher?","откуда?","Woher kommst du?"],["wann?","когда?","Wann kommst du?"],["wie?","как?","Wie heißt du?"],["wie viel?","сколько?","Wie viel kostet das?"],["warum?","почему?","Warum lernst du Deutsch?"],["welcher?","который? какой?","Welcher Bus fährt zum Krankenhaus?"]],"озвучивать_столбец0":true,"советы":["<b>wohin / woher / wo</b>: куда (движение туда) / откуда (оттуда) / где (на месте).","<b>wen / wem / wessen</b> — это «wer» в трёх падежах: кого / кому / чей.","Вопрос с предлогом — одним словом: <b>woran</b> (во что?), <b>worüber</b> (о чём?), <b>wofür</b> (для чего?), <b>wohin</b> (куда?)."]}];
+const ЗВУК = {"der":"der.mp3","das":"das.mp3","die":"die.mp3","den":"den.mp3","dem":"dem.mp3","des":"des.mp3","ich":"ich.mp3","mich":"mich.mp3","mir":"mir.mp3","du":"du.mp3","dich":"dich.mp3","dir":"dir.mp3","er / sie / es":"er___sie___es.mp3","ihn / sie / es":"ihn___sie___es.mp3","ihm / ihr / ihm":"ihm___ihr___ihm.mp3","wir":"wir.mp3","uns":"uns.mp3","ihr":"ihr.mp3","euch":"euch.mp3","sie / Sie":"sie___Sie.mp3","ihnen / Ihnen":"ihnen___Ihnen.mp3","mein":"mein.mp3","meine":"meine.mp3","meinen":"meinen.mp3","meinem":"meinem.mp3","meiner":"meiner.mp3","meines":"meines.mp3","für":"fuer.mp3","ohne":"ohne.mp3","gegen":"gegen.mp3","um":"um.mp3","durch":"durch.mp3","bis":"bis.mp3","mit":"mit.mp3","nach":"nach.mp3","aus":"aus.mp3","bei":"bei.mp3","seit":"seit.mp3","von":"von.mp3","zu":"zu.mp3","in":"in.mp3","an":"an.mp3","auf":"auf.mp3","vor":"vor.mp3","hinter":"hinter.mp3","unter":"unter.mp3","neben":"neben.mp3","zwischen":"zwischen.mp3","wer":"wer.mp3","was":"was.mp3","wen":"wen.mp3","wem":"wem.mp3","wessen":"wessen.mp3","wo":"wo.mp3","wohin":"wohin.mp3","woher":"woher.mp3","wann":"wann.mp3","wie":"wie.mp3","wie viel":"wie_viel.mp3","warum":"warum.mp3","welcher":"welcher.mp3"};
+const экран = document.getElementById('экран');
+const назад = document.getElementById('назад');
+let таблица, режим, этап, группы, плеер;
 
-function игрок(ф) { const а = new Audio('zvuk/tablichki/' + ф); а.play().catch(()=>{}); }
-
-function списокКатегорий(){
-  const div = document.getElementById('катСписок');
-  div.innerHTML = КАТЕГОРИИ.map((к,i)=>
-    `<button class="кат" data-i="${i}"><span class="знак">${к.знак}</span><span><b>${к.имя}</b><span class="пояс">${к.подзаголовок}</span></span></button>`
-  ).join('') +
-  `<a class="глаголы-ссылка" href="glagoly.html"><span class="знак" style="font-size:26px">🔁</span><span><b>Глаголы: спряжения</b><span class="пояс">обычные · особые · модальные · меняют гласную — 4 группы, там же режимы «по одному» и «впиши форму»</span></span></a>`;
-  div.querySelectorAll('button.кат').forEach(b=>{
-    b.onclick = ()=>{ показать(+b.dataset.i); window.scrollTo({top: b.offsetTop - 70, behavior:'smooth'}); };
-  });
+function список(){
+  назад.href = 'index.html';
+  назад.textContent = '← Главная';
+  экран.innerHTML = `<h1>Таблицы немецкого</h1>
+    <div class="кат-список">
+      <a class="кат" href="glagoly.html"><span class="знак">🔁</span><span><b>Глаголы</b>
+        <span class="пояс">Обычные, особые, модальные и с чередованием гласной</span></span></a>
+      ${КАТЕГОРИИ.map(к=>`<a class="кат" href="#${к.id}"><span class="знак">${к.знак}</span>
+        <span><b>${к.имя}</b><span class="пояс">${к.подзаголовок}</span></span></a>`).join('')}
+    </div>`;
 }
 
-function показать(i){
-  выбран = i; режим = 'смотреть';
-  document.querySelectorAll('button.кат').forEach((b,j)=> b.classList.toggle('вкл', j===i));
-  нарисовать();
+function фрагменты(к){
+  const строки = к.id === 'artikeli' || к.id === 'prityazhatelnye';
+  const списокСлов = к.озвучивать_столбец0;
+  if (строки || списокСлов) return к.строки.map((строка,r)=>({
+    имя: строка[0],
+    поля: (списокСлов ? [1] : к.шапка.slice(1).map((_,i)=>i+1)).map(c=>[r,c])
+  }));
+  return к.шапка.slice(1).map((имя,i)=>({имя, поля: к.строки.map((_,r)=>[r,i+1])}));
 }
 
-function нарисовать(){
-  const к = КАТЕГОРИИ[выбран];
-  const обл = document.getElementById('область');
-  const кнопки = [['смотреть','👀 Смотреть'],['учить','🙈 Учить'],['впиши','✍️ Впиши']]
-    .map(([id,им])=>`<button data-р="${id}" class="${режим===id?'вкл':''}">${им}</button>`).join('');
-  let тело = '';
-  if (режим === 'впиши') {
-    тело = `<div class="обёртка"><table class="табл"><tr>${к.шапка.map(h=>`<th>${h}</th>`).join('')}</tr>`;
-    к.строки.forEach((стр,r)=>{
-      тело += `<tr>${стр.map((яч,c)=>{
-        if (c===0 && !к.озвучивать_столбец0) return `<td class="строка-имя">${яч}</td>`;
-        if (c===0) return `<td class="строка-имя">${яч}</td>`;
-        if (к.озвучивать_столбец0 && c===2) return `<td>${яч}</td>`;  // пример не вводим
-        return `<td><input data-r="${r}" data-c="${c}" placeholder="…" autocomplete="off"></td>`;
-      }).join('')}</tr>`;
-    });
-    тело += `</table></div>
-      <div class="низ"><button class="кн" id="проверить">Проверить</button><button class="кн тихая" id="показатьВсе">Показать ответы</button></div>
-      <div class="итог" id="итог"></div><div class="счёт" id="счёт"></div>`;
+function навигация(){
+  таблица = КАТЕГОРИИ.find(к=>location.hash === '#' + к.id);
+  if (таблица) {
+    назад.href = '#';
+    назад.textContent = '← Все таблицы';
+    группы = фрагменты(таблица);
+    режим = 'смотреть';
+    этап = 0;
+    рисовать();
   } else {
-    тело = `<div class="обёртка"><table class="табл"><tr>${к.шапка.map(h=>`<th>${h}</th>`).join('')}</tr>`;
-    к.строки.forEach((стр)=>{
-      тело += `<tr>${стр.map((яч,c)=>{
-        if (c===0) return `<td class="строка-имя">${яч}</td>`;
-        const закр = режим==='учить' ? ' закрыта' : '';
-        const звук = ЗВУК[ядрышко(яч)] ? ' звук' : '';
-        return `<td class="ячейка${закр}${звук}" data-т="${яч}">${яч}</td>`;
+    список();
+  }
+  window.scrollTo(0, 0);
+  const заголовок = экран.querySelector('h1');
+  заголовок.tabIndex = -1;
+  заголовок.focus({preventScroll:true});
+}
+
+function озвучить(файл){
+  if (localStorage.getItem('nemeckiy_zvuk_выкл') === '1') return;
+  if (плеер) плеер.pause();
+  плеер = new Audio('zvuk/tablichki/' + файл);
+  плеер.play().catch(()=>{});
+}
+
+function сетка(поля = []){
+  const ряды = поля.length ? [...new Set(поля.map(([r])=>r))] : таблица.строки.map((_,r)=>r);
+  const столбцы = поля.length ? [0, ...new Set(поля.map(([,c])=>c))] : таблица.шапка.map((_,c)=>c);
+  const ввод = new Set(поля.map(([r,c])=>r+':'+c));
+  return `<div class="обёртка"><table class="табл">
+    <thead><tr>${столбцы.map(c=>`<th scope="col">${таблица.шапка[c]}</th>`).join('')}</tr></thead>
+    <tbody>${ряды.map(r=>{
+      const строка = таблица.строки[r];
+      return `<tr>${столбцы.map(c=>{
+        const ячейка = строка[c];
+        if (ввод.has(r+':'+c)) return `<td><input data-r="${r}" data-c="${c}" aria-label="${строка[0]} — ${таблица.шапка[c]}" autocomplete="off" autocapitalize="none" spellcheck="false"><small class="подсказка" hidden></small></td>`;
+        const файл = ЗВУК[ядрышко(ячейка)];
+        const содержимое = файл ? `<button type="button" class="слушать" data-sound="${файл}">${ячейка} <span aria-hidden="true">🔊</span></button>` : ячейка;
+        return c === 0 ? `<th scope="row" class="строка-имя">${содержимое}</th>` : `<td>${содержимое}</td>`;
       }).join('')}</tr>`;
-    });
-    тело += `</table></div>`;
-    if (режим === 'учить') {
-      тело += `<div class="низ"><button class="кн тихая" id="открытьВсе">Открыть все</button><button class="кн тихая" id="закрытьВсе">Закрыть все</button></div><div class="легенда">Тап по ячейке — открыть/закрыть. Сначала открывай по одной и повторяй вслух.</div>`;
-    } else {
-      тело += `<div class="легенда">Ячейки с подчёркнутой точкой можно послушать — тапни по ним 🔊</div>`;
+    }).join('')}</tbody></table></div>`;
+}
+
+function ядрышко(т){ return т.replace(/\?$/, '').trim(); }
+function норм(т){ return т.normalize('NFC').trim().toLowerCase().replace(/\s*\/\s*/g,'/').replace(/\s+/g,' '); }
+
+function рисовать(){
+  const всеПоля = группы.flatMap(г=>г.поля);
+  const фрагмент = группы[этап];
+  const полная = этап === группы.length;
+  const память = режим === 'учить';
+  const поля = режим === 'впиши' || (память && полная) ? всеПоля : память && фрагмент ? фрагмент.поля : [];
+  const готово = память && этап > группы.length;
+  const названиеЭтапа = полная ? 'Вся таблица по памяти' : фрагмент?.имя;
+  экран.innerHTML = `<h1>${таблица.знак} ${таблица.имя}</h1>
+    <p class="подзаг">${таблица.подзаголовок}</p>
+    <nav class="режимы" aria-label="Режим">
+      ${[['смотреть','📋 Таблица'],['учить','🧠 По памяти'],['впиши','✍️ Впиши всё']]
+        .map(([ключ,имя])=>`<button type="button" data-mode="${ключ}" aria-pressed="${режим===ключ}" class="${режим===ключ?'вкл':''}">${имя}</button>`).join('')}
+    </nav>
+    <section class="карта">
+      ${готово ? '<h2>Таблица выучена</h2><div class="низ"><button class="кн" id="повтор">Повторить</button><a class="кн тихая" href="#">Все таблицы</a></div>' :
+      поля.length ? `<form id="упражнение">
+        ${память ? `<p class="под">Шаг ${этап+1} из ${группы.length+1}</p><h2>${названиеЭтапа}</h2>` : ''}
+        ${сетка(поля)}
+        <div class="низ"><button class="кн" type="submit">Проверить</button>
+          <button class="кн тихая" id="подсказки" type="button">Показать ответы</button>
+          ${память ? '<button class="кн" id="дальше" type="button" hidden>Дальше →</button>' : ''}
+        </div>
+        <p class="итог" id="итог" role="status"></p>
+      </form>` : `${сетка()}
+        <div class="низ"><button class="кн" id="начать">Начать заучивание →</button></div>
+        <ol class="советы">${таблица.советы.map(s=>`<li>${s}</li>`).join('')}</ol>`}
+    </section>`;
+  экран.querySelectorAll('[data-mode]').forEach(к=>к.onclick = ()=>перейти(к.dataset.mode));
+  экран.querySelectorAll('[data-sound]').forEach(к=>к.onclick = ()=>озвучить(к.dataset.sound));
+  for (const id of ['начать','повтор']) {
+    const кнопка = document.getElementById(id);
+    if (кнопка) кнопка.onclick = ()=>перейти('учить');
+  }
+  const форма = document.getElementById('упражнение');
+  if (!форма) return;
+  const входы = [...форма.querySelectorAll('input')];
+  const дальше = document.getElementById('дальше');
+  const итог = document.getElementById('итог');
+  const ответ = поле=>таблица.строки[+поле.dataset.r][+поле.dataset.c];
+  форма.onsubmit = событие=>{
+    событие.preventDefault();
+    let верных = 0;
+    for (const поле of входы) {
+      const верно = норм(поле.value) === норм(ответ(поле));
+      поле.parentElement.classList.toggle('ок', верно);
+      поле.parentElement.classList.toggle('ошибка', !верно);
+      поле.setAttribute('aria-invalid', String(!верно));
+      if (верно) верных++;
     }
-  }
-  обл.innerHTML = `<section class="карта">
-    <h2>${к.знак} ${к.имя}</h2>
-    <p class="под">${к.подзаголовок}</p>
-    <div class="режимы">${кнопки}</div>
-    ${тело}
-    ${к.советы.length ? `<ol class="советы">${к.советы.map(s=>`<li>${s}</li>`).join('')}</ol>` : ''}
-  </section>`;
-  обл.querySelectorAll('.режимы button').forEach(b=> b.onclick = ()=>{ режим = b.dataset.р; нарисовать(); });
-  if (режим === 'учить') {
-    обл.querySelectorAll('td.ячейка').forEach(td=> td.onclick = ()=> td.classList.toggle('закрыта'));
-    document.getElementById('открытьВсе').onclick = ()=> обл.querySelectorAll('td.ячейка').forEach(td=>td.classList.remove('закрыта'));
-    document.getElementById('закрытьВсе').onclick = ()=> обл.querySelectorAll('td.ячейка').forEach(td=>td.classList.add('закрыта'));
-  } else if (режим === 'смотреть') {
-    обл.querySelectorAll('td.ячейка.звук').forEach(td=> td.onclick = ()=> игрок(ЗВУК[ядрышко(td.dataset.т)]));
-  } else if (режим === 'впиши') {
-    document.getElementById('проверить').onclick = проверить;
-    document.getElementById('показатьВсе').onclick = показатьОтветы;
-  }
+    итог.textContent = `Верно ${верных} из ${входы.length}`;
+    итог.className = 'итог ' + (верных === входы.length ? 'хорошо' : 'плохо');
+    if (дальше) дальше.hidden = верных !== входы.length;
+  };
+  форма.oninput = событие=>{
+    if (дальше) дальше.hidden = true;
+    событие.target.parentElement.classList.remove('ок','ошибка');
+    событие.target.removeAttribute('aria-invalid');
+  };
+  document.getElementById('подсказки').onclick = ()=>{
+    for (const поле of входы) {
+      const подсказка = поле.nextElementSibling;
+      подсказка.textContent = ответ(поле);
+      подсказка.hidden = !подсказка.hidden;
+    }
+    document.getElementById('подсказки').textContent =
+      входы[0].nextElementSibling.hidden ? 'Показать ответы' : 'Скрыть ответы';
+  };
+  if (дальше) дальше.onclick = ()=>{
+    этап++;
+    рисовать();
+    экран.querySelector('input, #повтор')?.focus();
+  };
 }
 
-function ядрышко(т){
-  // «wohin?» → «wohin», «er / sie / es» → не озвучиваем (слэш), «in» → in
-  const ч = т.split('?')[0].trim();
-  if (ч.includes('/')) return '';
-  return ч;
+function перейти(куда){
+  режим = куда;
+  этап = 0;
+  рисовать();
+  экран.querySelector('input, [aria-pressed="true"]')?.focus();
 }
 
-function проверить(){
-  const к = КАТЕГОРИИ[выбран];
-  const инп = document.querySelectorAll('#область input');
-  let верно = 0, всего = 0;
-  инп.forEach(п=>{
-    const ждём = к.строки[+п.dataset.r][+п.dataset.c].split('?')[0].trim();
-    всего++;
-    const ок = п.value.trim().toLowerCase() === ждём.toLowerCase();
-    п.parentElement.classList.toggle('ок', ок);
-    п.parentElement.classList.toggle('ошибка', !ок && п.value.trim() !== '');
-    if (ок) верно++;
-  });
-  const ит = document.getElementById('итог');
-  ит.textContent = `Верно ${верно} из ${всего}`;
-  ит.className = 'итог ' + (верно === всего ? 'хорошо' : 'плохо');
-  document.getElementById('счёт').textContent = верно === всего ? 'Отлично! Таблица твоя 💪' : 'Красное — исправь и проверь снова.';
-}
-
-function показатьОтветы(){
-  const к = КАТЕГОРИИ[выбран];
-  document.querySelectorAll('#область input').forEach(п=>{
-    п.value = к.строки[+п.dataset.r][+п.dataset.c].split('?')[0].trim();
-    п.parentElement.classList.remove('ошибка');
-    п.parentElement.classList.add('ок');
-  });
-}
-
-списокКатегорий();
+window.addEventListener('hashchange', навигация);
+навигация();
 </script>
 </body>
 </html>
