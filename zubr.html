@@ -92,8 +92,9 @@ body{
   font:inherit; min-height:42px; max-width:100%; padding:6px 8px;
   background:var(--бел); color:var(--текст); border:1px solid var(--линия); border-radius:8px;
 }
-.голос-зубра [role="status"]:not(:empty){ flex-basis:100%; text-align:center; }
-.голос-зубра button{
+.отзыв-озвучки{ text-align:center; }
+.отзыв-озвучки [role="status"]:not(:empty){ display:block; }
+.отзыв-озвучки button{
   font:inherit; color:var(--синий); background:transparent; border:0;
   padding:6px; cursor:pointer; text-decoration:underline;
 }
@@ -600,15 +601,17 @@ body{ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica N
     <div class="титул" id="титул"></div>
     <div class="право" id="право"></div>
   </header>
-  <div class="голос-зубра">
-    <label for="голосЗубра">Озвучка</label>
-    <select id="голосЗубра">
+  <template id="шаблонГолоса"><div class="голос-зубра">
+    <label for="голосЗубра">Выберите голос</label>
+    <select id="голосЗубра" required>
       <option value="" disabled>Выбрать голос</option>
       <option value="grigoriy">Григорий Плотников</option>
       <option value="female">Женский голос</option>
       <option value="thorsten">Thorsten · носитель немецкого</option>
       <option value="mute">Без озвучки</option>
     </select>
+  </div></template>
+  <div class="отзыв-озвучки">
     <span id="статусГолосаЗубра" role="status"></span>
     <button type="button" id="прежняяОзвучка" hidden>Послушать прежнюю запись</button>
   </div>
@@ -620,8 +623,8 @@ body{ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica N
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202611191752';</script>
-<script src="kartinki.js?v=202611191752"></script>
+<script>window.ЗУБР_ВЕРСИЯ = '202611201839';</script>
+<script src="kartinki.js?v=202611201839"></script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -1350,6 +1353,7 @@ function блокМеста(){
 
 /* ================= каркас ================= */
 function показать(имя, данные, безИстории){
+  убратьСообщениеОзвучки();
   if (!безИстории && текущийЭкран) история.push({ имя: текущийЭкран, данные: текущиеДанные });
   текущийЭкран = имя; текущиеДанные = данные;
   window.scrollTo(0,0);
@@ -1361,6 +1365,7 @@ function показать(имя, данные, безИстории){
 var текущийЭкран = null, текущиеДанные = null;
 
 function назад(){
+  убратьСообщениеОзвучки();
   var п = история.pop();
   if (!п){
     if (new URLSearchParams(location.search).get('откуда') === 'глаголы'){
@@ -1924,6 +1929,7 @@ function формаДобавления(куда, послеДобавления
       : '') +
     '<div class="термины" id="термины"></div>';
 
+  $('экран').querySelector('.режимы').before(полеГолоса);
   if (набор.свой){
     формаДобавления($('формаСлова'), function(){
       // колода пересобирается, чтобы новое слово сразу было видно в списке
@@ -1937,11 +1943,14 @@ function формаДобавления(куда, послеДобавления
     b.onclick = function(){
       if (b.disabled) return;
       var к = b.dataset.к;
+      if (к !== 'заучивание' && к !== 'тест' && !выборГолоса.reportValidity()) return;
       if (к === 'тест') показать('настройкиТеста', набор);
       else показать(к, набор);
     };
   });
-  if ($('кПродолжить')) $('кПродолжить').onclick = function(){ продолжитьМесто(набор); };
+  if ($('кПродолжить')) $('кПродолжить').onclick = function(){
+    if (выборГолоса.reportValidity()) продолжитьМесто(набор);
+  };
   var вернуть = $('вернутьСлова');
   if (вернуть) вернуть.onclick = function(e){
     e.preventDefault();
@@ -1990,7 +1999,8 @@ function нарисоватьТермины(набор){
 
 /* ================= звук ================= */
 var проигрыватель = null, немГолос;
-var выборГолоса = $('голосЗубра'), статусГолоса = $('статусГолосаЗубра');
+var полеГолоса = $('шаблонГолоса').content.firstElementChild.cloneNode(true);
+var выборГолоса = полеГолоса.querySelector('select'), статусГолоса = $('статусГолосаЗубра');
 var прежняяОзвучка = $('прежняяОзвучка');
 var номерОзвучки = 0, ключиУроков;
 var КЛЮЧ_ГОЛОСА = 'nemeckiy_zubr_voice_' + ПРОФИЛЬ;
@@ -2003,6 +2013,12 @@ var КЛЮЧ_ГОЛОСА = 'nemeckiy_zubr_voice_' + ПРОФИЛЬ;
   статусГолоса.textContent = '';
   прежняяОзвучка.hidden = true;
 };
+
+function убратьСообщениеОзвучки(){
+  номерОзвучки++;
+  статусГолоса.textContent = '';
+  прежняяОзвучка.hidden = true;
+}
 
 function ключДорожки(c){
   var хеш = /\/([\da-f]{10})\.mp3$/.exec(c.mp3 || '');
@@ -2489,6 +2505,7 @@ function сохранитьНастройки(н){
     '<button class="кн широкая" id="кПечать">🖨 Распечатать на бумаге</button>' +
     '<p class="подзаголовок" id="предупр" style="text-align:center;margin-top:12px"></p>';
 
+  $('кНачать').before(полеГолоса);
   function строкаТумблер(имя, титул, под, вкл, выкл){
     return '<div class="строка"' + (выкл?' style="opacity:.5"':'') + '>' +
       '<span class="имя"><b>' + титул + '</b><small>' + под + '</small></span>' +
@@ -2524,6 +2541,7 @@ function сохранитьНастройки(н){
   проверить();
 
   $('кНачать').onclick = function(){
+    if (!выборГолоса.reportValidity()) return;
     сохранитьНастройки(н);
     показать('тест', { набор: набор, настройки: н,
                        колода: н.толькоЗвёзды ? сЗвездой : набор.карточки });
@@ -3131,7 +3149,9 @@ function очередь(набор){
           нарисовать();
         };
       });
+      $('кНачатьЭт').before(полеГолоса);
       $('кНачатьЭт').onclick = function(){
+        if (!выборГолоса.reportValidity()) return;
         if (!отмечены.length) return;
         этапы = отмечены.slice();
         try{ localStorage.setItem(КЛЮЧЭТАП, этапы.join(',')); }catch(e){}
