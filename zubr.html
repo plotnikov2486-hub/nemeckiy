@@ -623,8 +623,8 @@ body{ font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Helvetica N
   </footer>
 </div>
 
-<script>window.ЗУБР_ВЕРСИЯ = '202611201902';</script>
-<script src="kartinki.js?v=202611201902"></script>
+<script>window.ЗУБР_ВЕРСИЯ = '202611231038';</script>
+<script src="kartinki.js?v=202611231038"></script>
 <script>
 /* ============================================================
    FSRS-5 — расписание повторений, как в Anki.
@@ -1150,7 +1150,7 @@ function карточка(de, ru, k, номера, было, тема, f, тр, 
    чтобы подтянуть все предыдущие уроки той же линии). */
 function изАдреса(){
   var п = new URLSearchParams(location.search);
-  var урок = п.get('урок') || п.get('urok');
+  var урок = п.get('урок') || п.get('urok') || п.get('набор');
   if (!урок || !/^(urok|dasha|polya)\d+$/.test(урок)) return null;
   return { урок: урок, повтор: п.get('повтор') === '1' || п.get('repeat') === '1' };
 }
@@ -1314,8 +1314,36 @@ function запомнитьМесто(набор, режим, доп){
 function подписьМеста(м){
   return (РЕЖИМЫ_МЕСТА[м.режим] || '') + (м.настр && м.настр.где ? ' · ' + м.настр.где : '');
 }
+var КОЛОДЫ_QUIZLET = {
+  quizlet557184174: { урок: 'polya23', префикс: /^qz\d+$/, имя: 'Глаголы с приставками' }
+};
+
+function открытьКолодуQuizlet(ключ, колода, готово){
+  $('экран').innerHTML = '<div class="пусто">Загружаю колоду…</div>';
+  fetch('words/' + колода.урок + '.json?v=' + window.ЗУБР_ВЕРСИЯ)
+    .then(function(r){
+      if (!r.ok) throw Error('Словарь недоступен');
+      return r.json();
+    })
+    .then(function(строки){
+      var карточки = строки.filter(function(с){ return колода.префикс.test(с[0]); })
+        .map(function(с){ return карточкаУрока(с, колода.урок); });
+      if (!карточки.length) throw Error('В колоде нет карточек');
+      return { ключ: ключ, имя: колода.имя, под: 'Карточки Даши · Quizlet',
+        знак: '🃏', карточки: карточки, изУрока: true, порядок: true };
+    })
+    .then(function(набор){
+      НАБОРЫ.unshift(набор);
+      готово(набор);
+    }, function(){
+      $('экран').innerHTML = '<div class="пусто">Колода не загрузилась. <button type="button" class="кн" id="повторКолоды">Попробовать снова</button></div>';
+      $('повторКолоды').onclick = function(){ открытьКолодуQuizlet(ключ, колода, готово); };
+    });
+}
+
 function открытьМесто(м, готово){
   for (var i = 0; i < НАБОРЫ.length; i++) if (НАБОРЫ[i].ключ === м.ключ) return готово(НАБОРЫ[i]);
+  if (Object.hasOwn(КОЛОДЫ_QUIZLET, м.ключ)) return открытьКолодуQuizlet(м.ключ, КОЛОДЫ_QUIZLET[м.ключ], готово);
   var к = /^((?:urok|dasha|polya)\d+)(_всё)?$/.exec(м.ключ);
   if (!к) return;
   $('экран').innerHTML = '<div class="пусто">Собираю слова урока…</div>';
@@ -4315,6 +4343,12 @@ $('назадНиз').onclick = назад;   // была нарисована, 
         return;
       }
     }
+  }
+  if (Object.hasOwn(КОЛОДЫ_QUIZLET, хочуНабор)){
+    текущийЭкран = 'главный';
+    return открытьКолодуQuizlet(хочуНабор, КОЛОДЫ_QUIZLET[хочуНабор], function(набор){
+      показать('набор', набор);
+    });
   }
   var изУрока = изАдреса();
   if (изУрока){
